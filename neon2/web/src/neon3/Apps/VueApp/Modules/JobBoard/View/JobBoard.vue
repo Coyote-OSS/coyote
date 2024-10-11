@@ -1,10 +1,11 @@
 <template>
-  <div class="relative">
+  <div class="relative px-2">
     <ValuePropositionModal
       v-if="store.vpVisibleFor"
       :company-name="store.vpVisibleFor.companyName"
       @accept="vpAccept"/>
     <Design.Layout class="bg-body">
+      <Navigation/>
       <Design.BannerHeading
         :pricing="store.screen === 'pricing'"
         :back="showHomeLink"
@@ -37,6 +38,7 @@ import {PaymentStatus} from "../../../../../Packages/Feature/JobBoard/Domain/Mod
 import {ValuePropositionEvent} from "../../../../../Packages/Feature/Vp/Model";
 import ValuePropositionModal from "../../../../../Packages/Feature/Vp/ValuePropositionModal.vue";
 import {Design} from "../../../DesignSystem/design";
+import Navigation from "../../Navigation/Navigation.vue";
 import {JobBoardService} from "../JobBoardService";
 import {Toast} from "../Model";
 import {useBoardStore} from "../store";

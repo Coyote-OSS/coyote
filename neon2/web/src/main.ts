@@ -6,6 +6,8 @@ import {useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
 import JobBoard from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobBoard.vue";
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/View/vue";
 import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
+import {NavigationService} from "./neon3/Apps/VueApp/Modules/Navigation/NavigationService";
+import {navigationServiceInjectKey} from "./neon3/Apps/VueApp/Modules/Navigation/View/vue";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
 import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider";
@@ -64,5 +66,6 @@ viewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 viewModel.setFiltersOptions(presenter.filterOptions());
 
 vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
+vueApp.provide(navigationServiceInjectKey, new NavigationService(screens));
 screens.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);

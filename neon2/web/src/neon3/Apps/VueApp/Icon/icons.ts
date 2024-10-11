@@ -19,7 +19,7 @@ const jobOfferWorkModeHybrid = 'fa-light fa-globe-wifi';
 const jobOfferWorkModeRemote = 'fa-solid fa-wifi';
 const jobOfferWorkExperience = 'fa-light fa-chart-line';
 
-export const icons = {
+const jobBoardIcons = {
   dropdownClosed: 'fa-light fa-chevron-down',
   dropdownOptionSelected: iconCheck,
   dropdownOptionTagRemove: iconClose,
@@ -63,6 +63,23 @@ export const icons = {
   jobOfferTagRemove: iconClose,
   jobOfferExpiredOn: iconCalendar,
   vpBack: iconArrowLeft,
+};
+
+const iconMessage = 'fa-light fa-message';
+
+const navigationIcons = {
+  navigationCategoryDiscussion: iconMessage,
+  navigationCategoryCommunity: 'fa-light fa-users',
+  navigationCategoryResources: 'fa-light fa-book-open',
+  navigationActiveDiscussions: iconMessage,
+  navigationOnlineUsers: 'fa-light fa-arrow-trend-up',
+  navigationCategoryPromoted: 'fa-solid fa-star',
+  navigationAllCategories: 'fa-solid fa-chevron-right',
+};
+
+export const icons = {
+  ...jobBoardIcons,
+  ...navigationIcons,
 };
 
 export const htmlIconFormatBold = '<i class="fa-solid fa-bold"/>';

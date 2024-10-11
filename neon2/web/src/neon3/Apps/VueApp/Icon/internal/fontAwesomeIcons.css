@@ -22,6 +22,10 @@
     content: "\f075";
 }
 
+.fa-message:before {
+    content: "\f27a";
+}
+
 .fa-location-dot:before {
     content: "\f3c5";
 }
@@ -60,6 +64,10 @@
 
 .fa-chevron-down:before {
     content: "\f078";
+}
+
+.fa-chevron-right:before {
+    content: "\f054";
 }
 
 .fa-check:before {
@@ -130,6 +138,14 @@
     content: "\f3f4";
 }
 
-.fa-arrow-up-right-from-square::before {
+.fa-arrow-up-right-from-square:before {
     content: "\f08e";
+}
+
+.fa-book-open:before {
+    content: "\f518";
+}
+
+.fa-arrow-trend-up:before {
+    content: "\e098";
 }
