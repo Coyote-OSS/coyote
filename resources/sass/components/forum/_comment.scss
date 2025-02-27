@@ -37,6 +37,10 @@
   padding:   5px 0 5px 0;
   word-wrap: break-word;
 
+  .btn-comment-visible {
+    padding: 0 5px;
+    color:   $gray;
+  }
   .btn-comment {
     padding: 0 5px;
     color:   $gray;

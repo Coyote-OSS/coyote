@@ -14,7 +14,7 @@
           @cancel="$store.commit('posts/editEnd', comment)"
           ref="comment-form"
         />
-        <div class="d-flex" v-else>
+        <div class="d-flex py-1" v-else>
           <div>
             <div class="neon-avatar-border">
               <vue-avatar v-bind="comment.user" :is-online="comment.user.is_online" class="i-35"/>
@@ -28,6 +28,7 @@
                 <vue-timeago :datetime="comment.created_at" class="text-muted small"/>
               </a>
               <template v-if="!authorBlocked">
+
                 <span v-if="comment.editable" @click="edit" title="Edytuj ten komentarz" class="btn-comment cursor-pointer">
                   <vue-icon name="postCommentEdit"/>
                 </span>
@@ -43,6 +44,17 @@
               </template>
             </div>
             <span v-html="comment.html" class="comment-text neon-contains-a-color-link"/>
+            <div class="d-flex mt-1">
+              <span @click="toggleVote" title="Zagłosuj na komentarz" class="cursor-pointer px-0" :class="{'neon-color-link':isVoted}">
+                <vue-icon name="postCommentVote"/>
+                {{ comment.votes }}
+                głosów
+              </span>
+              <span class="px-1">•</span>
+              <span title="Odpowiedz na komentarz" class="cursor-pointer px-0">
+                Odpowiedz
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -84,7 +96,13 @@ export default {
     return {
       isEditing: false,
       blockedExpanded: false,
+      voted: false,
     };
+  },
+  created(): void {
+    if (!this.$props.comment.votes) {
+      this.$props.comment.votes = 0;
+    }
   },
   computed: {
     ...mapGetters('topics', ['topic']),
@@ -103,6 +121,9 @@ export default {
     authorBlocked(): boolean {
       return store.getters['user/isBlocked'](this.comment.user.id);
     },
+    isVoted(): boolean {
+      return this.$data.voted;
+    },
   },
   methods: {
     blockedToggle() {
@@ -111,6 +132,15 @@ export default {
     edit() {
       store.commit('posts/editStart', this.comment);
       nextTick(() => this.$refs['comment-form'].focus());
+    },
+    toggleVote(): void {
+      if (this.$data.voted) {
+        this.$props.comment.votes = 0;
+        this.$data.voted = false;
+      } else {
+        this.$props.comment.votes = 1;
+        this.$data.voted = true;
+      }
     },
     deleteComment() {
       confirmModal({
