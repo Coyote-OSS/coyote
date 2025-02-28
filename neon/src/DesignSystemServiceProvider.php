@@ -14,26 +14,21 @@ class DesignSystemServiceProvider extends ServiceProvider
                 return $this->view(
                     $request->query->get('htmlMarkup', 'Hello, world!'),
                     $request->query->get('theme', '') === 'dark',
+                    $request->query->get('sectionName', null),
                 );
             });
         });
     }
 
-    private function view(string $htmlMarkup, bool $darkTheme): string
+    private function view(string $htmlMarkup, bool $darkTheme, ?string $sectionName): string
     {
         $manifest = $this->staticFilesManifest();
-        $jsSource = $this->url($manifest['main.ts']['file']);
-        $cssSource = $this->url($manifest['main.ts']['css'][0]);
-        $theme = $darkTheme ? 'dark' : 'light';
-        return <<<html
-            <html lang="en" data-theme="$theme">
-            <head>
-                <link rel="stylesheet" href="$cssSource">
-                <script src="$jsSource"></script>
-            </head>
-            <body>$htmlMarkup</body>
-            </html>
-            html;
+        return $this->webLayout(
+            $htmlMarkup,
+            $darkTheme ? 'dark' : 'light',
+            $this->url($manifest['main.ts']['file']),
+            $this->url($manifest['main.ts']['css'][0]),
+            ['sectionName' => $sectionName]);
     }
 
     private function url(string $relativeUrl): string
@@ -49,5 +44,20 @@ class DesignSystemServiceProvider extends ServiceProvider
     private function parseJson(string $jsonContent): array
     {
         return json_decode($jsonContent, true);
+    }
+
+    private function webLayout(string $htmlMarkup, string $theme, string $jsSource, string $cssSource, array $inputData): string
+    {
+        $inputDataJson = json_encode($inputData);
+        return <<<html
+            <html lang="en" data-theme="$theme">
+            <head>
+                <link rel="stylesheet" href="$cssSource">
+                <script>var inputData = $inputDataJson;</script>
+                <script src="$jsSource"></script>
+            </head>
+            <body>$htmlMarkup</body>
+            </html>
+            html;
     }
 }
