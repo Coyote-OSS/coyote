@@ -1,5 +1,5 @@
 <?php
-namespace Neon\Test\BaseFixture\View;
+namespace Tests\Legacy\IntegrationNew\BaseFixture\Neon\View;
 
 use PHPUnit\Framework\TestCase;
 

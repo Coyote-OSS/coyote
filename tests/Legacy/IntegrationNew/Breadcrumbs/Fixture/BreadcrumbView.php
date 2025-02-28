@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Legacy\IntegrationNew\Breadcrumbs\Fixture;
 
-use Neon\Test\BaseFixture\Selector\Selector;
+use Tests\Legacy\IntegrationNew\BaseFixture\Neon\Selector\Selector;
 use Tests\Legacy\IntegrationNew\BaseFixture\View;
 use Tests\Legacy\IntegrationNew\BaseFixture\View\ViewDom;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Neon\Test\BaseFixture\Selector;
+namespace Tests\Legacy\IntegrationNew\BaseFixture\Neon\Selector;
 
 readonly class Selector
 {

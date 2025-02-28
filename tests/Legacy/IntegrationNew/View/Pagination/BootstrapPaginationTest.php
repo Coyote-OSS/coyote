@@ -3,9 +3,9 @@ namespace Tests\Legacy\IntegrationNew\View\Pagination;
 
 use Coyote\Domain\Html;
 use Coyote\Domain\View\Pagination\BootstrapPagination;
-use Neon\Test\BaseFixture\View\ViewDom;
-use Neon\Test\BaseFixture\View\ViewDomElement;
 use PHPUnit\Framework\TestCase;
+use Tests\Legacy\IntegrationNew\BaseFixture\Neon\View\ViewDom;
+use Tests\Legacy\IntegrationNew\BaseFixture\Neon\View\ViewDomElement;
 use function array_search;
 use function explode;
 

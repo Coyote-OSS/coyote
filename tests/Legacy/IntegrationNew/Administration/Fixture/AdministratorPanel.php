@@ -4,8 +4,8 @@ namespace Tests\Legacy\IntegrationNew\Administration\Fixture;
 use Coyote\Group;
 use Coyote\User;
 use Illuminate\Testing\TestResponse;
-use Neon\Test\BaseFixture\View\ViewDom;
 use PHPUnit\Framework\Assert;
+use Tests\Legacy\IntegrationNew\BaseFixture\Neon\View\ViewDom;
 use Tests\Legacy\IntegrationNew\BaseFixture\Server;
 
 trait AdministratorPanel
