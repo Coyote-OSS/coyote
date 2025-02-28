@@ -32,4 +32,18 @@ class DesignSystemTest extends TestCase
         $margin = $this->dsl->designSystem->cssProperty('p', 'margin-bottom');
         $this->assertSame('0px', $margin);
     }
+
+    #[Test]
+    public function backgroundIsDark_inDarkTheme(): void
+    {
+        $this->dsl->designSystem->setTheme('dark');
+        $this->assertSame('#121314', $this->dsl->designSystem->backgroundColor());
+    }
+
+    #[Test]
+    public function backgroundIsLight_inLightTheme(): void
+    {
+        $this->dsl->designSystem->setTheme('light');
+        $this->assertSame('#f0f2f5', $this->dsl->designSystem->backgroundColor());
+    }
 }
