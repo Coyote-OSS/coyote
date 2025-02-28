@@ -493,6 +493,6 @@ class PaymentControllerTest extends TestCase
         );
         $payment->refresh();
         $this->assertEquals($payment->invoice->country_id, $this->austria->id);
-        $this->assertEquals($payment->invoice->grossPrice(), $this->job->plan->price * 1.23);
+        $this->assertEqualsWithDelta($payment->invoice->grossPrice(), $this->job->plan->price * 1.23, 0.00001);
     }
 }
