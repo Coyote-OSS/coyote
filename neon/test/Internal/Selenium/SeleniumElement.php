@@ -21,4 +21,9 @@ readonly class SeleniumElement
     {
         return $this->element->getText();
     }
+
+    public function cssProperty(string $cssProperty): string
+    {
+        return $this->element->getCSSValue($cssProperty);
+    }
 }

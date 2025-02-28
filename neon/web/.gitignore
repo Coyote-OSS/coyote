@@ -1,0 +1,7 @@
+# Node
+node_modules/
+
+# Client resources
+public/index.html
+public/manifest.json
+public/assets/
