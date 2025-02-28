@@ -1,20 +1,26 @@
 <?php
 namespace Neon\Test\Integration;
 
+use Neon\Test\Internal\Color\Color;
 use Neon\Test\Internal\WebDriver;
 
 readonly class DesignSystemDsl
 {
     public function __construct(private WebDriver $web) {}
 
-    public function renderHtml(string $code): void
-    {
-        $this->visitDesignSystem(['htmlMarkup' => $code]);
-    }
-
     public function setTheme(string $theme): void
     {
         $this->visitDesignSystem(['theme' => $theme]);
+    }
+
+    public function showSection(string $sectionName): void
+    {
+        $this->visitDesignSystem(['sectionName' => $sectionName]);
+    }
+
+    public function cssColor(string $cssSelector, string $cssProperty): string
+    {
+        return Color::parseRgbaAsHex($this->cssProperty($cssSelector, $cssProperty));
     }
 
     public function cssProperty(string $cssSelector, string $cssProperty): string

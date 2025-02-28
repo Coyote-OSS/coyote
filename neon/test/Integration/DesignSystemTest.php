@@ -26,14 +26,6 @@ class DesignSystemTest extends TestCase
     }
 
     #[Test]
-    public function browserStylesAreReset(): void
-    {
-        $this->dsl->designSystem->renderHtml('<p>Hello</p>');
-        $margin = $this->dsl->designSystem->cssProperty('p', 'margin-bottom');
-        $this->assertSame('0px', $margin);
-    }
-
-    #[Test]
     public function backgroundIsDark_inDarkTheme(): void
     {
         $this->dsl->designSystem->setTheme('dark');
@@ -45,5 +37,28 @@ class DesignSystemTest extends TestCase
     {
         $this->dsl->designSystem->setTheme('light');
         $this->assertSame('#f0f2f5', $this->dsl->designSystem->backgroundColor());
+    }
+
+    #[Test]
+    public function browserStylesAreReset(): void
+    {
+        $this->dsl->designSystem->showSection('reset-elements');
+        $this->assertSame('0px', $this->cssProperty('p', 'margin-bottom'));
+        $this->assertSame('#00000000', $this->dsl->designSystem->cssColor('button', 'background-color'));
+    }
+
+    #[Test]
+    public function tailwindSpacing(): void
+    {
+        $this->dsl->designSystem->showSection('spacing-preview');
+        $this->assertSame('4px', $this->cssProperty('p:nth-child(1)', 'margin-bottom'));
+        $this->assertSame('8px', $this->cssProperty('p:nth-child(2)', 'margin-bottom'));
+        $this->assertSame('12px', $this->cssProperty('p:nth-child(3)', 'margin-bottom'));
+        $this->assertSame('16px', $this->cssProperty('p:nth-child(4)', 'margin-bottom'));
+    }
+
+    private function cssProperty(string $cssSelector, string $cssProperty): string
+    {
+        return $this->dsl->designSystem->cssProperty($cssSelector, $cssProperty);
     }
 }
