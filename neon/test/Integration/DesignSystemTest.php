@@ -26,10 +26,20 @@ class DesignSystemTest extends TestCase
     }
 
     #[Test]
-    public function emptyTest(): void
+    public function browserStylesAreReset(): void
     {
-        $this->dsl->driver->web->navigate('/DesignSystem');
-        $content = $this->dsl->driver->web->find('p')->text();
-        $this->assertSame('Hello, World!', $content);
+        $this->renderHtmlInDesignSystem('<p>Hello</p>');
+        $this->assertSame('0px', $this->cssProperty('p', 'margin-bottom'));
+    }
+
+    private function renderHtmlInDesignSystem(string $code): void
+    {
+        $query = \http_build_query(['htmlMarkup' => $code]);
+        $this->dsl->driver->web->navigate('/DesignSystem?' . $query);
+    }
+
+    private function cssProperty(string $cssSelector, string $cssProperty): string
+    {
+        return $this->dsl->driver->web->find($cssSelector)->cssProperty($cssProperty);
     }
 }
