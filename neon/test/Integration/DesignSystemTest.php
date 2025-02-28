@@ -57,8 +57,19 @@ class DesignSystemTest extends TestCase
         $this->assertSame('16px', $this->cssProperty('p:nth-child(4)', 'margin-bottom'));
     }
 
-    private function cssProperty(string $cssSelector, string $cssProperty): string
+    #[Test]
+    public function responsiveElements(): void
     {
+        $this->dsl->designSystem->showSection('responsive-elements');
+        $this->assertSame('block', $this->cssProperty('aside', 'display', viewport:430));
+        $this->assertSame('none', $this->cssProperty('aside', 'display', viewport:1440));
+    }
+
+    private function cssProperty(string $cssSelector, string $cssProperty, ?int $viewport = null): string
+    {
+        if ($viewport) {
+            $this->dsl->designSystem->setViewportWidth($viewport);
+        }
         return $this->dsl->designSystem->cssProperty($cssSelector, $cssProperty);
     }
 }

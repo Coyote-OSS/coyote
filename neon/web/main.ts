@@ -19,4 +19,13 @@ function sectionMarkup(sectionName: string): string {
       <button>Okay</button>
     `;
   }
+  if (sectionName === 'responsive-elements') {
+    return `
+      <aside class="block md:hidden">
+        aside
+      </aside>
+      <main>main</main>
+    `;
+  }
+  return 'no section selected';
 }

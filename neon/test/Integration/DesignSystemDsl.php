@@ -37,4 +37,9 @@ readonly class DesignSystemDsl
     {
         $this->web->navigate('/DesignSystem?' . \http_build_query($queryParams));
     }
+
+    public function setViewportWidth(int $width): void
+    {
+        $this->web->resize($width, 800);
+    }
 }
