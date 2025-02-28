@@ -2,9 +2,9 @@
 namespace Tests\Unit\Initials;
 
 use Coyote\Domain\InitialsSvg;
-use Neon\Test\BaseFixture\View\ViewDom;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Tests\Legacy\IntegrationNew\BaseFixture\Neon\View\ViewDom;
 
 class InitialsSvgTest extends TestCase
 {

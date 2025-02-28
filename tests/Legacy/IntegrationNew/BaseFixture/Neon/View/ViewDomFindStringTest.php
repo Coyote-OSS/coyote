@@ -1,8 +1,8 @@
 <?php
-namespace Neon\Test\BaseFixture\View;
+namespace Tests\Legacy\IntegrationNew\BaseFixture\Neon\View;
 
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use function Neon\Test\BaseFixture\Caught\caught;
 
 class ViewDomFindStringTest extends TestCase
 {
@@ -21,7 +21,7 @@ class ViewDomFindStringTest extends TestCase
     public function notFound(): void
     {
         $dom = new ViewDom('<p>Missing</p>');
-        $throwable = caught(fn() => $dom->findString('/html/body/ul/li'));
+        $throwable = $this->caught(fn() => $dom->findString('/html/body/ul/li'));
         $this->assertStringStartsWith('Failed to find element: /html/body/ul/li', $throwable->getMessage());
     }
 
@@ -31,7 +31,7 @@ class ViewDomFindStringTest extends TestCase
     public function many(): void
     {
         $dom = new ViewDom('<p>One</p><p>Two</p>');
-        $throwable = caught(fn() => $dom->findString('//p'));
+        $throwable = $this->caught(fn() => $dom->findString('//p'));
         $this->assertStringStartsWith('Failed to find unique element (found 2): //p', $throwable->getMessage());
     }
 
@@ -59,7 +59,7 @@ class ViewDomFindStringTest extends TestCase
     public function throwForElement(): void
     {
         $dom = new ViewDom('<ul></ul>');
-        $exception = caught(fn() => $dom->findString('/html/body/ul'));
+        $exception = $this->caught(fn() => $dom->findString('/html/body/ul'));
         $this->assertSame('Failed to get element as string: <ul>', $exception->getMessage());
     }
 
@@ -71,5 +71,15 @@ class ViewDomFindStringTest extends TestCase
         $dom = new ViewDom('<a href="foo"></a>');
         $attribute = $dom->findString('/html/body/a/@href');
         $this->assertSame('foo', $attribute);
+    }
+
+    private function caught(callable $block): \Throwable
+    {
+        try {
+            $block();
+        } catch (\Throwable $throwable) {
+            return $throwable;
+        }
+        throw new AssertionFailedError('Failed to assert that exception is thrown.');
     }
 }

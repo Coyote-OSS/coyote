@@ -83,12 +83,8 @@
       "Tests\\Unit\\": "tests/Unit/",
       "Tests\\Legacy\\Browser\\": "tests/Legacy/Browser/",
       "Tests\\Legacy\\IntegrationOld\\": "tests/Legacy/IntegrationOld/",
-      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/",
-      "Neon\\Test\\": "neon/test/"
-    },
-    "files": [
-      "neon/test/BaseFixture/Caught/caught.php"
-    ]
+      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/"
+    }
   },
   "scripts": {
     "post-install-cmd": [

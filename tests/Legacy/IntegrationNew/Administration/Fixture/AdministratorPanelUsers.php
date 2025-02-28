@@ -2,7 +2,7 @@
 namespace Tests\Legacy\IntegrationNew\Administration\Fixture;
 
 use Illuminate\Testing\TestResponse;
-use Neon\Test\BaseFixture\View\ViewDom;
+use Tests\Legacy\IntegrationNew\BaseFixture\Neon\View\ViewDom;
 use Tests\Legacy\IntegrationNew\BaseFixture\Server;
 
 trait AdministratorPanelUsers

@@ -1,9 +1,9 @@
 <?php
-namespace Neon\Test\BaseFixture\Selector;
+namespace Tests\Legacy\IntegrationNew\BaseFixture\Neon\Selector;
 
-use Neon\Test\BaseFixture\View\ViewDom;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use function Neon\Test\BaseFixture\Caught\caught;
+use Tests\Legacy\IntegrationNew\BaseFixture\Neon\View\ViewDom;
 
 class SelectorTest extends TestCase
 {
@@ -66,10 +66,20 @@ class SelectorTest extends TestCase
      */
     public function blank(): void
     {
-        $exception = caught(fn() => new Selector('html', ' ', 'body', 'text()'));
+        $exception = $this->caught(fn() => new Selector('html', ' ', 'body', 'text()'));
         $this->assertSame(
             'Failed to accept empty string selector.',
             $exception->getMessage());
+    }
+
+    private function caught(callable $block): \Throwable
+    {
+        try {
+            $block();
+        } catch (\Throwable $throwable) {
+            return $throwable;
+        }
+        throw new AssertionFailedError('Failed to assert that exception is thrown.');
     }
 
     /**

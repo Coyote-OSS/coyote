@@ -1,8 +1,8 @@
 <?php
-namespace Neon\Test\BaseFixture\View;
+namespace Tests\Legacy\IntegrationNew\BaseFixture\Neon\View;
 
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use function Neon\Test\BaseFixture\Caught\caught;
 
 class ViewDomFindStringsTest extends TestCase
 {
@@ -30,7 +30,17 @@ class ViewDomFindStringsTest extends TestCase
     public function throwForElement(): void
     {
         $dom = new ViewDom('<ul></ul>');
-        $exception = caught(fn() => $dom->findStrings('/html/body/ul'));
+        $exception = $this->caught(fn() => $dom->findStrings('/html/body/ul'));
         $this->assertSame('Failed to get element as string: <ul>', $exception->getMessage());
+    }
+
+    private function caught(callable $block): \Throwable
+    {
+        try {
+            $block();
+        } catch (\Throwable $throwable) {
+            return $throwable;
+        }
+        throw new AssertionFailedError('Failed to assert that exception is thrown.');
     }
 }
