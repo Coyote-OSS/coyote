@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Acceptance\AcceptanceDsl\Internal\Selenium;
+namespace Neon\Test\Internal\Selenium;
 
 use Facebook\WebDriver\Remote\RemoteWebElement;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Acceptance\AcceptanceDsl\Internal\Selenium;
+namespace Neon\Test\Internal\Selenium;
 
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
@@ -48,11 +48,6 @@ readonly class SeleniumDriver
         $this->driver->get($absoluteUrl);
     }
 
-    public function click(string $clickableText): void
-    {
-        $this->findByXPath("//text()[normalize-space(.)='$clickableText']/..")->click();
-    }
-
     public function captureScreenshot(string $screenshotFilename): void
     {
         $this->driver->takeScreenshot($screenshotFilename);
@@ -63,18 +58,8 @@ readonly class SeleniumDriver
         $this->driver->manage()->deleteAllCookies();
     }
 
-    public function readLineNodes(): array
-    {
-        return \explode("\n", $this->driver->findElement(WebDriverBy::tagName('body'))->getText());
-    }
-
     public function findByCss(string $cssSelector): SeleniumElement
     {
         return new SeleniumElement($this->driver->findElement(WebDriverBy::cssSelector($cssSelector)));
-    }
-
-    public function findByXPath(string $xPath): SeleniumElement
-    {
-        return new SeleniumElement($this->driver->findElement(WebDriverBy::xpath($xPath)));
     }
 }

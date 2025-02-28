@@ -1,14 +1,13 @@
 <?php
-namespace Tests\Acceptance;
+namespace Neon\Test\Integration;
 
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Acceptance\AcceptanceDsl\Dsl;
 
-class AcceptanceTest extends TestCase
+class DesignSystemTest extends TestCase
 {
     private Dsl $dsl;
 
@@ -29,5 +28,8 @@ class AcceptanceTest extends TestCase
 
     #[Test]
     #[DoesNotPerformAssertions]
-    public function emptyTest(): void {}
+    public function emptyTest(): void
+    {
+        $this->dsl->driver->web->navigate('/DesignSystem');
+    }
 }
