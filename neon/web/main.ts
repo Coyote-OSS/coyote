@@ -27,5 +27,10 @@ function sectionMarkup(sectionName: string): string {
       <main>main</main>
     `;
   }
+  if (sectionName === 'jobboard') {
+    return `
+      <h2>Oferty Pracy w IT - Odwiedza nas ponad 150 tys. programistów miesięcznie</h2>
+    `;
+  }
   return 'no section selected';
 }

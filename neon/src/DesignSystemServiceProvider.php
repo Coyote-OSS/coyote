@@ -9,22 +9,29 @@ class DesignSystemServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        if (config('app.debug')) {
+            $this->bootServiceProvider();
+        }
+    }
+
+    private function bootServiceProvider(): void
+    {
         Route::middleware('web')->group(function () {
             Route::get('/DesignSystem', function (Request $request): string {
                 return $this->view(
-                    $request->query->get('htmlMarkup', 'Hello, world!'),
-                    $request->query->get('theme', '') === 'dark',
-                    $request->query->get('sectionName', null),
-                );
+                    $request->query->get('section'),
+                    $request->query->get('theme', '') === 'dark');
+            });
+            Route::get('/Praca/New', function (Request $request): string {
+                return $this->view('jobboard', $request->query->get('theme', '') === 'dark');
             });
         });
     }
 
-    private function view(string $htmlMarkup, bool $darkTheme, ?string $sectionName): string
+    private function view(?string $sectionName, bool $darkTheme): string
     {
         $manifest = $this->staticFilesManifest();
         return $this->webLayout(
-            $htmlMarkup,
             $darkTheme ? 'dark' : 'light',
             $this->url($manifest['main.ts']['file']),
             $this->url($manifest['main.ts']['css'][0]),
@@ -46,7 +53,7 @@ class DesignSystemServiceProvider extends ServiceProvider
         return json_decode($jsonContent, true);
     }
 
-    private function webLayout(string $htmlMarkup, string $theme, string $jsSource, string $cssSource, array $inputData): string
+    private function webLayout(string $theme, string $jsSource, string $cssSource, array $inputData): string
     {
         $inputDataJson = json_encode($inputData);
         return <<<html
@@ -56,7 +63,7 @@ class DesignSystemServiceProvider extends ServiceProvider
                 <script>var inputData = $inputDataJson;</script>
                 <script src="$jsSource"></script>
             </head>
-            <body>$htmlMarkup</body>
+            <body></body>
             </html>
             html;
     }

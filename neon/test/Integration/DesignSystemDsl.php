@@ -15,7 +15,7 @@ readonly class DesignSystemDsl
 
     public function showSection(string $sectionName): void
     {
-        $this->visitDesignSystem(['sectionName' => $sectionName]);
+        $this->visitDesignSystem(['section' => $sectionName]);
     }
 
     public function cssColor(string $cssSelector, string $cssProperty): string

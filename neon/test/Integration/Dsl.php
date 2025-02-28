@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 readonly class Dsl
 {
-    private Driver $driver;
+    public Driver $driver;
     public DesignSystemDsl $designSystem;
 
     public function __construct()

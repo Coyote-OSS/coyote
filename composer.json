@@ -85,7 +85,8 @@
       "Tests\\Legacy\\IntegrationOld\\": "tests/Legacy/IntegrationOld/",
       "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/",
       "Neon\\Test\\": "neon/test/",
-      "Neon\\Test\\Integration\\": "neon/test/Integration"
+      "Neon\\Test\\Acceptance\\": "neon/test/Acceptance/",
+      "Neon\\Test\\Integration\\": "neon/test/Integration/"
     }
   },
   "scripts": {
