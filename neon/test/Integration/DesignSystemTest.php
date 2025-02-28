@@ -3,7 +3,6 @@ namespace Neon\Test\Integration;
 
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
-use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -27,9 +26,10 @@ class DesignSystemTest extends TestCase
     }
 
     #[Test]
-    #[DoesNotPerformAssertions]
     public function emptyTest(): void
     {
         $this->dsl->driver->web->navigate('/DesignSystem');
+        $content = $this->dsl->driver->web->find('p')->text();
+        $this->assertSame('Hello, World!', $content);
     }
 }
