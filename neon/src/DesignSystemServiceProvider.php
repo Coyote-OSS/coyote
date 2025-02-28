@@ -11,18 +11,22 @@ class DesignSystemServiceProvider extends ServiceProvider
     {
         Route::middleware('web')->group(function () {
             Route::get('/DesignSystem', function (Request $request): string {
-                return $this->view($request->query->get('htmlMarkup', ''));
+                return $this->view(
+                    $request->query->get('htmlMarkup', 'Hello, world!'),
+                    $request->query->get('theme', '') === 'dark',
+                );
             });
         });
     }
 
-    private function view(string $htmlMarkup): string
+    private function view(string $htmlMarkup, bool $darkTheme): string
     {
         $manifest = $this->staticFilesManifest();
         $jsSource = $this->url($manifest['main.ts']['file']);
         $cssSource = $this->url($manifest['main.ts']['css'][0]);
+        $theme = $darkTheme ? 'dark' : 'light';
         return <<<html
-            <html lang="en">
+            <html lang="en" data-theme="$theme">
             <head>
                 <link rel="stylesheet" href="$cssSource">
                 <script src="$jsSource"></script>
