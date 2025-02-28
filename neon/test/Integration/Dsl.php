@@ -1,16 +1,20 @@
 <?php
 namespace Neon\Test\Integration;
 
+use Neon\Test\Internal\WebDriver;
 use PHPUnit\Framework\TestCase;
 
 readonly class Dsl
 {
-    public Driver $driver;
+    private Driver $driver;
+    public DesignSystemDsl $designSystem;
 
     public function __construct()
     {
-        $this->driver = new Driver();
+        $web = new WebDriver();
+        $this->driver = new Driver($web);
         $this->driver->clearClientData();
+        $this->designSystem = new DesignSystemDsl($web);
     }
 
     public function close(): void
