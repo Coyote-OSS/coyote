@@ -69,6 +69,7 @@
     "psr-4": {
       "Boduch\\Grid\\": "grid/",
       "Coyote\\": "app/",
+      "Neon\\": "neon/src/",
       "Database\\Seeders\\": "database/seeders/"
     },
     "files": [

@@ -2,6 +2,7 @@
 namespace Neon\Test\Internal;
 
 use Neon\Test\Internal\Selenium\SeleniumDriver;
+use Neon\Test\Internal\Selenium\SeleniumElement;
 
 readonly class WebDriver
 {
@@ -33,5 +34,10 @@ readonly class WebDriver
     public function captureScreenshot(string $path, string $testCaseName): void
     {
         $this->selenium->captureScreenshot("$path$testCaseName.png");
+    }
+
+    public function find(string $cssSelector): SeleniumElement
+    {
+        return $this->selenium->findByCss($cssSelector);
     }
 }

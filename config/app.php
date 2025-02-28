@@ -181,6 +181,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Coyote\Providers\ImageServiceProvider::class,
 
+        Neon\DesignSystemServiceProvider::class,
         /*
          * Application Service Providers...
          */
