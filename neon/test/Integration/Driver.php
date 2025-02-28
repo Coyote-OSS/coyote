@@ -26,4 +26,16 @@ readonly class Driver
     {
         $this->web->captureScreenshot($this->diagnosticArtifactPath, $testCaseName);
     }
+
+    public function visitJobList(): void
+    {
+        $this->web->navigate('/Praca/New');
+    }
+
+    public function textNodes(): array
+    {
+        return [
+            $this->web->find('body')->text(),
+        ];
+    }
 }
