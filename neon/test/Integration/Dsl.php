@@ -1,12 +1,11 @@
 <?php
-namespace Tests\Acceptance\AcceptanceDsl;
+namespace Neon\Test\Integration;
 
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 readonly class Dsl
 {
-    private Driver $driver;
+    public Driver $driver;
 
     public function __construct()
     {

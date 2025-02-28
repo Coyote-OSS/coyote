@@ -79,11 +79,12 @@
   "autoload-dev": {
     "psr-4": {
       "Tests\\": "tests/",
-      "Tests\\Acceptance\\": "tests/Acceptance/",
       "Tests\\Unit\\": "tests/Unit/",
       "Tests\\Legacy\\Browser\\": "tests/Legacy/Browser/",
       "Tests\\Legacy\\IntegrationOld\\": "tests/Legacy/IntegrationOld/",
-      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/"
+      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/",
+      "Neon\\Test\\": "neon/test/",
+      "Neon\\Test\\Integration\\": "neon/test/Integration"
     }
   },
   "scripts": {
