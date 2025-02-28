@@ -5,6 +5,7 @@ use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverDimension;
 
 readonly class SeleniumDriver
 {
@@ -61,5 +62,10 @@ readonly class SeleniumDriver
     public function findByCss(string $cssSelector): SeleniumElement
     {
         return new SeleniumElement($this->driver->findElement(WebDriverBy::cssSelector($cssSelector)));
+    }
+
+    public function resize(int $width, int $height): void
+    {
+        $this->driver->manage()->window()->setSize(new WebDriverDimension($width, $height));
     }
 }

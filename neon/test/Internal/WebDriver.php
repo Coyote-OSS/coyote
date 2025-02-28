@@ -40,4 +40,9 @@ readonly class WebDriver
     {
         return $this->selenium->findByCss($cssSelector);
     }
+
+    public function resize(int $width, int $height): void
+    {
+        $this->selenium->resize($width, $height);
+    }
 }
