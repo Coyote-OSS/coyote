@@ -5,12 +5,10 @@ use Neon\Test\Internal\WebDriver;
 
 readonly class Driver
 {
-    public WebDriver $web;
     private string $diagnosticArtifactPath;
 
-    public function __construct()
+    public function __construct(private WebDriver $web)
     {
-        $this->web = new WebDriver();
         $this->diagnosticArtifactPath = '/var/www/neon/test/Integration/';
     }
 

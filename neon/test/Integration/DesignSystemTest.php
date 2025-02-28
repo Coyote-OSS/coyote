@@ -28,18 +28,8 @@ class DesignSystemTest extends TestCase
     #[Test]
     public function browserStylesAreReset(): void
     {
-        $this->renderHtmlInDesignSystem('<p>Hello</p>');
-        $this->assertSame('0px', $this->cssProperty('p', 'margin-bottom'));
-    }
-
-    private function renderHtmlInDesignSystem(string $code): void
-    {
-        $query = \http_build_query(['htmlMarkup' => $code]);
-        $this->dsl->driver->web->navigate('/DesignSystem?' . $query);
-    }
-
-    private function cssProperty(string $cssSelector, string $cssProperty): string
-    {
-        return $this->dsl->driver->web->find($cssSelector)->cssProperty($cssProperty);
+        $this->dsl->designSystem->renderHtml('<p>Hello</p>');
+        $margin = $this->dsl->designSystem->cssProperty('p', 'margin-bottom');
+        $this->assertSame('0px', $margin);
     }
 }
