@@ -31,9 +31,32 @@
 {% endblock %}
 
 {% block container %}
-  <div id="jobBoardShadowRoot">
+  <div id="shadowRootParent">
     <template shadowrootmode="open">
       {{ jobBoard }}
     </template>
+    <script>
+      const {shadowRootInitialized} = window['NeonModule'];
+      const shadowRoot = document.querySelector('#shadowRootParent').shadowRoot;
+
+      shadowRootCopyStyleSheets(shadowRoot);
+      shadowRootInitialized(shadowRoot);
+
+      function shadowRootCopyStyleSheets(root) {
+        for (const styleSheet of window.document.styleSheets) {
+          if (styleSheet.title === 'includeShadowRoot') {
+            root.adoptedStyleSheets.push(copiedStyleSheet(styleSheet));
+          }
+        }
+      }
+
+      function copiedStyleSheet(source) {
+        const copy = new CSSStyleSheet();
+        for (const rule of source.cssRules) {
+          copy.insertRule(rule.cssText);
+        }
+        return copy;
+      }
+    </script>
   </div>
 {% endblock %}
