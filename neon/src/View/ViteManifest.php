@@ -26,6 +26,6 @@ readonly class ViteManifest
 
     public function styleUrl(): string
     {
-        return $this->manifest['src/main.ts']['css'][0];
+        return $this->manifest['style.css']['file'];
     }
 }

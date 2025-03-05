@@ -1,21 +1,16 @@
 import "./style.scss";
+import {createApp} from 'vue';
+import App from "./App.vue";
 
-const shadowRoot = document
-  .querySelector('#jobBoardShadowRoot')
-  .shadowRoot!;
-const jobBoard = shadowRoot.querySelector('#jobBoard')!;
-jobBoard.textContent = JSON.stringify(window['inputData']);
-
-for (const styleSheet of window.document.styleSheets) {
-  if (styleSheet.title === 'includeShadowRoot') {
-    shadowRoot.adoptedStyleSheets.push(copiedStyleSheet(styleSheet));
-  }
+interface BackendInput {
+  jobOffers: string[];
 }
 
-function copiedStyleSheet(source: CSSStyleSheet): CSSStyleSheet {
-  const copy = new CSSStyleSheet();
-  for (const rule of source.cssRules) {
-    copy.insertRule(rule.cssText);
-  }
-  return copy;
+export function shadowRootInitialized(root: ShadowRoot): void {
+  const jobBoard = root.querySelector('#jobBoard')!;
+  const backendInput = window['backendInput'] as BackendInput;
+  const vueApp = createApp(App, {
+    jobOfferTitles: backendInput.jobOffers,
+  });
+  vueApp.mount(jobBoard);
 }

@@ -31,13 +31,8 @@ class JobBoard
             'jobOffers' => $this->jobOffers,
         ]);
         return <<<body
-            <p>4programmers » Praca</p>
-            <p>Oferty Pracy w IT - Odwiedza nas ponad 150 tys. programistów miesięcznie</p>
-            <script>var inputData = $inputDataJson;</script>
-            <h2>welcome</h2>
-            <span class="text-muted">muted</span>
-            <div id="jobBoard" class="job-offer__title">
-            </div>
+            <script>window['backendInput'] = $inputDataJson;</script>
+            <div id="jobBoard" class="job-offer__title"></div>
             <script src="$scriptUrl"></script>
         body;
     }
