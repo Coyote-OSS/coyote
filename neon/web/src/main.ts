@@ -6,7 +6,7 @@ interface BackendInput {
   jobOffers: string[];
 }
 
-export function shadowRootInitialized(root: ShadowRoot): void {
+function shadowRootInitialized(root: ShadowRoot): void {
   const jobBoard = root.querySelector('#jobBoard')!;
   const backendInput = window['backendInput'] as BackendInput;
   const vueApp = createApp(App, {
@@ -14,3 +14,5 @@ export function shadowRootInitialized(root: ShadowRoot): void {
   });
   vueApp.mount(jobBoard);
 }
+
+window['NeonModule'] = {shadowRootInitialized};

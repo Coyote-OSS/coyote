@@ -7,22 +7,10 @@ export default defineConfig({
     vue(),
   ],
   build: {
-    lib: {
-      entry: './src/main.ts',
-      name: 'NeonModule',
-      fileName: 'neon',
-    },
     rollupOptions: {
-      output: {
-        assetFileNames: 'assets/[name]-[hash].[ext]',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-      },
+      input: './src/main.ts',
     },
     outDir: './public/',
     manifest: 'manifest.json',
-  },
-  define: {
-    'process.env.NODE_ENV': JSON.stringify('production'),
   },
 });
