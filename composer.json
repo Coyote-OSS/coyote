@@ -69,6 +69,7 @@
     "psr-4": {
       "Boduch\\Grid\\": "grid/",
       "Coyote\\": "app/",
+      "Neon\\": "neon/src/",
       "Database\\Seeders\\": "database/seeders/"
     },
     "files": [
@@ -79,11 +80,13 @@
   "autoload-dev": {
     "psr-4": {
       "Tests\\": "tests/",
-      "Tests\\Acceptance\\": "tests/Acceptance/",
       "Tests\\Unit\\": "tests/Unit/",
       "Tests\\Legacy\\Browser\\": "tests/Legacy/Browser/",
       "Tests\\Legacy\\IntegrationOld\\": "tests/Legacy/IntegrationOld/",
-      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/"
+      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/",
+      "Neon\\Test\\": "neon/test/",
+      "Neon\\Test\\Acceptance\\": "neon/test/Acceptance/",
+      "Neon\\Test\\Integration\\": "neon/test/Integration/"
     }
   },
   "scripts": {
