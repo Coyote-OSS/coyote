@@ -1,4 +1,4 @@
-FROM 4programmers/php-node:8.4.2 as backend
+FROM 4programmers/php-node:8.4.2 AS backend
 
 USER root
 WORKDIR /app
@@ -10,6 +10,7 @@ COPY webpack.common.js webpack.dev.js webpack.prod.js /app/
 COPY resources /app/resources
 COPY survey /app/survey
 COPY public /app/public
+COPY neon /app/neon
 
 ARG FRONTEND_SENTRY_DSN
 ARG VAPID_PUBLIC_KEY
@@ -17,9 +18,14 @@ ARG RELEASE
 ARG SENTRY_API_KEY
 
 RUN yarn run prod
-
 RUN rm -rf node_modules
 
+WORKDIR /app/neon/web
+RUN yarn install
+RUN yarn run build
+RUN rm -rf node_modules/
+
+WORKDIR /app
 COPY composer.json composer.json
 COPY composer.lock composer.lock
 
