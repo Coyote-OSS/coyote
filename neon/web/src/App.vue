@@ -33,7 +33,11 @@
         <div class="badge ml-auto" v-if="jobOffer.isNew">Nowe</div>
       </div>
       <div class="flex text-xs">
-        <span>{{ {isFavourite: jobOffer.isFavourite} }}</span>
+        <span>
+          <Icon name="jobOfferFavouriteChecked" v-if="jobOffer.isFavourite"/>
+          <Icon name="jobOfferFavourite" v-else/>
+          Ulubiona
+        </span>
         <span>{{ jobOffer.commentsCount }} komentarzy</span>
         <span class="ml-auto" v-text="jobOffer.publishDate"/>
       </div>
@@ -42,6 +46,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from "./Icon.vue";
 import {JobOffer} from "./main";
 
 interface Props {

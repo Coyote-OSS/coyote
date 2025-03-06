@@ -20,8 +20,10 @@ class JobBoard
     public function htmlMarkupHead(): string
     {
         $styleUrl = $this->assetUrl($this->manifest->styleUrl());
+        $faLightUrl = $this->assetUrl($this->manifest->fontAwesomeLightUrl());
         return <<<head
             <link rel="stylesheet" href="$styleUrl" title="includeShadowRoot">
+            <link rel="preload" href="$faLightUrl" as="font" type="font/woff2" crossorigin>
         head;
     }
 
