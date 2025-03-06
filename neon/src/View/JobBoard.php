@@ -4,6 +4,7 @@ namespace Neon\View;
 class JobBoard
 {
     private ViteManifest $manifest;
+    /** @var JobOffer[] */
     private array $jobOffers = [];
 
     public function __construct()
@@ -11,9 +12,9 @@ class JobBoard
         $this->manifest = new ViteManifest('../neon/web/');
     }
 
-    public function addOffer(string $title): void
+    public function addOffer(JobOffer $jobOffer): void
     {
-        $this->jobOffers[] = $title;
+        $this->jobOffers[] = $jobOffer;
     }
 
     public function htmlMarkupHead(): string

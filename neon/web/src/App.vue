@@ -8,15 +8,19 @@
         Oferty Pracy w IT - Odwiedza nas ponad 150 tys. programistów miesięcznie
       </h1>
     </div>
-    <div v-for="jobOffer in props.jobOfferTitles" class="card-tile">
-      {{ jobOffer }}
+    <div v-for="jobOffer in props.jobOffers" class="card-tile">
+      <p>{{ jobOffer.title }}</p>
+      <p>{{ jobOffer.companyName }}</p>
+      <p>{{ jobOffer.commentsCount }} komentarzy</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {JobOffer} from "./main";
+
 interface Props {
-  jobOfferTitles: string[];
+  jobOffers: JobOffer[];
 }
 
 const props = defineProps<Props>();

@@ -22,7 +22,7 @@ class ServiceProvider extends RouteServiceProvider
                 $jobBoard = new Neon\View\JobBoard();
                 $repository = app(JobElasticSearchRepository::class);
                 foreach ($repository->jobOffers() as $jobOffer) {
-                    $jobBoard->addOffer($jobOffer->title);
+                    $jobBoard->addOffer($jobOffer);
                 }
                 return view('job.home_modern', [
                     'head'     => new StringHtml($jobBoard->htmlMarkupHead()),
