@@ -21,24 +21,33 @@
           salaryIncludesTax: jobOffer.salaryIncludesTax,
         }
       }}
-      <p>
-        {{ jobOffer.companyName }}
-        {{ jobOffer.locations }}
-        {{ jobOffer.workMode }}
+      <p class="flex flex-wrap space-x-2">
+        <span v-if="jobOffer.companyName" v-text="jobOffer.companyName"/>
+        <span v-for="location in jobOffer.locations">
+          <Icon name="jobOfferLocation"/>
+          {{ location }}
+        </span>
+        <span>
+          <Icon :name="workModeIcon(jobOffer.workMode)"/>
+          {{ workModeTitle(jobOffer.workMode) }}
+        </span>
       </p>
       <div class="flex">
         <div>
-          <span v-for="tagName in jobOffer.tagNames" class="tag" v-text="tagName"/>
+          <span v-for="tagName in jobOffer.tagNames" class="tag text-sm" v-text="tagName"/>
         </div>
-        <div class="badge ml-auto" v-if="jobOffer.isNew">Nowe</div>
+        <div class="badge text-sm ml-auto" v-if="jobOffer.isNew">Nowe</div>
       </div>
-      <div class="flex text-xs">
+      <div class="flex text-xs space-x-2">
         <span>
           <Icon name="jobOfferFavouriteChecked" v-if="jobOffer.isFavourite"/>
           <Icon name="jobOfferFavourite" v-else/>
           Ulubiona
         </span>
-        <span>{{ jobOffer.commentsCount }} komentarzy</span>
+        <span>
+          <Icon name="jobOfferComments"/>
+          {{ jobOffer.commentsCount }} komentarzy
+        </span>
         <span class="ml-auto" v-text="jobOffer.publishDate"/>
       </div>
     </div>
@@ -46,12 +55,30 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "./Icon.vue";
-import {JobOffer} from "./main";
+import Icon, {IconName} from "./Icon.vue";
+import {JobOffer, WorkMode} from "./main";
 
 interface Props {
   jobOffers: JobOffer[];
 }
 
 const props = defineProps<Props>();
+
+function workModeIcon(workMode: WorkMode): IconName {
+  const icons: Record<WorkMode, IconName> = {
+    stationary: 'jobOfferWorkModeStationary',
+    hybrid: 'jobOfferWorkModeHybrid',
+    fullyRemote: 'jobOfferWorkModeRemote',
+  };
+  return icons[workMode];
+}
+
+function workModeTitle(workMode: WorkMode): string {
+  const titles: Record<WorkMode, string> = {
+    stationary: 'Praca stacjonarna',
+    hybrid: 'Praca hybrydowa',
+    fullyRemote: 'Praca zdalna',
+  };
+  return titles[workMode];
+}
 </script>

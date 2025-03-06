@@ -36,4 +36,24 @@
 .fa-star:before {
   content: "\f005";
 }
+
+.fa-globe-wifi:before {
+  content: "\e685";
+}
+
+.fa-wifi:before {
+  content: "\f1eb";
+}
+
+.fa-suitcase:before {
+  content: "\f0f2";
+}
+
+.fa-comment:before {
+  content: "\f075";
+}
+
+.fa-location-dot:before {
+  content: "\f3c5";
+}
 </style>

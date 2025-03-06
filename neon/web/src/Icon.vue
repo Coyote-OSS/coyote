@@ -1,12 +1,12 @@
 <template>
-  <FontAwesomeIcon class="fa-fw" :class="fontAwesomeClasses"/>
+  <FontAwesomeIcon :class="fontAwesomeClasses"/>
 </template>
 
 <script setup lang="ts">
 import {computed} from "vue";
 import FontAwesomeIcon from "./FontAwesomeIcon.vue";
 
-type IconName = 'jobOfferFavourite'|'jobOfferFavouriteChecked';
+export type IconName = keyof typeof icons;
 
 const props = defineProps<Props>();
 
@@ -14,9 +14,14 @@ interface Props {
   name: IconName;
 }
 
-const icons: Record<IconName, string> = {
+const icons = {
   'jobOfferFavourite': 'fa-light fa-star',
   'jobOfferFavouriteChecked': 'fa-solid fa-star',
+  'jobOfferWorkModeRemote': 'fa-solid fa-wifi',
+  'jobOfferWorkModeHybrid': 'fa-light fa-globe-wifi',
+  'jobOfferWorkModeStationary': 'fa-light fa-suitcase',
+  'jobOfferComments': 'fa-light fa-comment',
+  'jobOfferLocation': 'fa-light fa-location-dot',
 };
 
 const fontAwesomeClasses = computed<string>((): string => icons[props.name]);

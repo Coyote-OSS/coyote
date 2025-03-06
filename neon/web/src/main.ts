@@ -8,7 +8,7 @@ interface BackendInput {
 }
 
 type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
-type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
+export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
 
 export interface JobOffer {
   title: string;
