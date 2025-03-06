@@ -73,7 +73,9 @@ class JobRepository extends Repository implements JobRepositoryInterface
             ->model
             ->select(['jobs.*'])
             ->join('subscriptions', function (JoinClause $join) use ($userId) {
-                $join->on('subscriptions.resource_id', '=', 'jobs.id')->where('subscriptions.resource_type', Job::class)->where('subscriptions.user_id', $userId);
+                $join->on('subscriptions.resource_id', '=', 'jobs.id')
+                    ->where('subscriptions.resource_type', Job::class)
+                    ->where('subscriptions.user_id', $userId);
             })
             ->get();
 

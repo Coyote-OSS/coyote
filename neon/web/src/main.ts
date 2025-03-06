@@ -7,10 +7,24 @@ interface BackendInput {
   jobOffers: JobOffer[];
 }
 
+type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
+type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
+
 export interface JobOffer {
   title: string;
-  companyName: string;
+  url: string;
+  locations: string[];
+  workMode: WorkMode;
+  isFavourite: boolean;
+  isNew: boolean;
+  publishDate: string;
+  tagNames: string[];
+  companyName: string|null;
   commentsCount: number;
+  salaryFrom: number|null;
+  salaryTo: number|null;
+  salaryCurrency: Currency|null;
+  salaryIncludesTax: boolean;
 }
 
 function shadowRootInitialized(root: ShadowRoot): void {

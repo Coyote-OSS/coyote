@@ -28,14 +28,17 @@ class JobBoard
     public function htmlMarkupBody(): string
     {
         $scriptUrl = $this->assetUrl($this->manifest->scriptUrl());
-        $inputDataJson = json_encode([
-            'jobOffers' => $this->jobOffers,
-        ]);
+        $backendInput = $this->json(['jobOffers' => $this->jobOffers]);
         return <<<body
-            <script>window['backendInput'] = $inputDataJson;</script>
-            <div id="jobBoard" class="job-offer__title"></div>
+            <script>window['backendInput'] = $backendInput;</script>
+            <div id="jobBoard"></div>
             <script src="$scriptUrl"></script>
         body;
+    }
+
+    private function json(array $data): string
+    {
+        return \json_encode($data, \JSON_THROW_ON_ERROR);
     }
 
     private function assetUrl(string $relativeUrl): string
