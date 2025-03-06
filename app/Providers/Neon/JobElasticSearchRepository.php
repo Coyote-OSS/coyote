@@ -48,12 +48,14 @@ class JobElasticSearchRepository
             $jobOffer->boost_at->diffInDays(Carbon::now()) <= 2,
             $jobOffer->boost_at->format('Y-m-d h:i'),
             $this->jobOfferTags($jobOffer),
-            $jobOffer->firm->name,
+            $this->trimToNull($jobOffer->firm->name),
+            $this->trimToNull((string)$jobOffer->firm->logo->url()),
             $jobOffer->comments_count,
             $jobOffer->salary_from,
             $jobOffer->salary_to,
             $this->currency($jobOffer->currency),
-            $jobOffer->is_gross);
+            $jobOffer->is_gross,
+            Neon\View\Settlement::from($jobOffer->rate));
     }
 
     private function isSubscribed(Coyote\Job $jobOffer): bool
@@ -116,5 +118,14 @@ class JobElasticSearchRepository
         return $jobOffer->tags
             ->map(fn(Coyote\Tag $tag) => $tag->real_name ?? $tag->name)
             ->toArray();
+    }
+
+    private function trimToNull(?string $string): ?string
+    {
+        $trimmed = \trim($string);
+        if ($trimmed === '') {
+            return null;
+        }
+        return $trimmed;
     }
 }

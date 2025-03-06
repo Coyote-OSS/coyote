@@ -7,8 +7,9 @@ interface BackendInput {
   jobOffers: JobOffer[];
 }
 
-type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
+export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
+export type Settlement = 'hourly'|'weekly'|'monthly'|'yearly';
 
 export interface JobOffer {
   title: string;
@@ -20,11 +21,13 @@ export interface JobOffer {
   publishDate: string;
   tagNames: string[];
   companyName: string|null;
+  companyLogoUrl: string|null;
   commentsCount: number;
   salaryFrom: number|null;
   salaryTo: number|null;
   salaryCurrency: Currency|null;
   salaryIncludesTax: boolean;
+  salarySettlement: Settlement;
 }
 
 function shadowRootInitialized(root: ShadowRoot): void {

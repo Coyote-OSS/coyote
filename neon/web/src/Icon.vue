@@ -22,6 +22,10 @@ const icons = {
   'jobOfferWorkModeStationary': 'fa-light fa-suitcase',
   'jobOfferComments': 'fa-light fa-comment',
   'jobOfferLocation': 'fa-light fa-location-dot',
+  'jobOfferCompany': 'fa-light fa-building',
+  'jobOfferLogoPlaceholder': 'fa-light fa-laptop-code',
+  'jobOfferSearch': 'fa-light fa-magnifying-glass',
+  'jobOfferFilter': 'fa-light fa-filter',
 };
 
 const fontAwesomeClasses = computed<string>((): string => icons[props.name]);

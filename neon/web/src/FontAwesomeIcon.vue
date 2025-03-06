@@ -33,6 +33,13 @@
   display:     inline-block;
 }
 
+.fa-light,
+.fa-solid {
+  &:before {
+    content: var(--fa);
+  }
+}
+
 .fa-star:before {
   content: "\f005";
 }
@@ -55,5 +62,9 @@
 
 .fa-location-dot:before {
   content: "\f3c5";
+}
+
+.fa-building:before {
+  content: "\f1ad";
 }
 </style>
