@@ -52,8 +52,8 @@
 
       function copiedStyleSheet(source) {
         const copy = new CSSStyleSheet();
-        for (const rule of source.cssRules) {
-          copy.insertRule(rule.cssText);
+        for (let index = 0; index < source.cssRules.length; index++) {
+          copy.insertRule(source.cssRules.item(index).cssText, index);
         }
         return copy;
       }

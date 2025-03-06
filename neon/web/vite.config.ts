@@ -1,9 +1,11 @@
+import tailwind from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import {defineConfig} from 'vite';
 
 export default defineConfig({
   publicDir: './static/',
   plugins: [
+    tailwind(),
     vue(),
   ],
   build: {
