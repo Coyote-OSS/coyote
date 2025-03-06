@@ -17,3 +17,11 @@
   border:        1px solid lightGray;
   border-radius: 8px;
 }
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 400;
+  src:         local('Inter Regular'), url(../font/inter/regular-400.ttf) format('truetype');
+}
+

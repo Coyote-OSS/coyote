@@ -1,7 +1,7 @@
 <template>
-  <div class="text-base space-y-3 md:w-2/3 mx-auto">
+  <div class="font-[Inter] text-base space-y-3 md:w-2/3 mx-auto">
     <div class="space-y-1 card-tile">
-      <p class="text-xs">
+      <p class="text-sm">
         4programmers » Praca
       </p>
       <h1 class="text-lg leading-6 font-semibold">
@@ -62,7 +62,7 @@
       <div class="flex items-center flex-wrap space-x-1">
         <span v-for="tagName in jobOffer.tagNames" class="tag text-sm mb-1" v-text="tagName"/>
       </div>
-      <div class="flex text-xs space-x-2">
+      <div class="flex text-sm space-x-2">
         <span>
           <Icon name="jobOfferFavouriteChecked" v-if="jobOffer.isFavourite"/>
           <Icon name="jobOfferFavourite" v-else/>

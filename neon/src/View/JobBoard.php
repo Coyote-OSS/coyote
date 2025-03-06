@@ -35,7 +35,7 @@ class JobBoard
         $backendInput = $this->json(['jobOffers' => $this->jobOffers]);
         return <<<body
             <script>window['backendInput'] = $backendInput;</script>
-            <div id="jobBoard"></div>
+            <div id="jobBoard" style=""></div>
             <script src="$scriptUrl"></script>
         body;
     }
