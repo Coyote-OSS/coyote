@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 /**
  * @deprecated
  */
-abstract class SearchQueryBuilder extends QueryBuilder
+final class JobOfferSearchQueryBuilder extends QueryBuilder
 {
     public Filters\Job\City $city;
     public Filters\Job\Location $location;

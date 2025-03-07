@@ -5,7 +5,7 @@ use Coyote\Services\Geocoder;
 
 class JobOfferSearchBuilder
 {
-    public function __construct(public SearchQueryBuilder $builder) {}
+    public function __construct(private JobOfferSearchQueryBuilder $builder) {}
 
     public function addLocation(string $location): void
     {
@@ -55,5 +55,10 @@ class JobOfferSearchBuilder
     public function usedLocations(): array
     {
         return $this->builder->city->getCities();
+    }
+
+    public function buildQuery(): array
+    {
+        return $this->builder->build();
     }
 }
