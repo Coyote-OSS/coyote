@@ -102,18 +102,12 @@ class ResultSet implements \Countable, \IteratorAggregate
         return $this->hits;
     }
 
-    /**
-     * Get _source element from raw hits
-     *
-     * @return array|\Illuminate\Support\Collection
-     */
-    public function getSource()
+    public function getSource(): \Illuminate\Support\Collection
     {
-        if (!$this->total) {
-            return [];
+        if ($this->total) {
+            return $this->hits->pluck('_source');
         }
-
-        return $this->hits->pluck('_source');
+        return \Illuminate\Support\Collection::empty();
     }
 
     /**

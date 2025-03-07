@@ -30,10 +30,13 @@ class JobElasticSearchRepository
 
     private function coyoteJobOffers(): Eloquent\Collection
     {
-        $result = $this->jobs->search($this->searchBuilder());
         $this->jobs->pushCriteria(new EagerLoading(['firm', 'locations', 'tags', 'currency']));
         $this->jobs->pushCriteria(new EagerLoadingWithCount(['comments']));
-        return $this->jobs->findManyWithOrder($result->getSource()->pluck('id')->unique()->toArray());
+        $ids = $this->searchJobIds();
+        if (empty($ids)) {
+            return Eloquent\Collection::empty();
+        }
+        return $this->jobs->findManyWithOrder($ids);
     }
 
     private function neonJobOffer(Coyote\Job $jobOffer): Neon\View\JobOffer
@@ -120,5 +123,11 @@ class JobElasticSearchRepository
             return null;
         }
         return $trimmed;
+    }
+
+    private function searchJobIds(): array
+    {
+        $result = $this->jobs->search($this->searchBuilder());
+        return $result->getSource()->pluck('id')->unique()->toArray();
     }
 }
