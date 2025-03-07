@@ -8,6 +8,7 @@ use Coyote\Repositories\Criteria\EagerLoadingWithCount;
 use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Services\Elasticsearch\Builders\Job\JobOfferSearchBuilder;
 use Coyote\Services\Elasticsearch\Builders\Job\SearchQueryBuilder;
+use Coyote\Services\Elasticsearch\ResultSet;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Database\Eloquent;
 use Illuminate\Database\Eloquent\Collection;
@@ -76,14 +77,6 @@ class JobElasticSearchRepository
         return $this->jobs->subscribes(auth()->id());
     }
 
-    private function searchBuilder(): SearchQueryBuilder
-    {
-        $jobSearch = new JobOfferSearchBuilder(app(SearchQueryBuilder::class));
-        $jobSearch->boostLocation($this->request->attributes->get('geocode'));
-        $jobSearch->sortByPublishDate();
-        return $jobSearch->builder;
-    }
-
     private function workMode(Coyote\Job $jobOffer): Neon\View\WorkMode
     {
         if (!$jobOffer->is_remote) {
@@ -127,7 +120,21 @@ class JobElasticSearchRepository
 
     private function searchJobIds(): array
     {
-        $result = $this->jobs->search($this->searchBuilder());
+        /** @var \Elasticsearch\Client $app */
+        $app = app('elasticsearch');
+        $result = new ResultSet($app->search([
+            'index' => config('elasticsearch.default_index'),
+            'type'  => '_doc',
+            'body'  => $this->elasticsearchBody(),
+        ]));
         return $result->getSource()->pluck('id')->unique()->toArray();
+    }
+
+    private function elasticsearchBody(): array
+    {
+        $jobSearch = new JobOfferSearchBuilder(app(SearchQueryBuilder::class));
+        $jobSearch->boostLocation($this->request->attributes->get('geocode'));
+        $jobSearch->sortByPublishDate();
+        return $jobSearch->builder->build();
     }
 }

@@ -89,7 +89,7 @@ class HomeController extends \Coyote\Http\Controllers\Controller
             }
         }
 
-        $result = $this->job->search($this->jobSearch->builder);
+        $result = $this->job->searchQueryBody($this->jobSearch->builder->build());
 
         // keep in mind that we return data by calling getSource(). This is important because
         // we want to pass collection to the twig (not raw php array)

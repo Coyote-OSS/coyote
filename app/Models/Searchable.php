@@ -10,13 +10,21 @@ use Elasticsearch;
  */
 trait Searchable
 {
+    /**
+     * @deprecated
+     */
     public function search(QueryBuilderInterface $queryBuilder): ResultSet
+    {
+        return $this->searchQueryBody($queryBuilder->build());
+    }
+
+    public function searchQueryBody(array $body): ResultSet
     {
         return new ResultSet($this->elasticsearchClient()->search([
             'index' => config('elasticsearch.default_index'),
             'type'  => '_doc',
             ...$this->modelId(),
-            'body'  => $queryBuilder->build(),
+            'body'  => $body,
         ]));
     }
 
