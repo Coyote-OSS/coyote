@@ -33,32 +33,30 @@
             :firms="firms"
         ></vue-firm-form>
         <div id="form-fixed">
-          <div class="container-3xl">
-            <div class="row">
-              <div class="col-12 col-lg-9 d-flex justify-content-end">
-                <vue-button v-if="currentTab > 0" @click="switchTab(currentTab - 1,'prev')" :disabled="isSubmitting" class="btn btn-outline-primary next-tab">
-                  {{ icon('jobOfferDraftTabPrev') }}
-                  ${ tabs[currentTab - 1] }
-                </vue-button>
-                <vue-button
-                    v-if="currentTab < 1"
-                    @click="switchTab(currentTab + 1,'next')"
-                    :disabled="isSubmitting"
-                    class="btn btn-outline-primary next-tab">
-                  ${ tabs[currentTab + 1] }
-                  {{ icon('jobOfferDraftTabNext') }}
-                </vue-button>
-                <vue-button
-                    v-if="job.firm.name || currentTab === 1"
-                    :disabled="isSubmitting"
-                    @click="submitForm"
-                    class="btn btn-primary btn-save ms-2"
-                    title="Zapisz tę ofertę">
-                  {{ icon('jobOfferDraftSave') }}
-                  Zapisz
-                  <template v-if="job.firm.name">jako ${ job.firm.name }</template>
-                </vue-button>
-              </div>
+          <div class="row">
+            <div class="col-12 col-lg-9 d-flex justify-content-end">
+              <vue-button v-if="currentTab > 0" @click="switchTab(currentTab - 1,'prev')" :disabled="isSubmitting" class="btn btn-outline-primary next-tab">
+                {{ icon('jobOfferDraftTabPrev') }}
+                ${ tabs[currentTab - 1] }
+              </vue-button>
+              <vue-button
+                  v-if="currentTab < 1"
+                  @click="switchTab(currentTab + 1,'next')"
+                  :disabled="isSubmitting"
+                  class="btn btn-outline-primary next-tab">
+                ${ tabs[currentTab + 1] }
+                {{ icon('jobOfferDraftTabNext') }}
+              </vue-button>
+              <vue-button
+                  v-if="job.firm.name || currentTab === 1"
+                  :disabled="isSubmitting"
+                  @click="submitForm"
+                  class="btn btn-primary btn-save ms-2"
+                  title="Zapisz tę ofertę">
+                {{ icon('jobOfferDraftSave') }}
+                Zapisz
+                <template v-if="job.firm.name">jako ${ job.firm.name }</template>
+              </vue-button>
             </div>
           </div>
         </div>

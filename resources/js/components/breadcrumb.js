@@ -11,7 +11,7 @@ function handleScroll() {
     return;
   }
 
-  const logo = getElementByClass('navbar-brand');
+  const header = document.querySelector('header');
 
   if (!breadcrumb) {
     breadcrumb = getElementByClass('breadcrumb')?.cloneNode(true);
@@ -21,7 +21,7 @@ function handleScroll() {
     }
 
     breadcrumb.id = 'breadcrumb-fixed';
-    breadcrumb.style.left = `${logo.offsetLeft}px`;
+    breadcrumb.style.left = `${header.offsetLeft}px`;
 
     document.body.append(breadcrumb);
   }

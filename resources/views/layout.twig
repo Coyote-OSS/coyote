@@ -98,12 +98,12 @@
   {% endif %}
 
 {% block header %}
-  <header class="{{ auth_guest() or user('allow_sticky_header') ? ' fixed-top' }}">
+  <header class="container-3xl {{ auth_guest() or user('allow_sticky_header') ? ' fixed-top' }}">
     {{ form_open({url: route('logout'), name: 'logout-form'}) }}
     {{ form_close() }}
 
     <nav class="navbar navbar-expand-lg {{ __dark_theme ? 'navbar-dark' : 'navbar-light' }} neon-divider-b">
-      <div class="container-3xl d-flex flex-wrap">
+      <div class="d-flex flex-wrap flex-grow-1">
         <a rel="home" class="navbar-brand order-0" href="{{ route('home') }}" title="4programmers.net - Strona główna">
           <img
               class="logo neon-logo"
@@ -272,7 +272,7 @@
   </header>
 {% endblock header %}
 
-  <div class="container-fluid">
+  <div class="container-3xl">
     {% block breadcrumbs %}
       {% if breadcrumbLegacyComponent is defined %}
         {{ breadcrumbLegacyComponent }}
@@ -291,7 +291,7 @@
     {{ render_region('header') }}
 
     {% block fixed %}
-      <div class="container-3xl">
+      <div>
         {% if session_has('success') %}
           <div class="row">
             <div class="col-12">
@@ -322,7 +322,7 @@
   </div>
 
 {% block footer %}
-  <footer class="container-fluid mt-4">
+  <footer class="container-3xl mt-4">
     <div class="footer-top">
       {% if breadcrumbLegacyComponent is defined %}
         {{ breadcrumbLegacyComponent }}
@@ -330,7 +330,7 @@
     </div>
     <div class="footer-inner row">
       <div class="col-12">
-        <div class="container-3xl">
+        <div>
           {{ render_block('footer') }}
         </div>
         <span class="scroll-top neon-scroll-top" id="scroll-to-top" title="Powrót na górę">
@@ -339,7 +339,7 @@
       </div>
     </div>
     <div class="footer-copyright">
-      <div class="container-3xl ">
+      <div>
         <div class="d-flex align-items-center">
           <span>
             Copyright &copy; 2000-{{ year }}
