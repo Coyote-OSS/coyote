@@ -78,6 +78,25 @@ class JobOfferSearchBuilder
         );
     }
 
+    public function buildQueryData(
+        int     $page,
+        int     $perPage,
+        ?string $searchPhrase,
+        ?string $cityLocation,
+        ?array  $locations,
+        ?array  $tags,
+        bool    $isRemote,
+        bool    $hasRemoteRange,
+        ?int    $minSalary,
+        ?int    $currency,
+    ): array
+    {
+        return $this->builder->buildQueryData(
+            $this->sort, $page, $perPage, $searchPhrase, $cityLocation,
+            $locations, $tags, $isRemote, $hasRemoteRange, $minSalary, $currency,
+        );
+    }
+
     private function salary(Request $request): ?int
     {
         if ($request->filled('salary')) {

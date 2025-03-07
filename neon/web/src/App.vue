@@ -11,8 +11,8 @@
 
     <div class="card-tile p-3 space-y-2">
       <div class="card-tile p-3 flex">
-        <input class="outline-none flex-grow-1" placeholder="Szukaj po tytule, nazwie firmy">
-        <button class="button py-1 p-3">
+        <input class="outline-none flex-grow-1" placeholder="Szukaj po tytule, nazwie firmy" v-model="searchPhrase">
+        <button class="button py-1 p-3 cursor-pointer" @click="search">
           <Icon name="jobOfferSearch"/>
         </button>
       </div>
@@ -79,6 +79,7 @@
 </template>
 
 <script setup lang="ts">
+import {ref} from "vue";
 import Icon, {IconName} from "./Icon.vue";
 import Salary from "./jobOffer/Salary.vue";
 import {JobOffer, WorkMode} from "./main";
@@ -105,5 +106,13 @@ function workModeTitle(workMode: WorkMode): string {
     fullyRemote: 'Praca zdalna',
   };
   return titles[workMode];
+}
+
+const searchPhrase = ref<string>('');
+
+function search(): void {
+  const params = new URLSearchParams(window.location.search);
+  params.set('search', searchPhrase.value);
+  window.location.search = '?' + params.toString();
 }
 </script>

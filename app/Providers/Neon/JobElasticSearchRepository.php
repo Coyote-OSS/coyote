@@ -21,18 +21,18 @@ class JobElasticSearchRepository
     /**
      * @return Neon\View\JobOffer[]
      */
-    public function jobOffers(): array
+    public function jobOffers(?string $searchPhrase): array
     {
-        return $this->coyoteJobOffers()
+        return $this->coyoteJobOffers($searchPhrase)
             ->map($this->neonJobOffer(...))
             ->toArray();
     }
 
-    private function coyoteJobOffers(): Eloquent\Collection
+    private function coyoteJobOffers(?string $searchPhrase): Eloquent\Collection
     {
         $this->jobs->pushCriteria(new EagerLoading(['firm', 'locations', 'tags', 'currency']));
         $this->jobs->pushCriteria(new EagerLoadingWithCount(['comments']));
-        return $this->jobs->findManyWithOrder($this->searchJobIds());
+        return $this->jobs->findManyWithOrder($this->searchJobIds($searchPhrase));
     }
 
     private function neonJobOffer(Coyote\Job $jobOffer): Neon\View\JobOffer
@@ -113,24 +113,34 @@ class JobElasticSearchRepository
         return $trimmed;
     }
 
-    private function searchJobIds(): array
+    private function searchJobIds(?string $searchPhrase): array
     {
         /** @var \Elasticsearch\Client $app */
         $app = app('elasticsearch');
         $result = new ResultSet($app->search([
             'index' => config('elasticsearch.default_index'),
             'type'  => '_doc',
-            'body'  => $this->elasticsearchBody(),
+            'body'  => $this->elasticsearchBody($searchPhrase),
         ]));
         return $result->getSource()->pluck('id')->unique()->toArray();
     }
 
-    private function elasticsearchBody(): array
+    private function elasticsearchBody(?string $searchPhrase): array
     {
         /** @var JobOfferSearchBuilder $jobSearch */
         $jobSearch = app(JobOfferSearchBuilder::class);
         $jobSearch->boostLocation($this->request->attributes->get('geocode'));
         $jobSearch->sortByPublishDate();
-        return $jobSearch->buildQueryFromRequest($this->request);
+        return $jobSearch->buildQueryData(
+            0,
+            15,
+            $searchPhrase,
+            null,
+            null,
+            null,
+            false,
+            false,
+            null,
+            null);
     }
 }
