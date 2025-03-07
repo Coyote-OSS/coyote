@@ -1,21 +1,69 @@
-.card-tile {
-  padding:       12px;
-  border:        1px solid lightGray;
+$navy-050:  #f0f2f5;
+$navy-100:  #dde4ea;
+$green-050: #e7f7e6;
+$green-800: #014718;
+$body-bg:   $navy-050;
+
+.card-tile,
+{
+  background:    white;
+  padding:       8px;
+  border-radius: 16px;
+}
+
+.card-tile-heading {
+  background:    white;
+  padding:       16px;
+  border-radius: 16px;
+}
+
+.card-pill {
+  background:    $body-bg;
+  padding:       8px;
+  border-radius: 16px;
+}
+
+.card-tile-nested,
+{
+  background:    $body-bg;
+  padding:       8px;
   border-radius: 8px;
+}
+
+.input-tile {
+  background:    $body-bg;
+  border-radius: 8px;
+  padding:       12px;
+}
+
+.divider {
+  color:  $navy-100;
+  margin: 8px 0;
 }
 
 .button {
   border:        1px solid lightGray;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .job-offer-company-logo-placeholder,
-.salary,
-.tag,
 .badge {
   padding:       0 4px;
   border:        1px solid lightGray;
   border-radius: 8px;
+}
+
+.salary {
+  background:    $green-050;
+  color:         $green-800;
+  border-radius: 8px;
+  padding:       6px;
+}
+
+.tag {
+  background:    $navy-100;
+  padding:       2px 6px;
+  border-radius: 6px;
 }
 
 @font-face {
@@ -24,4 +72,3 @@
   font-weight: 400;
   src:         local('Inter Regular'), url(../font/inter/regular-400.ttf) format('truetype');
 }
-
