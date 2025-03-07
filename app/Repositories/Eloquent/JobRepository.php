@@ -6,6 +6,7 @@ use Coyote\Job;
 use Coyote\Repositories\Contracts\JobRepositoryInterface;
 use Coyote\Services\Elasticsearch\ResultSet;
 use Coyote\Tag;
+use Illuminate\Database\Eloquent;
 use Illuminate\Database\Query\JoinClause;
 
 /**
@@ -25,23 +26,21 @@ class JobRepository extends Repository implements JobRepositoryInterface
      */
     public function findManyWithOrder(array $ids)
     {
+        if (empty($ids)) {
+            return Eloquent\Collection::empty();
+        }
         $values = [];
-
         foreach ($ids as $key => $id) {
             $values[] = "($id,$key)";
         }
-
         $this->applyCriteria();
-
         $result = $this
             ->model
             ->addSelect('jobs.*')
             ->join($this->raw('(VALUES ' . implode(',', $values) . ') AS x (id, ordering)'), 'jobs.id', '=', 'x.id')
             ->orderBy('x.ordering')
             ->get();
-
         $this->resetModel();
-
         return $result;
     }
 
