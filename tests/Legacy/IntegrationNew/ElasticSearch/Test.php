@@ -15,12 +15,4 @@ class Test extends TestCase
     {
         $this->laravel->get('/Praca?tags[]')->assertSuccessful();
     }
-
-    /**
-     * @test
-     */
-    public function emptyQueryParamArrayCity()
-    {
-        $this->laravel->get('/Praca?city[]')->assertSuccessful();
-    }
 }

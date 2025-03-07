@@ -62,7 +62,7 @@ class HomeController extends \Coyote\Http\Controllers\Controller
 
     public function remote(): View
     {
-        $this->jobSearch->remote();
+        $this->jobSearch->remote($this->request->filled('remote_range'));
         return $this->load();
     }
 
@@ -89,7 +89,7 @@ class HomeController extends \Coyote\Http\Controllers\Controller
             }
         }
 
-        $result = $this->job->searchQueryBody($this->jobSearch->buildQuery());
+        $result = $this->job->searchQueryBody($this->jobSearch->buildQueryFromRequest($this->request));
 
         // keep in mind that we return data by calling getSource(). This is important because
         // we want to pass collection to the twig (not raw php array)

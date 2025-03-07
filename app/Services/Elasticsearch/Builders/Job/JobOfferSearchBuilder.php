@@ -1,11 +1,30 @@
 <?php
 namespace Coyote\Services\Elasticsearch\Builders\Job;
 
+use Coyote\Services\Elasticsearch\Filters;
 use Coyote\Services\Geocoder;
+use Illuminate\Http\Request;
 
 class JobOfferSearchBuilder
 {
+    private string $sort;
+
     public function __construct(private JobOfferSearchQueryBuilder $builder) {}
+
+    public function sortBySalary(): void
+    {
+        $this->sort = 'salary';
+    }
+
+    public function sortByPublishDate(): void
+    {
+        $this->sort = 'boost_at';
+    }
+
+    public function sortByRelevance(): void
+    {
+        $this->sort = '_score';
+    }
 
     public function addLocation(string $location): void
     {
@@ -19,32 +38,17 @@ class JobOfferSearchBuilder
 
     public function addCompany(string $companySlug): void
     {
-        $this->builder->addFirmFilter($companySlug);
+        $this->builder->must(new Filters\Job\Firm($companySlug));
     }
 
-    public function remote(): void
+    public function remote(bool $hasRemoteRange): void
     {
-        $this->builder->addRemoteFilter();
-    }
-
-    public function sortBySalary(): void
-    {
-        $this->builder->setSort('salary');
-    }
-
-    public function sortByPublishDate(): void
-    {
-        $this->builder->setSort('boost_at');
-    }
-
-    public function sortByRelevance(): void
-    {
-        $this->builder->setSort('_score');
+        $this->builder->addRemoteFilter($hasRemoteRange);
     }
 
     public function boostLocation(?Geocoder\Location $location): void
     {
-        $this->builder->boostLocation($location);
+        $this->builder->should(new Filters\Job\LocationScore($location));
     }
 
     public function usedTags(): array
@@ -57,8 +61,31 @@ class JobOfferSearchBuilder
         return $this->builder->city->getCities();
     }
 
-    public function buildQuery(): array
+    public function buildQueryFromRequest(Request $request): array
     {
-        return $this->builder->build();
+        return $this->builder->buildQueryData(
+            $this->sort,
+            max(0, (int)$request->get('page', 1) - 1),
+            15,
+            $request->get('q', null),
+            $request->get('city'),
+            array_filter($request->get('locations', [])),
+            array_filter($request->get('tags', [])),
+            $request->filled('remote', false),
+            $request->filled('remote_range', false),
+            $this->salary($request),
+            (int)$request->get('currency'),
+        );
+    }
+
+    private function salary(Request $request): ?int
+    {
+        if ($request->filled('salary')) {
+            $salary = $request->get('salary');
+            if (\is_string($salary) && \ctype_digit($salary)) {
+                return (int)$salary;
+            }
+        }
+        return null;
     }
 }
