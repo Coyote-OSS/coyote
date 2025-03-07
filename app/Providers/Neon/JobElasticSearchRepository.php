@@ -6,6 +6,7 @@ use Coyote;
 use Coyote\Repositories\Criteria\EagerLoading;
 use Coyote\Repositories\Criteria\EagerLoadingWithCount;
 use Coyote\Repositories\Eloquent\JobRepository;
+use Coyote\Services\Elasticsearch\Builders\Job\JobOfferSearchBuilder;
 use Coyote\Services\Elasticsearch\Builders\Job\SearchQueryBuilder;
 use Coyote\Services\Elasticsearch\ResultSet;
 use Coyote\Services\UrlBuilder;
@@ -76,11 +77,10 @@ class JobElasticSearchRepository
 
     private function searchBuilder(): SearchQueryBuilder
     {
-        /** @var SearchQueryBuilder $builder */
-        $builder = app(SearchQueryBuilder::class);
-        $builder->boostLocation($this->request->attributes->get('geocode'));
-        $builder->setSort(SearchQueryBuilder::DEFAULT_SORT);
-        return $builder;
+        $jobSearch = new JobOfferSearchBuilder(app(SearchQueryBuilder::class));
+        $jobSearch->boostLocation($this->request->attributes->get('geocode'));
+        $jobSearch->sortByPublishDate();
+        return $jobSearch->builder;
     }
 
     private function workMode(Coyote\Job $jobOffer): Neon\View\WorkMode

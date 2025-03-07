@@ -14,15 +14,17 @@ use Coyote\Services\Elasticsearch\Sort;
 use Coyote\Services\Geocoder;
 use Illuminate\Http\Request;
 
+/**
+ * @deprecated
+ */
 class SearchQueryBuilder extends QueryBuilder
 {
-    const int PER_PAGE = 15;
-    const string DEFAULT_SORT = 'boost_at';
-    const string SCORE = '_score';
-
     public Filters\Job\City $city;
     public Filters\Job\Location $location;
     public Filters\Job\Tag $tag;
+    /**
+     * @deprecated
+     */
     private Request $request;
     private string $sort;
 
@@ -36,11 +38,7 @@ class SearchQueryBuilder extends QueryBuilder
 
     public function setSort(string $sort): void
     {
-        if (in_array($sort, ['boost_at', '_score', 'salary'])) {
-            $this->sort = $sort;
-        } else {
-            $this->sort = self::DEFAULT_SORT;
-        }
+        $this->sort = $sort;
     }
 
     public function boostLocation(?Geocoder\Location $location = null): void
@@ -66,13 +64,10 @@ class SearchQueryBuilder extends QueryBuilder
 
     public function build(): array
     {
-        $this->must(new Filters\Term('model', class_basename(Job::class)));
-
         if ($this->request->filled('q')) {
             $this->must(new MultiMatch(
                 $this->filterString($this->request->get('q')),
-                ['title^3', 'description', 'recruitment', 'tags^2', 'firm.name']),
-            );
+                ['title^3', 'description', 'recruitment', 'tags^2', 'firm.name']));
         } else {
             // no keywords were provided -- let's calculate score based on score functions
             $this->setupScoreFunctions();
@@ -102,10 +97,8 @@ class SearchQueryBuilder extends QueryBuilder
         if ($this->request->filled('salary')) {
             $salary = $this->request->get('salary');
             if (\is_string($salary) && \ctype_digit($salary)) {
-                $this->addSalaryFilter(
-                    (int)$salary,
-                    (int)$this->request->get('currency'),
-                );
+                $this->addSalaryFilter((int)$salary);
+                $this->addCurrencyFilter((int)$this->request->get('currency'));
             }
         }
 
@@ -113,21 +106,19 @@ class SearchQueryBuilder extends QueryBuilder
             $this->addRemoteFilter();
         }
 
+        $this->must(new Filters\Term('model', class_basename(Job::class)));
         $this->score(new ScriptScore('_score'));
         $this->sort(new Sort($this->sort, 'desc'));
-        $this->setupFilters();
-        $this->setupAggregations();
-        $this->size(self::PER_PAGE * (max(0, (int)$this->request->get('page', 1) - 1)), self::PER_PAGE);
-        $this->source(['id']);
-
-        return parent::build();
-    }
-
-    private function setupFilters(): void
-    {
         $this->must($this->city);
         $this->must($this->tag);
         $this->must($this->location);
+        $this->aggs(new Aggs\Job\Location());
+        $this->aggs(new Aggs\Job\TopSpot());
+        $perPage = 15;
+        $this->size($perPage * (max(0, (int)$this->request->get('page', 1) - 1)), $perPage);
+        $this->source(['id']);
+
+        return parent::build();
     }
 
     private function setupScoreFunctions(): void
@@ -139,20 +130,18 @@ class SearchQueryBuilder extends QueryBuilder
         $this->score(new Decay('boost_at', '14d', 0.1, '2h'));
     }
 
-    private function setupAggregations(): void
-    {
-        $this->aggs(new Aggs\Job\Location());
-        $this->aggs(new Aggs\Job\TopSpot());
-    }
-
-    private function addSalaryFilter(int $salary, int $currencyId): void
-    {
-        $this->must(new Filters\Range('salary', ['gte' => $salary]));
-        $this->must(new Filters\Job\Currency($currencyId));
-    }
-
     private function filterString(string $value): string
     {
         return \filter_var($value, \FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
+
+    private function addSalaryFilter(int $salary): void
+    {
+        $this->must(new Filters\Range('salary', ['gte' => $salary]));
+    }
+
+    private function addCurrencyFilter(int $currencyId): void
+    {
+        $this->must(new Filters\Job\Currency($currencyId));
     }
 }
