@@ -10,7 +10,6 @@ use Coyote\Services\Elasticsearch\Builders\Job\JobOfferSearchBuilder;
 use Coyote\Services\Elasticsearch\ResultSet;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Database\Eloquent;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Neon;
 
@@ -42,7 +41,7 @@ class JobElasticSearchRepository
             UrlBuilder::job($jobOffer, true),
             $this->locationCities($jobOffer),
             $this->workMode($jobOffer),
-            $this->isSubscribed($jobOffer),
+            false,
             $jobOffer->boost_at->diffInDays(Carbon::now()) <= 2,
             $jobOffer->boost_at->format('Y-m-d h:i'),
             $this->jobOfferTags($jobOffer),
@@ -54,22 +53,6 @@ class JobElasticSearchRepository
             Neon\View\Currency::from($jobOffer->currency->name),
             $jobOffer->is_gross,
             Neon\View\Settlement::from($jobOffer->rate));
-    }
-
-    private function isSubscribed(Coyote\Job $jobOffer): bool
-    {
-        return $this
-            ->subscribedJobOffers()
-            ->filter(fn(Coyote\Job $offer) => $offer->id === $jobOffer->id)
-            ->isNotEmpty();
-    }
-
-    private function subscribedJobOffers(): Eloquent\Collection
-    {
-        if (!auth()->check()) {
-            return Collection::empty();
-        }
-        return $this->jobs->subscribes(auth()->id());
     }
 
     private function workMode(Coyote\Job $jobOffer): Neon\View\WorkMode
