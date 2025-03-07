@@ -6,7 +6,7 @@ use Coyote;
 use Coyote\Repositories\Criteria\EagerLoading;
 use Coyote\Repositories\Criteria\EagerLoadingWithCount;
 use Coyote\Repositories\Eloquent\JobRepository;
-use Coyote\Services\Elasticsearch\Builders\Job\SearchBuilder;
+use Coyote\Services\Elasticsearch\Builders\Job\SearchQueryBuilder;
 use Coyote\Services\Elasticsearch\ResultSet;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Database\Eloquent;
@@ -53,7 +53,7 @@ class JobElasticSearchRepository
             $jobOffer->comments_count,
             $jobOffer->salary_from,
             $jobOffer->salary_to,
-            $this->currency($jobOffer->currency),
+            Neon\View\Currency::from($jobOffer->currency->name),
             $jobOffer->is_gross,
             Neon\View\Settlement::from($jobOffer->rate));
     }
@@ -74,18 +74,13 @@ class JobElasticSearchRepository
         return $this->jobs->subscribes(auth()->id());
     }
 
-    private function searchBuilder(): SearchBuilder
+    private function searchBuilder(): SearchQueryBuilder
     {
-        /** @var SearchBuilder $builder */
-        $builder = app(SearchBuilder::class);
+        /** @var SearchQueryBuilder $builder */
+        $builder = app(SearchQueryBuilder::class);
         $builder->boostLocation($this->request->attributes->get('geocode'));
-        $builder->setSort(SearchBuilder::DEFAULT_SORT);
+        $builder->setSort(SearchQueryBuilder::DEFAULT_SORT);
         return $builder;
-    }
-
-    private function currency(Coyote\Currency $currency): Neon\View\Currency
-    {
-        return \Neon\View\Currency::from($currency->name);
     }
 
     private function workMode(Coyote\Job $jobOffer): Neon\View\WorkMode

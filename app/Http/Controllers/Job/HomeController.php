@@ -14,7 +14,7 @@ use Coyote\Repositories\Criteria\Job\PriorDeadline;
 use Coyote\Repositories\Criteria\Tag\ForCategory;
 use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Repositories\Eloquent\TagRepository;
-use Coyote\Services\Elasticsearch\Builders\Job\SearchBuilder;
+use Coyote\Services\Elasticsearch\Builders\Job\SearchQueryBuilder;
 use Coyote\Tag;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -30,9 +30,9 @@ class HomeController extends \Coyote\Http\Controllers\Controller
     private $firmName;
 
     public function __construct(
-        private JobRepository $job,
-        private TagRepository $tag,
-        private SearchBuilder $builder,
+        private JobRepository      $job,
+        private TagRepository      $tag,
+        private SearchQueryBuilder $builder,
     )
     {
         parent::__construct();
@@ -56,7 +56,7 @@ class HomeController extends \Coyote\Http\Controllers\Controller
         return $this->load();
     }
 
-    public function firm($slug): View
+    public function firm(string $slug): View
     {
         $this->builder->addFirmFilter($slug);
         $this->firmName = $slug;
@@ -77,7 +77,7 @@ class HomeController extends \Coyote\Http\Controllers\Controller
             $visits->visit($this->request->path(), Carbon::now()->toDateString());
         }
         // set sort by score if keyword was provided and no sort was specified
-        $defaultSort = $this->request->input('sort', $this->request->filled('q') ? SearchBuilder::SCORE : SearchBuilder::DEFAULT_SORT);
+        $defaultSort = $this->request->input('sort', $this->request->filled('q') ? SearchQueryBuilder::SCORE : SearchQueryBuilder::DEFAULT_SORT);
 
         $this->builder->boostLocation($this->request->attributes->get('geocode'));
         $this->builder->setSort($defaultSort);
@@ -105,7 +105,7 @@ class HomeController extends \Coyote\Http\Controllers\Controller
         $pagination = new LengthAwarePaginator(
             $jobs,
             $result->total(),
-            SearchBuilder::PER_PAGE,
+            SearchQueryBuilder::PER_PAGE,
             LengthAwarePaginator::resolveCurrentPage(),
             ['path' => LengthAwarePaginator::resolveCurrentPath()]);
         $pagination->appends($this->request->except('page'));

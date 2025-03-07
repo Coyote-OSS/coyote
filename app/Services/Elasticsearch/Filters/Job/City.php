@@ -1,82 +1,57 @@
 <?php
-
 namespace Coyote\Services\Elasticsearch\Filters\Job;
 
 use Coyote\Services\Elasticsearch\DslInterface;
 use Coyote\Services\Elasticsearch\Filter;
 use Coyote\Services\Elasticsearch\QueryBuilderInterface;
-use Coyote\Services\Parser\Helpers;
 
 class City extends Filter implements DslInterface
 {
-    /**
-     * @var array
-     */
-    protected $cities = [];
+    protected array $cities = [];
 
-    /**
-     * City constructor.
-     * @param $cities
-     */
     public function __construct($cities = [])
     {
         $this->setCities($cities);
     }
 
-    /**
-     * @param $city
-     */
-    public function addCity($city)
+    public function addCity($city): void
     {
         if (is_array($city)) {
             foreach ($city as $value) {
                 $this->addCity($value);
             }
         } else {
-            $city = (new \Coyote\Services\Helper\City())->grab($city);
-            $this->cities = array_merge($this->cities, $city);
+            $this->cities = array_merge($this->cities, new \Coyote\Services\Helper\City()->grab($city));
         }
     }
 
-    /**
-     * @param $cities
-     */
-    public function setCities($cities)
+    public function setCities($cities): void
     {
         if (!is_array($cities)) {
             $cities = [$cities];
         }
-
         $this->cities = $cities;
     }
 
-    /**
-     * @return array
-     */
-    public function getCities()
+    public function getCities(): array
     {
         return $this->cities;
     }
 
-    /**
-     * @param QueryBuilderInterface $queryBuilder
-     * @return mixed
-     */
     public function apply(QueryBuilderInterface $queryBuilder)
     {
         if (empty($this->cities)) {
-            return (object) [];
+            return (object)[];
         }
-
         return [
             'nested' => [
-                'path' => 'locations',
+                'path'  => 'locations',
                 'query' => [
                     'match' => [
-                        'locations.label' => implode(' ', $this->cities)
-                    ]
-                ]
-            ]
+                        'locations.label' => implode(' ', $this->cities),
+                    ],
+                ],
+            ],
         ];
     }
 }

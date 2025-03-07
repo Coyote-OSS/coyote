@@ -8,26 +8,20 @@ use Coyote\Services\Elasticsearch\Functions\Random;
 use Coyote\Services\Elasticsearch\QueryBuilder;
 use Coyote\Services\Elasticsearch\SimpleQueryString;
 
-class AdBuilder extends SearchBuilder
+class AdQueryBuilder extends SearchQueryBuilder
 {
-    /**
-     * @param string $tags
-     */
-    public function boostTags(string $tag)
+    public function boostTags(string $tag): void
     {
         $this->must(new SimpleQueryString($tag, ['title^2', 'tags.original'], 3));
     }
 
     public function build(): array
     {
-        // only premium offers
         $this->must(new Term('is_ads', true));
         $this->must(new Term('model', class_basename(Job::class)));
-
         $this->score(new FieldValueFactor('score', 'log', 1));
         $this->score(new Random());
         $this->size(0, 4);
-
         $this->source([
             'id',
             'title',
@@ -41,7 +35,6 @@ class AdBuilder extends SearchBuilder
             'salary_from',
             'salary_to',
         ]);
-
         return QueryBuilder::build();
     }
 }

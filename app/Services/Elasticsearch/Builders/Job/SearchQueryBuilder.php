@@ -11,93 +11,55 @@ use Coyote\Services\Elasticsearch\MatchAll;
 use Coyote\Services\Elasticsearch\MultiMatch;
 use Coyote\Services\Elasticsearch\QueryBuilder;
 use Coyote\Services\Elasticsearch\Sort;
-use Coyote\Services\Geocoder\Location;
+use Coyote\Services\Geocoder;
 use Illuminate\Http\Request;
 
-class SearchBuilder extends QueryBuilder
+class SearchQueryBuilder extends QueryBuilder
 {
-    const PER_PAGE = 15;
-    const DEFAULT_SORT = 'boost_at';
-    const SCORE = '_score';
+    const int PER_PAGE = 15;
+    const string DEFAULT_SORT = 'boost_at';
+    const string SCORE = '_score';
 
-    /**
-     * @var Filters\Job\City
-     */
-    public $city;
+    public Filters\Job\City $city;
+    public Filters\Job\Location $location;
+    public Filters\Job\Tag $tag;
+    private Request $request;
+    private string $sort;
 
-    /**
-     * @var Filters\Job\Location
-     */
-    public $location;
-
-    /**
-     * @var Filters\Job\Tag
-     */
-    public $tag;
-
-    /**
-     * @var array
-     */
-    protected $languages = [];
-
-    /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * @var string
-     */
-    protected $sort;
-
-    /**
-     * @param Request $request
-     */
     public function __construct(Request $request)
     {
         $this->request = $request;
-
         $this->city = new Filters\Job\City();
         $this->tag = new Filters\Job\Tag();
         $this->location = new Filters\Job\Location();
     }
 
-    /**
-     * @param string $sort
-     */
-    public function setSort($sort)
+    public function setSort(string $sort): void
     {
-        $this->sort = in_array($sort, ['boost_at', '_score', 'salary']) ? $sort : self::DEFAULT_SORT;
+        if (in_array($sort, ['boost_at', '_score', 'salary'])) {
+            $this->sort = $sort;
+        } else {
+            $this->sort = self::DEFAULT_SORT;
+        }
     }
 
-    /**
-     * @param Location|null $location
-     */
-    public function boostLocation(Location $location = null)
+    public function boostLocation(?Geocoder\Location $location = null): void
     {
         $this->should(new Filters\Job\LocationScore($location));
     }
 
-    /**
-     * Apply remote job filter
-     */
-    public function addRemoteFilter()
+    public function addRemoteFilter(): void
     {
         // @see https://github.com/adam-boduch/coyote/issues/374
         // jezeli szukamy ofert pracy zdalnej ORAZ z danego miasta, stosujemy operator OR zamiast AND
         $method = count($this->city->getCities()) ? 'should' : 'must';
-
         $this->$method(new Filters\Job\Remote());
-
         if ($this->request->filled('remote_range')) {
             $this->$method(new Filters\Job\RemoteRange());
         }
     }
 
-    /**
-     * @param string $name
-     */
-    public function addFirmFilter($name)
+    public function addFirmFilter(string $name): void
     {
         $this->must(new Filters\Job\Firm($this->filterString($name)));
     }
@@ -161,14 +123,14 @@ class SearchBuilder extends QueryBuilder
         return parent::build();
     }
 
-    protected function setupFilters()
+    private function setupFilters(): void
     {
         $this->must($this->city);
         $this->must($this->tag);
         $this->must($this->location);
     }
 
-    protected function setupScoreFunctions()
+    private function setupScoreFunctions(): void
     {
         // wazniejsze sa te ofery, ktorych pole score jest wyzsze. obliczamy to za pomoca wzoru: log(score * 1)
         $this->score(new FieldValueFactor('score', 'log', 1));
@@ -177,7 +139,7 @@ class SearchBuilder extends QueryBuilder
         $this->score(new Decay('boost_at', '14d', 0.1, '2h'));
     }
 
-    protected function setupAggregations(): void
+    private function setupAggregations(): void
     {
         $this->aggs(new Aggs\Job\Location());
         $this->aggs(new Aggs\Job\TopSpot());
