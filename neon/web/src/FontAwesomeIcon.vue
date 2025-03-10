@@ -1,6 +1,14 @@
 <template>
-  <i/>
+  <i :class="{'fa-fw': props.fixedWidth}"/>
 </template>
+
+<script setup lang="ts">
+const props = defineProps<Props>();
+
+interface Props {
+  fixedWidth?: boolean;
+}
+</script>
 
 <style lang="scss">
 @use "@fortawesome/fontawesome-free/css/fontawesome.css";
@@ -66,5 +74,9 @@
 
 .fa-building:before {
   content: "\f1ad";
+}
+
+.fa-bars-sort:before {
+  content: "\e0ae";
 }
 </style>
