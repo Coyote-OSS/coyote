@@ -43,10 +43,7 @@ use Illuminate\Support;
  */
 class Microblog extends Model
 {
-    use SoftDeletes, Taggable, ForUser, SerializeClass;
-    use Searchable {
-        getIndexBody as parentGetIndexBody;
-    }
+    use SoftDeletes, Taggable, ForUser, SerializeClass, Searchable;
 
     protected $fillable = ['parent_id', 'user_id', 'text'];
 

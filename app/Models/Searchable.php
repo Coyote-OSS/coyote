@@ -1,115 +1,44 @@
 <?php
-
 namespace Coyote;
 
 use Coyote\Services\Elasticsearch\QueryBuilderInterface;
 use Coyote\Services\Elasticsearch\ResultSet;
+use Elasticsearch;
 
 /**
  * @deprecated
  */
 trait Searchable
 {
-    /**
-     * Get the table associated with the model.
-     *
-     * @return string
-     */
-    abstract public function getTable();
-
-    /**
-     * Get the value of the model's primary key.
-     *
-     * @return mixed
-     */
-    abstract public function getKey();
-
-
-    /**
-     * @param QueryBuilderInterface $queryBuilder
-     * @return ResultSet
-     */
-    public function search(QueryBuilderInterface $queryBuilder)
+    public function search(QueryBuilderInterface $queryBuilder): ResultSet
     {
-        return new ResultSet($this->performSearch($queryBuilder->build()));
+        return $this->searchBody($queryBuilder->build());
     }
 
-    /**
-     * @param array $body
-     * @return array
-     */
-    protected function performSearch($body)
+    private function searchBody(array $body): ResultSet
     {
-        // show build query in laravel's debugbar
-        debugbar()->debug(htmlspecialchars(json_encode($body)));
-        debugbar()->debug($body);
-
-        $params = $this->getParams();
-        $params['body'] = $body;
-
-        debugbar()->startMeasure('Elasticsearch');
-
-        $result = $this->getClient()->search($params);
-
-        debugbar()->stopMeasure('Elasticsearch');
-
-        return $result;
+        return new ResultSet($this->elasticsearchClient()->search([
+            'index' => config('elasticsearch.default_index'),
+            'type'  => '_doc',
+            ...$this->modelId(),
+            'body'  => $body,
+        ]));
     }
 
-    /**
-     * Default data to index in elasticsearch
-     *
-     * @return mixed
-     */
-    protected function getIndexBody()
+    private function modelId(): array
     {
-        $body = $this->toArray();
-
-        foreach ($this->dates as $column) {
-            if (!empty($body[$column])) {
-                $body[$column] = date('Y-m-d H:i:s', strtotime($body[$column]));
-            }
-        }
-
-        return $body;
-    }
-
-    /**
-     * Basic elasticsearch params
-     *
-     * @return array
-     */
-    protected function getParams()
-    {
-        $params = [
-            'index'     => $this->getIndexName(),
-            'type'      => '_doc'
-        ];
-
         if ($this->getKey()) {
-            $params['id'] = str_singular($this->getTable()) . '_' . $this->getKey();
+            return ['id' => str_singular($this->getTable()) . '_' . $this->getKey()];
         }
-
-        return $params;
+        return [];
     }
 
-    /**
-     * Get client instance
-     *
-     * @return \Elasticsearch\Client
-     */
-    protected function getClient()
+    private function elasticsearchClient(): Elasticsearch\Client
     {
         return app('elasticsearch');
     }
 
-    /**
-     * Get default index name from config
-     *
-     * @return mixed
-     */
-    protected function getIndexName()
-    {
-        return config('elasticsearch.default_index');
-    }
+    abstract public function getTable();
+
+    abstract public function getKey();
 }

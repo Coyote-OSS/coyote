@@ -43,9 +43,9 @@ use Illuminate\Notifications\RoutesNotifications;
  * @property string $phone
  * @property User $user
  * @property Firm $firm
- * @property Tag[] $tags
+ * @property Tag[]|Eloquent\Collection $tags
  * @property Location[]|Eloquent\Collection $locations
- * @property Currency[]|Eloquent\Collection $currency
+ * @property Currency $currency
  * @property Feature[]|Eloquent\Collection $features
  * @property int $plan_id
  * @property bool $is_boost
@@ -63,10 +63,7 @@ use Illuminate\Notifications\RoutesNotifications;
  */
 class Job extends Model
 {
-    use SoftDeletes, ForUser, RoutesNotifications;
-    use Searchable {
-        getIndexBody as parentGetIndexBody;
-    }
+    use SoftDeletes, ForUser, RoutesNotifications, Searchable;
 
     const MONTHLY = 'monthly';
     const YEARLY = 'yearly';

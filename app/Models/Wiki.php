@@ -27,10 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Wiki extends Model
 {
-    use SoftDeletes;
-    use Searchable {
-        getIndexBody as parentGetIndexBody;
-    }
+    use SoftDeletes, Searchable;
 
     protected $table = 'wiki';
 

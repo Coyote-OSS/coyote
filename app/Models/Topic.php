@@ -45,10 +45,7 @@ use Illuminate\Database\Query\Builder;
  */
 class Topic extends Model
 {
-    use SoftDeletes, Sortable, Taggable, TrackTopic, TrackForum;
-    use Searchable {
-        getIndexBody as parentGetIndexBody;
-    }
+    use SoftDeletes, Sortable, Taggable, TrackTopic, TrackForum, Searchable;
 
     /**
      * The attributes that are mass assignable.

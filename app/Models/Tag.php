@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int $id
  * @property string $name
- * @property string $real_name
+ * @property string|null $real_name
  * @property string $text
  * @property int $category_id
  * @property Category $category
@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $topics
  * @property int $jobs
  * @property int $microblogs
- * @property mixed $resources
  */
 class Tag extends Model
 {
