@@ -1,4 +1,4 @@
-install: file-permission composer-install migration es-create seed es-index yarn-install yarn-prod install-passport install-push
+install: file-permission composer-install migration es-create seed es-index yarn-install yarn-prod neon-install neon-build install-passport install-push
 
 up:
 	docker compose up -d
@@ -46,3 +46,9 @@ install-passport:
 
 install-push:
 	docker compose exec -T -u nginx php php artisan webpush:vapid
+
+neon-install:
+	docker compose exec -T -u nginx php bash -c 'cd neon/web/ && yarn install'
+
+neon-build:
+	docker compose exec -T -u nginx php bash -c 'cd neon/web/ && yarn build'

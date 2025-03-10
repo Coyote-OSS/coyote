@@ -1,6 +1,8 @@
 <?php
 namespace Neon\Acceptance\Test\Dsl;
 
+use Neon\Acceptance\Test\Dsl\Internal\SeleniumDriver;
+
 readonly class Driver
 {
     private SeleniumDriver $selenium;
@@ -27,7 +29,8 @@ readonly class Driver
     public function fetchJobOffers(): array
     {
         $this->selenium->navigate($this->url('/job-offers'));
-        return \explode("\n", $this->selenium->text());
+        $root = $this->selenium->shadowRootChild('#jobBoardRoot');
+        return \explode("\n", $root->text());
     }
 
     private function acceptanceIntegration(string $url, array $body): void
