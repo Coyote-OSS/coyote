@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Services\Elasticsearch;
 
+use Illuminate\Support;
 use Traversable;
 
 class ResultSet implements \Countable, \IteratorAggregate
@@ -102,25 +103,14 @@ class ResultSet implements \Countable, \IteratorAggregate
         return $this->hits;
     }
 
-    /**
-     * Get _source element from raw hits
-     *
-     * @return array|\Illuminate\Support\Collection
-     */
-    public function getSource()
+    public function getSource(): Support\Collection
     {
-        if (!$this->total) {
-            return [];
+        if ($this->total) {
+            return $this->hits->pluck('_source');
         }
-
-        return $this->hits->pluck('_source');
+        return Support\Collection::empty();
     }
 
-    /**
-     * @param $name
-     * @param $arguments
-     * @return mixed
-     */
     public function __call($name, $arguments)
     {
         return $this->hits->$name(...$arguments);
