@@ -82,7 +82,8 @@
       "Tests\\Unit\\": "tests/Unit/",
       "Tests\\Legacy\\Browser\\": "tests/Legacy/Browser/",
       "Tests\\Legacy\\IntegrationOld\\": "tests/Legacy/IntegrationOld/",
-      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/"
+      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/",
+      "Neon\\Acceptance\\Test\\": "neon/acceptance/acceptance-test/"
     }
   },
   "scripts": {

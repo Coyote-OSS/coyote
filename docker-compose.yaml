@@ -166,6 +166,17 @@ services:
       REDIS_HOST: $REDIS_HOST
       APP_KEY: $APP_KEY
 
+  neon-acceptance:
+    build: ./neon/acceptance/acceptance-app/
+    ports:
+      - "8881:8881"
+    command: php -S 0.0.0.0:8881 index.php
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www/neon/acceptance/acceptance-app/
+    networks:
+      - coyote
+
 volumes:
   postgres:
   elasticsearch:
@@ -176,4 +187,3 @@ volumes:
 networks:
   coyote:
     name: coyote
-

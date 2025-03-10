@@ -9,6 +9,9 @@
          executionOrder="random"
          stopOnFailure="false">
     <testsuites>
+        <testsuite name="Acceptance">
+            <directory suffix="Test.php">./neon/acceptance/acceptance-test/</directory>
+        </testsuite>
         <testsuite name="Legacy">
             <directory suffix="Test.php">./tests/Legacy/IntegrationOld/</directory>
             <directory suffix="Test.php">./tests/Legacy/IntegrationNew/</directory>
