@@ -30,7 +30,6 @@ class AdController extends Controller
             $builder->boostTags(Raw::escape($majorTag->name));
         }
 
-        /** @var ResultSet $result */
         $result = $this->job->search($builder);
         if (!$result->total()) {
             return false;

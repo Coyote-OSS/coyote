@@ -8,7 +8,6 @@ use Coyote\Repositories\Criteria\EagerLoadingWithCount;
 use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Services\Elasticsearch\Builders\Job\JobOfferSearchBuilder;
 use Coyote\Services\Elasticsearch\Builders\Job\SearchQueryBuilder;
-use Coyote\Services\Elasticsearch\ResultSet;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Database\Eloquent;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,7 +30,6 @@ class JobElasticSearchRepository
 
     private function coyoteJobOffers(): Eloquent\Collection
     {
-        /** @var ResultSet $result */
         $result = $this->jobs->search($this->searchBuilder());
         $this->jobs->pushCriteria(new EagerLoading(['firm', 'locations', 'tags', 'currency']));
         $this->jobs->pushCriteria(new EagerLoadingWithCount(['comments']));

@@ -43,9 +43,9 @@ use Illuminate\Notifications\RoutesNotifications;
  * @property string $phone
  * @property User $user
  * @property Firm $firm
- * @property Tag[]|Eloquent\Collection $tags
+ * @property Tag[] $tags
  * @property Location[]|Eloquent\Collection $locations
- * @property Currency $currency
+ * @property Currency[]|Eloquent\Collection $currency
  * @property Feature[]|Eloquent\Collection $features
  * @property int $plan_id
  * @property bool $is_boost

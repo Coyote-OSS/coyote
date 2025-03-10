@@ -12,16 +12,11 @@ trait Searchable
 {
     public function search(QueryBuilderInterface $queryBuilder): ResultSet
     {
-        return $this->searchBody($queryBuilder->build());
-    }
-
-    private function searchBody(array $body): ResultSet
-    {
         return new ResultSet($this->elasticsearchClient()->search([
             'index' => config('elasticsearch.default_index'),
             'type'  => '_doc',
             ...$this->modelId(),
-            'body'  => $body,
+            'body'  => $queryBuilder->build(),
         ]));
     }
 

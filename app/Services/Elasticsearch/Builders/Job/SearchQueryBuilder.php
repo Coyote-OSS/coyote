@@ -59,14 +59,14 @@ class SearchQueryBuilder extends QueryBuilder
 
     public function addFirmFilter(string $name): void
     {
-        $this->must(new Filters\Job\Firm($this->filterString($name)));
+        $this->must(new Filters\Job\Firm($name));
     }
 
     public function build(): array
     {
         if ($this->request->filled('q')) {
             $this->must(new MultiMatch(
-                $this->filterString($this->request->get('q')),
+                $this->request->get('q'),
                 ['title^3', 'description', 'recruitment', 'tags^2', 'firm.name']));
         } else {
             // no keywords were provided -- let's calculate score based on score functions
@@ -81,7 +81,7 @@ class SearchQueryBuilder extends QueryBuilder
             }
             foreach ($cities as $city) {
                 if ($city) {
-                    $this->city->addCity($this->filterString($city));
+                    $this->city->addCity($city);
                 }
             }
         }
@@ -128,11 +128,6 @@ class SearchQueryBuilder extends QueryBuilder
         // strsze ogloszenia traca na waznosci, glownie po 14d. z kazdym dniem score bedzie malalo o 1/10
         // za wyjatkiem pierwszych 2h publikacji
         $this->score(new Decay('boost_at', '14d', 0.1, '2h'));
-    }
-
-    private function filterString(string $value): string
-    {
-        return \filter_var($value, \FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     private function addSalaryFilter(int $salary): void
