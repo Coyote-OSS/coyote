@@ -8,7 +8,7 @@ use Coyote\Services\Elasticsearch\Functions\Random;
 use Coyote\Services\Elasticsearch\QueryBuilder;
 use Coyote\Services\Elasticsearch\SimpleQueryString;
 
-class AdQueryBuilder extends SearchQueryBuilder
+class AdBuilder extends SearchQueryBuilder
 {
     public function boostTags(string $tag): void
     {

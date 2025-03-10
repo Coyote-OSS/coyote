@@ -1,12 +1,13 @@
 <?php
 namespace Coyote\Services\Elasticsearch;
 
+use Illuminate\Support\Collection;
 use Traversable;
 
 class ResultSet implements \Countable, \IteratorAggregate
 {
     /**
-     * @var array|\Illuminate\Support\Collection
+     * @var array|Collection
      */
     protected $hits = [];
 
@@ -56,7 +57,7 @@ class ResultSet implements \Countable, \IteratorAggregate
      * Transform results array to laravel's collection
      *
      * @param mixed $data
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function collect($data)
     {
@@ -95,19 +96,19 @@ class ResultSet implements \Countable, \IteratorAggregate
      * Get the raw hits from
      * Elasticsearch results.
      *
-     * @return array|\Illuminate\Support\Collection
+     * @return array|Collection
      */
     public function getHits()
     {
         return $this->hits;
     }
 
-    public function getSource(): \Illuminate\Support\Collection
+    public function getSource(): Collection
     {
         if ($this->total) {
             return $this->hits->pluck('_source');
         }
-        return \Illuminate\Support\Collection::empty();
+        return Collection::empty();
     }
 
     /**
@@ -126,7 +127,7 @@ class ResultSet implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getHighlights()
     {
@@ -135,7 +136,7 @@ class ResultSet implements \Countable, \IteratorAggregate
 
     /**
      * @param string $name
-     * @return \Illuminate\Support\Collection|array
+     * @return Collection|array
      */
     public function getAggregationCount($name)
     {
@@ -151,7 +152,7 @@ class ResultSet implements \Countable, \IteratorAggregate
     /**
      * @param string $name
      * @param string $key
-     * @return \Illuminate\Support\Collection|array
+     * @return Collection|array
      */
     public function getAggregationHits($name, $key)
     {
