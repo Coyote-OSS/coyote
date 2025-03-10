@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Neon\View\NeonApplication;
 
 class SessionRepository
 {
@@ -32,8 +34,16 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 $repo->add($request->query->get('jobOfferTitle'));
                 return \response(status:201);
             });
-            Route::get('/job-offers', function (SessionRepository $repo): Response {
-                return response(\implode(',', $repo->all()));
+            Route::get('/job-offers', function (SessionRepository $repo): string {
+                $jobBoard = new Neon\View\NeonApplication('/');
+                foreach ($repo->all() as $jobOffer) {
+                    $jobBoard->addOffer($jobOffer);
+                }
+                return neonView($jobBoard);
+            });
+            Route::get('/assets/{filename}', function (string $filename): Response {
+                $neon = new Neon\View\NeonApplication('/');
+                return response(File::get($neon->assetPath("/assets/$filename")));
             });
         });
     })
@@ -65,3 +75,15 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
     ->withExceptions()
     ->create()
     ->handleRequest(Request::capture());
+
+function neonView(NeonApplication $neon): string
+{
+    return <<<html
+        <html>
+        <head>{$neon->htmlMarkupHead()}</head>
+        <body>
+        <div id="neon-application">{$neon->htmlMarkupBody()}</div>
+        </body>
+        </html>
+        html;
+}

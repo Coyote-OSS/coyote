@@ -34,3 +34,5 @@ jobs:
             docker compose exec -T php php artisan queue:restart
             docker compose exec -T php yarn install
             docker compose exec -T php yarn run prod
+            docker compose exec -T php bash -c 'cd neon/web/ && yarn install'
+            docker compose exec -T php bash -c 'cd neon/web/ && yarn run build'

@@ -1,5 +1,5 @@
 <?php
-namespace Neon\Acceptance\Test\Dsl;
+namespace Neon\Acceptance\Test\Dsl\Internal;
 
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Exception\PhpWebDriverExceptionInterface;
@@ -41,8 +41,11 @@ readonly class SeleniumDriver
         $this->driver->get($url);
     }
 
-    public function text(): string
+    public function shadowRootChild(string $cssSelector): SeleniumElement
     {
-        return $this->driver->findElement(WebDriverBy::tagName('body'))->getText();
+        return new SeleniumElement($this->driver
+            ->findElement(WebDriverBy::cssSelector($cssSelector))
+            ->getShadowRoot()
+            ->findElement(WebDriverBy::cssSelector('*')));
     }
 }

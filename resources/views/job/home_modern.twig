@@ -1,0 +1,37 @@
+{% extends 'layout' %}
+
+{% block title %}
+  Praca dla programistów
+  {% if firm %}
+    w firmie {{ firm }}
+  {% endif %}
+  {% if request('q') %}
+    {{ request('q') }}
+  {% endif %}
+  {% if input.tags %}
+    {{ input.tags|join(', ') }}
+  {% endif %}
+  {% if input.locations %}
+    {{ input.locations|join(', ') }}
+  {% endif %}
+  {{ parent() }}
+{% endblock %}
+
+{% block description %}
+  Praca dla programistów. Pracodawco: umieść u nas swoją ofertę pracy - już od 1 zł za dzień. Znajdź u nas pracownika wśród 50 000 programistów.
+{% endblock %}
+
+{% block keywords %}
+  programowanie, praca, C#, Java, PHP, Android, Kotlin, Python, programista, HTML, CSS, JavaScript, TypeScript, C, C++
+{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  {{ head }}
+{% endblock %}
+
+{% block container %}
+  <div id="neon-application">
+    {{ jobBoard }}
+  </div>
+{% endblock %}
