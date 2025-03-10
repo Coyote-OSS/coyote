@@ -9,18 +9,47 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Neon\View\JobOffer;
 use Neon\View\NeonApplication;
 
 class SessionRepository
 {
-    public function all(): array
+    public function all(?string $searchPhrase): array
     {
-        return json_decode(session()->get('jobOffers', '[]'), true, \JSON_THROW_ON_ERROR);
+        $jobOfferTitles = $this->jobOfferTitles();
+        $filtered = \array_filter($jobOfferTitles, fn(string $title) => str_contains($title, $searchPhrase));
+        return \array_map($this->jobOffer(...), $filtered);
     }
 
     public function add(string $jobOfferTitle): void
     {
-        session()->put('jobOffers', \json_encode([...$this->all(), $jobOfferTitle]));
+        session()->put('jobOffers', \json_encode([...$this->jobOfferTitles(), $jobOfferTitle]));
+    }
+
+    private function jobOffer(string $offerTitle): JobOffer
+    {
+        return new JobOffer(
+            $offerTitle,
+            '',
+            [],
+            \Neon\View\WorkMode::Stationary,
+            false,
+            false,
+            '',
+            [],
+            null,
+            null,
+            0,
+            null,
+            null,
+            null,
+            false,
+            \Neon\View\Settlement::Hourly);
+    }
+
+    private function jobOfferTitles(): mixed
+    {
+        return json_decode(session()->get('jobOffers', '[]'), true, \JSON_THROW_ON_ERROR);
     }
 }
 
@@ -35,14 +64,15 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 return \response(status:201);
             });
             Route::get('/job-offers', function (SessionRepository $repo): string {
-                $jobBoard = new Neon\View\NeonApplication('/');
-                foreach ($repo->all() as $jobOffer) {
+                $searchPhrase = request()->query->get('search');
+                $jobBoard = new Neon\View\NeonApplication();
+                foreach ($repo->all($searchPhrase) as $jobOffer) {
                     $jobBoard->addOffer($jobOffer);
                 }
                 return neonView($jobBoard);
             });
-            Route::get('/assets/{filename}', function (string $filename): Response {
-                $neon = new Neon\View\NeonApplication('/');
+            Route::get('/neon/assets/{filename}', function (string $filename): Response {
+                $neon = new Neon\View\NeonApplication();
                 return response(File::get($neon->assetPath("/assets/$filename")));
             });
         });
@@ -76,13 +106,16 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
     ->create()
     ->handleRequest(Request::capture());
 
-function neonView(NeonApplication $neon): string
+function neonView(NeonApplication $application): string
 {
     return <<<html
         <html>
-        <head>{$neon->htmlMarkupHead()}</head>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            {$application->htmlMarkupHead()}
+        </head>
         <body>
-        <div id="neon-application">{$neon->htmlMarkupBody()}</div>
+        <div id="neon-application">{$application->htmlMarkupBody()}</div>
         </body>
         </html>
         html;

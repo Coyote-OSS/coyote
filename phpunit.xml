@@ -18,6 +18,7 @@
         </testsuite>
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit/</directory>
+            <directory suffix="Test.php">./neon/test/</directory>
         </testsuite>
     </testsuites>
     <php>

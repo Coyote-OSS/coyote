@@ -4,12 +4,14 @@ namespace Coyote\Repositories\Eloquent;
 use Coyote\Feature;
 use Coyote\Job;
 use Coyote\Repositories\Contracts\JobRepositoryInterface;
+use Coyote\Services\Elasticsearch\ResultSet;
 use Coyote\Tag;
 use Illuminate\Database\Eloquent;
 use Illuminate\Database\Query\JoinClause;
 
 /**
- * @method mixed search(\Coyote\Services\Elasticsearch\QueryBuilderInterface $queryBuilder)
+ * @method ResultSet search(\Coyote\Services\Elasticsearch\QueryBuilderInterface $queryBuilder)
+ * @method ResultSet searchBody(array $body)
  * @method $this withTrashed()
  */
 class JobRepository extends Repository implements JobRepositoryInterface

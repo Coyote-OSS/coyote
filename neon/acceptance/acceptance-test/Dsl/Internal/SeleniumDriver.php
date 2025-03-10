@@ -5,6 +5,7 @@ use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Exception\PhpWebDriverExceptionInterface;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriverBy;
 
 readonly class SeleniumDriver
@@ -43,9 +44,18 @@ readonly class SeleniumDriver
 
     public function shadowRootChild(string $cssSelector): SeleniumElement
     {
-        return new SeleniumElement($this->driver
-            ->findElement(WebDriverBy::cssSelector($cssSelector))
+        return new SeleniumElement($this->byCssSelector($cssSelector)
             ->getShadowRoot()
-            ->findElement(WebDriverBy::cssSelector('*')));
+            ->findElement(WebDriverBy::cssSelector('div')));
+    }
+
+    private function byCssSelector(string $cssSelector): RemoteWebElement
+    {
+        return $this->driver->findElement(WebDriverBy::cssSelector($cssSelector));
+    }
+
+    public function saveScreenshot(string $path): void
+    {
+        $this->driver->takeScreenshot($path);
     }
 }

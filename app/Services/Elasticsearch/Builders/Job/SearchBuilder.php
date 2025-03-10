@@ -10,107 +10,52 @@ use Coyote\Services\Elasticsearch\Functions\ScriptScore;
 use Coyote\Services\Elasticsearch\MatchAll;
 use Coyote\Services\Elasticsearch\MultiMatch;
 use Coyote\Services\Elasticsearch\QueryBuilder;
-use Coyote\Services\Elasticsearch\Sort;
-use Coyote\Services\Geocoder\Location;
+use Coyote\Services\Geocoder;
 use Illuminate\Http\Request;
 
-class SearchBuilder extends QueryBuilder
+/**
+ * @deprecated
+ */
+abstract class SearchBuilder extends QueryBuilder
 {
-    const PER_PAGE = 15;
-    const DEFAULT_SORT = 'boost_at';
-    const SCORE = '_score';
+    public Filters\Job\City $city;
+    public Filters\Job\Location $location;
+    public Filters\Job\Tag $tag;
+    private Request $request;
 
     /**
-     * @var Filters\Job\City
-     */
-    public $city;
-
-    /**
-     * @var Filters\Job\Location
-     */
-    public $location;
-
-    /**
-     * @var Filters\Job\Tag
-     */
-    public $tag;
-
-    /**
-     * @var array
-     */
-    protected $languages = [];
-
-    /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * @var string
-     */
-    protected $sort;
-
-    /**
-     * @param Request $request
+     * @deprecated
      */
     public function __construct(Request $request)
     {
         $this->request = $request;
-
         $this->city = new Filters\Job\City();
         $this->tag = new Filters\Job\Tag();
         $this->location = new Filters\Job\Location();
     }
 
-    /**
-     * @param string $sort
-     */
-    public function setSort($sort)
-    {
-        $this->sort = in_array($sort, ['boost_at', '_score', 'salary']) ? $sort : self::DEFAULT_SORT;
-    }
-
-    /**
-     * @param Location|null $location
-     */
-    public function boostLocation(Location $location = null)
+    public function boostLocation(?Geocoder\Location $location = null): void
     {
         $this->should(new Filters\Job\LocationScore($location));
     }
 
-    /**
-     * Apply remote job filter
-     */
-    public function addRemoteFilter()
+    public function addRemoteFilter(): void
     {
         // @see https://github.com/adam-boduch/coyote/issues/374
         // jezeli szukamy ofert pracy zdalnej ORAZ z danego miasta, stosujemy operator OR zamiast AND
         $method = count($this->city->getCities()) ? 'should' : 'must';
-
         $this->$method(new Filters\Job\Remote());
-
         if ($this->request->filled('remote_range')) {
             $this->$method(new Filters\Job\RemoteRange());
         }
     }
 
-    /**
-     * @param string $name
-     */
-    public function addFirmFilter($name)
-    {
-        $this->must(new Filters\Job\Firm($this->filterString($name)));
-    }
-
     public function build(): array
     {
-        $this->must(new Filters\Term('model', class_basename(Job::class)));
-
         if ($this->request->filled('q')) {
             $this->must(new MultiMatch(
-                $this->filterString($this->request->get('q')),
-                ['title^3', 'description', 'recruitment', 'tags^2', 'firm.name']),
-            );
+                $this->request->get('q'),
+                ['title^3', 'description', 'recruitment', 'tags^2', 'firm.name']));
         } else {
             // no keywords were provided -- let's calculate score based on score functions
             $this->setupScoreFunctions();
@@ -124,7 +69,7 @@ class SearchBuilder extends QueryBuilder
             }
             foreach ($cities as $city) {
                 if ($city) {
-                    $this->city->addCity($this->filterString($city));
+                    $this->city->addCity($city);
                 }
             }
         }
@@ -140,10 +85,8 @@ class SearchBuilder extends QueryBuilder
         if ($this->request->filled('salary')) {
             $salary = $this->request->get('salary');
             if (\is_string($salary) && \ctype_digit($salary)) {
-                $this->addSalaryFilter(
-                    (int)$salary,
-                    (int)$this->request->get('currency'),
-                );
+                $this->addSalaryFilter((int)$salary);
+                $this->addCurrencyFilter((int)$this->request->get('currency'));
             }
         }
 
@@ -151,24 +94,21 @@ class SearchBuilder extends QueryBuilder
             $this->addRemoteFilter();
         }
 
+        $this->must(new Filters\Term('model', class_basename(Job::class)));
         $this->score(new ScriptScore('_score'));
-        $this->sort(new Sort($this->sort, 'desc'));
-        $this->setupFilters();
-        $this->setupAggregations();
-        $this->size(self::PER_PAGE * (max(0, (int)$this->request->get('page', 1) - 1)), self::PER_PAGE);
+        $this->must($this->city);
+        $this->must($this->tag);
+        $this->must($this->location);
+        $this->aggs(new Aggs\Job\Location());
+        $this->aggs(new Aggs\Job\TopSpot());
+        $perPage = 15;
+        $this->size($perPage * (max(0, (int)$this->request->get('page', 1) - 1)), $perPage);
         $this->source(['id']);
 
         return parent::build();
     }
 
-    protected function setupFilters()
-    {
-        $this->must($this->city);
-        $this->must($this->tag);
-        $this->must($this->location);
-    }
-
-    protected function setupScoreFunctions()
+    private function setupScoreFunctions(): void
     {
         // wazniejsze sa te ofery, ktorych pole score jest wyzsze. obliczamy to za pomoca wzoru: log(score * 1)
         $this->score(new FieldValueFactor('score', 'log', 1));
@@ -177,20 +117,13 @@ class SearchBuilder extends QueryBuilder
         $this->score(new Decay('boost_at', '14d', 0.1, '2h'));
     }
 
-    protected function setupAggregations(): void
-    {
-        $this->aggs(new Aggs\Job\Location());
-        $this->aggs(new Aggs\Job\TopSpot());
-    }
-
-    private function addSalaryFilter(int $salary, int $currencyId): void
+    private function addSalaryFilter(int $salary): void
     {
         $this->must(new Filters\Range('salary', ['gte' => $salary]));
-        $this->must(new Filters\Job\Currency($currencyId));
     }
 
-    private function filterString(string $value): string
+    private function addCurrencyFilter(int $currencyId): void
     {
-        return \filter_var($value, \FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $this->must(new Filters\Job\Currency($currencyId));
     }
 }
