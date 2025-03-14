@@ -80,12 +80,23 @@ class AcceptanceTest extends TestCase
     }
 
     #[Test]
-    public function jobOfferIsFilteredByWorkModeRemote(): void
+    public function jobOfferIsFilteredByWorkModeFullyRemote(): void
     {
         $this->driver->addJobOffer('Java Developer', workMode:'stationary');
-        $this->driver->addJobOffer('Kotlin Developer', workMode:'remote');
+        $this->driver->addJobOffer('Kotlin Developer', workMode:'fullyRemote');
         $this->driver->visitJobOffers();
-        $this->driver->filterJobOffersByWorkMode('remote');
+        $this->driver->filterJobOffersByWorkMode('fullyRemote');
+        Assert::assertContains('Kotlin Developer', $this->driver->fetchJobOffers());
+        Assert::assertNotContains('Java Developer', $this->driver->fetchJobOffers());
+    }
+
+    #[Test]
+    public function jobOfferIsFilteredByWorkModeHybrid(): void
+    {
+        $this->driver->addJobOffer('Java Developer', workMode:'stationary');
+        $this->driver->addJobOffer('Kotlin Developer', workMode:'hybrid');
+        $this->driver->visitJobOffers();
+        $this->driver->filterJobOffersByWorkMode('hybrid');
         Assert::assertContains('Kotlin Developer', $this->driver->fetchJobOffers());
         Assert::assertNotContains('Java Developer', $this->driver->fetchJobOffers());
     }

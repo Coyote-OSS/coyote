@@ -82,9 +82,13 @@ readonly class Driver
 
     public function filterJobOffersByWorkMode(string $workMode): void
     {
-        if ($workMode === 'remote') {
+        if ($workMode === 'fullyRemote') {
             $this->selenium->element('jobOfferWorkMode')->click();
             $this->selenium->label('Praca zdalna')->check(true);
+        }
+        if ($workMode === 'hybrid') {
+            $this->selenium->element('jobOfferWorkMode')->click();
+            $this->selenium->label('Praca hybrydowa')->check(true);
         }
         $this->selenium->element('jobOfferSearch')->click();
     }

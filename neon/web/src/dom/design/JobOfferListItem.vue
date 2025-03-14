@@ -4,8 +4,11 @@
       <Design.Tile nested-pill icon="jobOfferLocation" v-for="location in jobOffer.locations">
         {{ location }}
       </Design.Tile>
-      <Design.Tile nested-pill icon="jobOfferWorkModeRemote" v-if="jobOffer.workMode === 'remote'">
+      <Design.Tile nested-pill icon="jobOfferWorkModeRemote" v-if="jobOffer.workMode === 'fullyRemote'">
         Praca zdalna
+      </Design.Tile>
+      <Design.Tile nested-pill icon="jobOfferWorkModeHybrid" v-if="jobOffer.workMode === 'hybrid'">
+        Praca hybrydowa
       </Design.Tile>
       <Design.Tile nested-pill icon="jobOfferWorkModeStationary" v-if="jobOffer.workMode === 'stationary'">
         Praca stacjonarna

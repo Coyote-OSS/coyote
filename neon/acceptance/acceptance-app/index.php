@@ -9,6 +9,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades;
 use Illuminate\Support\Facades\Route;
 use Neon\Acceptance\JobOffer;
+use Neon\WorkMode;
 
 Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
     ->withRouting(function (): void {
@@ -22,7 +23,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     '',
                     $request->get('jobOfferPublishDate'),
                     $request->get('jobOfferSalaryTo'),
-                    $request->get('jobOfferWorkMode'),
+                    WorkMode::from($request->get('jobOfferWorkMode')),
                     $request->get('jobOfferLocations', []),
                     null,
                 ));
@@ -30,9 +31,9 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
             });
             Route::get('/', function (): Response {
                 $neon = new \Neon\NeonApplication('/neon');
-                $neon->addJobOffer('Swift Developer', '', '2023-03-03', null, 4000, 'remote', ['New York'], 'Spotify');
-                $neon->addJobOffer('Rust Developer', '', '2000-01-01', null, 7500, 'stationary', ['London'], 'Facebook');
-                $neon->addJobOffer('Go Developer', '', '2012-02-02', null, 12500, 'stationary', ['Amsterdam'], 'Microsoft');
+                $neon->addJobOffer('Swift Developer', '', '2023-03-03', null, 4000, WorkMode::FullyRemote, ['New York'], 'Spotify');
+                $neon->addJobOffer('Rust Developer', '', '2000-01-01', null, 7500, WorkMode::Stationary, ['London'], 'Facebook');
+                $neon->addJobOffer('Go Developer', '', '2012-02-02', null, 12500, WorkMode::Hybrid, ['Amsterdam'], 'Microsoft');
                 foreach (sessionJobOffers() as $jobOffer) {
                     $neon->addJobOffer(
                         $jobOffer->title,

@@ -5,7 +5,7 @@ interface JobOfferTemplate {
   title?: string;
   publishDate?: string;
   salaryTo?: number;
-  workMode?: 'stationary'|'remote';
+  workMode?: 'stationary'|'fullyRemote'|'hybrid';
   locations?: string[];
 }
 
@@ -134,12 +134,33 @@ test('filtering job offer by exact salary does not filter it out', () => {
   filters.filterBySalary(1200);
 });
 
-test('job offers are filtered by work mode remote', () => {
+test('job offers are filtered by work mode fully remote', () => {
   const filters = new Filters();
   addJobOffer(filters, {title: 'Python Developer', workMode: 'stationary'});
-  addJobOffer(filters, {title: 'Java Developer', workMode: 'remote'});
+  addJobOffer(filters, {title: 'Java Developer', workMode: 'fullyRemote'});
   filters.onUpdate(jobOffers => {
     assertEquals(['Java Developer'], titles(jobOffers));
+  });
+  filters.filterByWorkModeRemote(true);
+});
+
+test('job offers are filtered by work mode hybrid remote', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Python Developer', workMode: 'stationary'});
+  addJobOffer(filters, {title: 'Java Developer', workMode: 'hybrid'});
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Java Developer'], titles(jobOffers));
+  });
+  filters.filterByWorkModeHybrid(true);
+});
+
+test('job offers are filtered by work mode both simultaneously', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Python Developer', workMode: 'fullyRemote'});
+  addJobOffer(filters, {title: 'Java Developer', workMode: 'hybrid'});
+  filters.filterByWorkModeHybrid(true);
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Python Developer', 'Java Developer'], titles(jobOffers));
   });
   filters.filterByWorkModeRemote(true);
 });

@@ -2,6 +2,7 @@
 namespace Coyote\Providers\Neon;
 
 use Coyote\Domain\StringHtml;
+use Coyote\Job;
 use Coyote\Job\Location;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
@@ -30,7 +31,7 @@ class ServiceProvider extends RouteServiceProvider
                         $jobOffer->boost_at->format('Y-m-d'),
                         $jobOffer->salary_to,
                         $jobOffer->salary_from,
-                        $jobOffer->is_remote ? 'remote' : 'stationary',
+                        $this->workMode($jobOffer),
                         $jobOffer->locations
                             ->map(fn(Location $location): string => $location->city)
                             ->filter(fn(string $city) => !empty($city))
@@ -43,5 +44,16 @@ class ServiceProvider extends RouteServiceProvider
                 ]);
             });
         });
+    }
+
+    function workMode(Job $jobOffer): Neon\WorkMode
+    {
+        if (!$jobOffer->is_remote) {
+            return Neon\WorkMode::Stationary;
+        }
+        if ($jobOffer->remote_range === 100) {
+            return Neon\WorkMode::FullyRemote;
+        }
+        return Neon\WorkMode::Hybrid;
     }
 }

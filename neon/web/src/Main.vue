@@ -21,10 +21,8 @@
             :test-id="workModeField.testId"
             :title="workModeField.title"
             :icon="workModeField.icon">
-            <Design.CheckBox
-              :label="workModeField.remoteLabel"
-              :icon="workModeField.remoteIcon"
-              v-model="state.workModeRemote"/>
+            <Design.CheckBox :label="workModeField.remoteLabel" :icon="workModeField.remoteIcon" v-model="state.workModeRemote"/>
+            <Design.CheckBox :label="workModeField.hybridLabel" :icon="workModeField.hybridIcon" v-model="state.workModeHybrid"/>
           </Design.Drawer>
           <Design.Dropdown
             nested
@@ -61,10 +59,8 @@
         :test-id="workModeField.testId"
         :title="workModeField.title"
         :icon="workModeField.icon">
-        <Design.CheckBox
-          :label="workModeField.remoteLabel"
-          :icon="workModeField.remoteIcon"
-          v-model="state.workModeRemote"/>
+        <Design.CheckBox :label="workModeField.remoteLabel" :icon="workModeField.remoteIcon" v-model="state.workModeRemote"/>
+        <Design.CheckBox :label="workModeField.hybridLabel" :icon="workModeField.hybridIcon" v-model="state.workModeHybrid"/>
       </Design.Drawer>
       <Design.Dropdown
         nested
@@ -129,6 +125,7 @@ const state = reactive({
   searchPhrase: '',
   minimumSalary: 0,
   workModeRemote: false,
+  workModeHybrid: false,
   sort: 'most-recent' as OrderBy,
   locations: {},
 });
@@ -190,12 +187,15 @@ const workModeField = {
   icon: 'jobOfferFilterWorkMode',
   remoteLabel: 'Praca zdalna',
   remoteIcon: 'jobOfferWorkModeRemote',
+  hybridLabel: 'Praca hybrydowa',
+  hybridIcon: 'jobOfferWorkModeHybrid',
 };
 
 function search(): void {
   filters.filter(state.searchPhrase);
   filters.filterBySalary(state.minimumSalary);
   filters.filterByWorkModeRemote(state.workModeRemote);
+  filters.filterByWorkModeHybrid(state.workModeHybrid);
   const locations = Object.entries(state.locations)
     .filter(([location, selected]) => selected)
     .map(([location, selected]) => location);

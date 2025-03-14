@@ -9,7 +9,7 @@ export interface JobOffer {
   companyName: string|null;
 }
 
-export type WorkMode = 'remote'|'stationary';
+export type WorkMode = 'fullyRemote'|'stationary'|'hybrid';
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
 export type OrderBy = 'most-recent'|'highest-salary';
@@ -21,6 +21,7 @@ export class Filters {
   private _searchPhrase: string = '';
   private minimumSalary: number = 0;
   private workModeRemote: boolean = false;
+  private workModeHybrid: boolean = false;
   private locations: string[] = [];
 
   clearFilters(): void {
@@ -53,6 +54,11 @@ export class Filters {
 
   filterByWorkModeRemote(workModeRemote: boolean): void {
     this.workModeRemote = workModeRemote;
+    this.update();
+  }
+
+  filterByWorkModeHybrid(workModeRemote: boolean): void {
+    this.workModeHybrid = workModeRemote;
     this.update();
   }
 
@@ -96,26 +102,41 @@ export class Filters {
     const offers = this.jobOffers
       .filter(offer => offer.title.toLowerCase().includes(this._searchPhrase.toLowerCase()))
       .filter(offer => offer.salaryTo >= this.minimumSalary)
-      .filter(offer => {
-        if (this.workModeRemote) {
-          return offer.workMode === 'remote';
-        }
-        return true;
-      })
-      .filter(offer => {
-        if (this.locations.length === 0) {
-          return true;
-        }
-        for (const location of this.locations) {
-          if (offer.locations.includes(location)) {
-            return true;
-          }
-        }
-        return false;
-      })
-    ;
+      .filter(offer => this.matchesByLocation(offer))
+      .filter(offer => this.matchesByWorkMode(offer));
     this.sortInPlace(offers);
     return offers;
+  }
+
+  private matchesByLocation(offer: JobOffer): boolean {
+    if (this.locations.length === 0) {
+      return true;
+    }
+    for (const location of this.locations) {
+      if (offer.locations.includes(location)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private matchesByWorkMode(offer: JobOffer): boolean {
+    const list = this.workModes();
+    if (list.length === 0) {
+      return true;
+    }
+    return list.includes(offer.workMode);
+  }
+
+  private workModes(): WorkMode[] {
+    const list: WorkMode[] = [];
+    if (this.workModeHybrid) {
+      list.push('hybrid');
+    }
+    if (this.workModeRemote) {
+      list.push('fullyRemote');
+    }
+    return list;
   }
 
   private sortInPlace(offers: JobOffer[]): void {
