@@ -9,6 +9,7 @@ import JobOfferListItem from "./JobOfferListItem.vue";
 import Layout from "./Layout.vue";
 import Row from "./Row.vue";
 import RowEnd from "./RowEnd.vue";
+import Salary from "./Salary.vue";
 import TextField from "./TextField.vue";
 import Tile from "./Tile.vue";
 
@@ -24,6 +25,7 @@ export const Design = {
   Layout,
   Row,
   RowEnd,
+  Salary,
   TextField,
   Tile,
 };

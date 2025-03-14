@@ -12,17 +12,20 @@
       </Design.Tile>
     </Design.Row>
     <Design.Tile nested>
-      <Design.Row>
+      <div class="flex">
         <div class="size-12 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
           <Icon name="jobOfferLogoPlaceholder"/>
         </div>
-        <div>
+        <div class="flex-grow-1">
           <p class="text-lg leading-6" data-testid="jobOfferTitle">
             <a :href="jobOffer.url" v-text="jobOffer.title"/>
           </p>
           {{ jobOffer.companyName }}
         </div>
-      </Design.Row>
+        <div v-if="jobOffer.salary">
+          <Design.Salary :salary="jobOffer.salary"/>
+        </div>
+      </div>
     </Design.Tile>
   </Design.Tile>
 </template>

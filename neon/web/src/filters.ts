@@ -2,7 +2,8 @@ export interface JobOffer {
   title: string;
   url: string;
   publishDate: string;
-  salaryTo: number;
+  salaryTo: number|null;
+  salaryFrom: number|null;
   workMode: WorkMode;
   locations: string[];
   companyName: string|null;

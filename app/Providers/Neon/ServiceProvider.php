@@ -28,7 +28,8 @@ class ServiceProvider extends RouteServiceProvider
                         $jobOffer->title,
                         UrlBuilder::job($jobOffer, true),
                         $jobOffer->boost_at->format('Y-m-d'),
-                        $jobOffer->salary_to ?? 0,
+                        $jobOffer->salary_to,
+                        $jobOffer->salary_from,
                         $jobOffer->is_remote ? 'remote' : 'stationary',
                         $jobOffer->locations
                             ->map(fn(Location $location): string => $location->city)

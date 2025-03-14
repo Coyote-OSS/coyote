@@ -18,6 +18,7 @@ function addJobOffer(
     url: '',
     publishDate: publishDate || '2000-01-01',
     salaryTo: salaryTo || 1000,
+    salaryFrom: 1000,
     workMode: workMode || 'stationary',
     locations: locations || [],
     companyName: '',

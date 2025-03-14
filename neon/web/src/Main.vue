@@ -100,7 +100,8 @@ import {Filters, OrderBy, WorkMode} from "./filters";
 interface BackendJobOffer {
   title: string;
   url: string;
-  salaryTo: number;
+  salaryFrom: number|null;
+  salaryTo: number|null;
   publishDate: string;
   workMode: WorkMode;
   locations: string[];
@@ -113,6 +114,12 @@ export interface VueJobOffer {
   workMode: WorkMode;
   url: string;
   companyName: string|null;
+  salary: VueSalary|null;
+}
+
+export interface VueSalary {
+  to: number;
+  from: number;
 }
 
 const initialJobOffers: BackendJobOffer[] = window['jobOffers'];
@@ -134,14 +141,26 @@ filters.onUpdate(jobOffers => {
     locations: jobOffer.locations,
     workMode: jobOffer.workMode,
     companyName: jobOffer.companyName,
+    salary: salary(jobOffer),
   }));
 });
+
+function salary(jobOffer: JobOffer): VueSalary|null {
+  if (jobOffer.salaryFrom && jobOffer.salaryTo) {
+    return {
+      from: jobOffer.salaryFrom!,
+      to: jobOffer.salaryTo!,
+    };
+  }
+  return null;
+}
 
 initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
   filters.addJobOffer({
     title: jobOffer.title,
     url: jobOffer.url,
     salaryTo: jobOffer.salaryTo,
+    salaryFrom: jobOffer.salaryFrom,
     publishDate: jobOffer.publishDate,
     workMode: jobOffer.workMode,
     locations: jobOffer.locations,
