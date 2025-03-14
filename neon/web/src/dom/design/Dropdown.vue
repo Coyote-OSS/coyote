@@ -4,8 +4,13 @@
     :icon="props.icon"
     :test-id="props.testId"
     :nested="props.nested"
+    no-space
     v-model:open="open">
-    <div v-for="option in options" @click="select(option.value)" class="cursor-pointer text-nowrap">
+    <div
+      v-for="option in options"
+      @click="select(option.value)"
+      class="cursor-pointer text-nowrap px-2 py-2 rounded"
+      :class="{'text-accent-front bg-accent-back':selected === option.value}">
       <Icon v-if="selected === option.value" name="dropdownOptionSelected" class="text-primary mr-1"/>
       {{ option.title }}
     </div>

@@ -5,7 +5,11 @@
       <span class="mr-2">{{ props.title }}</span>
       <Icon name="dropdownClosed" class="ml-auto"/>
     </div>
-    <Design.Tile space v-if="open" class="absolute z-[1] min-w-full w-max border border-divider" vertical>
+    <Design.Tile
+      v-if="open"
+      class="absolute z-[1] min-w-full w-max border border-divider"
+      :space="!props.noSpace"
+      :vertical="!props.noSpace">
       <slot/>
     </Design.Tile>
   </Design.Tile>
@@ -22,6 +26,7 @@ interface Props {
   icon?: IconName;
   testId?: string;
   nested?: boolean;
+  noSpace?: boolean;
 }
 
 const props = defineProps<Props>();
