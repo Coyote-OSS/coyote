@@ -2,7 +2,7 @@
   <Design.Tile :nested="props.nested" class="relative">
     <div class="cursor-pointer flex" @click="toggle" :data-testid="props.testId">
       <Icon :name="props.icon" v-if="props.icon" class="mr-2"/>
-      <span class="mr-2">{{ props.title }}</span>
+      <span class="mr-2 font-medium" v-text="props.title"/>
       <Icon name="dropdownClosed" class="ml-auto"/>
     </div>
     <Design.Tile v-if="open" :space="!props.noSpace" class="absolute z-[1] min-w-full w-max border border-divider">
