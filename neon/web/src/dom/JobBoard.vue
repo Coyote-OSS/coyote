@@ -25,14 +25,13 @@
           <Design.Drawer scrollable nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
             <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
           </Design.Drawer>
-          <Design.Drawer
+          <Design.DropdownMultiple
             nested
             :test-id="workModeField.testId"
             :title="workModeField.title"
-            :icon="workModeField.icon">
-            <Design.CheckBox :label="workModeField.remoteLabel" :icon="workModeField.remoteIcon" v-model="state.workModeRemote"/>
-            <Design.CheckBox :label="workModeField.hybridLabel" :icon="workModeField.hybridIcon" v-model="state.workModeHybrid"/>
-          </Design.Drawer>
+            :icon="workModeField.icon"
+            :options="workModeField.options"
+            v-model="state.workModes"/>
           <Design.RowEnd>
             <span @click="clearFilters" class="cursor-pointer">
               Wyczyść filtry
@@ -73,14 +72,13 @@
         <Design.Drawer scrollable nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
           <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
         </Design.Drawer>
-        <Design.Drawer
+        <Design.DropdownMultiple
           nested
           :test-id="workModeField.testId"
           :title="workModeField.title"
-          :icon="workModeField.icon">
-          <Design.CheckBox :label="workModeField.remoteLabel" :icon="workModeField.remoteIcon" v-model="state.workModeRemote"/>
-          <Design.CheckBox :label="workModeField.hybridLabel" :icon="workModeField.hybridIcon" v-model="state.workModeHybrid"/>
-        </Design.Drawer>
+          :icon="workModeField.icon"
+          :options="workModeField.options"
+          v-model="state.workModes"/>
       </div>
       <Design.Divider space/>
       <Design.Dropdown
@@ -108,7 +106,7 @@
 import {reactive, ref, watch} from "vue";
 import {initialJobOffers} from "../backendIntegration";
 import {Currency, Filters, LegalForm, OrderBy, Rate, WorkMode} from "../filters";
-import {Design} from "./design/design";
+import {Design, DropdownOption} from "./design/design";
 
 export interface VueJobOffer {
   title: string;
@@ -137,6 +135,7 @@ const state = reactive({
   searchPhrase: '',
   minimumSalary: 0,
   workModeRemote: false,
+  workModes: [],
   workModeHybrid: false,
   sort: 'most-recent' as OrderBy,
   locations: {},
@@ -207,14 +206,17 @@ const sortField = {
   ],
 };
 
+const workModeFieldOptions: DropdownOption[] = [
+  {icon: 'jobOfferWorkModeRemote', value: 'fullyRemote', title: 'Praca zdalna'},
+  {icon: 'jobOfferWorkModeHybrid', value: 'hybrid', title: 'Praca hybrydowa'},
+  {icon: 'jobOfferWorkModeStationary', value: 'stationary', title: 'Praca stacjonarna'},
+];
+
 const workModeField = {
   testId: 'jobOfferWorkMode',
-  title: 'Typ pracy',
+  title: 'Tryb pracy',
   icon: 'jobOfferFilterWorkMode',
-  remoteLabel: 'Praca zdalna',
-  remoteIcon: 'jobOfferWorkModeRemote',
-  hybridLabel: 'Praca hybrydowa',
-  hybridIcon: 'jobOfferWorkModeHybrid',
+  options: workModeFieldOptions,
 };
 
 const tagsField = {
@@ -234,15 +236,14 @@ const locationsField = {
 function search(): void {
   filters.filter(state.searchPhrase);
   filters.filterBySalary(state.minimumSalary);
-  filters.filterByWorkModeRemote(state.workModeRemote);
-  filters.filterByWorkModeHybrid(state.workModeHybrid);
+  filters.filterByWorkMode(state.workModes);
   filters.filterByLocation(selected(state.locations));
   filters.filterByTags(selected(state.tags));
   filters.sort(state.sort);
 }
 
-function selected<V>(checkboxList: Record<string, boolean>): string[] {
-  return Object.entries(checkboxList)
+function selected(selectedValues: Record<string, boolean>): string[] {
+  return Object.entries(selectedValues)
     .filter(([item, selected]) => selected)
     .map(([item, selected]) => item);
 }
@@ -250,8 +251,7 @@ function selected<V>(checkboxList: Record<string, boolean>): string[] {
 function clearFilters(): void {
   state.searchPhrase = '';
   state.minimumSalary = 0;
-  state.workModeRemote = false;
-  state.workModeHybrid = false;
+  state.workModes = [];
   state.locations = {};
   state.tags = {};
   state.sort = 'most-recent';

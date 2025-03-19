@@ -19,8 +19,11 @@ interface Props {
 
 const jobOfferLocation = 'fa-light fa-location-dot';
 const jobOfferWorkModeStationary = 'fa-light fa-suitcase';
+const jobOfferWorkModeHybrid = 'fa-light fa-globe-wifi';
+const jobOfferWorkModeRemote = 'fa-solid fa-wifi';
 const check = 'fa-light fa-check';
 const plus = 'fa-light fa-plus';
+
 const icons = {
   dropdownClosed: 'fa-light fa-chevron-down',
   dropdownOptionSelected: check,
@@ -28,8 +31,8 @@ const icons = {
   add: plus,
   jobOfferFavourite: 'fa-light fa-star',
   jobOfferFavouriteChecked: 'fa-solid fa-star',
-  jobOfferWorkModeRemote: 'fa-solid fa-wifi',
-  jobOfferWorkModeHybrid: 'fa-light fa-globe-wifi',
+  jobOfferWorkModeRemote,
+  jobOfferWorkModeHybrid,
   jobOfferWorkModeStationary,
   jobOfferComments: 'fa-light fa-comment',
   jobOfferLocation,
@@ -40,7 +43,7 @@ const icons = {
   jobOfferFilterClose: 'fa-light fa-close',
   jobOfferFilterTechnology: 'fa-light fa-code',
   jobOfferFilterLocation: jobOfferLocation,
-  jobOfferFilterWorkMode: jobOfferWorkModeStationary,
+  jobOfferFilterWorkMode: jobOfferWorkModeHybrid,
   jobOfferFilterSalary: 'fa-light fa-sack-dollar',
   jobOfferFilterCurrency: 'fa-light fa-coins',
   jobOfferFilterSort: 'fa-light fa-bars-sort',

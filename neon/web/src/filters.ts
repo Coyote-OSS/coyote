@@ -15,13 +15,13 @@ export interface JobOffer {
   legalForm: LegalForm;
 }
 
-export type WorkMode = 'fullyRemote'|'stationary'|'hybrid';
+export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
 export type LegalForm = 'fullTime'|'contract'|'partTime';
 export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
 export type Rate = 'hourly'|'monthly'|'weekly'|'yearly';
+export type OrderBy = 'most-recent'|'highest-salary'|'lowest-salary';
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
-export type OrderBy = 'most-recent'|'highest-salary'|'lowest-salary';
 
 type Predicate<T> = (argument: T) => boolean;
 type Function<I, O> = (argument: I) => O;
@@ -30,20 +30,18 @@ export class Filters {
   private jobOffers: JobOffer[] = [];
   private updateListener: JobOffersListener|null = null;
   private orderBy: OrderBy = 'most-recent';
-  private _searchPhrase: string = '';
+  private searchPhrase: string = '';
   private minimumSalary: number = 0;
-  private workModeRemote: boolean = false;
-  private workModeHybrid: boolean = false;
+  private workModes: WorkMode[] = [];
   private locations: string[] = [];
   private tags: string[] = [];
 
   clearFilters(): void {
-    this._searchPhrase = '';
+    this.searchPhrase = '';
     this.locations = [];
     this.tags = [];
     this.minimumSalary = 0;
-    this.workModeRemote = false;
-    this.workModeHybrid = false;
+    this.workModes = [];
     this.orderBy = 'most-recent';
     this.update();
   }
@@ -58,7 +56,7 @@ export class Filters {
   }
 
   filter(searchPhrase: string): void {
-    this._searchPhrase = searchPhrase;
+    this.searchPhrase = searchPhrase;
     this.update();
   }
 
@@ -67,13 +65,8 @@ export class Filters {
     this.update();
   }
 
-  filterByWorkModeRemote(workModeRemote: boolean): void {
-    this.workModeRemote = workModeRemote;
-    this.update();
-  }
-
-  filterByWorkModeHybrid(workModeHybrid: boolean): void {
-    this.workModeHybrid = workModeHybrid;
+  filterByWorkMode(workModes: WorkMode[]): void {
+    this.workModes = workModes;
     this.update();
   }
 
@@ -116,10 +109,6 @@ export class Filters {
     return [5000, 10000, 15000, 20000, 25000, 30000];
   }
 
-  searchPhrase(): string {
-    return this._searchPhrase;
-  }
-
   private update(): void {
     if (this.updateListener) {
       this.updateListener(this.filteredJobOffersInOrder());
@@ -128,7 +117,7 @@ export class Filters {
 
   private filteredJobOffersInOrder(): JobOffer[] {
     const offers = this.jobOffers
-      .filter(offer => offer.title.toLowerCase().includes(this._searchPhrase.toLowerCase()))
+      .filter(offer => offer.title.toLowerCase().includes(this.searchPhrase.toLowerCase()))
       .filter(offer => offer.salaryTo >= this.minimumSalary)
       .filter(offer => this.matchesByLocation(offer))
       .filter(offer => this.matchesByTag(offer))
@@ -153,22 +142,10 @@ export class Filters {
   }
 
   private matchesByWorkMode(offer: JobOffer): boolean {
-    const list = this.workModes();
-    if (list.length === 0) {
+    if (this.workModes.length === 0) {
       return true;
     }
-    return list.includes(offer.workMode);
-  }
-
-  private workModes(): WorkMode[] {
-    const list: WorkMode[] = [];
-    if (this.workModeHybrid) {
-      list.push('hybrid');
-    }
-    if (this.workModeRemote) {
-      list.push('fullyRemote');
-    }
-    return list;
+    return this.workModes.includes(offer.workMode);
   }
 
   private sortInPlace(offers: JobOffer[]): void {
@@ -191,16 +168,13 @@ export class Filters {
 
   count(): number {
     let count = 0;
-    if (this._searchPhrase.length > 0) {
+    if (this.searchPhrase.length > 0) {
       count++;
     }
     if (this.locations.length > 0) {
       count++;
     }
-    if (this.workModeRemote) {
-      count++;
-    }
-    if (this.workModeHybrid) {
+    if (this.workModes.length > 0) {
       count++;
     }
     if (this.tags.length > 0) {

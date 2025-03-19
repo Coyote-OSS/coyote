@@ -5,6 +5,7 @@ import Divider from "./Divider.vue";
 import Drawer from "./Drawer.vue";
 import Dropdown from "./Dropdown.vue";
 import DropdownLabel from "./DropdownLabel.vue";
+import DropdownMultiple from "./DropdownMultiple.vue";
 import JobOfferListItem from "./JobOfferListItem.vue";
 import Layout from "./Layout.vue";
 import Row from "./Row.vue";
@@ -15,6 +16,8 @@ import TagList from "./TagList.vue";
 import TextField from "./TextField.vue";
 import Tile from "./Tile.vue";
 
+export {DropdownOption} from "./DropdownMultiple.vue";
+
 export const Design = {
   BannerHeading,
   Button,
@@ -23,6 +26,7 @@ export const Design = {
   Drawer,
   Dropdown,
   DropdownLabel,
+  DropdownMultiple,
   JobOfferListItem,
   Layout,
   Row,

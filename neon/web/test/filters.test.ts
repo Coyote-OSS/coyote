@@ -158,28 +158,37 @@ test('job offers are filtered by work mode fully remote', () => {
   filters.onUpdate(jobOffers => {
     assertEquals(['Java Developer'], titles(jobOffers));
   });
-  filters.filterByWorkModeRemote(true);
+  filters.filterByWorkMode(['fullyRemote']);
 });
 
-test('job offers are filtered by work mode hybrid remote', () => {
+test('job offers are filtered by work mode hybrid', () => {
   const filters = new Filters();
   addJobOffer(filters, {title: 'Python Developer', workMode: 'stationary'});
   addJobOffer(filters, {title: 'Java Developer', workMode: 'hybrid'});
   filters.onUpdate(jobOffers => {
     assertEquals(['Java Developer'], titles(jobOffers));
   });
-  filters.filterByWorkModeHybrid(true);
+  filters.filterByWorkMode(['hybrid']);
+});
+
+test('job offers are filtered by work mode stationary', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Python Developer', workMode: 'stationary'});
+  addJobOffer(filters, {title: 'Java Developer', workMode: 'hybrid'});
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Python Developer'], titles(jobOffers));
+  });
+  filters.filterByWorkMode(['stationary']);
 });
 
 test('job offers are filtered by work mode both simultaneously', () => {
   const filters = new Filters();
   addJobOffer(filters, {title: 'Python Developer', workMode: 'fullyRemote'});
   addJobOffer(filters, {title: 'Java Developer', workMode: 'hybrid'});
-  filters.filterByWorkModeHybrid(true);
   filters.onUpdate(jobOffers => {
     assertEquals(['Python Developer', 'Java Developer'], titles(jobOffers));
   });
-  filters.filterByWorkModeRemote(true);
+  filters.filterByWorkMode(['hybrid', 'fullyRemote']);
 });
 
 test('filtering by location calls listener', () => {
@@ -286,7 +295,7 @@ describe('clear filters', () => {
   test('clears work mode remote', () => {
     const filters = new Filters();
     addJobOffer(filters, {workMode: 'stationary'});
-    filters.filterByWorkModeRemote(true);
+    filters.filterByWorkMode(['fullyRemote']);
     filters.onUpdate(jobOffers => assertEquals(1, jobOffers.length));
     filters.clearFilters();
   });
@@ -294,7 +303,7 @@ describe('clear filters', () => {
   test('clears work mode hybrid', () => {
     const filters = new Filters();
     addJobOffer(filters, {workMode: 'stationary'});
-    filters.filterByWorkModeHybrid(true);
+    filters.filterByWorkMode(['hybrid']);
     filters.onUpdate(jobOffers => assertEquals(1, jobOffers.length));
     filters.clearFilters();
   });
@@ -316,14 +325,6 @@ describe('clear filters', () => {
       assertEquals(['Python', 'Ruby'], titles(jobOffers));
     });
     filters.clearFilters();
-  });
-});
-
-describe('inspect filters', () => {
-  test('read search phrase', () => {
-    const filters = new Filters();
-    filters.filter('foo');
-    assertEquals('foo', filters.searchPhrase());
   });
 });
 
@@ -380,13 +381,13 @@ describe('count filters', () => {
 
   test('filtering by work mode remote increases count by 1', () => {
     const filters = new Filters();
-    filters.filterByWorkModeRemote(true);
+    filters.filterByWorkMode(['fullyRemote']);
     assertEquals(1, filters.count());
   });
 
   test('filtering by work mode hybrid increases count by 1', () => {
     const filters = new Filters();
-    filters.filterByWorkModeHybrid(true);
+    filters.filterByWorkMode(['hybrid']);
     assertEquals(1, filters.count());
   });
 
