@@ -29,6 +29,7 @@ function addJobOffer(
     companyLogoUrl: null,
     tagNames: tags || [],
     legalForm: 'fullTime',
+    isFavourite: false,
   });
 }
 

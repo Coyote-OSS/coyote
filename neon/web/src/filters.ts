@@ -13,6 +13,7 @@ export interface JobOffer {
   companyLogoUrl: string|null;
   tagNames: string[];
   legalForm: LegalForm;
+  isFavourite: boolean;
 }
 
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';

@@ -59,7 +59,9 @@
     </Design.DropdownLabel>
     <ul class="space-y-2">
       <li v-for="jobOffer in jobOffers" :data-testid="jobOffer.testId">
-        <Design.JobOfferListItem :job-offer="jobOffer"/>
+        <Design.JobOfferListItem
+          :job-offer="jobOffer"
+          @favourite-change="favourite => favouriteChange(jobOffer, favourite)"/>
       </li>
     </ul>
     <Design.Tile space class="mt-32 md:w-1/2 h-128 flex flex-col">
@@ -105,7 +107,7 @@
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
 import {initialJobOffers} from "../backendIntegration";
-import {Currency, Filters, LegalForm, OrderBy, Rate, WorkMode} from "../filters";
+import {Currency, Filters, JobOffer, LegalForm, OrderBy, Rate, WorkMode} from "../filters";
 import {Design, DropdownOption} from "./design/design";
 
 export interface VueJobOffer {
@@ -118,6 +120,7 @@ export interface VueJobOffer {
   salary: VueSalary|null;
   tagNames: string[];
   legalForm: LegalForm;
+  isFavourite: boolean;
 }
 
 export interface VueSalary {
@@ -130,6 +133,10 @@ export interface VueSalary {
 
 const jobOffers = ref<VueJobOffer[]>([]);
 const filtersCount = ref<number>(0);
+
+function favouriteChange(jobOffer: VueJobOffer, favourite: boolean): void {
+  jobOffer.isFavourite = favourite;
+}
 
 const state = reactive({
   searchPhrase: '',
@@ -155,6 +162,7 @@ filters.onUpdate(offers => {
     salary: salary(offer),
     tagNames: offer.tagNames,
     legalForm: offer.legalForm,
+    isFavourite: offer.isFavourite,
   }));
   filtersCount.value = filters.count();
 });
@@ -188,6 +196,7 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
     companyLogoUrl: jobOffer.companyLogoUrl,
     tagNames: jobOffer.tagNames,
     legalForm: jobOffer.legalForm,
+    isFavourite: jobOffer.isFavourite,
   });
 });
 

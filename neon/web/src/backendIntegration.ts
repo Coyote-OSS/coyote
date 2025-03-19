@@ -13,6 +13,7 @@ export interface BackendJobOffer {
   companyLogoUrl: string|null;
   tagNames: string[];
   legalForm: LegalForm;
+  isFavourite: boolean;
 }
 
 export interface BackendSalary {

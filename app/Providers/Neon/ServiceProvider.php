@@ -51,7 +51,8 @@ class ServiceProvider extends RouteServiceProvider
             $jobOffer->firm->name,
             $this->jobOfferLogoUrl($jobOffer),
             $this->jobOfferTags($jobOffer),
-            $this->jobOfferLegalForm($jobOffer));
+            $this->jobOfferLegalForm($jobOffer),
+            $this->isSubscribed($jobOffer));
     }
 
     private function workMode(Job $jobOffer): Neon\WorkMode
@@ -103,5 +104,13 @@ class ServiceProvider extends RouteServiceProvider
             Neon\Currency::from($jobOffer->currency->name),
             Neon\Rate::from($jobOffer->rate),
             !$jobOffer->is_gross);
+    }
+
+    private function isSubscribed(Job $jobOffer): bool
+    {
+        if (auth()->check()) {
+            return $jobOffer->subscribers()->forUser(auth()->user()->id)->exists();
+        }
+        return false;
     }
 }

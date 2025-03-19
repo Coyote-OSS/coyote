@@ -2,6 +2,11 @@
   <Design.Tile vertical>
     <Design.Row>
       <Design.Tile nested-pill v-for="badge in badges" :text="badge.title" :icon="badge.icon"/>
+      <Design.RowEnd>
+        <Design.JobOfferFavouriteButton
+          :favourite="jobOffer.isFavourite"
+          @favourite-change="toggleFavourite"/>
+      </Design.RowEnd>
     </Design.Row>
     <Design.Tile nested space>
       <Design.Row vertical-center>
@@ -61,9 +66,18 @@ import {VueJobOffer} from "../JobBoard.vue";
 import {Design} from "./design";
 
 const props = defineProps<Props>();
+const emit = defineEmits<Emit>();
 
 interface Props {
   jobOffer: VueJobOffer;
+}
+
+interface Emit {
+  (event: 'favouriteChange', favourite: boolean): void;
+}
+
+function toggleFavourite(newValue: boolean): void {
+  emit('favouriteChange', newValue);
 }
 
 const badges = computed<Badge[]>((): Badge[] => {

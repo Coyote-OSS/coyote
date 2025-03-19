@@ -18,5 +18,6 @@ readonly class JobOffer
         public ?string   $companyLogoUrl,
         public array     $tagNames,
         public LegalForm $legalForm,
+        public bool      $isFavourite,
     ) {}
 }
