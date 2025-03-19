@@ -14,6 +14,7 @@ export interface JobOffer {
   tagNames: string[];
   legalForm: LegalForm;
   isFavourite: boolean;
+  isMine: boolean;
 }
 
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
@@ -36,6 +37,8 @@ export class Filters {
   private workModes: WorkMode[] = [];
   private locations: string[] = [];
   private tags: string[] = [];
+  private onlyFavourite: boolean;
+  private onlyMine: boolean;
 
   clearFilters(): void {
     this.searchPhrase = '';
@@ -81,6 +84,16 @@ export class Filters {
     this.update();
   }
 
+  filterByFavourite(onlyFavourite: boolean): void {
+    this.onlyFavourite = onlyFavourite;
+    this.update();
+  }
+
+  filterByMine(onlyMine: boolean): void {
+    this.onlyMine = onlyMine;
+    this.update();
+  }
+
   sortByPublishDate(): void {
     this.sort('most-recent');
   }
@@ -122,7 +135,9 @@ export class Filters {
       .filter(offer => offer.salaryTo >= this.minimumSalary)
       .filter(offer => this.matchesByLocation(offer))
       .filter(offer => this.matchesByTag(offer))
-      .filter(offer => this.matchesByWorkMode(offer));
+      .filter(offer => this.matchesByWorkMode(offer))
+      .filter(offer => this.matchesByFavourite(offer))
+      .filter(offer => this.matchesByMine(offer));
     this.sortInPlace(offers);
     return offers;
   }
@@ -147,6 +162,20 @@ export class Filters {
       return true;
     }
     return this.workModes.includes(offer.workMode);
+  }
+
+  private matchesByFavourite(offer: JobOffer): boolean {
+    if (this.onlyFavourite) {
+      return offer.isFavourite;
+    }
+    return true;
+  }
+
+  private matchesByMine(offer: JobOffer): boolean {
+    if (this.onlyMine) {
+      return offer.isMine;
+    }
+    return true;
   }
 
   private sortInPlace(offers: JobOffer[]): void {

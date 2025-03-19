@@ -8,11 +8,13 @@ interface JobOfferTemplate {
   workMode?: 'stationary'|'fullyRemote'|'hybrid';
   locations?: string[];
   tags?: string[];
+  favourite?: boolean;
+  mine?: boolean;
 }
 
 function addJobOffer(
   filters: Filters,
-  {title, publishDate, salaryTo, workMode, locations, tags}: JobOfferTemplate,
+  {title, publishDate, salaryTo, workMode, locations, tags, favourite, mine}: JobOfferTemplate,
 ): void {
   filters.addJobOffer({
     title: title || 'Job offer',
@@ -29,7 +31,8 @@ function addJobOffer(
     companyLogoUrl: null,
     tagNames: tags || [],
     legalForm: 'fullTime',
-    isFavourite: false,
+    isFavourite: favourite || false,
+    isMine: mine || false,
   });
 }
 
@@ -402,5 +405,49 @@ describe('count filters', () => {
     const filters = new Filters();
     filters.filterBySalary(12);
     assertEquals(1, filters.count());
+  });
+});
+
+describe('filtering job offers by favourite', () => {
+  test('filtering job offer calls listener', () => {
+    const filters = new Filters();
+    let wasCalled = false;
+    filters.onUpdate(() => {
+      wasCalled = true;
+    });
+    filters.filterByFavourite(true);
+    assertTrue(wasCalled);
+  });
+
+  test('filter job offers by mine', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {title: 'Uninteresting', favourite: false});
+    addJobOffer(filters, {title: 'Interesting one', favourite: true});
+    filters.onUpdate(jobOffers => {
+      assertEquals(['Interesting one'], titles(jobOffers));
+    });
+    filters.filterByFavourite(true);
+  });
+});
+
+describe('filtering job offers by mine', () => {
+  test('filtering job offer calls listener', () => {
+    const filters = new Filters();
+    let wasCalled = false;
+    filters.onUpdate(() => {
+      wasCalled = true;
+    });
+    filters.filterByMine(true);
+    assertTrue(wasCalled);
+  });
+
+  test('filter job offers by mine', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {title: "Someone else's", mine: false});
+    addJobOffer(filters, {title: 'Mine', mine: true});
+    filters.onUpdate(jobOffers => {
+      assertEquals(['Mine'], titles(jobOffers));
+    });
+    filters.filterByMine(true);
   });
 });

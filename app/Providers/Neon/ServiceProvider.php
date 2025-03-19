@@ -52,7 +52,8 @@ class ServiceProvider extends RouteServiceProvider
             $this->jobOfferLogoUrl($jobOffer),
             $this->jobOfferTags($jobOffer),
             $this->jobOfferLegalForm($jobOffer),
-            $this->isSubscribed($jobOffer));
+            $this->isSubscribed($jobOffer),
+            $this->isMine($jobOffer));
     }
 
     private function workMode(Job $jobOffer): Neon\WorkMode
@@ -110,6 +111,14 @@ class ServiceProvider extends RouteServiceProvider
     {
         if (auth()->check()) {
             return $jobOffer->subscribers()->forUser(auth()->user()->id)->exists();
+        }
+        return false;
+    }
+
+    private function isMine(Job $jobOffer): bool
+    {
+        if (auth()->check()) {
+            return $jobOffer->user_id === auth()->user()->id;
         }
         return false;
     }

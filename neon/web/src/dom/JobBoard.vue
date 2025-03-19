@@ -2,7 +2,7 @@
   <Design.Layout>
     <Design.BannerHeading/>
     <Design.Row>
-      <Design.Tabs selected="allOffers" :tabs="pageTabs" @change="redirectToMyOffers"/>
+      <Design.Tabs :tabs="tabs" v-model="state.tab"/>
       <Design.RowEnd>
         <Design.Button icon="add" primary-outline @click="redirectToOfferForm">
           Dodaj ofertę
@@ -106,7 +106,7 @@
 
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
-import {initialJobOffers} from "../backendIntegration";
+import {BackendJobOffer, initialJobOffers} from "../backendIntegration";
 import {Currency, Filters, JobOffer, LegalForm, OrderBy, Rate, WorkMode} from "../filters";
 import {Design, DropdownOption} from "./design/design";
 
@@ -147,6 +147,7 @@ const state = reactive({
   sort: 'most-recent' as OrderBy,
   locations: {},
   tags: {},
+  tab: 'allOffers',
 });
 watch(state, (): void => search());
 
@@ -197,11 +198,13 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
     tagNames: jobOffer.tagNames,
     legalForm: jobOffer.legalForm,
     isFavourite: jobOffer.isFavourite,
+    isMine: jobOffer.isMine,
   });
 });
 
-const pageTabs = [
+const tabs = [
   {value: 'allOffers', title: 'Ogłoszenia'},
+  {value: 'favouriteOffers', title: 'Ulubione ogłoszenia'},
   {value: 'myOffers', title: 'Moje ogłoszenia'},
 ];
 
@@ -248,6 +251,8 @@ function search(): void {
   filters.filterByWorkMode(state.workModes);
   filters.filterByLocation(selected(state.locations));
   filters.filterByTags(selected(state.tags));
+  filters.filterByFavourite(state.tab === 'favouriteOffers');
+  filters.filterByMine(state.tab === 'myOffers');
   filters.sort(state.sort);
 }
 

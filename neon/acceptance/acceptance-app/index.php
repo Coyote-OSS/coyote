@@ -31,6 +31,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     null,
                     $request->get('jobOfferTags', []),
                     \Neon\LegalForm::FullTime,
+                    false,
                     false));
                 return \response(status:201);
             });
@@ -94,7 +95,8 @@ function neonApplication(): NeonApplication
         null,
         ['swift', 'ios'],
         \Neon\LegalForm::FullTime,
-        false));
+        false,
+        true));
     $neon->addJobOffer(new JobOffer('Rust Developer', '',
         '2000-01-01',
         salaryRange(75, 100, \Neon\Rate::Hourly),
@@ -104,6 +106,7 @@ function neonApplication(): NeonApplication
         null,
         ['rust', 'cargo'],
         \Neon\LegalForm::Contract,
+        false,
         false));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
         '2012-02-02',
@@ -114,7 +117,8 @@ function neonApplication(): NeonApplication
         null,
         ['go', 'golang'],
         \Neon\LegalForm::PartTime,
-        false));
+        false,
+        true));
     foreach (sessionJobOffers() as $jobOffer) {
         $neon->addJobOffer($jobOffer);
     }
