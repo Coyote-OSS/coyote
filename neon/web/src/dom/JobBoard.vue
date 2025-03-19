@@ -207,9 +207,9 @@ const sortField = {
 };
 
 const workModeFieldOptions: DropdownOption[] = [
-  {icon: 'jobOfferWorkModeRemote', value: 'fullyRemote', title: 'Praca zdalna'},
-  {icon: 'jobOfferWorkModeHybrid', value: 'hybrid', title: 'Praca hybrydowa'},
-  {icon: 'jobOfferWorkModeStationary', value: 'stationary', title: 'Praca stacjonarna'},
+  {value: 'fullyRemote', title: 'Praca zdalna'},
+  {value: 'hybrid', title: 'Praca hybrydowa'},
+  {value: 'stationary', title: 'Praca stacjonarna'},
 ];
 
 const workModeField = {

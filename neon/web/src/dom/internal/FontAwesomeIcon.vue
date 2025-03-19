@@ -56,6 +56,10 @@ interface Props {
   content: "\e685";
 }
 
+.fa-globe:before {
+  content: "\f0ac";
+}
+
 .fa-wifi:before {
   content: "\f1eb";
 }

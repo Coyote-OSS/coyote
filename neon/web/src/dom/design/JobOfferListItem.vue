@@ -68,17 +68,17 @@ interface Props {
 
 const badges = computed<Badge[]>((): Badge[] => {
   return [
-    workModeBadge.value,
     ...locationBadges.value,
+    workModeBadge.value,
     {title: legalFormTitle.value},
   ];
 });
 
 const workModeBadge = computed<Badge>((): Badge => {
   const badges: Record<WorkMode, Badge> = {
-    'stationary': {icon: 'jobOfferWorkModeStationary', title: 'Praca stacjonarna'},
-    'fullyRemote': {icon: 'jobOfferWorkModeRemote', title: 'Praca zdalna'},
-    'hybrid': {icon: 'jobOfferWorkModeHybrid', title: 'Praca hybrydowa'},
+    'stationary': {title: 'Praca stacjonarna'},
+    'fullyRemote': {title: 'Praca zdalna'},
+    'hybrid': {title: 'Praca hybrydowa'},
   };
   return badges[props.jobOffer.workMode];
 });

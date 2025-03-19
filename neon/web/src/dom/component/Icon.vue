@@ -43,7 +43,7 @@ const icons = {
   jobOfferFilterClose: 'fa-light fa-close',
   jobOfferFilterTechnology: 'fa-light fa-code',
   jobOfferFilterLocation: jobOfferLocation,
-  jobOfferFilterWorkMode: jobOfferWorkModeHybrid,
+  jobOfferFilterWorkMode: 'fa-light fa-globe',
   jobOfferFilterSalary: 'fa-light fa-sack-dollar',
   jobOfferFilterCurrency: 'fa-light fa-coins',
   jobOfferFilterSort: 'fa-light fa-bars-sort',
