@@ -3,7 +3,8 @@ namespace Neon;
 
 enum LegalForm: string
 {
-    case FullTime = 'fullTime';
-    case Contract = 'contract';
-    case PartTime = 'partTime';
+    case EmploymentContract = 'employment';
+    case ContractOfMandate = 'of-mandate';
+    case ContractForSpecificTask = 'specific-task';
+    case BusinessToBusiness = 'b2b';
 }

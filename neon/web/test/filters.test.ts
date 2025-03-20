@@ -30,7 +30,7 @@ function addJobOffer(
     companyName: '',
     companyLogoUrl: null,
     tagNames: tags || [],
-    legalForm: 'fullTime',
+    legalForm: 'employment',
     isFavourite: favourite || false,
     isMine: mine || false,
   });

@@ -30,7 +30,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     null,
                     null,
                     $request->get('jobOfferTags', []),
-                    \Neon\LegalForm::FullTime,
+                    \Neon\LegalForm::EmploymentContract,
                     false,
                     false));
                 return \response(status:201);
@@ -94,7 +94,7 @@ function neonApplication(): NeonApplication
         'Spotify',
         null,
         ['swift', 'ios'],
-        \Neon\LegalForm::FullTime,
+        \Neon\LegalForm::EmploymentContract,
         false,
         true));
     $neon->addJobOffer(new JobOffer('Rust Developer', '',
@@ -105,7 +105,7 @@ function neonApplication(): NeonApplication
         'Facebook',
         null,
         ['rust', 'cargo'],
-        \Neon\LegalForm::Contract,
+        \Neon\LegalForm::BusinessToBusiness,
         false,
         false));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
@@ -116,7 +116,7 @@ function neonApplication(): NeonApplication
         'Microsoft',
         null,
         ['go', 'golang'],
-        \Neon\LegalForm::PartTime,
+        \Neon\LegalForm::ContractForSpecificTask,
         false,
         true));
     foreach (sessionJobOffers() as $jobOffer) {

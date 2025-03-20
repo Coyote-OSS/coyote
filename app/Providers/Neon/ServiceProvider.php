@@ -80,9 +80,10 @@ class ServiceProvider extends RouteServiceProvider
     private function jobOfferLegalForm(Coyote\Job $jobOffer): Neon\LegalForm
     {
         return match ($jobOffer->employment) {
-            'employment' => Neon\LegalForm::FullTime,
-            'b2b' => Neon\LegalForm::Contract,
-            'mandatory', 'contract' => Neon\LegalForm::PartTime,
+            'employment' => Neon\LegalForm::EmploymentContract,
+            'mandatory' => Neon\LegalForm::ContractOfMandate,
+            'contract' => Neon\LegalForm::ContractForSpecificTask,
+            'b2b' => Neon\LegalForm::BusinessToBusiness,
         };
     }
 

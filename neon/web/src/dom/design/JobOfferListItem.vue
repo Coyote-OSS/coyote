@@ -106,9 +106,10 @@ const locationBadges = computed<Badge[]>((): Badge[] => {
 
 const legalFormTitle = computed((): string => {
   const titles: Record<LegalForm, string> = {
-    'fullTime': 'Pełny etat',
-    'contract': 'Kontrakt',
-    'partTime': 'Praca dorywcza',
+    'b2b': 'Kontrakt',
+    'employment': 'Pełny etat',
+    'of-mandate': 'Umowa zlecenie',
+    'specific-task': 'Umowa o dzieło',
   };
   return titles[props.jobOffer.legalForm];
 });

@@ -18,7 +18,7 @@ export interface JobOffer {
 }
 
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
-export type LegalForm = 'fullTime'|'contract'|'partTime';
+export type LegalForm = 'employment'|'b2b'|'of-mandate'|'specific-task';
 export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
 export type Rate = 'hourly'|'monthly'|'weekly'|'yearly';
 export type OrderBy = 'most-recent'|'highest-salary'|'lowest-salary';
