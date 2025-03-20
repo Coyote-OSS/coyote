@@ -11,13 +11,14 @@ class NeonApplication
         $this->vite = new ViteManifest(__DIR__ . '/../web/');
     }
 
-    public function htmlMarkupBody(): string
+    public function htmlMarkupBody(Theme $theme): string
     {
         $jobOffers = json_encode($this->offers);
         $scriptUrl = $this->url($this->vite->scriptUrl());
+        $themeAttribute = $this->theme($theme);
         return <<<html
-            <div id="neon-application">
-                <div id="vueApplication"></div>
+            <div id="neon-application" data-theme="$themeAttribute">
+                <div id="vueApplication" class="bg-tile-nested"></div>
             </div>
             <script>var jobOffers = {$jobOffers};</script>
             <script src="{$scriptUrl}"></script>        
@@ -50,5 +51,13 @@ class NeonApplication
     private function url(string $path): string
     {
         return \rTrim($this->basePath, '/') . '/' . $path;
+    }
+
+    private function theme(Theme $theme): string
+    {
+        return match ($theme) {
+            Theme::Light => 'theme-light',
+            Theme::Dark => 'theme-dark',
+        };
     }
 }

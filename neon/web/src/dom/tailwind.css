@@ -1,32 +1,34 @@
 @import "tailwindcss";
 
-@layer base {
-  :root, :host {
-    --color-on-primary: var(--color-white);
-    --color-accent-front: var(--color-green-800);
-    --color-accent-back: var(--color-green-050);
-    --color-tile: var(--color-white);
-    --color-tile-nested: var(--color-navy-050);
-    --color-tile-highlight: #bbe7ca;
-    --color-word: var(--color-neutral-600);
-    --color-word-standout: var(--color-neutral-700);
-    --color-word-accent: var(--color-green-700);
-    --color-divider: var(--color-neutral-050);
-    --color-tag: var(--color-navy-100);
+@custom-variant dark (&:where([data-theme='theme-dark'], [data-theme='theme-dark'] *));
 
-    @variant dark {
-      --color-on-primary: var(--color-navy-950);
-      --color-accent-front: var(--color-green-500);
-      --color-accent-back: var(--color-green-950);
-      --color-tile: var(--color-neutral-800);
-      --color-tile-nested: var(--color-neutral-900);
-      --color-tile-highlight: #0d5c28;
-      --color-word: var(--color-neutral-300);
-      --color-word-standout: var(--color-neutral-050);
-      --color-word-accent: var(--color-green-050);
-      --color-divider: var(--color-neutral-700);
-      --color-tag: var(--color-navy-950);
-    }
+#vueApplication {
+  --color-on-primary: var(--color-white);
+  --color-accent-front: var(--color-green-800);
+  --color-accent-back: var(--color-green-050);
+  --color-tile: var(--color-white);
+  --color-tile-nested: var(--color-navy-050);
+  --color-tile-highlight: #bbe7ca;
+  --color-word: var(--color-neutral-600);
+  --color-word-standout: var(--color-neutral-700);
+  --color-word-accent: var(--color-green-700);
+  --color-divider: var(--color-neutral-050);
+  --color-tag: var(--color-navy-100);
+}
+
+#vueApplication {
+  @variant dark {
+    --color-on-primary: var(--color-navy-950);
+    --color-accent-front: var(--color-green-500);
+    --color-accent-back: var(--color-green-950);
+    --color-tile: var(--color-neutral-800);
+    --color-tile-nested: var(--color-neutral-900);
+    --color-tile-highlight: #0d5c28;
+    --color-word: var(--color-neutral-300);
+    --color-word-standout: var(--color-neutral-050);
+    --color-word-accent: var(--color-green-050);
+    --color-divider: var(--color-neutral-700);
+    --color-tag: var(--color-navy-950);
   }
 }
 

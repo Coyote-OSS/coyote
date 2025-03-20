@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Neon\Currency;
 use Neon\JobOffer;
 use Neon\NeonApplication;
+use Neon\Theme;
 use Neon\WorkMode;
 
 Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
@@ -36,17 +37,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 return \response(status:201);
             });
             Route::get('/', function (): Response {
-                $neon = neonApplication();
-                return response(<<<EOF
-                    <html>
-                    <head>
-                        <meta name="viewport" content="width=device-width,initial-scale=1">
-                        {$neon->htmlMarkupHead()}
-                    </head>
-                    <body class="bg-tile-nested">{$neon->htmlMarkupBody()}</body>
-                    </html>
-                    EOF,
-                );
+                return response(markup(neonApplication(), Theme::Light));
             });
             Route::get('/neon/assets/{filename}', function (string $filename): Response {
                 $neon = new NeonApplication('/neon');
@@ -123,6 +114,19 @@ function neonApplication(): NeonApplication
         $neon->addJobOffer($jobOffer);
     }
     return $neon;
+}
+
+function markup(NeonApplication $neon, Theme $theme): string
+{
+    return <<<EOF
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            {$neon->htmlMarkupHead()}
+        </head>
+        <body>{$neon->htmlMarkupBody($theme)}</body>
+        </html>
+        EOF;
 }
 
 /**

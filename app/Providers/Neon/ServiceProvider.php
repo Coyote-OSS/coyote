@@ -2,6 +2,7 @@
 namespace Coyote\Providers\Neon;
 
 use Coyote;
+use Coyote\Domain\Settings\UserTheme;
 use Coyote\Domain\StringHtml;
 use Coyote\Job;
 use Coyote\Job\Location;
@@ -19,7 +20,7 @@ class ServiceProvider extends RouteServiceProvider
             'uses' => fn() => redirect('https://wydarzenia.4programmers.net/'),
         ]);
         $this->middleware(['web', 'geocode'])->group(function () {
-            $this->get('/Praca/Modern', function (): View {
+            $this->get('/Praca/Modern', function (UserTheme $theme): View {
                 if (!Gate::check('alpha-access')) {
                     abort(404);
                 }
@@ -30,7 +31,7 @@ class ServiceProvider extends RouteServiceProvider
                 }
                 return view('job.home_modern', [
                     'neonHead' => new StringHtml($neon->htmlMarkupHead()),
-                    'neonBody' => new StringHtml($neon->htmlMarkupBody()),
+                    'neonBody' => new StringHtml($neon->htmlMarkupBody($theme->isThemeDark() ? Neon\Theme::Dark : Neon\Theme::Light)),
                 ]);
             });
         });
