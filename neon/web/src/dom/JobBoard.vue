@@ -19,12 +19,20 @@
       </Design.TextField>
       <div>
         <Design.Row class="max-md:hidden" vertical-center>
-          <Design.Drawer scrollable nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
-            <Design.CheckBox v-for="tag in tagsField.values" :label="tag" v-model="state.tags[tag]"/>
-          </Design.Drawer>
-          <Design.Drawer scrollable nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
-            <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
-          </Design.Drawer>
+          <Design.DropdownMultiple
+            nested
+            :test-id="tagsField.testId"
+            :title="tagsField.title"
+            :icon="tagsField.icon"
+            :options="tagsField.options"
+            v-model="state.tags"/>
+          <Design.DropdownMultiple
+            nested
+            :test-id="locationsField.testId"
+            :title="locationsField.title"
+            :icon="locationsField.icon"
+            :options="locationsField.options"
+            v-model="state.locations"/>
           <Design.DropdownMultiple
             nested
             :test-id="workModeField.testId"
@@ -68,12 +76,20 @@
       <h1 class="text-xl mt-2">Filtruj oferty</h1>
       <Design.Divider space/>
       <div class="space-y-4">
-        <Design.Drawer scrollable nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
-          <Design.CheckBox v-for="tag in tagsField.values" :label="tag" v-model="state.tags[tag]"/>
-        </Design.Drawer>
-        <Design.Drawer scrollable nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
-          <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
-        </Design.Drawer>
+        <Design.DropdownMultiple
+          nested
+          :test-id="tagsField.testId"
+          :title="tagsField.title"
+          :icon="tagsField.icon"
+          :options="tagsField.options"
+          v-model="state.tags"/>
+        <Design.DropdownMultiple
+          nested
+          :test-id="locationsField.testId"
+          :title="locationsField.title"
+          :icon="locationsField.icon"
+          :options="locationsField.options"
+          v-model="state.locations"/>
         <Design.DropdownMultiple
           nested
           :test-id="workModeField.testId"
@@ -145,8 +161,8 @@ const state = reactive({
   workModes: [],
   workModeHybrid: false,
   sort: 'most-recent' as OrderBy,
-  locations: {},
-  tags: {},
+  locations: [],
+  tags: [],
   tab: 'allOffers',
 });
 watch(state, (): void => search());
@@ -235,44 +251,38 @@ const tagsField = {
   testId: 'jobOfferTags',
   icon: 'jobOfferFilterTechnology',
   title: 'Technologie',
-  values: filters.availableTags(),
+  options: toMap(filters.availableTags()),
 };
 
 const locationsField = {
   testId: 'jobOfferLocation',
   icon: 'jobOfferFilterLocation',
   title: 'Lokalizacja',
-  values: filters.availableLocations(),
+  options: toMap(filters.availableLocations()),
 };
+
+function toMap(values: string[]): DropdownOption[] {
+  return values.map(value => ({value, title: value}));
+}
 
 function search(): void {
   filters.filter(state.searchPhrase);
   filters.filterBySalary(state.minimumSalary);
   filters.filterByWorkMode(state.workModes);
-  filters.filterByLocation(selected(state.locations));
-  filters.filterByTags(selected(state.tags));
+  filters.filterByLocation(state.locations);
+  filters.filterByTags(state.tags);
   filters.filterByFavourite(state.tab === 'favouriteOffers');
   filters.filterByMine(state.tab === 'myOffers');
   filters.sort(state.sort);
-}
-
-function selected(selectedValues: Record<string, boolean>): string[] {
-  return Object.entries(selectedValues)
-    .filter(([item, selected]) => selected)
-    .map(([item, selected]) => item);
 }
 
 function clearFilters(): void {
   state.searchPhrase = '';
   state.minimumSalary = 0;
   state.workModes = [];
-  state.locations = {};
-  state.tags = {};
+  state.locations = [];
+  state.tags = [];
   state.sort = 'most-recent';
-}
-
-function redirectToMyOffers(): void {
-  window.location.href = '/Praca/Moje';
 }
 
 function redirectToOfferForm(): void {

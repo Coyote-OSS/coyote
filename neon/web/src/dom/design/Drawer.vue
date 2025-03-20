@@ -10,6 +10,11 @@
         <slot/>
       </div>
     </Design.Tile>
+    <div v-if="props.blip" v-text="props.blip" :class="[
+      'absolute -top-1 -right-1',
+      'rounded-full size-4 leading-4 text-center text-xs',
+      'bg-primary text-on-primary',
+    ]"/>
   </Design.Tile>
 </template>
 
@@ -26,6 +31,7 @@ interface Props {
   nested?: boolean;
   noSpace?: boolean;
   scrollable?: boolean;
+  blip?: string;
 }
 
 const props = defineProps<Props>();

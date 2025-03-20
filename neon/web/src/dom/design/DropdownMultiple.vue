@@ -1,9 +1,11 @@
 <template>
   <Design.Drawer
+    scrollable
     :nested="nested"
     :test-id="props.testId"
     :title="props.title"
-    :icon="props.icon">
+    :icon="props.icon"
+    :blip="blip">
     <Design.CheckBox
       v-for="option in props.options"
       :label="option.title"
@@ -14,7 +16,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends string">
-import {ModelRef} from "vue";
+import {computed, ModelRef} from "vue";
 import {IconName} from "../component/Icon.vue";
 import {Design} from "./design";
 
@@ -28,6 +30,7 @@ interface Props {
   title: string;
   icon: IconName;
   options: DropdownOption[];
+  blip?: string;
 }
 
 export interface DropdownOption {
@@ -47,4 +50,11 @@ function toggle(value: T, checked: boolean): void {
     model.value.splice(model.value.indexOf(value), 1);
   }
 }
+
+const blip = computed((): string|undefined => {
+  if (model.value.length === 0) {
+    return undefined;
+  }
+  return model.value.length.toString();
+});
 </script>
