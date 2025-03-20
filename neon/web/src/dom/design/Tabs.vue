@@ -6,7 +6,7 @@
       @click="select(tab)"
       class="px-4 py-3"
       :class="[
-        selected(tab) ? 'border-b-2 border-primary' : '',
+        selected(tab) ? 'border-b-2 border-primary' : 'text-neutral-300 dark:text-inherit',
         selected(tab) ? 'cursor-default' : 'cursor-pointer',
       ]"/>
   </div>

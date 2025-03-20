@@ -31,7 +31,7 @@
               <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
             </Design.Row>
             <Design.Row class="space-x-2 text-sm">
-              <div v-for="badge in badges">
+              <div v-for="badge in badges" :class="{'text-word-standout': badge.standout}">
                 <Icon :name="badge.icon" v-if="badge.icon"/>
                 {{ badge.title }}
               </div>
@@ -82,7 +82,7 @@ const badges = computed<Badge[]>((): Badge[] => {
   return [
     ...locationBadges.value,
     workModeBadge.value,
-    {title: legalFormTitle.value},
+    {title: legalFormTitle.value, standout: true},
   ];
 });
 
@@ -115,5 +115,6 @@ const legalFormTitle = computed((): string => {
 interface Badge {
   title: string;
   icon?: IconName;
+  standout?: boolean;
 }
 </script>

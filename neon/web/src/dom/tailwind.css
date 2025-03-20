@@ -7,7 +7,10 @@
     --color-accent-back: var(--color-green-050);
     --color-tile: var(--color-white);
     --color-tile-nested: var(--color-navy-050);
+    --color-tile-highlight: #bbe7ca;
     --color-word: var(--color-neutral-600);
+    --color-word-standout: var(--color-neutral-700);
+    --color-word-accent: var(--color-green-700);
     --color-divider: var(--color-neutral-050);
     --color-tag: var(--color-navy-100);
 
@@ -17,7 +20,10 @@
       --color-accent-back: var(--color-green-950);
       --color-tile: var(--color-neutral-800);
       --color-tile-nested: var(--color-neutral-900);
+      --color-tile-highlight: #0d5c28;
       --color-word: var(--color-neutral-300);
+      --color-word-standout: var(--color-neutral-050);
+      --color-word-accent: var(--color-green-050);
       --color-divider: var(--color-neutral-700);
       --color-tag: var(--color-navy-950);
     }
@@ -38,6 +44,7 @@
   --color-neutral-900: #121314;
   --color-green-050: #e7f7e6;
   --color-green-500: #00a538;
+  --color-green-700: #016a24;
   --color-green-800: #014718;
   --color-green-950: #001407;
 
@@ -46,12 +53,15 @@
   --color-accent-front: var(--color-accent-front);
   --color-accent-back: var(--color-accent-back);
   --color-divider: var(--color-divider);
+  --color-tag: var(--color-tag);
 
   --color-tile: var(--color-tile);
   --color-tile-nested: var(--color-tile-nested);
 
   --color-word: var(--color-word);
-  --color-tag: var(--color-tag);
+  --color-word-standout: var(--color-word-standout);
+  --color-word-accent: var(--color-word-accent);
+  --color-tile-highlight: var(--color-tile-highlight);
 
   --text-xs: 0.625rem;
   --text-sm: 0.75rem;
@@ -70,4 +80,12 @@
   --text-2xl--line-height: calc(1.75 / 1.25);
   --text-3xl--line-height: calc(2 / 1.5);
   --text-4xl--line-height: calc(2.25 / 1.875);
+}
+
+@utility tile-highlight {
+  background-image: linear-gradient(45deg, var(--color-tile), var(--color-tile), var(--color-tile-highlight));
+}
+
+@utility tile-highlight-long {
+  background-image: linear-gradient(45deg, var(--color-tile) 0%, var(--color-tile) 70%, var(--color-tile-highlight) 140%);
 }

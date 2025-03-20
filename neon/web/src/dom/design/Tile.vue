@@ -29,6 +29,7 @@ const tileClass = computed(() => {
     rounded(),
     padding(),
     verticalSpacing(),
+    fontSize(),
   ];
 });
 
@@ -58,6 +59,13 @@ function padding(): string {
 function verticalSpacing(): string {
   if (props.vertical) {
     return props.space ? 'space-y-4' : 'space-y-2';
+  }
+  return '';
+}
+
+function fontSize(): string {
+  if (props.nestedPill) {
+    return 'text-sm';
   }
   return '';
 }
