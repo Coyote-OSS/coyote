@@ -40,6 +40,12 @@
             :icon="workModeField.icon"
             :options="workModeField.options"
             v-model="state.workModes"/>
+          <Design.DropdownMultiple
+            nested
+            :title="legalFormField.title"
+            :icon="legalFormField.icon"
+            :options="legalFormField.options"
+            v-model="state.legalForms"/>
           <Design.RowEnd>
             <span @click="clearFilters" class="cursor-pointer">
               Wyczyść filtry
@@ -97,6 +103,12 @@
           :icon="workModeField.icon"
           :options="workModeField.options"
           v-model="state.workModes"/>
+        <Design.DropdownMultiple
+          nested
+          :title="legalFormField.title"
+          :icon="legalFormField.icon"
+          :options="legalFormField.options"
+          v-model="state.legalForms"/>
       </div>
       <Design.Divider space/>
       <Design.Dropdown
@@ -159,6 +171,7 @@ const state = reactive({
   minimumSalary: 0,
   workModeRemote: false,
   workModes: [],
+  legalForms: [],
   workModeHybrid: false,
   sort: 'most-recent' as OrderBy,
   locations: [],
@@ -261,6 +274,20 @@ const locationsField = {
   options: toMap(filters.availableLocations()),
 };
 
+const legalFormFieldOptions: DropdownOption[] = [
+  {value: 'employment', title: 'Umowa o pracę'},
+  {value: 'of-mandate', title: 'Umowa zlecenie'},
+  {value: 'specific-task', title: 'Umowa o dzieło'},
+  {value: 'b2b', title: 'B2B'},
+];
+
+const legalFormField = {
+  testId: 'jobOfferLegalForm',
+  title: 'Umowa',
+  icon: 'jobOfferFilterLegalForm',
+  options: legalFormFieldOptions,
+};
+
 function toMap(values: string[]): DropdownOption[] {
   return values.map(value => ({value, title: value}));
 }
@@ -273,6 +300,7 @@ function search(): void {
   filters.filterByTags(state.tags);
   filters.filterByFavourite(state.tab === 'favouriteOffers');
   filters.filterByMine(state.tab === 'myOffers');
+  filters.filterByLegalForm(state.legalForms);
   filters.sort(state.sort);
 }
 
@@ -283,6 +311,7 @@ function clearFilters(): void {
   state.locations = [];
   state.tags = [];
   state.sort = 'most-recent';
+  state.legalForms = [];
 }
 
 function redirectToOfferForm(): void {

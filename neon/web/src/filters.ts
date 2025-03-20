@@ -39,6 +39,7 @@ export class Filters {
   private tags: string[] = [];
   private onlyFavourite: boolean;
   private onlyMine: boolean;
+  private legalForms: LegalForm[] = [];
 
   clearFilters(): void {
     this.searchPhrase = '';
@@ -94,6 +95,11 @@ export class Filters {
     this.update();
   }
 
+  filterByLegalForm(legalForms: LegalForm[]): void {
+    this.legalForms = legalForms;
+    this.update();
+  }
+
   sortByPublishDate(): void {
     this.sort('most-recent');
   }
@@ -137,7 +143,8 @@ export class Filters {
       .filter(offer => this.matchesByTag(offer))
       .filter(offer => this.matchesByWorkMode(offer))
       .filter(offer => this.matchesByFavourite(offer))
-      .filter(offer => this.matchesByMine(offer));
+      .filter(offer => this.matchesByMine(offer))
+      .filter(offer => this.matchesByLegalForm(offer));
     this.sortInPlace(offers);
     return offers;
   }
@@ -162,6 +169,13 @@ export class Filters {
       return true;
     }
     return this.workModes.includes(offer.workMode);
+  }
+
+  private matchesByLegalForm(offer: JobOffer): boolean {
+    if (this.legalForms.length === 0) {
+      return true;
+    }
+    return this.legalForms.includes(offer.legalForm);
   }
 
   private matchesByFavourite(offer: JobOffer): boolean {

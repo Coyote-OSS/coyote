@@ -1,4 +1,4 @@
-import {Filters, JobOffer} from "../src/filters";
+import {Filters, JobOffer, LegalForm} from "../src/filters";
 import {assertEquals, assertTrue, describe, test} from "./assertion";
 
 interface JobOfferTemplate {
@@ -10,11 +10,12 @@ interface JobOfferTemplate {
   tags?: string[];
   favourite?: boolean;
   mine?: boolean;
+  legalForm?: LegalForm;
 }
 
 function addJobOffer(
   filters: Filters,
-  {title, publishDate, salaryTo, workMode, locations, tags, favourite, mine}: JobOfferTemplate,
+  {title, publishDate, salaryTo, workMode, locations, tags, favourite, mine, legalForm}: JobOfferTemplate,
 ): void {
   filters.addJobOffer({
     title: title || 'Job offer',
@@ -30,7 +31,7 @@ function addJobOffer(
     companyName: '',
     companyLogoUrl: null,
     tagNames: tags || [],
-    legalForm: 'employment',
+    legalForm: legalForm || 'employment',
     isFavourite: favourite || false,
     isMine: mine || false,
   });
@@ -449,5 +450,27 @@ describe('filtering job offers by mine', () => {
       assertEquals(['Mine'], titles(jobOffers));
     });
     filters.filterByMine(true);
+  });
+});
+
+describe('filter by legal form', () => {
+  test('filtering job offer calls listener', () => {
+    const filters = new Filters();
+    let wasCalled = false;
+    filters.onUpdate(() => {
+      wasCalled = true;
+    });
+    filters.filterByLegalForm([]);
+    assertTrue(wasCalled);
+  });
+
+  test('filter job offers by legal form', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {title: 'Job', legalForm: 'employment'});
+    addJobOffer(filters, {title: 'Contract', legalForm: 'b2b'});
+    filters.onUpdate(jobOffers => {
+      assertEquals(['Job'], titles(jobOffers));
+    });
+    filters.filterByLegalForm(['employment']);
   });
 });

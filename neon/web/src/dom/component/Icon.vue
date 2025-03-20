@@ -47,6 +47,7 @@ const icons = {
   jobOfferFilterSalary: 'fa-light fa-sack-dollar',
   jobOfferFilterCurrency: 'fa-light fa-coins',
   jobOfferFilterSort: 'fa-light fa-bars-sort',
+  jobOfferFilterLegalForm: 'fa-light fa-suitcase',
 };
 
 const fontAwesomeClasses = computed<string>((): string => icons[props.name]);
