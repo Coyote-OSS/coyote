@@ -18,6 +18,7 @@ interface Props {
   testId?: string;
   nestedPill?: boolean;
   space?: boolean;
+  desktopSpace?: boolean;
   vertical?: boolean;
   text?: string;
 }
@@ -44,6 +45,9 @@ function rounded(): string {
 function padding(): string {
   if (props.nestedPill) {
     return 'py-2 px-3';
+  }
+  if (props.desktopSpace) {
+    return 'p-2 md:p-4';
   }
   if (props.space) {
     return 'p-4';

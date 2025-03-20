@@ -1,6 +1,6 @@
 <template>
-  <span class="flex flex-wrap gap-x-2 gap-y-1 items-center">
-    <span v-for="tag in visibleTags" v-text="tag" class="bg-tag px-2 rounded text-sm"/>
+  <span class="flex flex-wrap gap-1 items-center">
+    <span v-for="tag in visibleTags" v-text="tag" class="bg-tag px-1 py-0.5 rounded text-sm"/>
     <span v-if="hiddenTags">+{{ hiddenTags }}</span>
   </span>
 </template>

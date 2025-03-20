@@ -8,7 +8,7 @@
           @favourite-change="toggleFavourite"/>
       </Design.RowEnd>
     </Design.Row>
-    <Design.Tile nested space>
+    <Design.Tile nested desktop-space>
       <Design.Row vertical-center>
         <div class="size-14 rounded-lg overflow-hidden">
           <img v-if="props.jobOffer.companyLogoUrl" :src="props.jobOffer.companyLogoUrl"/>
@@ -28,9 +28,7 @@
           <Design.Row apart class="max-md:hidden mt-2" vertical-center>
             <Design.Row vertical-center class="space-x-2">
               <span v-if="jobOffer.companyName" v-text="jobOffer.companyName"/>
-              <div>
-                <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
-              </div>
+              <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
             </Design.Row>
             <Design.Row class="space-x-2 text-sm">
               <div v-for="badge in badges">
@@ -49,10 +47,10 @@
             <Design.Salary v-if="jobOffer.salary" :salary="jobOffer.salary"/>
           </Design.RowEnd>
         </Design.Row>
-        <template v-if="jobOffer.tagNames.length">
-          <Design.Divider/>
+        <Design.Divider/>
+        <Design.Row v-if="jobOffer.tagNames.length">
           <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
-        </template>
+        </Design.Row>
       </div>
     </Design.Tile>
   </Design.Tile>

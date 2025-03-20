@@ -3,7 +3,7 @@
     <Design.BannerHeading/>
     <Design.Row>
       <Design.Tabs :tabs="tabs" v-model="state.tab"/>
-      <Design.RowEnd>
+      <Design.RowEnd class="max-md:hidden">
         <Design.Button icon="add" primary-outline @click="redirectToOfferForm">
           Dodaj ofertę
         </Design.Button>
