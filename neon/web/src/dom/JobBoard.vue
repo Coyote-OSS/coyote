@@ -69,6 +69,7 @@
         :test-id="sortField.testId"
         :icon="sortField.icon"
         :options="sortField.options"
+        open-to-left
         v-model="state.sort"/>
     </Design.DropdownLabel>
     <ul class="space-y-2">

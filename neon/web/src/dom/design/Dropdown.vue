@@ -4,6 +4,7 @@
     :icon="props.icon"
     :test-id="props.testId"
     :nested="props.nested"
+    :openToLeft="props.openToLeft"
     no-space
     v-model:open="open">
     <div
@@ -35,6 +36,7 @@ interface Props {
   testId?: string;
   nested?: boolean;
   options: DrawerOptions;
+  openToLeft?: boolean;
 }
 
 const props = defineProps<Props>();
