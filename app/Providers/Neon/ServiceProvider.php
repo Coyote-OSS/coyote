@@ -54,7 +54,8 @@ class ServiceProvider extends RouteServiceProvider
             $this->jobOfferTags($jobOffer),
             $this->jobOfferLegalForm($jobOffer),
             $this->isSubscribed($jobOffer),
-            $this->isMine($jobOffer));
+            $this->isMine($jobOffer),
+            $this->isPromoted($jobOffer));
     }
 
     private function workMode(Job $jobOffer): Neon\WorkMode
@@ -123,5 +124,10 @@ class ServiceProvider extends RouteServiceProvider
             return $jobOffer->user_id === auth()->user()->id;
         }
         return false;
+    }
+
+    private function isPromoted(Job $jobOffer): bool
+    {
+        return $jobOffer->is_ads;
     }
 }

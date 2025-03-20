@@ -15,6 +15,7 @@ export interface BackendJobOffer {
   legalForm: LegalForm;
   isFavourite: boolean;
   isMine: boolean;
+  promoted: boolean;
 }
 
 export interface BackendSalary {

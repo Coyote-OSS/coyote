@@ -15,13 +15,14 @@ export interface JobOffer {
   legalForm: LegalForm;
   isFavourite: boolean;
   isMine: boolean;
+  promoted: boolean;
 }
 
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
 export type LegalForm = 'employment'|'b2b'|'of-mandate'|'specific-task';
 export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
 export type Rate = 'hourly'|'monthly'|'weekly'|'yearly';
-export type OrderBy = 'most-recent'|'highest-salary'|'lowest-salary';
+export type OrderBy = 'promoted'|'most-recent'|'highest-salary'|'lowest-salary';
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
 
@@ -47,7 +48,7 @@ export class Filters {
     this.tags = [];
     this.minimumSalary = 0;
     this.workModes = [];
-    this.orderBy = 'most-recent';
+    this.orderBy = 'promoted';
     this.update();
   }
 
@@ -206,6 +207,14 @@ export class Filters {
     if (this.orderBy === 'lowest-salary') {
       offers.sort((offer1: JobOffer, offer2: JobOffer): number => {
         return offer1.salaryTo < offer2.salaryTo ? -1 : 1;
+      });
+    }
+    if (this.orderBy === 'promoted') {
+      offers.sort((offer1: JobOffer, offer2: JobOffer): number => {
+        if (offer1.promoted === offer2.promoted) {
+          return offer1.publishDate > offer2.publishDate ? -1 : 1;
+        }
+        return offer1.promoted > offer2.promoted ? -1 : 1;
       });
     }
   }

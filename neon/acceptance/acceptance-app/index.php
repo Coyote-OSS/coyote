@@ -33,6 +33,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     $request->get('jobOfferTags', []),
                     \Neon\LegalForm::EmploymentContract,
                     false,
+                    false,
                     false));
                 return \response(status:201);
             });
@@ -87,7 +88,8 @@ function neonApplication(): NeonApplication
         ['swift', 'ios'],
         \Neon\LegalForm::EmploymentContract,
         false,
-        true));
+        true,
+        false));
     $neon->addJobOffer(new JobOffer('Rust Developer', '',
         '2000-01-01',
         salaryRange(75, 100, \Neon\Rate::Hourly),
@@ -97,6 +99,7 @@ function neonApplication(): NeonApplication
         null,
         ['rust', 'cargo'],
         \Neon\LegalForm::BusinessToBusiness,
+        false,
         false,
         false));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
@@ -109,6 +112,7 @@ function neonApplication(): NeonApplication
         ['go', 'golang'],
         \Neon\LegalForm::ContractForSpecificTask,
         false,
+        true,
         true));
     foreach (sessionJobOffers() as $jobOffer) {
         $neon->addJobOffer($jobOffer);

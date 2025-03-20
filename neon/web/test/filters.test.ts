@@ -11,12 +11,11 @@ interface JobOfferTemplate {
   favourite?: boolean;
   mine?: boolean;
   legalForm?: LegalForm;
+  promoted?: boolean;
 }
 
-function addJobOffer(
-  filters: Filters,
-  {title, publishDate, salaryTo, workMode, locations, tags, favourite, mine, legalForm}: JobOfferTemplate,
-): void {
+function addJobOffer(filters: Filters, template: JobOfferTemplate): void {
+  const {title, publishDate, salaryTo, workMode, locations, tags, favourite, mine, legalForm, promoted} = template;
   filters.addJobOffer({
     title: title || 'Job offer',
     url: '',
@@ -34,6 +33,7 @@ function addJobOffer(
     legalForm: legalForm || 'employment',
     isFavourite: favourite || false,
     isMine: mine || false,
+    promoted: promoted || false,
   });
 }
 
@@ -106,6 +106,38 @@ test('job offers are sorted by lowest salary', () => {
     assertEquals(['JS Developer', 'Java Developer'], titles(jobOffers));
   });
   filters.sort('lowest-salary');
+});
+
+describe('job offers are sorted by promoted job offers', () => {
+  test('promoted job offers are higher than not promoted', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {title: 'Unpaid', promoted: false});
+    addJobOffer(filters, {title: 'Paid', promoted: true});
+    filters.onUpdate(jobOffers => {
+      assertEquals(['Paid', 'Unpaid'], titles(jobOffers));
+    });
+    filters.sort('promoted');
+  });
+
+  test('both promoted, the newest is higher', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {title: 'Paid Old', promoted: true, publishDate: '2000-01-01'});
+    addJobOffer(filters, {title: 'Paid New', promoted: true, publishDate: '2025-01-01'});
+    filters.onUpdate(jobOffers => {
+      assertEquals(['Paid New', 'Paid Old'], titles(jobOffers));
+    });
+    filters.sort('promoted');
+  });
+
+  test('both not promoted, the newest is higher', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {title: 'Unpaid Old', promoted: false, publishDate: '2000-01-01'});
+    addJobOffer(filters, {title: 'Unpaid New', promoted: false, publishDate: '2025-01-01'});
+    filters.onUpdate(jobOffers => {
+      assertEquals(['Unpaid New', 'Unpaid Old'], titles(jobOffers));
+    });
+    filters.sort('promoted');
+  });
 });
 
 test('filter by search phrase calls listener', () => {

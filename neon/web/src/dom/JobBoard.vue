@@ -170,11 +170,9 @@ function favouriteChange(jobOffer: VueJobOffer, favourite: boolean): void {
 const state = reactive({
   searchPhrase: '',
   minimumSalary: 0,
-  workModeRemote: false,
   workModes: [],
   legalForms: [],
-  workModeHybrid: false,
-  sort: 'most-recent' as OrderBy,
+  sort: 'promoted' as OrderBy,
   locations: [],
   tags: [],
   tab: 'allOffers',
@@ -229,8 +227,10 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
     legalForm: jobOffer.legalForm,
     isFavourite: jobOffer.isFavourite,
     isMine: jobOffer.isMine,
+    promoted: jobOffer.promoted,
   });
 });
+search();
 
 const tabs = [
   {value: 'allOffers', title: 'Ogłoszenia'},
@@ -242,6 +242,7 @@ const sortField = {
   testId: 'jobOfferSort',
   icon: 'jobOfferFilterSort',
   options: [
+    {value: 'promoted', title: 'Domyślne'},
     {value: 'most-recent', title: 'Najnowsze'},
     {value: 'highest-salary', title: 'Najwyższe wynagrodzenie'},
     {value: 'lowest-salary', title: 'Najniższe wynagrodzenie'},
@@ -311,7 +312,7 @@ function clearFilters(): void {
   state.workModes = [];
   state.locations = [];
   state.tags = [];
-  state.sort = 'most-recent';
+  state.sort = 'promoted';
   state.legalForms = [];
 }
 
