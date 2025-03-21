@@ -12,28 +12,28 @@ interface JobOfferTemplate {
   mine?: boolean;
   legalForm?: LegalForm;
   promoted?: boolean;
+  companyName?: string;
 }
 
 function addJobOffer(filters: Filters, template: JobOfferTemplate): void {
-  const {title, publishDate, salaryTo, workMode, locations, tags, favourite, mine, legalForm, promoted} = template;
   filters.addJobOffer({
-    title: title || 'Job offer',
+    title: template.title || 'Job offer',
     url: '',
-    publishDate: publishDate || '2000-01-01',
-    salaryTo: salaryTo || 1000,
+    publishDate: template.publishDate || '2000-01-01',
+    salaryTo: template.salaryTo || 1000,
     salaryFrom: 1000,
     salaryCurrency: 'PLN',
     salaryIsNet: false,
     salaryRate: 'monthly',
-    workMode: workMode || 'stationary',
-    locations: locations || [],
-    companyName: '',
+    workMode: template.workMode || 'stationary',
+    locations: template.locations || [],
+    companyName: template.companyName || null,
     companyLogoUrl: null,
-    tagNames: tags || [],
-    legalForm: legalForm || 'employment',
-    isFavourite: favourite || false,
-    isMine: mine || false,
-    promoted: promoted || false,
+    tagNames: template.tags || [],
+    legalForm: template.legalForm || 'employment',
+    isFavourite: template.favourite || false,
+    isMine: template.mine || false,
+    promoted: template.promoted || false,
   });
 }
 
@@ -505,4 +505,13 @@ describe('filter by legal form', () => {
     });
     filters.filterByLegalForm(['employment']);
   });
+});
+
+test('search phrase searches in company name', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Python Developer', companyName: 'Microsoft'});
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Python Developer'], titles(jobOffers));
+  });
+  filters.filter('microsoft');
 });

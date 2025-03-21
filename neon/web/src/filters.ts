@@ -138,7 +138,7 @@ export class Filters {
 
   private filteredJobOffersInOrder(): JobOffer[] {
     const offers = this.jobOffers
-      .filter(offer => offer.title.toLowerCase().includes(this.searchPhrase.toLowerCase()))
+      .filter(offer => this.matchesBySearchPhrase(offer))
       .filter(offer => offer.salaryTo >= this.minimumSalary)
       .filter(offer => this.matchesByLocation(offer))
       .filter(offer => this.matchesByTag(offer))
@@ -148,6 +148,11 @@ export class Filters {
       .filter(offer => this.matchesByLegalForm(offer));
     this.sortInPlace(offers);
     return offers;
+  }
+
+  private matchesBySearchPhrase(offer: JobOffer) {
+    const searchPhrase = this.searchPhrase.toLowerCase();
+    return offer.title.toLowerCase().includes(searchPhrase) || offer.companyName?.toLowerCase().includes(searchPhrase);
   }
 
   private matchesByLocation(offer: JobOffer): boolean {
