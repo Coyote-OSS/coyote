@@ -1,6 +1,6 @@
 <template>
   <Design.Tile vertical>
-    <Design.Row>
+    <Design.Row wrap>
       <Design.Tile nested-pill v-for="badge in badges" :text="badge.title" :icon="badge.icon"/>
       <Design.RowEnd>
         <Design.JobOfferFavouriteButton
@@ -41,16 +41,18 @@
       </Design.Row>
       <div class="md:hidden">
         <Design.Divider/>
-        <Design.Row vertical-center>
+        <Design.Row wrap vertical-center>
           <span>{{ jobOffer.companyName }}</span>
           <Design.RowEnd>
             <Design.Salary v-if="jobOffer.salary" :salary="jobOffer.salary"/>
           </Design.RowEnd>
         </Design.Row>
-        <Design.Divider/>
-        <Design.Row v-if="jobOffer.tagNames.length">
-          <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
-        </Design.Row>
+        <template v-if="jobOffer.tagNames.length">
+          <Design.Divider/>
+          <Design.Row>
+            <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
+          </Design.Row>
+        </template>
       </div>
     </Design.Tile>
   </Design.Tile>

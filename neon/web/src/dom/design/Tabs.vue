@@ -2,13 +2,15 @@
   <div class="flex">
     <div
       v-for="tab in props.tabs"
-      v-text="tab.title"
       @click="select(tab)"
       class="px-4 py-3"
       :class="[
         selected(tab) ? 'border-b-2 border-primary' : 'text-neutral-300 dark:text-inherit',
         selected(tab) ? 'cursor-default' : 'cursor-pointer',
-      ]"/>
+      ]">
+      <span class="max-md:hidden" v-text="tab.title"/>
+      <span class="md:hidden" v-text="tab.titleShort"/>
+    </div>
   </div>
 </template>
 
@@ -20,6 +22,7 @@ interface Props {
 export interface Tab<T> {
   value: T;
   title: string;
+  titleShort: string;
 }
 
 const props = defineProps<Props>();

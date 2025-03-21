@@ -233,9 +233,9 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
 search();
 
 const tabs = [
-  {value: 'allOffers', title: 'Ogłoszenia'},
-  {value: 'favouriteOffers', title: 'Ulubione ogłoszenia'},
-  {value: 'myOffers', title: 'Moje ogłoszenia'},
+  {value: 'allOffers', title: 'Ogłoszenia', titleShort: 'Ogłoszenia'},
+  {value: 'favouriteOffers', title: 'Ulubione ogłoszenia', titleShort: 'Ulubione'},
+  {value: 'myOffers', title: 'Moje ogłoszenia', titleShort: 'Moje'},
 ];
 
 const sortField = {

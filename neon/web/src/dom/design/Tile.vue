@@ -30,6 +30,7 @@ const tileClass = computed(() => {
     padding(),
     verticalSpacing(),
     fontSize(),
+    wrapping(),
   ];
 });
 
@@ -66,6 +67,13 @@ function verticalSpacing(): string {
 function fontSize(): string {
   if (props.nestedPill) {
     return 'text-sm';
+  }
+  return '';
+}
+
+function wrapping(): string {
+  if (props.nestedPill) {
+    return 'whitespace-nowrap';
   }
   return '';
 }
