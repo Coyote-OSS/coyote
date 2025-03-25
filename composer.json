@@ -70,7 +70,6 @@
       "Boduch\\Grid\\": "grid/",
       "Coyote\\": "app/",
       "Database\\Seeders\\": "database/seeders/",
-      "Neon\\Acceptance\\": "neon/acceptance/acceptance-app/",
       "Neon\\": "neon/src/"
     },
     "files": [
@@ -84,8 +83,7 @@
       "Tests\\Unit\\": "tests/Unit/",
       "Tests\\Legacy\\Browser\\": "tests/Legacy/Browser/",
       "Tests\\Legacy\\IntegrationOld\\": "tests/Legacy/IntegrationOld/",
-      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/",
-      "Neon\\Acceptance\\Test\\": "neon/acceptance/acceptance-test/"
+      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/"
     }
   },
   "scripts": {
