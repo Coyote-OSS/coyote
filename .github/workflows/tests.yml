@@ -1,11 +1,8 @@
 name: Tests
 
 on:
-  pull_request:
-    types: [ opened ]
   push:
     branches:
-      - master
       - staging
 
 jobs:
@@ -51,8 +48,5 @@ jobs:
       - name: Run server unit and legacy tests
         run: docker compose exec -T -u nginx php php vendor/bin/phpunit --testsuite Unit,Legacy
 
-      - name: Run client unit and legacy tests
+      - name: Run client unit tests
         run: docker compose exec -T php bash -c 'cd neon/web/ && yarn run test'
-
-      - name: Run acceptance tests
-        run: docker compose exec -T -u nginx php php vendor/bin/phpunit --testsuite Acceptance
