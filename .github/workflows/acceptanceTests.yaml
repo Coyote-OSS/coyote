@@ -28,11 +28,16 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
+      - name: Use PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
       - name: Use task
         uses: arduino/setup-task@v2
 
-      - name: Install the test runner
-        run: task accept:install
+      - name: Start the acceptance app
+        run: task accept:start &
 
       - name: Run acceptance tests
         run: task accept:test

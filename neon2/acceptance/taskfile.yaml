@@ -1,0 +1,18 @@
+version: '3'
+
+tasks:
+  start:
+    cmds:
+      - task: app:serve
+  test:
+    cmds:
+      - task: test:install
+      - task: test:test
+
+includes:
+  app:
+    taskfile: ./acceptance-app/
+    dir: ./acceptance-app/
+  test:
+    taskfile: ./acceptance-test/
+    dir: ./acceptance-test/
