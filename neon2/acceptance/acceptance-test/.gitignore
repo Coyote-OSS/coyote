@@ -1,0 +1,7 @@
+# Node
+node_modules/
+yarn.lock
+
+# Playwright
+playwright-report/
+test-results/

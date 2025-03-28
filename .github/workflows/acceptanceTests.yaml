@@ -1,0 +1,43 @@
+name: Acceptance tests
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  acceptance-tests:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: acceptance-tests
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node dependencies
+        uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Use PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
+      - name: Use task
+        uses: arduino/setup-task@v2
+
+      - name: Start the acceptance app
+        run: task accept:start &
+
+      - name: Run acceptance tests
+        run: task accept:test
