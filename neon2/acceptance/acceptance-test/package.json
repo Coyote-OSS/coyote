@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@playwright/test": "^1.51.1"
+  }
+}
