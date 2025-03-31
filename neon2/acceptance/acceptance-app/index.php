@@ -1,22 +1,22 @@
-<button>Dodaj ofertę</button>
-<button>Publikuj ogłoszenie</button>
+<?php
 
-<label>
-  Tytuł oferty
-  <input id="jobOfferTitle">
-</label>
-<button id="add">Dodaj</button>
+function mime(string $asset): string
+{
+    if (\str_ends_with($asset, '.js')) {
+        return 'application/javascript';
+    }
+    return \mime_content_type($asset);
+}
 
-<input placeholder="Wyszukaj">
-<button data-testid="search">S</button>
-<ul id="jobOffers"></ul>
-
-<script>
-  document.querySelector('#add').addEventListener('click', function () {
-    const title = document.querySelector('#jobOfferTitle').value;
-    const jobOffer = document.createElement('li');
-    jobOffer.dataset.testid = 'jobOfferTitle';
-    jobOffer.textContent = title;
-    document.querySelector('#jobOffers').appendChild(jobOffer);
-  });
-</script>
+$root = \realPath(__DIR__ . '/../../web/dist');
+$assetName = $_SERVER['REQUEST_URI'];
+if ($assetName === '/') {
+    $assetName = '/index.html';
+}
+$asset = \realPath($root . $assetName);
+if ($asset === false || !str_starts_with($asset, $root) || !file_exists($asset)) {
+    http_response_code(404);
+    exit;
+}
+\header('Content-Type: ' . mime($asset));
+\readFile($asset);

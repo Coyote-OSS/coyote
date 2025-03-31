@@ -4,3 +4,6 @@ includes:
   accept:
     taskfile: ./neon2/acceptance/
     dir: ./neon2/acceptance/
+  web:
+    taskfile: ./neon2/web/
+    dir: ./neon2/web/
