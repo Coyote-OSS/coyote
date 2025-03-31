@@ -36,6 +36,12 @@ jobs:
       - name: Use task
         uses: arduino/setup-task@v2
 
+      - name: Run client unit tests
+        run: task web:test
+
+      - name: Bundle the client
+        run: task web:bundle
+
       - name: Start the acceptance app
         run: task accept:start &
 

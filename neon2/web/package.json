@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "vite": "^6.2.4",
+    "vitest": "^3.1.1"
+  }
+}
