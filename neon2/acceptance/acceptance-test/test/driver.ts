@@ -11,6 +11,10 @@ export class Dsl {
     await this.driver.publishJobOffer(jobOffer.title);
   }
 
+  async updateJobOffer(update: { title: string, updatedTitle: string }): None {
+    await this.driver.updateJobOffer(update.title, update.updatedTitle);
+  }
+
   async assertJobOfferIsSearchable(assertion: { jobOfferTitle: string }): None {
     assertContains(
       assertion.jobOfferTitle,
@@ -34,6 +38,12 @@ export class Driver {
     await this.web.click('Publikuj ogłoszenie');
     await this.web.fillByLabel('Tytuł oferty', title);
     await this.web.click('Dodaj');
+  }
+
+  async updateJobOffer(sourceTitle: string, targetTitle: string): None {
+    await this.web.click(sourceTitle);
+    await this.web.fillByLabel('Tytuł oferty', targetTitle);
+    await this.web.click('Zapisz');
   }
 
   async searchJobOffers(searchPhrase: string): Promise<string[]> {

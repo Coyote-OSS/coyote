@@ -8,6 +8,11 @@ describe('A job offer can be found in search until it expires.', () => {
     await dsl.publishJobOffer({title: 'Green'});
     await dsl.assertJobOfferIsSearchable({jobOfferTitle: 'Green'});
   });
+  test('Given a job offer, when the author edits the offer, the updated job offer can be found in search.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Before'});
+    await dsl.updateJobOffer({title: 'Before', updatedTitle: 'After'});
+    await dsl.assertJobOfferIsSearchable({jobOfferTitle: 'After'});
+  });
 });
 
 // describe('The publishing time depends on the pricing of the job offer.', () => {

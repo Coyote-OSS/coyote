@@ -1,20 +1,12 @@
-import {JobBoard} from "./jobBoard";
+import {JobBoard, JobOffer} from "./jobBoard";
+import {View} from "./view";
 
-const board = new JobBoard((jobOfferTitle: string): void => {
-  displayAddJobOffer(jobOfferTitle);
+let board: JobBoard;
+const view = new View({
+  onJobCreate: (title: string) => board.addJobOffer(title),
+  onJobUpdate: (id: number, title: string) => board.updateJobOffer(id, title),
 });
-
-window.addEventListener('load', () => {
-  document.getElementById('add')!
-    .addEventListener('click', function () {
-      const jobOfferTitle = document.querySelector('#jobOfferTitle') as HTMLInputElement;
-      board.addJobOffer(jobOfferTitle.value);
-    });
+board = new JobBoard((jobOffers: JobOffer[]): void => {
+  view.setJobOffers(jobOffers);
 });
-
-function displayAddJobOffer(jobOfferTitle: string): void {
-  const jobOffer = document.createElement('li');
-  jobOffer.textContent = jobOfferTitle;
-  jobOffer.dataset.testid = 'jobOfferTitle';
-  document.querySelector('#jobOffers')!.appendChild(jobOffer);
-}
+view.mount();

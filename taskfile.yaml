@@ -1,5 +1,11 @@
 version: '3'
 
+tasks:
+  test:
+    - task: web:test
+    - task: web:bundle
+    - task: accept:test
+
 includes:
   accept:
     taskfile: ./neon2/acceptance/
