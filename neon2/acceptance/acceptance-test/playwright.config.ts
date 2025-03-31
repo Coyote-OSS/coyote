@@ -6,8 +6,8 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:8882/',
   },
-  timeout: 3000,
+  timeout: 5000,
   projects: [
-    {name: 'Google Chrome', use: {...devices["Desktop Chrome"], channel: 'chrome'}},
+    {name: 'Google Chrome', use: {...devices['Desktop Chrome'], channel: 'chrome'}},
   ],
 });

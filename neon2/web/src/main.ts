@@ -1,5 +1,5 @@
 import {JobBoard, JobOffer} from "./jobBoard";
-import {View} from "./view";
+import {View} from "./view/view";
 
 let board: JobBoard;
 const view = new View({
@@ -9,4 +9,4 @@ const view = new View({
 board = new JobBoard((jobOffers: JobOffer[]): void => {
   view.setJobOffers(jobOffers);
 });
-view.mount();
+view.mount('#neonApplication');
