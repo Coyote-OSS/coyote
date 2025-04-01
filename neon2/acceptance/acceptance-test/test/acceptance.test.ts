@@ -1,4 +1,5 @@
-import {beforeEach, describe, Dsl, saveScreenshotAfterFailedTest, test} from "./playwright";
+import {Dsl} from "../internal/dsl";
+import {beforeEach, describe, saveScreenshotAfterFailedTest, test} from "../internal/playwright";
 
 saveScreenshotAfterFailedTest('FAILURE.png');
 beforeEach(async (driver) => await driver.loadApplication());

@@ -1,7 +1,6 @@
 import {expect, test as playwrightTest, TestInfo} from '@playwright/test';
-import {Driver, Dsl} from './driver';
-
-export {Driver, Dsl} from './driver';
+import {Driver} from './driver';
+import {Dsl} from './dsl';
 
 export const describe = playwrightTest.describe;
 
