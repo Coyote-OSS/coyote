@@ -14,8 +14,12 @@ export class JobBoard {
     return this.jobOffers.length;
   }
 
-  addJobOffer(title: string): void {
-    this.jobOffers.push({title, id: this.autoInc++});
+  addJobOffer(title: string, pricingPlan: 'free'|'paid'): void {
+    this.jobOffers.push({
+      title,
+      id: this.autoInc++,
+      expiresInDays: pricingPlan === 'free' ? 14 : 30,
+    });
     this.updateView();
   }
 
@@ -40,6 +44,7 @@ export class JobBoard {
 export interface JobOffer {
   id: number;
   title: string;
+  expiresInDays: number;
 }
 
 function copyArray<T>(array: T[]): T[] {

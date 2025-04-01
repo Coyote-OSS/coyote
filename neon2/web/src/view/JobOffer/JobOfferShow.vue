@@ -1,4 +1,15 @@
 <template>
+  <h1>
+    Oferta: {{ props.jobOffer.title }}
+  </h1>
+  <div>
+    Oferta wygasa za:
+    <span data-testid="jobOfferExpiresInDays">
+      {{ props.jobOffer.expiresInDays }}
+    </span>
+    dni
+  </div>
+  <hr>
   <label>
     Tytuł oferty
     <input id="jobOfferTitle" v-model="jobTitle">

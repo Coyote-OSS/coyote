@@ -9,6 +9,7 @@
     @select="selectPlan"/>
   <JobOfferForm
     v-if="screen === 'form'"
+    :plan="selectedPlan!"
     @create="createJob"/>
   <JobOfferShow
     v-if="screen === 'edit'"
@@ -37,19 +38,20 @@ interface Props {
 }
 
 interface Emit {
-  (event: 'create', title: string): void;
+  (event: 'create', title: string, plan: 'free'|'paid'): void;
   (event: 'update', id: number, title: string): void;
 }
 
 const screen = ref<string>('home');
+const selectedPlan = ref<'free'|'paid'|null>(null);
 
 let currentlyEditedJobId = null;
 const currentlyEditedJob = computed<JobOffer>(() => {
   return props.jobOffers.find(offer => offer.id === currentlyEditedJobId)!;
 });
 
-function createJob(jobOfferTitle: string): void {
-  emit('create', jobOfferTitle);
+function createJob(jobOfferTitle: string, plan: 'free'|'paid'): void {
+  emit('create', jobOfferTitle, plan);
   screen.value = 'home';
 }
 
@@ -63,7 +65,8 @@ function updateJob(id: number, title: string): void {
   screen.value = 'home';
 }
 
-function selectPlan(): void {
+function selectPlan(plan: 'free'|'paid'): void {
+  selectedPlan.value = plan;
   screen.value = 'form';
 }
 

@@ -18,8 +18,8 @@ export class View {
       render() {
         return h(JobBoard, {
           jobOffers: that.jobOffers.value,
-          onCreate(title: string): void {
-            that.events.onJobCreate(title);
+          onCreate(title: string, plan: 'free'|'paid'): void {
+            that.events.onJobCreate(title, plan);
           },
           onUpdate(id: number, title: string): void {
             that.events.onJobUpdate(id, title);
@@ -32,6 +32,6 @@ export class View {
 }
 
 export interface ViewEvents {
-  onJobCreate: (title: string) => void;
+  onJobCreate: (title: string, plan: 'free'|'paid') => void;
   onJobUpdate: (id: number, title: string) => void;
 }
