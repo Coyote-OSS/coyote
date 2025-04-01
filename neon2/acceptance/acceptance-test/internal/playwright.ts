@@ -12,17 +12,23 @@ export function test(title: string, test: Test): void {
 
 type Test = (dsl: Dsl) => Promise<void>;
 
-export function beforeEach(block: DriverConsumer): void {
-  playwrightTest.beforeEach(async ({page}) => {
-    await block(new Driver(page));
-  });
+export function beforeEach(block: (dsl: Dsl) => Promise<void>): void {
+  playwrightTest.beforeEach(({page}) => block(new Dsl(new Driver(page))));
 }
-
-type DriverConsumer = (driver: Driver) => Promise<void>;
 
 export function assertEquals(expected: any, actual: any): void {
   expect(actual).toStrictEqual(expected);
 }
+
+export function assertNotEquals(expected: any, actual: any): void {
+  expect(actual).not.toStrictEqual(expected);
+}
+
+export function assertThrows(block: Runnable, expectedMessage: string): void {
+  expect(block).toThrow(expectedMessage);
+}
+
+type Runnable = () => void;
 
 export function assertContains(needle: any, haystack: any[]): void {
   expect(haystack).toContain(needle);

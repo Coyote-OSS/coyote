@@ -1,8 +1,8 @@
-import {Dsl} from "../internal/dsl";
-import {beforeEach, describe, saveScreenshotAfterFailedTest, test} from "../internal/playwright";
+import {Dsl} from "../../internal/dsl";
+import {beforeEach, describe, saveScreenshotAfterFailedTest, test} from "../../internal/playwright";
 
 saveScreenshotAfterFailedTest('FAILURE.png');
-beforeEach(async (driver) => await driver.loadApplication());
+beforeEach(dsl => dsl.beforeEach());
 
 describe('A job offer can be found in search until it expires.', () => {
   test('Given a user published a job offer, the job offer can be found in search.', async (dsl: Dsl) => {

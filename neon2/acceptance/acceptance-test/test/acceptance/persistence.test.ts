@@ -1,8 +1,8 @@
-import {Dsl} from "../internal/dsl";
-import {beforeEach, describe, saveScreenshotAfterFailedTest, test} from "../internal/playwright";
+import {Dsl} from "../../internal/dsl";
+import {beforeEach, describe, saveScreenshotAfterFailedTest, test} from "../../internal/playwright";
 
 saveScreenshotAfterFailedTest('FAILURE.png');
-beforeEach(async (driver) => await driver.loadApplication());
+beforeEach(dsl => dsl.beforeEach());
 
 describe('Job offers are persisted after browser reset.', () => {
   test('Given a published a job offer, when a browser is reset, the job offer can be found in search.', async (dsl: Dsl) => {
