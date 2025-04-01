@@ -10,6 +10,9 @@ includes:
   accept:
     taskfile: ./neon2/acceptance/
     dir: ./neon2/acceptance/
+  app:
+    taskfile: ./neon2/app/
+    dir: ./neon2/app/
   web:
     taskfile: ./neon2/web/
     dir: ./neon2/web/

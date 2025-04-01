@@ -1,76 +1,32 @@
 export class JobBoardBackend {
-  private autoInc: number;
-
-  constructor(private storage: BackendStorage) {
-    this.autoInc = this.initialAutoInc();
-  }
-
-  private initialAutoInc(): number {
-    const savedOffers = this.storedOffers();
-    if (savedOffers.length > 0) {
-      return Math.max(...savedOffers.map(o => o.id)) + 1;
-    }
-    return 1;
-  }
-
   addJobOffer(title: string, plan: 'free'|'paid', created: (id: number, expiresInDays: number) => void): void {
-    simulateNetwork(() => {
-      const jobOffer = {
-        id: this.autoInc++,
-        title,
-        expiresInDays: plan === 'free' ? 14 : 30,
-      };
-      this.storeOffers([...this.storedOffers(), jobOffer]);
-      created(jobOffer.id, jobOffer.expiresInDays);
-    });
+    const formData = new FormData();
+    formData.append('jobOfferTitle', title);
+    formData.append('jobOfferPlan', plan);
+    fetch('/job-offers', {method: 'POST', body: formData})
+      .then(response => response.json())
+      .then((jobOffer: BackendJobOffer): void => {
+        created(jobOffer.id, jobOffer.expiresInDays);
+      });
   }
 
   updateJobOffer(id: number, title: string, updated: () => void): void {
-    simulateNetwork(() => {
-      const offers = this.storedOffers();
-      const index = offers.findIndex(o => o.id === id);
-      if (index !== -1) {
-        offers[index].title = title;
-        this.storeOffers(offers);
-      }
-      updated();
-    });
+    const formData = new FormData();
+    formData.append('jobOfferId', id.toString());
+    formData.append('jobOfferTitle', title);
+    fetch('/job-offers', {method: 'PATCH', body: formData})
+      .then(() => updated());
   }
 
   initialJobOffers(): BackendJobOffer[] {
-    return this.storedOffers();
-  }
-
-  private storedOffers(): BackendJobOffer[] {
-    const data = this.storage.read();
-    return data ? JSON.parse(data) : [];
-  }
-
-  private storeOffers(offers: BackendJobOffer[]): void {
-    this.storage.write(JSON.stringify(offers));
+    const backendInput = window['backendInput'] as BackendInput;
+    return backendInput.jobOffers;
   }
 }
 
-export class LocalStorage implements BackendStorage {
-  write(value: string): void {
-    localStorage.setItem('jobOffers', value);
-  }
-
-  read(): string|null {
-    return localStorage.getItem('jobOffers') || null;
-  }
+interface BackendInput {
+  jobOffers: BackendJobOffer[];
 }
-
-export interface BackendStorage {
-  write(value: string): void;
-  read(): string|null;
-}
-
-function simulateNetwork(block: Runnable): void {
-  setTimeout(block, 125);
-}
-
-type Runnable = () => void;
 
 interface BackendJobOffer {
   id: number;

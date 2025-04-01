@@ -1,11 +1,11 @@
-import {JobBoardBackend, LocalStorage} from "./backend";
+import {JobBoardBackend} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
 import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
 const view = new View(new VueUi());
 const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
-const backend = new JobBoardBackend(new LocalStorage());
+const backend = new JobBoardBackend();
 
 view.addEventListener({
   createJob(title: string, plan: 'free'|'paid'): void {
