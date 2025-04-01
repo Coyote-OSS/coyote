@@ -9,10 +9,12 @@ export class Dsl {
 
   async publishJobOffer(jobOffer: { title: string, pricingType?: PricingType }): None {
     await this.driver.publishJobOffer(jobOffer.title, jobOffer.pricingType || 'free');
+    await this.driver.waitForText('Dodano ofertę pracy!');
   }
 
   async updateJobOffer(update: { title: string, updatedTitle: string }): None {
     await this.driver.updateJobOffer(update.title, update.updatedTitle);
+    await this.driver.waitForText('Zaktualizowano ofertę pracy!');
   }
 
   async assertJobOfferIsSearchable(assertion: { jobOfferTitle: string }): None {
@@ -66,6 +68,10 @@ export class Driver {
     await this.web.click(jobOfferTitle);
     return await this.web.readStringByTestId('jobOfferExpiresInDays');
   }
+
+  async waitForText(text: string): None {
+    await this.web.waitForText(text);
+  }
 }
 
 type PricingType = 'free'|'paid';
@@ -117,5 +123,9 @@ class WebDriver {
       strings.push(text);
     }
     return strings;
+  }
+
+  async waitForText(text: string): None {
+    await this.page.getByText(text).waitFor({timeout: 500});
   }
 }

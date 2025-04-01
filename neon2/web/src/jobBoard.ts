@@ -2,9 +2,11 @@ interface JobBoardObserver {
   (jobOffers: JobOffer[]): void;
 }
 
+type ToastListener = (toast: Toast) => void;
+
 export class JobBoard {
   private readonly jobOffers: JobOffer[];
-  private autoInc = 1;
+  private readonly toastListeners: ToastListener[] = [];
 
   constructor(private observe: JobBoardObserver) {
     this.jobOffers = [];
@@ -14,18 +16,16 @@ export class JobBoard {
     return this.jobOffers.length;
   }
 
-  addJobOffer(title: string, pricingPlan: 'free'|'paid'): void {
-    this.jobOffers.push({
-      title,
-      id: this.autoInc++,
-      expiresInDays: pricingPlan === 'free' ? 14 : 30,
-    });
+  jobOfferCreated(jobOffer: JobOffer): void {
+    this.jobOffers.push(jobOffer);
     this.updateView();
+    this.toastListeners.forEach(listener => listener('created'));
   }
 
-  updateJobOffer(id: number, targetTitle: string): void {
+  jobOfferUpdated(id: number, targetTitle: string): void {
     this.findJobOffer(id).title = targetTitle;
     this.updateView();
+    this.toastListeners.forEach(listener => listener('edited'));
   }
 
   private findJobOffer(id: number): JobOffer {
@@ -39,7 +39,13 @@ export class JobBoard {
   updateView(): void {
     this.observe(copyArray<JobOffer>(this.jobOffers));
   }
+
+  onToast(listener: ToastListener): void {
+    this.toastListeners.push(listener);
+  }
 }
+
+export type Toast = 'created'|'edited';
 
 export interface JobOffer {
   id: number;
@@ -48,9 +54,5 @@ export interface JobOffer {
 }
 
 function copyArray<T>(array: T[]): T[] {
-  return array.map(copy);
-}
-
-function copy<T>(object: T): T {
-  return {...object};
+  return array.map(object => ({...object}));
 }
