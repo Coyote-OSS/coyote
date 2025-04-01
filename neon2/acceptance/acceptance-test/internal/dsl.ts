@@ -1,6 +1,6 @@
 import {Driver} from './driver';
 import {Mangler} from './mangler';
-import {assertContains, assertEquals} from './playwright';
+import {assertContains, assertEquals, assertNotContains} from './playwright';
 
 export type PricingType = 'free'|'paid';
 
@@ -30,10 +30,20 @@ export class Dsl {
     await this.driver.waitForText('Zaktualizowano ofertę pracy!');
   }
 
-  async assertJobOfferIsSearchable(assertion: { jobOfferTitle: string }): None {
+  async searchJobOffers(search: { searchPhrase: string }): None {
+    await this.driver.searchJobOffers(search.searchPhrase);
+  }
+
+  async assertJobOfferIsListed(assertion: { jobOfferTitle: string }): None {
     assertContains(
       assertion.jobOfferTitle,
-      this.mangler.decodedAll(await this.driver.searchJobOffers(this.enc(assertion.jobOfferTitle))));
+      this.mangler.decodedAll(await this.driver.listJobOffers()));
+  }
+
+  async assertJobOfferIsNotListed(assertion: { jobOfferTitle: string }): None {
+    assertNotContains(
+      assertion.jobOfferTitle,
+      this.mangler.decodedAll(await this.driver.listJobOffers()));
   }
 
   async assertJobOfferExpiresInDays(assertion: { jobOfferTitle: string, expectedExpiry: number }): None {

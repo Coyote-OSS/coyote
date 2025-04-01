@@ -14,15 +14,18 @@ export interface UserInterface {
   setToast(toast: string|null): void;
   addViewListener(listener: ViewListener): void;
   addNavigationListener(listener: NavigationListener): void;
+  addSearchListener(listener: SearchListener): void;
 }
 
 export type NavigationListener = () => void;
+export type SearchListener = (searchPhrase: string) => void;
 
 export class VueUi implements UserInterface {
   private jobOffers = ref<JobOffer[]>([]);
   private toast = ref<Toast|null>(null);
   private viewListener: ViewListener|null = null;
   private navigationListeners: NavigationListener[] = [];
+  private searchListeners: SearchListener[] = [];
 
   addViewListener(viewEventListener: ViewListener): void {
     this.viewListener = viewEventListener;
@@ -30,6 +33,10 @@ export class VueUi implements UserInterface {
 
   addNavigationListener(navigationListener: NavigationListener): void {
     this.navigationListeners.push(navigationListener);
+  }
+
+  addSearchListener(listener: SearchListener): void {
+    this.searchListeners.push(listener);
   }
 
   setJobOffers(jobOffers: JobOffer[]): void {
@@ -58,6 +65,9 @@ export class VueUi implements UserInterface {
       },
       onNavigate(): void {
         that.navigationListeners.forEach(listener => listener());
+      },
+      onSearch(searchPhrase: string): void {
+        that.searchListeners.forEach(listener => listener(searchPhrase));
       },
     });
   }
