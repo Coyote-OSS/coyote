@@ -1,8 +1,8 @@
-import {JobBoardBackend} from "./backend";
+import {JobBoardBackend, LocalStorage} from "./backend";
 import {JobBoard, JobOffer, Toast} from './jobBoard';
 import {View} from "./view/view";
 
-const backend = new JobBoardBackend();
+const backend = new JobBoardBackend(new LocalStorage());
 let board: JobBoard;
 const view = new View({
   createJob(title: string, plan: 'free'|'paid'): void {

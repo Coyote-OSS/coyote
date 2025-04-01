@@ -7,6 +7,10 @@ export class Dsl {
   constructor(private driver: Driver) {
   }
 
+  async resetClient(): None {
+    await this.driver.loadApplication();
+  }
+
   async publishJobOffer(jobOffer: { title: string, pricingType?: PricingType }): None {
     await this.driver.publishJobOffer(jobOffer.title, jobOffer.pricingType || 'free');
     await this.driver.waitForText('Dodano ofertę pracy!');
