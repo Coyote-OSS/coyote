@@ -1,4 +1,4 @@
-import {JobBoard, JobOffer} from "../src/jobBoard";
+import {JobBoard, JobOffer, Toast} from "../src/jobBoard";
 import {
   assertContains,
   assertEquals,
@@ -7,6 +7,7 @@ import {
   assertThrows,
   beforeEach,
   describe,
+  Spy,
   test,
 } from "./assertion";
 
@@ -24,7 +25,7 @@ describe('Job board', () => {
   }
 
   function addJobOffer(title: string): void {
-    board.addJobOffer(title, 'free');
+    board.jobOfferCreated({id: 1, title, expiresInDays: 14});
   }
 
   describe('Job board updates the view with job offers.', () => {
@@ -68,45 +69,42 @@ describe('Job board', () => {
     test('Given a job offer, when its title is updated, the title is no longer passed to view.', () => {
       addJobOffer('Before');
       const [offer] = lastViewSnapshot!;
-      board.updateJobOffer(offer.id, 'After');
+      board.jobOfferUpdated(offer.id, 'After');
       assertNotContains('Before', lastViewSnapshotTitles());
     });
     test('Given a job offer, when its title is updated, the new title is passed to view.', () => {
       addJobOffer('Before');
       const [offer] = lastViewSnapshot!;
-      board.updateJobOffer(offer.id, 'After');
+      board.jobOfferUpdated(offer.id, 'After');
       assertContains('After', lastViewSnapshotTitles());
     });
     test('When a non-existing job offer is edited, an exception is thrown.', () => {
       const nonExistingId = 123;
       assertThrows(
-        () => board.updateJobOffer(nonExistingId, ''),
+        () => board.jobOfferUpdated(nonExistingId, ''),
         'No such job offer.');
-    });
-    test('Adding two job offers with the same name, does not yield the same id.', () => {
-      addJobOffer('Same name');
-      addJobOffer('Same name');
-      const [first, second] = lastViewSnapshot!;
-      assertNotEquals(first.id, second.id);
     });
     test('Updating an offer preserves its id.', () => {
       addJobOffer('Before');
       const [offer] = lastViewSnapshot!;
-      board.updateJobOffer(offer.id, 'First edit');
+      board.jobOfferUpdated(offer.id, 'First edit');
       const [afterEdit] = lastViewSnapshot!;
       assertEquals(offer.id, afterEdit.id);
     });
   });
-  describe('Job offer expiry date depends on the job offer pricing.', () => {
-    test('A free job offer expires in 14 days.', () => {
-      board.addJobOffer('Free offer', 'free');
-      const [freeOffer] = lastViewSnapshot!;
-      assertEquals(14, freeOffer.expiresInDays);
+  describe('Job offer state state is announced with a toast.', () => {
+    test('Job offer creation is announced with a toast.', () => {
+      const spy = new Spy<Toast>();
+      board.onToast(spy.capture());
+      board.jobOfferCreated({title: '', id: 0, expiresInDays: 0});
+      spy.assertCalledWith('created');
     });
-    test('A paid job offer expires in 30 days.', () => {
-      board.addJobOffer('Paid offer', 'paid');
-      const [freeOffer] = lastViewSnapshot!;
-      assertEquals(30, freeOffer.expiresInDays);
+    test('Job offer edit is announced with a toast.', async () => {
+      const spy = new Spy<Toast>();
+      board.jobOfferCreated({id: 1, title: '', expiresInDays: 0});
+      board.onToast(spy.capture());
+      board.jobOfferUpdated(1, '');
+      spy.assertCalledWith('edited');
     });
   });
 });
