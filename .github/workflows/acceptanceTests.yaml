@@ -42,6 +42,9 @@ jobs:
       - name: Bundle the client
         run: task web:bundle
 
+      - name: Install backend
+        run: task app:install
+
       - name: Start the acceptance app
         run: task accept:start &
 
