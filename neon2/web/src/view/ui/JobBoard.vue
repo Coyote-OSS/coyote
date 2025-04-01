@@ -25,7 +25,8 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {JobOffer, Toast} from '../jobBoard';
+import {JobOffer} from '../../jobBoard';
+import {Toast} from '../view';
 import JobOfferForm from './JobOffer/JobOfferForm.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';

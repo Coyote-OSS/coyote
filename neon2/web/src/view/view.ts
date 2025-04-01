@@ -1,46 +1,32 @@
-import {createApp, h, ref} from 'vue';
-import {JobOffer, Toast} from '../jobBoard';
-import JobBoard from './JobBoard.vue';
+import {JobOffer} from '../jobBoard';
+import {UserInterface, ViewListener} from './ui/ui';
+
+export type Toast = 'created'|'edited';
 
 export class View {
-  private jobOffers = ref<JobOffer[]>([]);
-  private _toast = ref<Toast|null>(null);
-
-  constructor(private events: ViewEvents) {
+  constructor(private ui: UserInterface) {
+    this.ui.addNavigationListener((): void => {
+      this.ui.setToast(null);
+    });
   }
 
-  setJobOffers(jobOffers: JobOffer[]): void {
-    this.jobOffers.value = jobOffers;
-  }
-
-  toast(toast: Toast|null): void {
-    this._toast.value = toast;
+  addEventListener(listener: ViewListener): void {
+    this.ui.addViewListener(listener);
   }
 
   mount(cssSelector: string): void {
-    const that = this;
-    const app = createApp({
-      render() {
-        return h(JobBoard, {
-          jobOffers: that.jobOffers.value,
-          toast: that._toast.value,
-          onCreate(title: string, plan: 'free'|'paid'): void {
-            that.events.createJob(title, plan);
-          },
-          onUpdate(id: number, title: string): void {
-            that.events.editJob(id, title);
-          },
-          onNavigate(): void {
-            that.toast(null);
-          },
-        });
-      },
-    });
-    window.addEventListener('load', () => app.mount(cssSelector));
+    this.ui.mount(cssSelector);
   }
-}
 
-export interface ViewEvents {
-  createJob: (title: string, plan: 'free'|'paid') => void;
-  editJob: (id: number, title: string) => void;
+  setJobOffers(jobOffers: JobOffer[]): void {
+    this.ui.setJobOffers(jobOffers);
+  }
+
+  toastCreated(): void {
+    this.ui.setToast('created');
+  }
+
+  toastEdited(): void {
+    this.ui.setToast('edited');
+  }
 }

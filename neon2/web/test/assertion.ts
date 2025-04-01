@@ -23,17 +23,3 @@ export function assertThrows(block: Runnable, expectedMessage: string): void {
 }
 
 type Runnable = () => void;
-
-export class Spy<T> {
-  private lastArgument: T|null = null;
-
-  capture(): (argument: T) => void {
-    return (argument: T): void => {
-      this.lastArgument = argument;
-    };
-  }
-
-  assertCalledWith(argument: T): void {
-    assertEquals(argument, this.lastArgument);
-  }
-}

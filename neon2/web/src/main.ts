@@ -1,34 +1,28 @@
 import {JobBoardBackend, LocalStorage} from "./backend";
-import {JobBoard, JobOffer, Toast} from './jobBoard';
+import {JobBoard, JobOffer} from './jobBoard';
+import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
+const view = new View(new VueUi());
+const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
 const backend = new JobBoardBackend(new LocalStorage());
-let board: JobBoard;
-const view = new View({
+
+view.addEventListener({
   createJob(title: string, plan: 'free'|'paid'): void {
-    backend.addJobOffer(title, plan, (id: number, expiresInDays: number) => {
-      board.jobOfferCreated({
-        id,
-        title,
-        expiresInDays,
-      });
+    backend.addJobOffer(title, plan, (id: number, expiresInDays: number): void => {
+      board.jobOfferCreated({id, title, expiresInDays});
+      view.toastCreated();
     });
   },
   editJob(id: number, title: string): void {
-    backend.updateJobOffer(id, title, () => {
+    backend.updateJobOffer(id, title, (): void => {
       board.jobOfferUpdated(id, title);
+      view.toastEdited();
     });
   },
 });
 
-board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
-board.onToast((toast: Toast|null): void => view.toast(toast));
-
-const offers = backend.initialJobOffers();
-offers.forEach(offer => board.jobOfferCreated({
-  id: offer.id,
-  title: offer.title,
-  expiresInDays: offer.expiresInDays,
-}));
+backend.initialJobOffers()
+  .forEach(offer => board.jobOfferCreated({...offer}));
 
 view.mount('#neonApplication');
