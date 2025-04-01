@@ -1,10 +1,10 @@
-import {JobBoardBackend} from '../src/backend';
+import {BackendStorage, JobBoardBackend} from '../src/backend';
 import {assertEquals, assertNotEquals, beforeEach, describe, test} from './assertion';
 
 describe('JobBoard backend', () => {
   let backend: JobBoardBackend;
   beforeEach(() => {
-    backend = new JobBoardBackend();
+    backend = new JobBoardBackend(new MemoryStorage());
   });
 
   function addJobOffer(title: string, plan: 'free'|'paid'): Promise<{ id, expiresInDays }> {
@@ -33,3 +33,15 @@ describe('JobBoard backend', () => {
     });
   });
 });
+
+class MemoryStorage implements BackendStorage {
+  private value: string|null = null;
+
+  write(value: string): void {
+    this.value = value;
+  }
+
+  read(): string|null {
+    return this.value;
+  }
+}
