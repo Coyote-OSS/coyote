@@ -1,6 +1,9 @@
 <template>
-  <button @click="emit('select')">
+  <button @click="emit('select', 'free')">
     Publikuj ogłoszenie
+  </button>
+  <button @click="emit('select', 'paid')">
+    Kup ogłoszenie
   </button>
 </template>
 
@@ -8,6 +11,6 @@
 const emit = defineEmits<Emit>();
 
 interface Emit {
-  (event: 'select'): void;
+  (event: 'select', plan: 'free'|'paid'): void;
 }
 </script>

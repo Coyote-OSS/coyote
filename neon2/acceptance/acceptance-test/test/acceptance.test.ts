@@ -15,19 +15,13 @@ describe('A job offer can be found in search until it expires.', () => {
   });
 });
 
-// describe('The publishing time depends on the pricing of the job offer.', () => {
-//   test('A free job offer expires after 14 days.', async (dsl: Dsl) => {
-//   });
-//   test('A paid job offer expires after 30 days.', async (dsl: Dsl) => {
-//   });
-// });
-
-// describe('The author of a job offer can view the offer, even after the job offer has expired.', () => {
-//   test('Given a job offer has expired, when a user views his job offer, then he can access the job offer.', async () => {
-//   });
-// });
-
-// describe('The author of a job offer can edit the job offer even after it expires.', () => {
-//   test('Given a job offer has expired, when a user edits a job offer, then the job offer is updated.', async () => {
-//   });
-// });
+describe('The publishing time depends on the pricing of the job offer.', () => {
+  test('A free job offer expires after 14 days.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Free offer', pricingType: 'free'});
+    await dsl.assertJobOfferExpiresInDays({jobOfferTitle: 'Free offer', expectedExpiry: 14});
+  });
+  test('A paid job offer expires after 30 days.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Paid offer', pricingType: 'paid'});
+    await dsl.assertJobOfferExpiresInDays({jobOfferTitle: 'Paid offer', expectedExpiry: 30});
+  });
+});
