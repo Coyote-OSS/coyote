@@ -7,12 +7,19 @@ beforeEach(dsl => dsl.beforeEach());
 describe('A job offer can be found in search until it expires.', () => {
   test('Given a user published a job offer, the job offer can be found in search.', async (dsl: Dsl) => {
     await dsl.publishJobOffer({title: 'Green'});
-    await dsl.assertJobOfferIsSearchable({jobOfferTitle: 'Green'});
+    await dsl.assertJobOfferIsListed({jobOfferTitle: 'Green'});
   });
   test('Given a job offer, when the author edits the offer, the updated job offer can be found in search.', async (dsl: Dsl) => {
     await dsl.publishJobOffer({title: 'Before'});
     await dsl.updateJobOffer({title: 'Before', updatedTitle: 'After'});
-    await dsl.assertJobOfferIsSearchable({jobOfferTitle: 'After'});
+    await dsl.assertJobOfferIsListed({jobOfferTitle: 'After'});
+  });
+  test('Given a job offer, it can be found by partial search phrase.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Big Blue Cheeseburger'});
+    await dsl.publishJobOffer({title: 'Small Green Cheeseburger'});
+    await dsl.searchJobOffers({searchPhrase: 'Blue'});
+    await dsl.assertJobOfferIsListed({jobOfferTitle: 'Big Blue Cheeseburger'});
+    await dsl.assertJobOfferIsNotListed({jobOfferTitle: 'Small Green Cheeseburger'});
   });
 });
 

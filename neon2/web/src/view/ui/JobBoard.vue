@@ -20,7 +20,8 @@
     v-if="screen === 'home'"
     :job-offers="props.jobOffers"
     @edit="editJob"
-    @add="showPricing"/>
+    @add="showPricing"
+    @search="searchJobs"/>
 </template>
 
 <script setup lang="ts">
@@ -44,6 +45,7 @@ interface Emit {
   (event: 'create', title: string, plan: 'free'|'paid'): void;
   (event: 'update', id: number, title: string): void;
   (event: 'navigate'): void;
+  (event: 'search', searchPhrase: string);
 }
 
 type Screen = 'home'|'edit'|'form'|'pricing';
@@ -83,6 +85,10 @@ function selectPlan(plan: 'free'|'paid'): void {
 
 function showPricing(): void {
   navigate('pricing');
+}
+
+function searchJobs(searchPhrase: string): void {
+  emit('search', searchPhrase);
 }
 
 const showHomeLink = computed<boolean>(() => {

@@ -30,9 +30,12 @@ export class Driver {
     await this.web.click('Zapisz');
   }
 
-  async searchJobOffers(searchPhrase: string): Promise<string[]> {
+  async searchJobOffers(searchPhrase: string): None {
     await this.web.fillByPlaceholder('Wyszukaj', searchPhrase);
     await this.web.clickByTestId('search');
+  }
+
+  async listJobOffers(): Promise<string[]> {
     return await this.web.listStringByTestId('jobOfferTitle');
   }
 

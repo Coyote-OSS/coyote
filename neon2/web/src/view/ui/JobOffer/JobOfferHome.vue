@@ -1,7 +1,7 @@
 <template>
   <button @click="emit('add')">Dodaj ofertę</button>
   <div>
-    <input placeholder="Wyszukaj"/>
+    <input placeholder="Wyszukaj" v-model="searchPhrase" @input="search"/>
     <button data-testid="search">S</button>
   </div>
   <ul>
@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import {ref} from 'vue';
 import {JobOffer} from '../../../jobBoard';
 
 const props = defineProps<Props>();
@@ -28,5 +29,12 @@ const emit = defineEmits<Emit>();
 interface Emit {
   (event: 'edit', id: number): void;
   (event: 'add'): void;
+  (event: 'search', searchPhrase: string): void;
+}
+
+const searchPhrase = ref<string>('');
+
+function search(): void {
+  emit('search', searchPhrase.value);
 }
 </script>

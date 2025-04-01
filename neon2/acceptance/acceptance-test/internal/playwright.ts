@@ -24,14 +24,12 @@ export function assertNotEquals(expected: any, actual: any): void {
   expect(actual).not.toStrictEqual(expected);
 }
 
-export function assertThrows(block: Runnable, expectedMessage: string): void {
-  expect(block).toThrow(expectedMessage);
-}
-
-type Runnable = () => void;
-
 export function assertContains(needle: any, haystack: any[]): void {
   expect(haystack).toContain(needle);
+}
+
+export function assertNotContains(needle: any, haystack: any[]): void {
+  expect(haystack).not.toContain(needle);
 }
 
 export function saveScreenshotAfterFailedTest(filename: string): void {
