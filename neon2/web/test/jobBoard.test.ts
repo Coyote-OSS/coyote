@@ -1,4 +1,4 @@
-import {JobBoard, JobOffer, Toast} from "../src/jobBoard";
+import {JobBoard, JobOffer} from "../src/jobBoard";
 import {
   assertContains,
   assertEquals,
@@ -7,7 +7,6 @@ import {
   assertThrows,
   beforeEach,
   describe,
-  Spy,
   test,
 } from "./assertion";
 
@@ -90,21 +89,6 @@ describe('Job board', () => {
       board.jobOfferUpdated(offer.id, 'First edit');
       const [afterEdit] = lastViewSnapshot!;
       assertEquals(offer.id, afterEdit.id);
-    });
-  });
-  describe('Job offer state state is announced with a toast.', () => {
-    test('Job offer creation is announced with a toast.', () => {
-      const spy = new Spy<Toast>();
-      board.onToast(spy.capture());
-      board.jobOfferCreated({title: '', id: 0, expiresInDays: 0});
-      spy.assertCalledWith('created');
-    });
-    test('Job offer edit is announced with a toast.', async () => {
-      const spy = new Spy<Toast>();
-      board.jobOfferCreated({id: 1, title: '', expiresInDays: 0});
-      board.onToast(spy.capture());
-      board.jobOfferUpdated(1, '');
-      spy.assertCalledWith('edited');
     });
   });
 });

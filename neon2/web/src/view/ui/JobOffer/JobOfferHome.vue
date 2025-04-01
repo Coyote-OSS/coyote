@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import {JobOffer} from '../../jobBoard';
+import {JobOffer} from '../../../jobBoard';
 
 const props = defineProps<Props>();
 
