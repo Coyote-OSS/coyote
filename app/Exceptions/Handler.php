@@ -20,7 +20,6 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         ForbiddenException::class,
         CommandNotFoundException::class,
-        PaymentFailedException::class,
     ];
 
     protected $dontFlash = [
