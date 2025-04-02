@@ -2,7 +2,6 @@
 namespace Coyote\Http\Controllers\Job;
 
 use Coyote\Events\PaymentPaid;
-use Coyote\Exceptions\PaymentFailedException;
 use Coyote\Firm;
 use Coyote\Http\Controllers\Controller;
 use Coyote\Http\Requests\Job\PaymentRequest;
@@ -100,7 +99,7 @@ class PaymentController extends Controller
             $payment->invoice()->associate($invoice);
             $payment->save();
             $this->database->commit();
-        } catch (PaymentFailedException|\Exception $exception) {
+        } catch (\Exception $exception) {
             $this->database->rollBack();
             logger()->error($exception);
             if (app()->environment('production')) {
