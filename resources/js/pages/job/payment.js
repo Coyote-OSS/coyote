@@ -97,7 +97,7 @@ createVueAppNotifications('Payment', '#js-payment', {
 
       if (error) {
         postJobBoardMilestone('payment-attempt-failed-p24');
-        notify({type: 'error', text: error});
+        notify({type: 'error', text: error.message});
         this.isProcessing = false;
       }
     },
