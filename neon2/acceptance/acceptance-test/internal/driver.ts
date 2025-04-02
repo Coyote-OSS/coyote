@@ -22,6 +22,22 @@ export class Driver {
     }
     await this.web.fillByLabel('Tytuł oferty', title);
     await this.web.click('Dodaj');
+    await this.finalizeJobOfferPayment(pricingType);
+  }
+
+  private async finalizeJobOfferPayment(pricingType: PricingType): None {
+    if (pricingType === 'paid') {
+      await this.waitForText('Dodano ofertę pracy!');
+      await this.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
+      await this.waitForText('Zostaniesz przekierowany do formularza płatności online.');
+      await this.navigateToHome();
+    } else {
+      await this.waitForText('Dodano ofertę pracy!');
+    }
+  }
+
+  private async navigateToHome(): None {
+    await this.web.click('> Wróć');
   }
 
   async updateJobOffer(sourceTitle: string, targetTitle: string): None {

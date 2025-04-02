@@ -12,6 +12,8 @@
     v-if="screen === 'form'"
     :plan="selectedPlan!"
     @create="createJob"/>
+  <JobOfferPaymentForm
+    v-if="screen === 'payment'"/>
   <JobOfferShow
     v-if="screen === 'edit'"
     :job-offer="currentlyEditedJob"
@@ -30,6 +32,7 @@ import {JobOffer} from '../../jobBoard';
 import {Toast} from '../view';
 import JobOfferForm from './JobOffer/JobOfferForm.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
+import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
 
@@ -48,7 +51,7 @@ interface Emit {
   (event: 'search', searchPhrase: string);
 }
 
-type Screen = 'home'|'edit'|'form'|'pricing';
+type Screen = 'home'|'edit'|'form'|'payment'|'pricing';
 const screen = ref<Screen>('home');
 
 function navigate(newScreen: Screen): void {
@@ -65,7 +68,11 @@ const currentlyEditedJob = computed<JobOffer>(() => {
 
 function createJob(jobOfferTitle: string, plan: 'free'|'paid'): void {
   emit('create', jobOfferTitle, plan);
-  navigate('home');
+  if (plan === 'paid') {
+    navigate('payment');
+  } else {
+    navigate('home');
+  }
 }
 
 function editJob(id: number): void {
