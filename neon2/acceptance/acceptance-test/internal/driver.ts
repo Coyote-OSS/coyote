@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {Payment, PricingType} from './dsl';
+import {JobOfferSection, Payment, PricingType} from './dsl';
 import {WebDriver} from './webDriver';
 
 export class Driver {
@@ -34,6 +34,9 @@ export class Driver {
         await this.web.click('Zapłać');
         await this.waitForText('Płatność sfinalizowana!');
       }
+      if (payment === 'ignored') {
+        await this.web.click('> Wróć');
+      }
     } else {
       await this.waitForText('Dodano ofertę pracy!');
     }
@@ -52,7 +55,12 @@ export class Driver {
     await this.web.clickByTestId('search');
   }
 
-  async listJobOffers(): Promise<string[]> {
+  async listJobOffers(section: JobOfferSection): Promise<string[]> {
+    if (section === 'published') {
+      await this.web.click('Ogłoszenia');
+    } else {
+      await this.web.click('Moje ogłoszenia');
+    }
     return await this.web.listStringByTestId('jobOfferTitle');
   }
 
@@ -63,6 +71,15 @@ export class Driver {
 
   async waitForText(text: string): None {
     await this.web.waitForText(text);
+  }
+
+  async login(username: string): None {
+    if (await this.web.hasText('Wyloguj się')) {
+      await this.web.click('Wyloguj się');
+    }
+    await this.web.click('Logowanie');
+    await this.web.fillByLabel('Login', username);
+    await this.web.click('Zaloguj się');
   }
 }
 

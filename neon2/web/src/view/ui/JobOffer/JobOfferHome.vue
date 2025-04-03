@@ -1,4 +1,8 @@
 <template>
+  <div>
+    <button>Ogłoszenia</button>
+    <button>Moje ogłoszenia</button>
+  </div>
   <button @click="emit('add')">Dodaj ofertę</button>
   <div>
     <input placeholder="Wyszukaj" v-model="searchPhrase" @input="search"/>

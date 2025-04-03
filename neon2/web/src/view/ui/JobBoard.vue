@@ -1,8 +1,15 @@
 <template>
-  4programmers > JobBoard > {{ screenTitle }}
-  <span v-if="showHomeLink" @click="navigate('home')" style="cursor:pointer;">
-    > Wróć
-  </span>
+  <div style="display:flex; justify-content:space-between;">
+    <div>
+      4programmers > JobBoard > {{ screenTitle }}
+      <span v-if="showHomeLink" @click="navigate('home')" style="cursor:pointer;">
+        > Wróć
+      </span>
+    </div>
+    <div>
+      <button @click="login">Logowanie</button>
+    </div>
+  </div>
   <hr/>
   <p v-if="toastTitle" v-text="toastTitle"/>
   <JobOfferPricing
@@ -30,6 +37,8 @@
     @show="showJob"
     @add="showPricing"
     @search="searchJobs"/>
+  <Login
+    v-if="props.screen === 'login'"/>
 </template>
 
 <script setup lang="ts">
@@ -42,6 +51,7 @@ import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
+import Login from "./Login.vue";
 
 export interface JobBoardProps {
   jobOffers: JobOffer[];
@@ -50,7 +60,7 @@ export interface JobBoardProps {
   currentJobOfferId: number|null;
 }
 
-export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
+export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show'|'login';
 
 const props = defineProps<JobBoardProps>();
 const emit = defineEmits<Emit>();
@@ -106,6 +116,10 @@ function searchJobs(searchPhrase: string): void {
   emit('search', searchPhrase);
 }
 
+function login(): void {
+  navigate('login');
+}
+
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');
 
 const screenTitle = computed<string>(() => {
@@ -116,6 +130,7 @@ const screenTitle = computed<string>(() => {
     form: 'Formularz',
     payment: 'Płatność',
     show: 'Oferta',
+    login: 'Logowanie',
   };
   return titles[props.screen];
 });

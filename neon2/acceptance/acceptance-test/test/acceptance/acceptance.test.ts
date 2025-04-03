@@ -44,3 +44,17 @@ describe('The publishing time depends on the pricing of the job offer.', () => {
     await dsl.assertJobOfferExpiresInDays({jobOfferTitle: 'Paid offer', expectedExpiry: 30});
   });
 });
+
+describe('My offers only contain own job offers.', () => {
+  test('Own offers are present in my offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'My offer', pricingType: 'paid'});
+    await dsl.assertJobOfferIsListed({jobOfferTitle: 'My offer', section: 'mine'});
+  });
+
+  test("Others' offers are not present in my offers.", async (dsl: Dsl) => {
+    await dsl.login({username: 'Mark'});
+    await dsl.publishJobOffer({title: 'Not mine', pricingType: 'paid'});
+    await dsl.login({username: 'John'});
+    await dsl.assertJobOfferIsNotListed({jobOfferTitle: 'Not mine', section: 'mine'});
+  });
+});

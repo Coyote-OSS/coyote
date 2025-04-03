@@ -4,6 +4,7 @@ import {assertContains, assertEquals, assertNotContains} from './playwright';
 
 export type PricingType = 'free'|'paid';
 export type Payment = 'completed'|'ignored';
+export type JobOfferSection = 'published'|'mine';
 
 export class Dsl {
   private mangler: Mangler;
@@ -21,6 +22,10 @@ export class Dsl {
     await this.driver.loadApplication();
   }
 
+  async login(login: { username: string }): None {
+    await this.driver.login(login.username);
+  }
+
   async publishJobOffer(jobOffer: { title: string, pricingType?: PricingType, payment?: Payment }): None {
     await this.driver.publishJobOffer(this.enc(jobOffer.title), jobOffer.pricingType || 'free', jobOffer.payment || 'completed');
   }
@@ -33,16 +38,16 @@ export class Dsl {
     await this.driver.searchJobOffers(search.searchPhrase);
   }
 
-  async assertJobOfferIsListed(assertion: { jobOfferTitle: string }): None {
+  async assertJobOfferIsListed(assertion: { jobOfferTitle: string, section?: JobOfferSection }): None {
     assertContains(
       assertion.jobOfferTitle,
-      this.mangler.decodedAll(await this.driver.listJobOffers()));
+      this.mangler.decodedAll(await this.driver.listJobOffers(assertion.section || 'published')));
   }
 
-  async assertJobOfferIsNotListed(assertion: { jobOfferTitle: string }): None {
+  async assertJobOfferIsNotListed(assertion: { jobOfferTitle: string, section?: JobOfferSection }): None {
     assertNotContains(
       assertion.jobOfferTitle,
-      this.mangler.decodedAll(await this.driver.listJobOffers()));
+      this.mangler.decodedAll(await this.driver.listJobOffers(assertion.section || 'published')));
   }
 
   async assertJobOfferExpiresInDays(assertion: { jobOfferTitle: string, expectedExpiry: number }): None {

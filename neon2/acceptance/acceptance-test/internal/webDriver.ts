@@ -52,6 +52,11 @@ export class WebDriver {
   async waitForText(text: string): None {
     await this.page.getByText(text).waitFor({timeout: 500});
   }
+
+  async hasText(text: string): Promise<boolean> {
+    const elements = await this.page.getByText(text).all();
+    return elements.length > 0;
+  }
 }
 
 type None = Promise<void>;
