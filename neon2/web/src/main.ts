@@ -28,6 +28,7 @@ view.addEventListener({
   payForJob(id: number): void {
     backend.initiateJobOfferPayment(id, (): void => {
       board.jobOfferPaid(id);
+      view.jobOfferPaid();
     });
   },
 });

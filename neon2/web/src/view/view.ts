@@ -1,7 +1,7 @@
 import {JobOffer} from '../jobBoard';
 import {Screen, UserInterface, ViewListener} from './ui/ui';
 
-export type Toast = 'created'|'edited';
+export type Toast = 'created'|'edited'|'paid';
 
 export class View {
   private jobOffers: JobOffer[] = [];
@@ -51,6 +51,11 @@ export class View {
 
   jobOfferEdited(): void {
     this.ui.setToast('edited');
+    this.ui.setScreen('home');
+  }
+
+  jobOfferPaid(): void {
+    this.ui.setToast('paid');
     this.ui.setScreen('home');
   }
 }
