@@ -75,7 +75,7 @@ describe('JobBoard View', () => {
       assertEquals('payment', ui.screen());
     });
     test('Updating a job offer navigates back to home.', () => {
-      ui.setScreen('edit');
+      ui.setScreen('show');
       view.jobOfferEdited();
       assertEquals('home', ui.screen());
     });
@@ -120,7 +120,7 @@ class MemoryUi implements UserInterface {
     this._screen = screen;
   }
 
-  setCurrentPaymentJobOfferId(jobOfferId: number): void {
+  setCurrentJobOfferId(jobOfferId: number): void {
   }
 
   navigate(): void {

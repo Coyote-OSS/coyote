@@ -44,7 +44,7 @@ export class View {
     if (plan === 'free') {
       this.ui.setScreen('home');
     } else {
-      this.ui.setCurrentPaymentJobOfferId(jobOfferId);
+      this.ui.setCurrentJobOfferId(jobOfferId);
       this.ui.setScreen('payment');
     }
   }
