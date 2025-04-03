@@ -9,7 +9,7 @@
       v-for="job in props.jobOffers"
       :key="job.id"
       data-testid="jobOfferTitle"
-      @click="emit('edit', job.id)"
+      @click="emit('show', job.id)"
       v-text="job.title"/>
   </ul>
 </template>
@@ -27,7 +27,7 @@ interface Props {
 const emit = defineEmits<Emit>();
 
 interface Emit {
-  (event: 'edit', id: number): void;
+  (event: 'show', id: number): void;
   (event: 'add'): void;
   (event: 'search', searchPhrase: string): void;
 }

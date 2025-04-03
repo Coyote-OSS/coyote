@@ -19,7 +19,7 @@ export interface UserInterface {
   addNavigationListener(listener: NavigationListener): void;
   addSearchListener(listener: SearchListener): void;
   setScreen(screen: Screen): void;
-  setCurrentPaymentJobOfferId(jobOfferId: number): void;
+  setCurrentJobOfferId(jobOfferId: number): void;
 }
 
 export type NavigationListener = (screen: Screen) => void;
@@ -30,7 +30,7 @@ export class VueUi implements UserInterface {
     jobOffers: [],
     toast: null,
     screen: 'home',
-    currentPaymentJobOfferId: null,
+    currentJobOfferId: null,
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
@@ -60,8 +60,8 @@ export class VueUi implements UserInterface {
     this.vueState.toast = toast;
   }
 
-  setCurrentPaymentJobOfferId(jobOfferId: number): void {
-    this.vueState.currentPaymentJobOfferId = jobOfferId;
+  setCurrentJobOfferId(jobOfferId: number|null): void {
+    this.vueState.currentJobOfferId = jobOfferId;
   }
 
   mount(cssSelector: string): void {
@@ -82,8 +82,9 @@ export class VueUi implements UserInterface {
       onPay(jobOfferId: number): void {
         that.viewListeners.forEach(listener => listener.payForJob(jobOfferId));
       },
-      onNavigate(screen: Screen): void {
+      onNavigate(screen: Screen, jobOfferId: number|null): void {
         that.navigationListeners.forEach(listener => listener(screen));
+        that.setCurrentJobOfferId(jobOfferId);
       },
       onSearch(searchPhrase: string): void {
         that.searchListeners.forEach(listener => listener(searchPhrase));

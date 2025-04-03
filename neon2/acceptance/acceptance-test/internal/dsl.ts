@@ -27,7 +27,6 @@ export class Dsl {
 
   async updateJobOffer(update: { title: string, updatedTitle: string }): None {
     await this.driver.updateJobOffer(this.enc(update.title), this.enc(update.updatedTitle));
-    await this.driver.waitForText('Zaktualizowano ofertę pracy!');
   }
 
   async searchJobOffers(search: { searchPhrase: string }): None {

@@ -41,8 +41,10 @@ export class Driver {
 
   async updateJobOffer(sourceTitle: string, targetTitle: string): None {
     await this.web.click(sourceTitle);
+    await this.web.click('Edytuj');
     await this.web.fillByLabel('Tytuł oferty', targetTitle);
     await this.web.click('Zapisz');
+    await this.waitForText('Zaktualizowano ofertę pracy!');
   }
 
   async searchJobOffers(searchPhrase: string): None {

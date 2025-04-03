@@ -9,10 +9,18 @@
     </span>
     dni
   </div>
-  <button @click="editJob">Edytuj</button>
+  <hr>
+  <label>
+    Tytuł oferty
+    <input id="jobOfferTitle" v-model="jobTitle">
+  </label>
+  <button @click="updateJob">
+    Zapisz
+  </button>
 </template>
 
 <script setup lang="ts">
+import {ref} from 'vue';
 import {JobOffer} from '../../../jobBoard';
 
 const props = defineProps<Props>();
@@ -23,10 +31,12 @@ interface Props {
 }
 
 interface Emit {
-  (event: 'edit', id: number): void;
+  (event: 'update', id: number, title: string): void;
 }
 
-function editJob(): void {
-  emit('edit', props.jobOffer.id);
+const jobTitle = ref<string>(props.jobOffer.title);
+
+function updateJob(): void {
+  emit('update', props.jobOffer.id, jobTitle.value);
 }
 </script>

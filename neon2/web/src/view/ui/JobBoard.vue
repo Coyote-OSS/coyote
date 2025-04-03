@@ -13,17 +13,21 @@
     :plan="selectedPlan!"
     @create="createJob"/>
   <JobOfferPaymentForm
-    v-if="props.screen === 'payment' && props.currentPaymentJobOfferId"
-    :job-offer-id="props.currentPaymentJobOfferId"
+    v-if="props.screen === 'payment' && props.currentJobOfferId"
+    :job-offer-id="props.currentJobOfferId"
     @pay="payForJob"/>
   <JobOfferShow
+    v-if="props.screen === 'show'"
+    :job-offer="currentJobOffer"
+    @edit="editJob"/>
+  <JobOfferEdit
     v-if="props.screen === 'edit'"
-    :job-offer="currentlyEditedJob"
+    :job-offer="currentJobOffer"
     @update="updateJob"/>
   <JobOfferHome
     v-if="props.screen === 'home'"
     :job-offers="props.jobOffers"
-    @edit="editJob"
+    @show="showJob"
     @add="showPricing"
     @search="searchJobs"/>
 </template>
@@ -32,6 +36,7 @@
 import {computed, ref} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {Toast} from '../view';
+import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
 import JobOfferForm from './JobOffer/JobOfferForm.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
@@ -42,10 +47,10 @@ export interface JobBoardProps {
   jobOffers: JobOffer[];
   toast: Toast|null;
   screen: Screen;
-  currentPaymentJobOfferId: number|null;
+  currentJobOfferId: number|null;
 }
 
-export type Screen = 'home'|'edit'|'form'|'payment'|'pricing';
+export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
 const props = defineProps<JobBoardProps>();
 const emit = defineEmits<Emit>();
@@ -53,20 +58,19 @@ const emit = defineEmits<Emit>();
 interface Emit {
   (event: 'create', title: string, plan: 'free'|'paid'): void;
   (event: 'update', id: number, title: string): void;
-  (event: 'navigate', screen: Screen): void;
+  (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string);
   (event: 'pay', id: number): void;
 }
 
-function navigate(newScreen: Screen): void {
-  emit('navigate', newScreen);
+function navigate(newScreen: Screen, id?: number): void {
+  emit('navigate', newScreen, id || null);
 }
 
 const selectedPlan = ref<'free'|'paid'|null>(null);
 
-let currentlyEditedJobId = null;
-const currentlyEditedJob = computed<JobOffer>(() => {
-  return props.jobOffers.find(offer => offer.id === currentlyEditedJobId)!;
+const currentJobOffer = computed<JobOffer>(() => {
+  return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
 });
 
 function createJob(jobOfferTitle: string, plan: 'free'|'paid'): void {
@@ -74,8 +78,11 @@ function createJob(jobOfferTitle: string, plan: 'free'|'paid'): void {
 }
 
 function editJob(id: number): void {
-  currentlyEditedJobId = id;
-  navigate('edit');
+  navigate('edit', id);
+}
+
+function showJob(id: number): void {
+  navigate('show', id);
 }
 
 function payForJob(jobOfferId: number): void {
@@ -108,6 +115,7 @@ const screenTitle = computed<string>(() => {
     pricing: 'Pricing',
     form: 'Formularz',
     payment: 'Płatność',
+    show: 'Oferta',
   };
   return titles[props.screen];
 });
