@@ -11,13 +11,13 @@ view.addEventListener({
   createJob(title: string, plan: 'free'|'paid'): void {
     backend.addJobOffer(title, plan, (id: number, expiresInDays: number): void => {
       board.jobOfferCreated({id, title, expiresInDays});
-      view.toastCreated();
+      view.jobOfferCreated(plan);
     });
   },
-  editJob(id: number, title: string): void {
+  updateJob(id: number, title: string): void {
     backend.updateJobOffer(id, title, (): void => {
       board.jobOfferUpdated(id, title);
-      view.toastEdited();
+      view.jobOfferEdited();
     });
   },
 });

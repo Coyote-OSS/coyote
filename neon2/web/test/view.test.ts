@@ -1,5 +1,5 @@
 import {JobOffer} from '../src/jobBoard';
-import {NavigationListener, SearchListener, UserInterface, ViewListener} from '../src/view/ui/ui';
+import {NavigationListener, Screen, SearchListener, UserInterface, ViewListener} from '../src/view/ui/ui';
 import {Toast, View} from '../src/view/view';
 import {assertEquals, beforeEach, describe, test} from './assertion';
 
@@ -12,18 +12,18 @@ describe('JobBoard View', () => {
   });
   describe('Job offer state state is announced with a toast.', () => {
     test('Job offer creation is announced with a toast.', () => {
-      view.toastCreated();
+      view.jobOfferCreated('free');
       assertEquals('created', ui.lastToast());
     });
     test('Job offer edit is announced with a toast.', async () => {
-      view.toastEdited();
+      view.jobOfferEdited();
       assertEquals('edited', ui.lastToast());
     });
   });
 
   describe('The toast disappears after navigating to other screen', () => {
     test('Given a toast visible in screen, when interface is navigated to other screen, the toast is not visible.', () => {
-      view.toastCreated();
+      view.jobOfferCreated('free');
       ui.navigate();
       assertEquals(null, ui.lastToast());
     });
@@ -62,6 +62,24 @@ describe('JobBoard View', () => {
       return {title, expiresInDays: 14, id: 1};
     }
   });
+
+  describe('Changing state of a job navigates to appropriate screen.', () => {
+    test('Creating a free job, changes screen to home.', () => {
+      ui.setScreen('pricing');
+      view.jobOfferCreated('free');
+      assertEquals('home', ui.screen());
+    });
+    test('Creating a paid job, changes screen to payment.', () => {
+      ui.setScreen('pricing');
+      view.jobOfferCreated('paid');
+      assertEquals('payment', ui.screen());
+    });
+    test('Updating a job offer navigates back to home.', () => {
+      ui.setScreen('edit');
+      view.jobOfferEdited();
+      assertEquals('home', ui.screen());
+    });
+  });
 });
 
 class MemoryUi implements UserInterface {
@@ -69,6 +87,7 @@ class MemoryUi implements UserInterface {
   private searchListeners: SearchListener[] = [];
   private toast: Toast|null = null;
   private _jobOffers: JobOffer[] = [];
+  private _screen: Screen = 'home';
 
   mount(cssSelector: string): void {
   }
@@ -92,6 +111,10 @@ class MemoryUi implements UserInterface {
   addViewListener(listener: ViewListener): void {
   }
 
+  setScreen(screen: Screen): void {
+    this._screen = screen;
+  }
+
   navigate(): void {
     this.naviListeners.forEach(listener => listener());
   }
@@ -106,5 +129,9 @@ class MemoryUi implements UserInterface {
 
   lastJobOffers(): JobOffer[] {
     return this._jobOffers;
+  }
+
+  screen(): Screen {
+    return this._screen;
   }
 }
