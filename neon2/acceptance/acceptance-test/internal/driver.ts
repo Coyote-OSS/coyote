@@ -56,6 +56,12 @@ export class Driver {
     return await this.web.listStringByTestId('jobOfferTitle');
   }
 
+  async listJobOffersMine(): Promise<string[]> {
+    await this.web.click('> Wróć');
+    await this.web.click('Moje oferty');
+    return await this.web.listStringByTestId('jobOfferTitle');
+  }
+
   async findJobOfferExpiryInDays(jobOfferTitle: string): Promise<number> {
     await this.web.click(jobOfferTitle);
     return await this.web.readStringByTestId('jobOfferExpiresInDays');

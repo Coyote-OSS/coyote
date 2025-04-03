@@ -1,4 +1,5 @@
 <template>
+  <button @click="showMyOffers">Moje oferty</button>
   <button @click="emit('add')">Dodaj ofertę</button>
   <div>
     <input placeholder="Wyszukaj" v-model="searchPhrase" @input="search"/>
@@ -30,11 +31,16 @@ interface Emit {
   (event: 'show', id: number): void;
   (event: 'add'): void;
   (event: 'search', searchPhrase: string): void;
+  (event: 'show-mine'): void;
 }
 
 const searchPhrase = ref<string>('');
 
 function search(): void {
   emit('search', searchPhrase.value);
+}
+
+function showMyOffers(): void {
+  emit('show-mine');
 }
 </script>

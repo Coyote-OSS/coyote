@@ -24,12 +24,15 @@
     v-if="props.screen === 'edit'"
     :job-offer="currentJobOffer"
     @update="updateJob"/>
+  <JobOfferMine
+    v-if="props.screen === 'mine'"/>
   <JobOfferHome
     v-if="props.screen === 'home'"
     :job-offers="props.jobOffers"
     @show="showJob"
     @add="showPricing"
-    @search="searchJobs"/>
+    @search="searchJobs"
+    @show-mine="showMine"/>
 </template>
 
 <script setup lang="ts">
@@ -39,6 +42,7 @@ import {Toast} from '../view';
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
 import JobOfferForm from './JobOffer/JobOfferForm.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
+import JobOfferMine from './JobOffer/JobOfferMine.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
@@ -50,7 +54,7 @@ export interface JobBoardProps {
   currentJobOfferId: number|null;
 }
 
-export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
+export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'mine'|'show';
 
 const props = defineProps<JobBoardProps>();
 const emit = defineEmits<Emit>();
@@ -106,6 +110,10 @@ function searchJobs(searchPhrase: string): void {
   emit('search', searchPhrase);
 }
 
+function showMine(): void {
+  navigate('mine');
+}
+
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');
 
 const screenTitle = computed<string>(() => {
@@ -116,6 +124,7 @@ const screenTitle = computed<string>(() => {
     form: 'Formularz',
     payment: 'Płatność',
     show: 'Oferta',
+    mine: 'Moje oferty',
   };
   return titles[props.screen];
 });

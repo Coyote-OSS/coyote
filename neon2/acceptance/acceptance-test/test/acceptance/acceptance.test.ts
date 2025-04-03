@@ -32,6 +32,10 @@ describe('Job offer in a non-free plan requires a payment.', () => {
     await dsl.publishJobOffer({title: 'New offer', pricingType: 'paid', payment: 'ignored'});
     await dsl.assertJobOfferIsNotListed({jobOfferTitle: 'New offer'});
   });
+  test('Given a paid job offer with awaiting payment, the job offer can be found in my offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Unpaid offer', pricingType: 'paid', payment: 'ignored'});
+    await dsl.assertJobOfferInMyOffers({jobOfferTitle: 'Unpaid offer'});
+  });
 });
 
 describe('The publishing time depends on the pricing of the job offer.', () => {

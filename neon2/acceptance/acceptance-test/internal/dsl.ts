@@ -45,6 +45,12 @@ export class Dsl {
       this.mangler.decodedAll(await this.driver.listJobOffers()));
   }
 
+  async assertJobOfferInMyOffers(assertion: { jobOfferTitle: string }): None {
+    assertContains(
+      assertion.jobOfferTitle,
+      this.mangler.decodedAll(await this.driver.listJobOffersMine()));
+  }
+
   async assertJobOfferExpiresInDays(assertion: { jobOfferTitle: string, expectedExpiry: number }): None {
     assertEquals(
       assertion.expectedExpiry,
