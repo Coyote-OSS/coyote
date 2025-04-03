@@ -8,6 +8,7 @@ export {Screen} from './JobBoard.vue';
 export interface ViewListener {
   createJob: (title: string, plan: 'free'|'paid') => void;
   updateJob: (id: number, title: string) => void;
+  payForJob: (id: number) => void;
 }
 
 export interface UserInterface {
@@ -18,6 +19,7 @@ export interface UserInterface {
   addNavigationListener(listener: NavigationListener): void;
   addSearchListener(listener: SearchListener): void;
   setScreen(screen: Screen): void;
+  setCurrentPaymentJobOfferId(jobOfferId: number): void;
 }
 
 export type NavigationListener = (screen: Screen) => void;
@@ -28,6 +30,7 @@ export class VueUi implements UserInterface {
     jobOffers: [],
     toast: null,
     screen: 'home',
+    currentPaymentJobOfferId: null,
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
@@ -57,6 +60,10 @@ export class VueUi implements UserInterface {
     this.vueState.toast = toast;
   }
 
+  setCurrentPaymentJobOfferId(jobOfferId: number): void {
+    this.vueState.currentPaymentJobOfferId = jobOfferId;
+  }
+
   mount(cssSelector: string): void {
     const render = this.vueRender.bind(this);
     createApp({render}).mount(cssSelector);
@@ -71,6 +78,9 @@ export class VueUi implements UserInterface {
       },
       onUpdate(id: number, title: string): void {
         that.viewListeners.forEach(listener => listener.updateJob(id, title));
+      },
+      onPay(jobOfferId: number): void {
+        that.viewListeners.forEach(listener => listener.payForJob(jobOfferId));
       },
       onNavigate(screen: Screen): void {
         that.navigationListeners.forEach(listener => listener(screen));

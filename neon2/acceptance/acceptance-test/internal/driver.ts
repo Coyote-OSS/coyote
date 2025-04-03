@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {PricingType} from './dsl';
+import {Payment, PricingType} from './dsl';
 import {WebDriver} from './webDriver';
 
 export class Driver {
@@ -13,7 +13,7 @@ export class Driver {
     await this.web.navigate('/');
   }
 
-  async publishJobOffer(title: string, pricingType: PricingType): None {
+  async publishJobOffer(title: string, pricingType: PricingType, payment: Payment): None {
     await this.web.click('Dodaj ofertę');
     if (pricingType === 'free') {
       await this.web.click('Publikuj ogłoszenie');
@@ -22,14 +22,17 @@ export class Driver {
     }
     await this.web.fillByLabel('Tytuł oferty', title);
     await this.web.click('Dodaj');
-    await this.finalizeJobOfferPayment(pricingType);
+    await this.finalizeJobOfferPayment(pricingType, payment);
   }
 
-  private async finalizeJobOfferPayment(pricingType: PricingType): None {
+  private async finalizeJobOfferPayment(pricingType: PricingType, payment: Payment): None {
     if (pricingType === 'paid') {
       await this.waitForText('Dodano ofertę pracy!');
       await this.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
       await this.waitForText('Zostaniesz przekierowany do formularza płatności online.');
+      if (payment === 'completed') {
+        await this.web.click('Zapłać');
+      }
       await this.navigateToHome();
     } else {
       await this.waitForText('Dodano ofertę pracy!');

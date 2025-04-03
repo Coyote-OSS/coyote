@@ -3,6 +3,7 @@ import {Mangler} from './mangler';
 import {assertContains, assertEquals, assertNotContains} from './playwright';
 
 export type PricingType = 'free'|'paid';
+export type Payment = 'completed'|'ignored';
 
 export class Dsl {
   private mangler: Mangler;
@@ -20,8 +21,8 @@ export class Dsl {
     await this.driver.loadApplication();
   }
 
-  async publishJobOffer(jobOffer: { title: string, pricingType?: PricingType }): None {
-    await this.driver.publishJobOffer(this.enc(jobOffer.title), jobOffer.pricingType || 'free');
+  async publishJobOffer(jobOffer: { title: string, pricingType?: PricingType, payment?: Payment }): None {
+    await this.driver.publishJobOffer(this.enc(jobOffer.title), jobOffer.pricingType || 'free', jobOffer.payment || 'completed');
   }
 
   async updateJobOffer(update: { title: string, updatedTitle: string }): None {

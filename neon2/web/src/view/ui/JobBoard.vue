@@ -13,7 +13,9 @@
     :plan="selectedPlan!"
     @create="createJob"/>
   <JobOfferPaymentForm
-    v-if="props.screen === 'payment'"/>
+    v-if="props.screen === 'payment' && props.currentPaymentJobOfferId"
+    :job-offer-id="props.currentPaymentJobOfferId"
+    @pay="payForJob"/>
   <JobOfferShow
     v-if="props.screen === 'edit'"
     :job-offer="currentlyEditedJob"
@@ -40,6 +42,7 @@ export interface JobBoardProps {
   jobOffers: JobOffer[];
   toast: Toast|null;
   screen: Screen;
+  currentPaymentJobOfferId: number|null;
 }
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing';
@@ -52,6 +55,7 @@ interface Emit {
   (event: 'update', id: number, title: string): void;
   (event: 'navigate', screen: Screen): void;
   (event: 'search', searchPhrase: string);
+  (event: 'pay', id: number): void;
 }
 
 function navigate(newScreen: Screen): void {
@@ -72,6 +76,10 @@ function createJob(jobOfferTitle: string, plan: 'free'|'paid'): void {
 function editJob(id: number): void {
   currentlyEditedJobId = id;
   navigate('edit');
+}
+
+function payForJob(jobOfferId: number): void {
+  emit('pay', jobOfferId);
 }
 
 function updateJob(id: number, title: string): void {

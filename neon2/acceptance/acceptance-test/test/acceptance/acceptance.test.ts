@@ -23,6 +23,17 @@ describe('A job offer can be found in search until it expires.', () => {
   });
 });
 
+describe('Job offer in a non-free plan requires a payment.', () => {
+  test('Given a paid job offer, if the payment is complete, the job offer can be found in search.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Job offer', pricingType: 'paid', payment: 'completed'});
+    await dsl.assertJobOfferIsListed({jobOfferTitle: 'Job offer'});
+  });
+  test('Given a paid job offer, if the payment is not made, the job offer can not be found in search.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'New offer', pricingType: 'paid', payment: 'ignored'});
+    await dsl.assertJobOfferIsNotListed({jobOfferTitle: 'New offer'});
+  });
+});
+
 describe('The publishing time depends on the pricing of the job offer.', () => {
   test('A free job offer expires after 14 days.', async (dsl: Dsl) => {
     await dsl.publishJobOffer({title: 'Free offer', pricingType: 'free'});
