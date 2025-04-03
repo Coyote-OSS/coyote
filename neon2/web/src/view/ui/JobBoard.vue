@@ -1,25 +1,25 @@
 <template>
-  4programmers > JobBoard
+  4programmers > JobBoard > {{ screenTitle }}
   <span v-if="showHomeLink" @click="navigate('home')" style="cursor:pointer;">
     > Wróć
   </span>
   <hr/>
   <p v-if="toastTitle" v-text="toastTitle"/>
   <JobOfferPricing
-    v-if="screen === 'pricing'"
+    v-if="props.screen === 'pricing'"
     @select="selectPlan"/>
   <JobOfferForm
-    v-if="screen === 'form'"
+    v-if="props.screen === 'form'"
     :plan="selectedPlan!"
     @create="createJob"/>
   <JobOfferPaymentForm
-    v-if="screen === 'payment'"/>
+    v-if="props.screen === 'payment'"/>
   <JobOfferShow
-    v-if="screen === 'edit'"
+    v-if="props.screen === 'edit'"
     :job-offer="currentlyEditedJob"
     @update="updateJob"/>
   <JobOfferHome
-    v-if="screen === 'home'"
+    v-if="props.screen === 'home'"
     :job-offers="props.jobOffers"
     @edit="editJob"
     @add="showPricing"
@@ -39,29 +39,23 @@ import JobOfferShow from './JobOffer/JobOfferShow.vue';
 export interface JobBoardProps {
   jobOffers: JobOffer[];
   toast: Toast|null;
+  screen: Screen;
 }
+
+export type Screen = 'home'|'edit'|'form'|'payment'|'pricing';
 
 const props = defineProps<JobBoardProps>();
 const emit = defineEmits<Emit>();
 
-interface Props {
-  jobOffers: JobOffer[];
-  toast: Toast|null;
-}
-
 interface Emit {
   (event: 'create', title: string, plan: 'free'|'paid'): void;
   (event: 'update', id: number, title: string): void;
-  (event: 'navigate'): void;
+  (event: 'navigate', screen: Screen): void;
   (event: 'search', searchPhrase: string);
 }
 
-type Screen = 'home'|'edit'|'form'|'payment'|'pricing';
-const screen = ref<Screen>('home');
-
 function navigate(newScreen: Screen): void {
-  screen.value = newScreen;
-  emit('navigate');
+  emit('navigate', newScreen);
 }
 
 const selectedPlan = ref<'free'|'paid'|null>(null);
@@ -73,11 +67,6 @@ const currentlyEditedJob = computed<JobOffer>(() => {
 
 function createJob(jobOfferTitle: string, plan: 'free'|'paid'): void {
   emit('create', jobOfferTitle, plan);
-  if (plan === 'paid') {
-    navigate('payment');
-  } else {
-    navigate('home');
-  }
 }
 
 function editJob(id: number): void {
@@ -87,7 +76,6 @@ function editJob(id: number): void {
 
 function updateJob(id: number, title: string): void {
   emit('update', id, title);
-  navigate('home');
 }
 
 function selectPlan(plan: 'free'|'paid'): void {
@@ -103,8 +91,17 @@ function searchJobs(searchPhrase: string): void {
   emit('search', searchPhrase);
 }
 
-const showHomeLink = computed<boolean>(() => {
-  return screen.value !== 'home';
+const showHomeLink = computed<boolean>(() => props.screen !== 'home');
+
+const screenTitle = computed<string>(() => {
+  const titles: Record<Screen, string> = {
+    home: 'Oferty',
+    edit: 'Edycja',
+    pricing: 'Pricing',
+    form: 'Formularz',
+    payment: 'Płatność',
+  };
+  return titles[props.screen];
 });
 
 const toastTitle = computed<string|null>(() => {

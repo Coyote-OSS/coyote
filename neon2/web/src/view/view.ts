@@ -1,5 +1,5 @@
 import {JobOffer} from '../jobBoard';
-import {UserInterface, ViewListener} from './ui/ui';
+import {Screen, UserInterface, ViewListener} from './ui/ui';
 
 export type Toast = 'created'|'edited';
 
@@ -8,8 +8,9 @@ export class View {
   private searchPhrase: string = '';
 
   constructor(private ui: UserInterface) {
-    this.ui.addNavigationListener((): void => {
+    this.ui.addNavigationListener((screen: Screen): void => {
       this.ui.setToast(null);
+      this.ui.setScreen(screen);
     });
     this.ui.addSearchListener(searchPhrase => {
       this.searchPhrase = searchPhrase;
@@ -38,11 +39,17 @@ export class View {
     return jobOffer.title.toLowerCase().includes(this.searchPhrase.toLowerCase());
   }
 
-  toastCreated(): void {
+  jobOfferCreated(plan: 'free'|'paid'): void {
     this.ui.setToast('created');
+    if (plan === 'free') {
+      this.ui.setScreen('home');
+    } else {
+      this.ui.setScreen('payment');
+    }
   }
 
-  toastEdited(): void {
+  jobOfferEdited(): void {
     this.ui.setToast('edited');
+    this.ui.setScreen('home');
   }
 }
