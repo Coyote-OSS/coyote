@@ -4,15 +4,23 @@ import {assertContains, assertEquals, assertNotContains, assertThrows, beforeEac
 describe('Job board', () => {
   let board: JobBoard;
   let lastViewSnapshot: JobOffer[]|null = null;
+  let lastViewSnapshot2: JobOffer[]|null = null;
 
   beforeEach(() => {
-    board = new JobBoard((viewUpdate: JobOffer[]) => lastViewSnapshot = viewUpdate);
-    lastViewSnapshot = null;
+    board = new JobBoard((viewUpdate: JobOffer[], viewUpdate2: JobOffer[]) => {
+      lastViewSnapshot = viewUpdate;
+      lastViewSnapshot2 = viewUpdate2;
+    });
   });
 
   function publishedOffers(): JobOffer[] {
     board.updateView();
     return lastViewSnapshot!;
+  }
+
+  function myOffers(): JobOffer[] {
+    board.updateView();
+    return lastViewSnapshot2!;
   }
 
   function jobOffer(title: string): JobOffer {
@@ -99,9 +107,15 @@ describe('Job board', () => {
       assertEquals(offer.id, afterEdit.id);
     });
   });
-  test('Paid job offer is not listable.', () => {
-    addJobOfferWaitingPayment(1, 'To be paid');
-    assertEquals([], publishedOffers());
+  describe('Paid job offers with awaiting payments are only available as my offers.', () => {
+    test('Unpaid job offer is not listable in published offers.', () => {
+      addJobOfferWaitingPayment(1, 'To be paid');
+      assertEquals([], publishedOffers());
+    });
+    test('Unpaid job offer is listable in my offers.', () => {
+      addJobOfferWaitingPayment(1, 'To be paid');
+      assertEquals(['To be paid'], myOffers().map(offer => offer.title));
+    });
   });
   test('Given an unpaid job offer, when it is paid, it is listable.', () => {
     addJobOfferWaitingPayment(42, 'Paid job offer');

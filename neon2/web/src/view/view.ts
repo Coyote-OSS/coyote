@@ -26,7 +26,7 @@ export class View {
     this.ui.mount(cssSelector);
   }
 
-  setJobOffers(jobOffers: JobOffer[]): void {
+  setPublishedJobOffers(jobOffers: JobOffer[]): void {
     this.jobOffers = jobOffers;
     this.filterJobOffers();
   }

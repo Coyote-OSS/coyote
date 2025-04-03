@@ -1,5 +1,5 @@
 interface JobBoardObserver {
-  (jobOffers: JobOffer[]): void;
+  (jobOffers: JobOffer[], jobOffers: JobOffer[]): void;
 }
 
 export class JobBoard {
@@ -32,7 +32,8 @@ export class JobBoard {
   }
 
   updateView(): void {
-    this.observe(copyArray<JobOffer>(this.jobOffers.filter(offer => offer.status === 'published')));
+    const publishedJobOffers = copyArray<JobOffer>(this.jobOffers.filter(offer => offer.status === 'published'));
+    this.observe(publishedJobOffers, this.jobOffers);
   }
 
   jobOfferPaid(jobOfferId: number): void {

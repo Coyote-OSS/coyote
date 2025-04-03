@@ -31,27 +31,27 @@ describe('JobBoard View', () => {
 
   describe('Job offers can be searched by title using a search phrase.', () => {
     test('Given a job offer, when search phrase is contained in the job offer title, the job offer is listed.', () => {
-      view.setJobOffers([jobOffer('Big Blue Cheeseburger')]);
+      view.setPublishedJobOffers([jobOffer('Big Blue Cheeseburger')]);
       ui.search('Blue');
       const [offer] = ui.lastJobOffers();
       assertEquals('Big Blue Cheeseburger', offer.title);
     });
 
     test('Given a job offer, when search phrase is not contained in the job offer title, the job offer is not listed.', () => {
-      view.setJobOffers([jobOffer('Big Blue Cheeseburger')]);
+      view.setPublishedJobOffers([jobOffer('Big Blue Cheeseburger')]);
       ui.search('Red');
       assertEquals([], ui.lastJobOffers());
     });
 
     test('Given a search phrase, when a new job offer is added that does not contain the search phrase, the job offer is not listed.', () => {
       ui.search('Green');
-      view.setJobOffers([jobOffer('Big Blue Cheeseburger')]);
+      view.setPublishedJobOffers([jobOffer('Big Blue Cheeseburger')]);
       assertEquals([], ui.lastJobOffers());
     });
 
     describe('Search is case-insensitive', () => {
       test('Given a lowercase job offer title, when search phrase is uppercase, the job offer is listed.', () => {
-        view.setJobOffers([jobOffer('Worker')]);
+        view.setPublishedJobOffers([jobOffer('Worker')]);
         ui.search('WORKER');
         const [offer] = ui.lastJobOffers();
         assertEquals('Worker', offer.title);
