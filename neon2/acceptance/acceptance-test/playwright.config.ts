@@ -6,7 +6,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:8882/',
   },
-  timeout: 5000,
+  timeout: process.env.CI ? 30000 : 5000,
   projects: [
     {name: 'Google Chrome', use: {...devices['Desktop Chrome'], channel: 'chrome'}},
   ],

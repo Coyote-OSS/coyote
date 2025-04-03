@@ -9,10 +9,6 @@ jobs:
   acceptance-tests:
     runs-on: ubuntu-latest
 
-    concurrency:
-      group: acceptance-tests
-      cancel-in-progress: true
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
