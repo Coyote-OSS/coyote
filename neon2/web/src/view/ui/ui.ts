@@ -1,7 +1,7 @@
-import {createApp, h, ref, VNode} from 'vue';
+import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {Toast} from '../view';
-import JobBoard from './JobBoard.vue';
+import JobBoard, {JobBoardProps} from './JobBoard.vue';
 
 export interface ViewListener {
   createJob: (title: string, plan: 'free'|'paid') => void;
@@ -21,8 +21,10 @@ export type NavigationListener = () => void;
 export type SearchListener = (searchPhrase: string) => void;
 
 export class VueUi implements UserInterface {
-  private jobOffers = ref<JobOffer[]>([]);
-  private toast = ref<Toast|null>(null);
+  private vueState: Reactive<JobBoardProps> = reactive<JobBoardProps>({
+    jobOffers: [],
+    toast: null,
+  });
   private viewListener: ViewListener|null = null;
   private navigationListeners: NavigationListener[] = [];
   private searchListeners: SearchListener[] = [];
@@ -40,11 +42,11 @@ export class VueUi implements UserInterface {
   }
 
   setJobOffers(jobOffers: JobOffer[]): void {
-    this.jobOffers.value = jobOffers;
+    this.vueState.jobOffers = jobOffers;
   }
 
   setToast(toast: Toast|null): void {
-    this.toast.value = toast;
+    this.vueState.toast = toast;
   }
 
   mount(cssSelector: string): void {
@@ -55,8 +57,7 @@ export class VueUi implements UserInterface {
   private vueRender(): VNode {
     const that = this;
     return h(JobBoard, {
-      jobOffers: that.jobOffers.value,
-      toast: that.toast.value,
+      ...this.vueState,
       onCreate(title: string, plan: 'free'|'paid'): void {
         that.viewListener!.createJob(title, plan);
       },
