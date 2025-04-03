@@ -1,7 +1,15 @@
 {
+  "require": {
+    "ext-pdo": "*"
+  },
   "autoload": {
     "psr-4": {
       "Neon2\\": "./src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Test\\Neon2\\": "./test/"
     }
   }
 }
