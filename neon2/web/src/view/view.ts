@@ -39,11 +39,12 @@ export class View {
     return jobOffer.title.toLowerCase().includes(this.searchPhrase.toLowerCase());
   }
 
-  jobOfferCreated(plan: 'free'|'paid'): void {
+  jobOfferCreated(jobOfferId: number, plan: 'free'|'paid'): void {
     this.ui.setToast('created');
     if (plan === 'free') {
       this.ui.setScreen('home');
     } else {
+      this.ui.setCurrentPaymentJobOfferId(jobOfferId);
       this.ui.setScreen('payment');
     }
   }

@@ -15,9 +15,8 @@ view.addEventListener({
       }
       if (plan === 'paid') {
         board.jobOfferCreated({id, title, expiresInDays, status: 'awaitingPayment'});
-        board.jobOfferPaid(id);
       }
-      view.jobOfferCreated(plan);
+      view.jobOfferCreated(id, plan);
     });
   },
   updateJob(id: number, title: string): void {
@@ -25,6 +24,9 @@ view.addEventListener({
       board.jobOfferUpdated(id, title);
       view.jobOfferEdited();
     });
+  },
+  payForJob(id: number): void {
+    board.jobOfferPaid(id);
   },
 });
 

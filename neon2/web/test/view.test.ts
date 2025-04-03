@@ -12,7 +12,7 @@ describe('JobBoard View', () => {
   });
   describe('Job offer state state is announced with a toast.', () => {
     test('Job offer creation is announced with a toast.', () => {
-      view.jobOfferCreated('free');
+      view.jobOfferCreated(1, 'free');
       assertEquals('created', ui.lastToast());
     });
     test('Job offer edit is announced with a toast.', async () => {
@@ -23,7 +23,7 @@ describe('JobBoard View', () => {
 
   describe('The toast disappears after navigating to other screen', () => {
     test('Given a toast visible in screen, when interface is navigated to other screen, the toast is not visible.', () => {
-      view.jobOfferCreated('free');
+      view.jobOfferCreated(1, 'free');
       ui.navigate();
       assertEquals(null, ui.lastToast());
     });
@@ -66,12 +66,12 @@ describe('JobBoard View', () => {
   describe('Changing state of a job navigates to appropriate screen.', () => {
     test('Creating a free job, changes screen to home.', () => {
       ui.setScreen('pricing');
-      view.jobOfferCreated('free');
+      view.jobOfferCreated(1, 'free');
       assertEquals('home', ui.screen());
     });
     test('Creating a paid job, changes screen to payment.', () => {
       ui.setScreen('pricing');
-      view.jobOfferCreated('paid');
+      view.jobOfferCreated(1, 'paid');
       assertEquals('payment', ui.screen());
     });
     test('Updating a job offer navigates back to home.', () => {
@@ -113,6 +113,9 @@ class MemoryUi implements UserInterface {
 
   setScreen(screen: Screen): void {
     this._screen = screen;
+  }
+
+  setCurrentPaymentJobOfferId(jobOfferId: number): void {
   }
 
   navigate(): void {
