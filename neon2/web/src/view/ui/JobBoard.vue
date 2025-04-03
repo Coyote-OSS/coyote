@@ -36,7 +36,12 @@ import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
 
-const props = defineProps<Props>();
+export interface JobBoardProps {
+  jobOffers: JobOffer[];
+  toast: Toast|null;
+}
+
+const props = defineProps<JobBoardProps>();
 const emit = defineEmits<Emit>();
 
 interface Props {
