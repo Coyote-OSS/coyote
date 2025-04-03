@@ -17,3 +17,16 @@ describe('Job offers are persisted after browser reset.', () => {
     await dsl.assertJobOfferIsListed({jobOfferTitle: 'Previous updated'});
   });
 });
+
+describe('Job offer in a non-free plan requires a payment.', () => {
+  test('Given a paid job offer, if the payment is complete, the job offer can be found in search.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Job offer', pricingType: 'paid', payment: 'completed'});
+    await dsl.resetClient();
+    await dsl.assertJobOfferIsListed({jobOfferTitle: 'Job offer'});
+  });
+  test('Given a paid job offer, if the payment is not made, the job offer can not be found in search.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'New offer', pricingType: 'paid', payment: 'ignored'});
+    await dsl.resetClient();
+    await dsl.assertJobOfferIsNotListed({jobOfferTitle: 'New offer'});
+  });
+});

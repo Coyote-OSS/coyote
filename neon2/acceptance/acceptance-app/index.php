@@ -31,6 +31,13 @@ if ($assetName === '/job-offers' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     return;
 }
 
+if ($assetName === '/job-offers/payment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $jobBoard->initiateJobOfferPayment($_POST['jobOfferId']);
+    \http_response_code(201);
+    \header('Content-Type: application/json');
+    return;
+}
+
 if ($assetName === '/job-offers' && $_SERVER['REQUEST_METHOD'] === 'PATCH') {
     [$_PUT] = \request_parse_body();
     $jobBoard->editJobOffer($_PUT['jobOfferId'], $_PUT['jobOfferTitle']);

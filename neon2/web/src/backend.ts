@@ -18,6 +18,13 @@ export class JobBoardBackend {
       .then(() => updated());
   }
 
+  initiateJobOfferPayment(id: number, initiated: () => void): void {
+    const formData = new FormData();
+    formData.append('jobOfferId', id.toString());
+    fetch('/job-offers/payment', {method: 'POST', body: formData})
+      .then(() => initiated());
+  }
+
   initialJobOffers(): BackendJobOffer[] {
     const backendInput = window['backendInput'] as BackendInput;
     return backendInput.jobOffers;
@@ -32,4 +39,7 @@ interface BackendJobOffer {
   id: number;
   title: string;
   expiresInDays: number;
+  status: BackendJobOfferStatus;
 }
+
+type BackendJobOfferStatus = 'published'|'awaitingPayment';

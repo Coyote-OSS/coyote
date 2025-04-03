@@ -2,6 +2,7 @@
 namespace Test\Neon2\Integration;
 
 use Neon2\JobBoard;
+use Neon2\JobOfferStatus;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -63,5 +64,30 @@ class JobBoardTest extends TestCase
         $this->board->editJobOffer($jobOffer->id, 'New title');
         [$jobOffer] = $this->board->listJobOffers();
         $this->assertEquals('New title', $jobOffer->title);
+    }
+
+    #[Test]
+    public function freeJobOfferIsInitiallyPublished(): void
+    {
+        $this->board->addJobOffer('Foo', 'free');
+        [$jobOffer] = $this->board->listJobOffers();
+        $this->assertEquals(JobOfferStatus::Published, $jobOffer->status);
+    }
+
+    #[Test]
+    public function paidJobOfferIsInitiallyAwaitingPayment(): void
+    {
+        $this->board->addJobOffer('Foo', 'paid');
+        [$jobOffer] = $this->board->listJobOffers();
+        $this->assertEquals(JobOfferStatus::AwaitingPayment, $jobOffer->status);
+    }
+
+    #[Test]
+    public function initiatingPaymentOnPaidJobOfferChangesStatusToPublished(): void
+    {
+        $offer = $this->board->addJobOffer('Foo', 'paid');
+        $this->board->initiateJobOfferPayment($offer->id);
+        [$jobOffer] = $this->board->listJobOffers();
+        $this->assertEquals(JobOfferStatus::Published, $jobOffer->status);
     }
 }
