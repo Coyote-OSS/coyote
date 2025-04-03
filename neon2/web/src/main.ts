@@ -10,7 +10,13 @@ const backend = new JobBoardBackend();
 view.addEventListener({
   createJob(title: string, plan: 'free'|'paid'): void {
     backend.addJobOffer(title, plan, (id: number, expiresInDays: number): void => {
-      board.jobOfferCreated({id, title, expiresInDays});
+      if (plan === 'free') {
+        board.jobOfferCreated({id, title, expiresInDays, status: 'published'});
+      }
+      if (plan === 'paid') {
+        board.jobOfferCreated({id, title, expiresInDays, status: 'awaitingPayment'});
+        board.jobOfferPaid(id);
+      }
       view.jobOfferCreated(plan);
     });
   },
@@ -23,6 +29,6 @@ view.addEventListener({
 });
 
 backend.initialJobOffers()
-  .forEach(offer => board.jobOfferCreated({...offer}));
+  .forEach(offer => board.jobOfferCreated({...offer, status: 'published'}));
 
 view.mount('#neonApplication');
