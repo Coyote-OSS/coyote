@@ -15,17 +15,20 @@ readonly class JobBoard
         $this->pdo->exec('CREATE TABLE IF NOT EXISTS job_offers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
-            duration INTEGER NOT NULL
+            duration INTEGER NOT NULL,
+            status TEXT NOT NULL
         )');
     }
 
     public function addJobOffer(string $title, string $plan): JobOffer
     {
-        $duration = $plan === 'free' ? 14 : 30;
-        return new JobOffer(
-            $this->insertJobOffer($title, $duration),
+        $jobOffer = new JobOffer(0,
             $title,
-            $duration);
+            $plan === 'free' ? 14 : 30,
+            $plan === 'free' ? JobOfferStatus::Published : JobOfferStatus::AwaitingPayment);
+        $id = $this->insertJobOffer($jobOffer);
+        $jobOffer->id = $id;
+        return $jobOffer;
     }
 
     public function editJobOffer(int $jobOfferId, string $jobOfferTitle): void
@@ -36,14 +39,22 @@ readonly class JobBoard
         ]);
     }
 
+    public function initiateJobOfferPayment(int $jobOfferId): void
+    {
+        $this->execute('UPDATE job_offers SET status = :status WHERE id = :id;', [
+            'id'     => $jobOfferId,
+            'status' => $this->toSql(JobOfferStatus::Published),
+        ]);
+    }
+
     /**
      * @return JobOffer[]
      */
     public function listJobOffers(): array
     {
         return array_map(
-            fn(array $row) => new JobOffer($row['id'], $row['title'], $row['duration']),
-            $this->query('SELECT id, title, duration FROM job_offers;'));
+            fn(array $row) => new JobOffer($row['id'], $row['title'], $row['duration'], $this->fromSql($row['status'])),
+            $this->query('SELECT id, title, duration, status FROM job_offers;'));
     }
 
     public function clear(): void
@@ -51,11 +62,12 @@ readonly class JobBoard
         $this->query('DELETE from job_offers');
     }
 
-    private function insertJobOffer(string $title, int $duration): int
+    private function insertJobOffer(JobOffer $jobOffer): int
     {
-        return $this->insert('INSERT INTO job_offers (title, duration) VALUES (:title, :duration);', [
-            'title'    => $title,
-            'duration' => $duration,
+        return $this->insert('INSERT INTO job_offers (title, duration, status) VALUES (:title, :duration, :status);', [
+            'title'    => $jobOffer->title,
+            'duration' => $jobOffer->expiresInDays,
+            'status'   => $this->toSql($jobOffer->status),
         ]);
     }
 
@@ -75,5 +87,15 @@ readonly class JobBoard
     private function execute(string $query, array $arguments): void
     {
         $this->pdo->prepare($query)->execute($arguments);
+    }
+
+    private function toSql(JobOfferStatus $status): string
+    {
+        return $status->value;
+    }
+
+    private function fromSql(string $status): JobOfferStatus
+    {
+        return JobOfferStatus::from($status);
     }
 }

@@ -26,11 +26,13 @@ view.addEventListener({
     });
   },
   payForJob(id: number): void {
-    board.jobOfferPaid(id);
+    backend.initiateJobOfferPayment(id, (): void => {
+      board.jobOfferPaid(id);
+    });
   },
 });
 
 backend.initialJobOffers()
-  .forEach(offer => board.jobOfferCreated({...offer, status: 'published'}));
+  .forEach(offer => board.jobOfferCreated({...offer}));
 
 view.mount('#neonApplication');
