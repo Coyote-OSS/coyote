@@ -32,7 +32,12 @@ export class JobBoard {
   }
 
   updateView(): void {
-    this.observe(copyArray<JobOffer>(this.jobOffers));
+    this.observe(copyArray<JobOffer>(this.jobOffers.filter(offer => offer.status === 'published')));
+  }
+
+  jobOfferPaid(jobOfferId: number): void {
+    this.findJobOffer(jobOfferId).status = 'published';
+    this.updateView();
   }
 }
 
@@ -40,6 +45,7 @@ export interface JobOffer {
   id: number;
   title: string;
   expiresInDays: number;
+  status: 'published'|'awaitingPayment';
 }
 
 function copyArray<T>(array: T[]): T[] {

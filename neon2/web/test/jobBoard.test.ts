@@ -24,7 +24,11 @@ describe('Job board', () => {
   }
 
   function addJobOffer(title: string): void {
-    board.jobOfferCreated({id: 1, title, expiresInDays: 14});
+    board.jobOfferCreated({id: 1, title, expiresInDays: 14, status: 'published'});
+  }
+
+  function addJobOfferWaitingPayment(jobOfferId: number, title: string): void {
+    board.jobOfferCreated({id: jobOfferId, title, expiresInDays: 14, status: 'awaitingPayment'});
   }
 
   describe('Job board updates the view with job offers.', () => {
@@ -90,5 +94,15 @@ describe('Job board', () => {
       const [afterEdit] = lastViewSnapshot!;
       assertEquals(offer.id, afterEdit.id);
     });
+  });
+  test('Paid job offer is not listable.', () => {
+    addJobOfferWaitingPayment(1, 'To be paid');
+    assertEquals([], lastViewSnapshot!);
+  });
+  test('Given an unpaid job offer, when it is paid, it is listable.', () => {
+    addJobOfferWaitingPayment(42, 'Paid job offer');
+    board.jobOfferPaid(42);
+    const [jobOffer] = lastViewSnapshot!;
+    assertEquals('Paid job offer', jobOffer.title);
   });
 });

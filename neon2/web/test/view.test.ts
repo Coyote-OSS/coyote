@@ -59,7 +59,7 @@ describe('JobBoard View', () => {
     });
 
     function jobOffer(title: string): JobOffer {
-      return {title, expiresInDays: 14, id: 1};
+      return {title, expiresInDays: 14, id: 1, status: 'published'};
     }
   });
 
