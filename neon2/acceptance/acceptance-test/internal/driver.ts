@@ -32,15 +32,11 @@ export class Driver {
       await this.waitForText('Zostaniesz przekierowany do formularza płatności online.');
       if (payment === 'completed') {
         await this.web.click('Zapłać');
+        await this.waitForText('Płatność sfinalizowana!');
       }
-      await this.navigateToHome();
     } else {
       await this.waitForText('Dodano ofertę pracy!');
     }
-  }
-
-  private async navigateToHome(): None {
-    await this.web.click('> Wróć');
   }
 
   async updateJobOffer(sourceTitle: string, targetTitle: string): None {

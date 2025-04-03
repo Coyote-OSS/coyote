@@ -79,6 +79,11 @@ describe('JobBoard View', () => {
       view.jobOfferEdited();
       assertEquals('home', ui.screen());
     });
+    test('Paying for a job offer navigates to home.', () => {
+      ui.setScreen('payment');
+      view.jobOfferPaid();
+      assertEquals('home', ui.screen());
+    });
   });
 });
 

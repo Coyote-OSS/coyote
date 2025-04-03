@@ -14,7 +14,7 @@ export interface ViewListener {
 export interface UserInterface {
   mount(cssSelector: string): void;
   setJobOffers(jobOffers: JobOffer[]): void;
-  setToast(toast: string|null): void;
+  setToast(toast: Toast|null): void;
   addViewListener(listener: ViewListener): void;
   addNavigationListener(listener: NavigationListener): void;
   addSearchListener(listener: SearchListener): void;

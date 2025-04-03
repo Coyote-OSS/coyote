@@ -113,12 +113,14 @@ const screenTitle = computed<string>(() => {
 });
 
 const toastTitle = computed<string|null>(() => {
-  if (props.toast === 'created') {
-    return 'Dodano ofertę pracy!';
+  if (props.toast === null) {
+    return null;
   }
-  if (props.toast === 'edited') {
-    return 'Zaktualizowano ofertę pracy!';
-  }
-  return null;
+  const titles: Record<Toast, string> = {
+    created: 'Dodano ofertę pracy!',
+    edited: 'Zaktualizowano ofertę pracy!',
+    paid: 'Płatność sfinalizowana!',
+  };
+  return titles[props.toast];
 });
 </script>
