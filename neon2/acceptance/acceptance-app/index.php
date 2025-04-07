@@ -21,7 +21,7 @@ if ($assetName === '/') {
     $assetName = '/index.html';
 }
 
-$jobBoard = new \Neon2\JobBoard();
+$jobBoard = new \Neon2\JobBoard\JobBoard();
 
 if ($assetName === '/job-offers' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $createdJobOffer = $jobBoard->addJobOffer($_POST['jobOfferTitle'], $_POST['jobOfferPlan']);

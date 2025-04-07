@@ -1,8 +1,8 @@
 <?php
 namespace Test\Neon2\Integration;
 
-use Neon2\JobBoard;
-use Neon2\JobOfferStatus;
+use Neon2\JobBoard\JobBoard;
+use Neon2\JobBoard\JobOfferStatus;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

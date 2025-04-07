@@ -1,5 +1,5 @@
 <?php
-namespace Neon2;
+namespace Neon2\JobBoard;
 
 class JobOffer
 {
