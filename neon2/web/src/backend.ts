@@ -1,9 +1,6 @@
 export class JobBoardBackend {
   addJobOffer(title: string, plan: 'free'|'paid', created: (id: number, expiresInDays: number) => void): void {
-    const formData = new FormData();
-    formData.append('jobOfferTitle', title);
-    formData.append('jobOfferPlan', plan);
-    fetch('/job-offers', {method: 'POST', body: formData})
+    request('POST', '/neon2/job-offers', {jobOfferTitle: title, jobOfferPlan: plan})
       .then(response => response.json())
       .then((jobOffer: BackendJobOffer): void => {
         created(jobOffer.id, jobOffer.expiresInDays);
@@ -11,17 +8,12 @@ export class JobBoardBackend {
   }
 
   updateJobOffer(id: number, title: string, updated: () => void): void {
-    const formData = new FormData();
-    formData.append('jobOfferId', id.toString());
-    formData.append('jobOfferTitle', title);
-    fetch('/job-offers', {method: 'PATCH', body: formData})
+    request('PATCH', '/neon2/job-offers', {jobOfferId: id.toString(), jobOfferTitle: title})
       .then(() => updated());
   }
 
   initiateJobOfferPayment(id: number, initiated: () => void): void {
-    const formData = new FormData();
-    formData.append('jobOfferId', id.toString());
-    fetch('/job-offers/payment', {method: 'POST', body: formData})
+    request('POST', '/neon2/job-offers/payment', {jobOfferId: id.toString()})
       .then(() => initiated());
   }
 
@@ -29,6 +21,14 @@ export class JobBoardBackend {
     const backendInput = window['backendInput'] as BackendInput;
     return backendInput.jobOffers;
   }
+}
+
+function request(method: string, url: string, body: object) {
+  return fetch(url, {
+    method,
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body),
+  });
 }
 
 interface BackendInput {

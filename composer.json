@@ -70,7 +70,8 @@
       "Boduch\\Grid\\": "grid/",
       "Coyote\\": "app/",
       "Database\\Seeders\\": "database/seeders/",
-      "Neon\\": "neon/src/"
+      "Neon\\": "neon/src/",
+      "Neon2\\": "neon2/app/src/"
     },
     "files": [
       "app/helpers.php",

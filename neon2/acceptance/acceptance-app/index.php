@@ -2,58 +2,48 @@
 
 require '../../app/vendor/autoload.php';
 
-function mime(string $asset): string {
-    if (\str_ends_with($asset, '.js')) {
-        return 'application/javascript';
-    }
-    return \mime_content_type($asset);
-}
-
 $assetName = $_SERVER['REQUEST_URI'];
 if ($assetName === '/') {
     $assetName = '/index.html';
 }
 
-$jobBoard = new \Neon2\JobBoard\JobBoardGate();
+$http = new \Neon2\HttpIntegration(new \Neon2\JobBoard\JobBoardGate());
 
-if ($assetName === '/job-offers' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $createdJobOffer = $jobBoard->addJobOffer($_POST['jobOfferTitle'], $_POST['jobOfferPlan']);
+if (($_SERVER['CONTENT_TYPE'] ?? null) === 'application/json') {
+    $body = \json_decode(\file_get_contents('php://input'), true);
+} else {
+    $body = [];
+}
+if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $createdJobOffer = $http->addAndReturnJobOffer($body['jobOfferTitle'], $body['jobOfferPlan']);
     \http_response_code(201);
     \header('Content-Type: application/json');
     echo \json_encode($createdJobOffer);
     return;
 }
 
-if ($assetName === '/job-offers/payment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $jobBoard->initiateJobOfferPayment($_POST['jobOfferId']);
+if ($assetName === '/neon2/job-offers/payment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $http->initiateJobOfferPayment($body['jobOfferId']);
     \http_response_code(201);
     \header('Content-Type: application/json');
     return;
 }
 
-if ($assetName === '/job-offers' && $_SERVER['REQUEST_METHOD'] === 'PATCH') {
-    [$_PUT] = \request_parse_body();
-    $jobBoard->editJobOffer($_PUT['jobOfferId'], $_PUT['jobOfferTitle']);
+if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'PATCH') {
+    $http->editJobOffer($body['jobOfferId'], $body['jobOfferTitle']);
     \http_response_code(201);
     \header('Content-Type: application/json');
     return;
 }
 
 if ($assetName === '/index.html') {
-    \header('Content-Type: text/html');
-    $backendInput = \json_encode(['jobOffers' => $jobBoard->listJobOffers()], \JSON_THROW_ON_ERROR);
-    $entryUrl = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/')->scriptUrl();
-    echo <<<html
-        <div id="neonApplication"></div>
-        <script type="module" src="$entryUrl"></script>
-        <script>var backendInput = $backendInput;</script>
-    html;
+    echo $http->jobBoardView();
     return;
 }
 
 $root = \realPath(__DIR__ . '/../../web/dist');
-if (\str_starts_with($assetName, '/neon2/')) {
-    $assetName = \substr($assetName, \strLen('/neon2'));
+if (\str_starts_with($assetName, '/neon2/static/')) {
+    $assetName = \substr($assetName, \strLen('/neon2/static'));
 }
 $asset = \realPath($root . $assetName);
 if ($asset === false || !str_starts_with($asset, $root) || !file_exists($asset)) {
@@ -62,3 +52,10 @@ if ($asset === false || !str_starts_with($asset, $root) || !file_exists($asset))
 }
 \header('Content-Type: ' . mime($asset));
 \readFile($asset);
+
+function mime(string $asset): string {
+    if (\str_ends_with($asset, '.js')) {
+        return 'application/javascript';
+    }
+    return \mime_content_type($asset);
+}

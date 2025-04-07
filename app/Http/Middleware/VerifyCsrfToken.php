@@ -17,6 +17,7 @@ class VerifyCsrfToken extends BaseVerifier
         '/Forum/Comment/*',
         '/Praca/Payment/Status',
         '/mailgun/permanent-failure',
-        '/github/sponsorship'
+        '/github/sponsorship',
+        '/neon2/*',
     ];
 }

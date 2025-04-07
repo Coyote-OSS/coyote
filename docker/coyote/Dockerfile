@@ -11,6 +11,7 @@ COPY resources /app/resources
 COPY survey /app/survey
 COPY public /app/public
 COPY neon /app/neon
+COPY neon2 /app/neon2
 
 ARG FRONTEND_SENTRY_DSN
 ARG VAPID_PUBLIC_KEY
@@ -24,6 +25,11 @@ RUN rm -rf node_modules
 WORKDIR /app/neon/web
 RUN yarn install
 RUN yarn run build
+RUN rm -rf node_modules/
+
+WORKDIR /app/neon2/web
+RUN yarn install
+RUN yarn vite build --mode production
 RUN rm -rf node_modules/
 
 WORKDIR /app

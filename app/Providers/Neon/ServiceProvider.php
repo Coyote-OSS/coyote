@@ -9,6 +9,9 @@ use Coyote\Job;
 use Coyote\Job\Location;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Neon;
 
@@ -33,6 +36,29 @@ class ServiceProvider extends RouteServiceProvider
                         'neonBody' => new StringHtml($neon->htmlMarkupBody($theme->isThemeDark() ? Neon\Theme::Dark : Neon\Theme::Light)),
                     ]);
                 });
+        });
+        $this->middleware(['web'])->group(function () {
+            $this->get('/Neon', function (\Neon2\HttpIntegration $integration): string {
+                Gate::authorize('alpha-access');
+                return $integration->jobBoardView();
+            });
+            $this->group(['prefix' => '/neon2'], function () {
+                $this->post('/job-offers', function (\Neon2\HttpIntegration $integration): JsonResponse {
+                    return response()->json(
+                        $integration->addAndReturnJobOffer(
+                            request()->get('jobOfferTitle'),
+                            request()->get('jobOfferPlan')),
+                        status:201);
+                });
+                $this->post('/job-offers/payment', function (\Neon2\HttpIntegration $integration): Response {
+                    $integration->initiateJobOfferPayment(request()->get('jobOfferId'));
+                    return response(status:201);
+                });
+                $this->patch('/job-offers', function (\Neon2\HttpIntegration $integration): Response {
+                    $integration->editJobOffer(request()->get('jobOfferId'), request()->get('jobOfferTitle'));
+                    return response(status:201);
+                });
+            });
         });
     }
 
