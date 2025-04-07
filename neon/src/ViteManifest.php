@@ -35,7 +35,7 @@ readonly class ViteManifest
         return $this->manifest['src/dom/internal/fa-solid-900.woff2']['file'];
     }
 
-    public function fileContent(string $distPath): string
+    private function fileContent(string $distPath): string
     {
         return \file_get_contents(\rTrim($this->viteRootPath, '/') . "/dist/$distPath");
     }

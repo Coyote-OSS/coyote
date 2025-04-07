@@ -13,7 +13,7 @@ class NeonApplication
 
     public function htmlMarkupBody(Theme $theme): string
     {
-        $jobOffers = json_encode($this->offers);
+        $jobOffers = \json_encode($this->offers);
         $scriptUrl = $this->url($this->vite->scriptUrl());
         $themeAttribute = $this->theme($theme);
         return <<<html
@@ -38,11 +38,6 @@ class NeonApplication
             <link rel="preload" href="$faRegularUrl" as="font" type="font/woff2" crossorigin>
             <link rel="preload" href="$faSolidUrl" as="font" type="font/woff2" crossorigin>
         head;
-    }
-
-    public function viteFile(string $file): string
-    {
-        return $this->vite->fileContent($file);
     }
 
     public function addJobOffer(JobOffer $jobOffer): void
