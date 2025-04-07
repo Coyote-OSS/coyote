@@ -10,12 +10,6 @@ function mime(string $asset): string
     return \mime_content_type($asset);
 }
 
-function includeJsArguments(array $jobOffers): string
-{
-    $backendInput = \json_encode($jobOffers, \JSON_THROW_ON_ERROR);
-    return "<script>var backendInput = $backendInput;</script>";
-}
-
 $assetName = $_SERVER['REQUEST_URI'];
 if ($assetName === '/') {
     $assetName = '/index.html';
@@ -42,10 +36,26 @@ if ($assetName === '/job-offers' && $_SERVER['REQUEST_METHOD'] === 'PATCH') {
     [$_PUT] = \request_parse_body();
     $jobBoard->editJobOffer($_PUT['jobOfferId'], $_PUT['jobOfferTitle']);
     \http_response_code(201);
+    \header('Content-Type: application/json');
+    return;
+}
+
+if ($assetName === '/index.html') {
+    \header('Content-Type: text/html');
+    $backendInput = \json_encode(['jobOffers' => $jobBoard->listJobOffers()], \JSON_THROW_ON_ERROR);
+    $entryUrl = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/')->scriptUrl();
+    echo <<<html
+        <div id="neonApplication"></div>
+        <script type="module" src="$entryUrl"></script>
+        <script>var backendInput = $backendInput;</script>
+    html;
     return;
 }
 
 $root = \realPath(__DIR__ . '/../../web/dist');
+if (\str_starts_with($assetName, '/neon2/')) {
+    $assetName = \substr($assetName, \strLen('/neon2'));
+}
 $asset = \realPath($root . $assetName);
 if ($asset === false || !str_starts_with($asset, $root) || !file_exists($asset)) {
     \http_response_code(404);
@@ -53,9 +63,3 @@ if ($asset === false || !str_starts_with($asset, $root) || !file_exists($asset))
 }
 \header('Content-Type: ' . mime($asset));
 \readFile($asset);
-
-if ($assetName === '/index.html') {
-    echo includeJsArguments([
-        'jobOffers' => $jobBoard->listJobOffers(),
-    ]);
-}
