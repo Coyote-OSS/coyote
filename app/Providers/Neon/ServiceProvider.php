@@ -14,6 +14,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Neon;
+use Neon2\JobBoard\JobBoardGate;
 
 class ServiceProvider extends RouteServiceProvider {
     public function loadRoutes(): void {
@@ -36,24 +37,24 @@ class ServiceProvider extends RouteServiceProvider {
                 });
         });
         $this->middleware(['web'])->group(function () {
-            $this->get('/Neon', function (\Neon2\HttpIntegration $integration): string {
+            $this->get('/Neon', function (\Neon2\JobBoardView $jobBoardView): string {
                 Gate::authorize('alpha-access');
-                return $integration->jobBoardView();
+                return $jobBoardView->jobBoardView();
             });
             $this->group(['prefix' => '/neon2'], function () {
-                $this->post('/job-offers', function (\Neon2\HttpIntegration $integration): JsonResponse {
+                $this->post('/job-offers', function (JobBoardGate $jobBoardGate): JsonResponse {
                     return response()->json(
-                        $integration->addAndReturnJobOffer(
+                        $jobBoardGate->addJobOffer(
                             request()->get('jobOfferTitle'),
                             request()->get('jobOfferPlan')),
                         status:201);
                 });
-                $this->post('/job-offers/payment', function (\Neon2\HttpIntegration $integration): Response {
-                    $integration->completeJobOfferPayment(request()->get('jobOfferId'));
+                $this->post('/job-offers/payment', function (JobBoardGate $jobBoardGate): Response {
+                    $jobBoardGate->payJobOfferPayment(request()->get('jobOfferId'));
                     return response(status:201);
                 });
-                $this->patch('/job-offers', function (\Neon2\HttpIntegration $integration): Response {
-                    $integration->editJobOffer(request()->get('jobOfferId'), request()->get('jobOfferTitle'));
+                $this->patch('/job-offers', function (JobBoardGate $jobBoardGate): Response {
+                    $jobBoardGate->editJobOffer(request()->get('jobOfferId'), request()->get('jobOfferTitle'));
                     return response(status:201);
                 });
             });

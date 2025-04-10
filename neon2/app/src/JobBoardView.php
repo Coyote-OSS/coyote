@@ -1,9 +1,7 @@
 <?php
 namespace Neon2;
 
-use Neon2\JobBoard\JobOffer;
-
-readonly class HttpIntegration {
+readonly class JobBoardView {
     private Web\ViteManifest $vite;
 
     public function __construct(private \Neon2\JobBoard\JobBoardGate $jobBoard) {
@@ -17,18 +15,6 @@ readonly class HttpIntegration {
             <div id="neonApplication"></div>
             <script type="module" src="$entryUrl"></script>
             <script>var backendInput = $backendInput;</script>
-        html;
-    }
-
-    public function addAndReturnJobOffer(string $jobOfferTitle, string $jobOfferPlan): JobOffer {
-        return $this->jobBoard->addJobOffer($jobOfferTitle, $jobOfferPlan);
-    }
-
-    public function completeJobOfferPayment(int $jobOfferId): void {
-        $this->jobBoard->payJobOfferPayment($jobOfferId);
-    }
-
-    public function editJobOffer(int $jobOfferId, string $jobOfferTitle): void {
-        $this->jobBoard->editJobOffer($jobOfferId, $jobOfferTitle);
+            html;
     }
 }
