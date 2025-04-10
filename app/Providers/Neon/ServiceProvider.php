@@ -15,10 +15,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Neon;
 
-class ServiceProvider extends RouteServiceProvider
-{
-    public function loadRoutes(): void
-    {
+class ServiceProvider extends RouteServiceProvider {
+    public function loadRoutes(): void {
         $this->get('/events', [
             'uses' => fn() => redirect('https://wydarzenia.4programmers.net/'),
         ]);
@@ -62,8 +60,7 @@ class ServiceProvider extends RouteServiceProvider
         });
     }
 
-    private function jobOffer(Coyote\Job $jobOffer): Neon\JobOffer
-    {
+    private function jobOffer(Coyote\Job $jobOffer): Neon\JobOffer {
         return new Neon\JobOffer(
             $jobOffer->title,
             UrlBuilder::job($jobOffer, true),
@@ -85,8 +82,7 @@ class ServiceProvider extends RouteServiceProvider
             $this->workExperience($jobOffer));
     }
 
-    private function workMode(Job $jobOffer): Neon\WorkMode
-    {
+    private function workMode(Job $jobOffer): Neon\WorkMode {
         if (!$jobOffer->is_remote) {
             return Neon\WorkMode::Stationary;
         }
@@ -99,33 +95,29 @@ class ServiceProvider extends RouteServiceProvider
     /**
      * @return string[]
      */
-    private function jobOfferTags(Coyote\Job $jobOffer): array
-    {
+    private function jobOfferTags(Coyote\Job $jobOffer): array {
         return $jobOffer->tags
             ->map(fn(Coyote\Tag $tag) => $tag->real_name ?? $tag->name)
             ->toArray();
     }
 
-    private function jobOfferLegalForm(Coyote\Job $jobOffer): Neon\LegalForm
-    {
+    private function jobOfferLegalForm(Coyote\Job $jobOffer): Neon\LegalForm {
         return match ($jobOffer->employment) {
             'employment' => Neon\LegalForm::EmploymentContract,
-            'mandatory' => Neon\LegalForm::ContractOfMandate,
-            'contract' => Neon\LegalForm::ContractForSpecificTask,
-            'b2b' => Neon\LegalForm::BusinessToBusiness,
+            'mandatory'  => Neon\LegalForm::ContractOfMandate,
+            'contract'   => Neon\LegalForm::ContractForSpecificTask,
+            'b2b'        => Neon\LegalForm::BusinessToBusiness,
         };
     }
 
-    private function jobOfferLogoUrl(Job $jobOffer): ?string
-    {
+    private function jobOfferLogoUrl(Job $jobOffer): ?string {
         if ($jobOffer->firm->logo->getFilename() === null) {
             return null;
         }
         return (string)($jobOffer->firm->logo->url());
     }
 
-    private function jobOfferSalary(Job $jobOffer): ?Neon\Salary
-    {
+    private function jobOfferSalary(Job $jobOffer): ?Neon\Salary {
         if ($jobOffer->salary_from === null && $jobOffer->salary_to === null) {
             return null;
         }
@@ -137,42 +129,37 @@ class ServiceProvider extends RouteServiceProvider
             !$jobOffer->is_gross);
     }
 
-    private function isSubscribed(Job $jobOffer): bool
-    {
+    private function isSubscribed(Job $jobOffer): bool {
         if (auth()->check()) {
             return $jobOffer->subscribers()->forUser(auth()->user()->id)->exists();
         }
         return false;
     }
 
-    private function isMine(Job $jobOffer): bool
-    {
+    private function isMine(Job $jobOffer): bool {
         if (auth()->check()) {
             return $jobOffer->user_id === auth()->user()->id;
         }
         return false;
     }
 
-    private function isPromoted(Job $jobOffer): bool
-    {
+    private function isPromoted(Job $jobOffer): bool {
         return $jobOffer->is_ads;
     }
 
-    private function workExperience(Job $jobOffer): ?Neon\WorkExperience
-    {
+    private function workExperience(Job $jobOffer): ?Neon\WorkExperience {
         return match ($jobOffer->seniority) {
             'student' => Neon\WorkExperience::Intern,
-            'junior' => Neon\WorkExperience::Junior,
-            'mid' => Neon\WorkExperience::MidLevel,
-            'senior' => Neon\WorkExperience::Senior,
-            'lead' => Neon\WorkExperience::Lead,
+            'junior'  => Neon\WorkExperience::Junior,
+            'mid'     => Neon\WorkExperience::MidLevel,
+            'senior'  => Neon\WorkExperience::Senior,
+            'lead'    => Neon\WorkExperience::Lead,
             'manager' => Neon\WorkExperience::Manager,
-            null => Neon\WorkExperience::NotProvided,
+            null      => Neon\WorkExperience::NotProvided,
         };
     }
 
-    private function isNew(Job $jobOffer): bool
-    {
+    private function isNew(Job $jobOffer): bool {
         return new \Carbon\Carbon($jobOffer->boost_at)->diffInDays(Carbon::now()) <= 2;
     }
 }

@@ -1,11 +1,11 @@
 <template>
   <h1>
-    Oferta: {{ props.jobOffer.title }}
+    Oferta: {{props.jobOffer.title}}
   </h1>
   <div>
     Oferta wygasa za:
     <span data-testid="jobOfferExpiresInDays">
-      {{ props.jobOffer.expiresInDays }}
+      {{props.jobOffer.expiresInDays}}
     </span>
     dni
   </div>

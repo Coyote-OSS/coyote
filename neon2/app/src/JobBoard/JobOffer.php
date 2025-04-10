@@ -1,8 +1,7 @@
 <?php
 namespace Neon2\JobBoard;
 
-class JobOffer
-{
+class JobOffer {
     public function __construct(
         public int            $id,
         public string         $title,

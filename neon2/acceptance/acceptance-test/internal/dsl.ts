@@ -21,31 +21,31 @@ export class Dsl {
     await this.driver.loadApplication();
   }
 
-  async publishJobOffer(jobOffer: { title: string, pricingType?: PricingType, payment?: Payment }): None {
+  async publishJobOffer(jobOffer: {title: string, pricingType?: PricingType, payment?: Payment}): None {
     await this.driver.publishJobOffer(this.enc(jobOffer.title), jobOffer.pricingType || 'free', jobOffer.payment || 'completed');
   }
 
-  async updateJobOffer(update: { title: string, updatedTitle: string }): None {
+  async updateJobOffer(update: {title: string, updatedTitle: string}): None {
     await this.driver.updateJobOffer(this.enc(update.title), this.enc(update.updatedTitle));
   }
 
-  async searchJobOffers(search: { searchPhrase: string }): None {
+  async searchJobOffers(search: {searchPhrase: string}): None {
     await this.driver.searchJobOffers(search.searchPhrase);
   }
 
-  async assertJobOfferIsListed(assertion: { jobOfferTitle: string }): None {
+  async assertJobOfferIsListed(assertion: {jobOfferTitle: string}): None {
     assertContains(
       assertion.jobOfferTitle,
       this.mangler.decodedAll(await this.driver.listJobOffers()));
   }
 
-  async assertJobOfferIsNotListed(assertion: { jobOfferTitle: string }): None {
+  async assertJobOfferIsNotListed(assertion: {jobOfferTitle: string}): None {
     assertNotContains(
       assertion.jobOfferTitle,
       this.mangler.decodedAll(await this.driver.listJobOffers()));
   }
 
-  async assertJobOfferExpiresInDays(assertion: { jobOfferTitle: string, expectedExpiry: number }): None {
+  async assertJobOfferExpiresInDays(assertion: {jobOfferTitle: string, expectedExpiry: number}): None {
     assertEquals(
       assertion.expectedExpiry,
       await this.driver.findJobOfferExpiryInDays(this.enc(assertion.jobOfferTitle)));

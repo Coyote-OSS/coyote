@@ -1,5 +1,5 @@
 <template>
-  4programmers > JobBoard > {{ screenTitle }}
+  4programmers > JobBoard > {{screenTitle}}
   <span v-if="showHomeLink" @click="navigate('home')" style="cursor:pointer;">
     > Wróć
   </span>

@@ -1,6 +1,6 @@
 <template>
   <h2>
-    Wybrany plan: {{ props.plan === 'free' ? 'Darmowy' : 'Płatny' }}
+    Wybrany plan: {{props.plan === 'free' ? 'Darmowy' : 'Płatny'}}
   </h2>
   <label>
     Tytuł oferty

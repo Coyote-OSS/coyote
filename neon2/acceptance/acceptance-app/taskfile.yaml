@@ -1,5 +1,5 @@
 version: '3'
 
 tasks:
-  serve: 
+  serve:
     php -S localhost:8882 index.php
