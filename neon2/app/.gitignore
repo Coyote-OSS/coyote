@@ -2,5 +2,5 @@
 composer.lock
 vendor/
 
-# Acceptance tests
-jobBoard.dat
+# Persistance for tests
+database.db
