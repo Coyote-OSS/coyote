@@ -73,9 +73,9 @@ class JobBoardGateTest extends TestCase {
     }
 
     #[Test]
-    public function initiatingPaymentOnPaidJobOfferChangesStatusToPublished(): void {
+    public function payingPaymentOnPaidJobOfferChangesStatusToPublished(): void {
         $offer = $this->board->addJobOffer('Foo', 'paid');
-        $this->board->initiateJobOfferPayment($offer->id);
+        $this->board->payJobOfferPayment($offer->id);
         [$jobOffer] = $this->board->listJobOffers();
         $this->assertEquals(JobOfferStatus::Published, $jobOffer->status);
     }

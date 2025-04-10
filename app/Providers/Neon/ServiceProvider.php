@@ -49,7 +49,7 @@ class ServiceProvider extends RouteServiceProvider {
                         status:201);
                 });
                 $this->post('/job-offers/payment', function (\Neon2\HttpIntegration $integration): Response {
-                    $integration->initiateJobOfferPayment(request()->get('jobOfferId'));
+                    $integration->completeJobOfferPayment(request()->get('jobOfferId'));
                     return response(status:201);
                 });
                 $this->patch('/job-offers', function (\Neon2\HttpIntegration $integration): Response {

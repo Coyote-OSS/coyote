@@ -24,8 +24,8 @@ readonly class HttpIntegration {
         return $this->jobBoard->addJobOffer($jobOfferTitle, $jobOfferPlan);
     }
 
-    public function initiateJobOfferPayment(int $jobOfferId): void {
-        $this->jobBoard->initiateJobOfferPayment($jobOfferId);
+    public function completeJobOfferPayment(int $jobOfferId): void {
+        $this->jobBoard->payJobOfferPayment($jobOfferId);
     }
 
     public function editJobOffer(int $jobOfferId, string $jobOfferTitle): void {

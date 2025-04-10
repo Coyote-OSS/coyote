@@ -35,7 +35,7 @@ readonly class JobBoardGate {
         ]);
     }
 
-    public function initiateJobOfferPayment(int $jobOfferId): void {
+    public function payJobOfferPayment(int $jobOfferId): void {
         $this->execute('UPDATE job_offers SET status = :status WHERE id = :id;', [
             'id'     => $jobOfferId,
             'status' => $this->toSql(JobOfferStatus::Published),
