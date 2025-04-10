@@ -2,8 +2,7 @@
 
 require '../../app/vendor/autoload.php';
 
-function mime(string $asset): string
-{
+function mime(string $asset): string {
     if (\str_ends_with($asset, '.js')) {
         return 'application/javascript';
     }
@@ -15,7 +14,7 @@ if ($assetName === '/') {
     $assetName = '/index.html';
 }
 
-$jobBoard = new \Neon2\JobBoard\JobBoard();
+$jobBoard = new \Neon2\JobBoard\JobBoardGate();
 
 if ($assetName === '/job-offers' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $createdJobOffer = $jobBoard->addJobOffer($_POST['jobOfferTitle'], $_POST['jobOfferPlan']);
