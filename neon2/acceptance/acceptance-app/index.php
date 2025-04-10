@@ -4,6 +4,8 @@ use Neon2\JobBoard;
 use Neon2\Payment\PaymentGate;
 use Neon2\Payment\PaymentService;
 use Neon2\Payment\PaymentStatus;
+use Neon2\Payment\Provider\Stripe;
+use Neon2\Payment\Provider\StripeWebhook;
 use Neon2\Payment\Provider\TestPaymentProvider;
 use Neon2\Payment\Provider\TestPaymentWebhook;
 
@@ -17,9 +19,14 @@ if ($assetName === '/') {
 $gate = new PaymentGate();
 $jobBoardGate = new \Neon2\JobBoard\JobBoardGate();
 $jobBoardView = new \Neon2\JobBoardView($jobBoardGate);
-$board = new JobBoard($gate, $jobBoardGate);
-$paymentProvider = new TestPaymentProvider();
-$paymentWebhook = new TestPaymentWebhook($paymentProvider);
+$board = new JobBoard($gate, $jobBoardGate, testMode:true);
+if ($board->testMode()) {
+    $paymentProvider = new TestPaymentProvider();
+    $paymentWebhook = new TestPaymentWebhook($paymentProvider);
+} else {
+    $paymentProvider = new Stripe('sk_test_51RBWn0Rf5n1iRahJzOJ6tJvWNO6fwKBaN7O2uVdhSGxVFVAsCeBTDgL13UWJ3VEGGLJc1ntyC5oDq5QQbVByEY8j00aluGGN0L');
+    $paymentWebhook = new StripeWebhook('whsec_W5t2VrjF8hVHk3Fp6bM4scZ5HyX9y4xB');
+}
 $paymentService = new PaymentService($gate, $paymentProvider);
 
 if (($_SERVER['CONTENT_TYPE'] ?? null) === 'application/json') {
@@ -76,7 +83,7 @@ if ($assetName === '/neon2/status' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 if ($assetName === '/index.html') {
-    echo $jobBoardView->jobBoardView();
+    echo $jobBoardView->jobBoardView($board->testMode());
     return;
 }
 

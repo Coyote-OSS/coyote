@@ -1,5 +1,6 @@
 {
   "require": {
+    "stripe/stripe-php": "v17.1.1",
     "ext-pdo": "*"
   },
   "require-dev": {

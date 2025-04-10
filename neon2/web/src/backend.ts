@@ -24,6 +24,11 @@ export class JobBoardBackend {
     const backendInput = window['backendInput'] as BackendInput;
     return backendInput.jobOffers;
   }
+
+  testMode(): boolean {
+    const backendInput = window['backendInput'] as BackendInput;
+    return backendInput.testMode;
+  }
 }
 
 function request(method: string, url: string, body: object) {
@@ -36,6 +41,7 @@ function request(method: string, url: string, body: object) {
 
 interface BackendInput {
   jobOffers: BackendJobOffer[];
+  testMode: boolean;
 }
 
 export interface BackendJobOffer {

@@ -45,7 +45,7 @@ export class PaymentService {
     return Promise.resolve('unexpectedProviderResponse');
   }
 
-  private updatePaymentNotification(notification: PaymentNotification): void {
+  private updatePaymentNotification(notification: string): void {
     this.listeners.forEach(listener => listener.notificationReceived(notification));
   }
 
@@ -55,6 +55,6 @@ export class PaymentService {
 }
 
 interface PaymentListener {
-  notificationReceived(notification: PaymentNotification): void;
+  notificationReceived(notification: string): void;
   statusChanged(paymentId: string, status: PaymentStatus): void;
 }

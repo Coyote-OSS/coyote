@@ -12,6 +12,62 @@ export type PaymentNotification =
   |'declinedCardExpired'
   |'unexpectedProviderResponse';
 
+export class Stripe implements PaymentProvider {
+  private readonly stripe: stripe.Stripe;
+  private readonly cardElement: stripe.elements.Element;
+
+  constructor(private publicKey: string) {
+    const stripe: stripe.StripeStatic = window['Stripe'];
+    this.stripe = stripe(this.publicKey);
+    this.cardElement = this.stripe.elements().create('card');
+  }
+
+  public mountCardInput(cssSelector: string): void {
+    this.cardElement.mount(cssSelector);
+  }
+
+  public unmountCardInput(): void {
+    this.cardElement.unmount();
+  }
+
+  public async performPayment(paymentToken: string): Promise<PaymentNotification> {
+    return this.parsePaymentResponse(await this.confirmCardPayment(paymentToken));
+  }
+
+  private confirmCardPayment(paymentToken: string): Promise<stripe.PaymentIntentResponse> {
+    return this.stripe.confirmCardPayment(paymentToken, {
+      payment_method: {card: this.cardElement},
+    });
+  }
+
+  private parsePaymentResponse(response: stripe.PaymentIntentResponse): PaymentNotification {
+    if (response.error) {
+      return this.parseErrorResponse(response);
+    }
+    if (response.paymentIntent) {
+      if (response.paymentIntent.status === 'succeeded') {
+        return 'processed';
+      }
+    }
+    return 'unexpectedProviderResponse';
+  }
+
+  private parseErrorResponse(response: stripe.PaymentIntentResponse): PaymentNotification {
+    if (response.error.code === 'expired_card') {
+      return 'declinedCardExpired';
+    }
+    if (response.error.code === 'card_declined') {
+      if (response.error.decline_code === 'generic_decline') {
+        return 'declinedCard';
+      }
+      if (response.error.decline_code === 'insufficient_funds') {
+        return 'declinedInsufficientFunds';
+      }
+    }
+    return 'declinedPayment';
+  }
+}
+
 export class TestPaymentProvider implements PaymentProvider {
   private input: HTMLInputElement|null = null;
 

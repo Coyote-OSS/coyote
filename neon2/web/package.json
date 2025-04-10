@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@types/stripe-v3": "^3.1.33",
     "@vitejs/plugin-vue": "^5.2.3",
     "vite": "^6.2.4",
     "vitest": "^3.1.1",

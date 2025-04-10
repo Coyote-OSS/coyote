@@ -10,7 +10,12 @@ readonly class JobBoard {
     public function __construct(
         private PaymentGate  $payments,
         private JobBoardGate $jobBoard,
+        private bool         $testMode,
     ) {}
+
+    public function testMode(): bool {
+        return $this->testMode;
+    }
 
     public function paymentUpdate(Payment\PaymentUpdate $paymentUpdate): void {
         if ($paymentUpdate->type === PaymentStatus::Completed) {

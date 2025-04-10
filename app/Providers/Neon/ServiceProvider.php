@@ -20,6 +20,8 @@ use Neon2\JobBoardView;
 use Neon2\Payment\PaymentGate;
 use Neon2\Payment\PaymentService;
 use Neon2\Payment\PaymentStatus;
+use Neon2\Payment\Provider\Stripe;
+use Neon2\Payment\Provider\StripeWebhook;
 use Neon2\Payment\Provider\TestPaymentProvider;
 use Neon2\Payment\Provider\TestPaymentWebhook;
 
@@ -45,14 +47,19 @@ class ServiceProvider extends RouteServiceProvider {
         });
         $payments = new PaymentGate();
         $jobBoardGate = new JobBoardGate();
-        $board = new JobBoard($payments, $jobBoardGate);
-        $provider = new TestPaymentProvider();
-        $webhook = new TestPaymentWebhook($provider);
+        $board = new JobBoard($payments, $jobBoardGate, testMode:false);
+        if ($board->testMode()) {
+            $provider = new TestPaymentProvider();
+            $webhook = new TestPaymentWebhook($provider);
+        } else {
+            $provider = new Stripe('sk_test_51RBWn0Rf5n1iRahJzOJ6tJvWNO6fwKBaN7O2uVdhSGxVFVAsCeBTDgL13UWJ3VEGGLJc1ntyC5oDq5QQbVByEY8j00aluGGN0L');
+            $webhook = new StripeWebhook('whsec_W5t2VrjF8hVHk3Fp6bM4scZ5HyX9y4xB');
+        }
         $paymentService = new PaymentService($payments, $provider);
         $this->middleware(['web'])->group(function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
-            $this->get('/Neon', function (JobBoardView $jobBoardView): string {
+            $this->get('/Neon', function (JobBoardView $jobBoardView) use ($board): string {
                 Gate::authorize('alpha-access');
-                return $jobBoardView->jobBoardView();
+                return $jobBoardView->jobBoardView($board->testMode());
             });
             $this->group(['prefix' => '/neon2'], function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
                 $this->post('/job-offers', function () use ($board): JsonResponse {
