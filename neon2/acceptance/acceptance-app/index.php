@@ -1,14 +1,26 @@
 <?php
 
+use Neon2\JobBoard;
+use Neon2\Payment\PaymentGate;
+use Neon2\Payment\PaymentService;
+use Neon2\Payment\PaymentStatus;
+use Neon2\Payment\Provider\TestPaymentProvider;
+use Neon2\Payment\Provider\TestPaymentWebhook;
+
 require '../../app/vendor/autoload.php';
 
-$assetName = $_SERVER['REQUEST_URI'];
+$assetName = \parse_url($_SERVER['REQUEST_URI'], \PHP_URL_PATH);
 if ($assetName === '/') {
     $assetName = '/index.html';
 }
 
-$jobBoard = new \Neon2\JobBoard\JobBoardGate();
-$jobBoardView = new \Neon2\JobBoardView($jobBoard);
+$gate = new PaymentGate();
+$jobBoardGate = new \Neon2\JobBoard\JobBoardGate();
+$jobBoardView = new \Neon2\JobBoardView($jobBoardGate);
+$board = new JobBoard($gate, $jobBoardGate);
+$paymentProvider = new TestPaymentProvider();
+$paymentWebhook = new TestPaymentWebhook($paymentProvider);
+$paymentService = new PaymentService($gate, $paymentProvider);
 
 if (($_SERVER['CONTENT_TYPE'] ?? null) === 'application/json') {
     $body = \json_decode(\file_get_contents('php://input'), true);
@@ -16,7 +28,7 @@ if (($_SERVER['CONTENT_TYPE'] ?? null) === 'application/json') {
     $body = [];
 }
 if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $createdJobOffer = $jobBoard->addJobOffer($body['jobOfferTitle'], $body['jobOfferPlan']);
+    $createdJobOffer = $jobBoardGate->addJobOffer($body['jobOfferTitle'], $body['jobOfferPlan']);
     \http_response_code(201);
     \header('Content-Type: application/json');
     echo \json_encode($createdJobOffer);
@@ -24,16 +36,42 @@ if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'POST')
 }
 
 if ($assetName === '/neon2/job-offers/payment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $jobBoard->payJobOfferPayment($body['jobOfferId']);
+    $payment = $paymentService->preparePayment(2000, $body['paymentId']);
+    \http_response_code(201);
+    \header('Content-Type: application/json');
+    echo \json_encode([
+        'providerReady' => $payment->providerReady,
+        'paymentId'     => $payment->paymentId,
+        'paymentToken'  => $payment->paymentToken,
+    ]);
+    return;
+}
+
+if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'PATCH') {
+    $jobBoardGate->editJobOffer($body['jobOfferId'], $body['jobOfferTitle']);
     \http_response_code(201);
     \header('Content-Type: application/json');
     return;
 }
 
-if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'PATCH') {
-    $jobBoard->editJobOffer($body['jobOfferId'], $body['jobOfferTitle']);
-    \http_response_code(201);
-    \header('Content-Type: application/json');
+if ($assetName === '/neon2/webhook' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $paymentUpdate = $paymentWebhook->acceptPaymentUpdate(
+        \file_get_contents('php://input'),
+        $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '');
+    if ($paymentUpdate) {
+        $board->paymentUpdate($paymentUpdate);
+    }
+    return;
+}
+if ($assetName === '/neon2/status' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    parse_str($_SERVER['QUERY_STRING'], $query);
+    $status = $gate->readPaymentStatus($query['paymentId']);
+    header('Content-Type: application/json');
+    echo \json_encode(match ($status) {
+        PaymentStatus::Completed => 'paymentComplete',
+        PaymentStatus::Failed    => 'paymentFailed',
+        PaymentStatus::Awaiting  => 'awaitingPayment',
+    });
     return;
 }
 

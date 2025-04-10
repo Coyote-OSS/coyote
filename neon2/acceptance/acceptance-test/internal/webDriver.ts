@@ -39,6 +39,22 @@ export class WebDriver {
   async waitForText(text: string): None {
     await this.page.getByText(text).waitFor({timeout: 500});
   }
+
+  async waitUntilVisible(testId: string): None {
+    await this.page.getByTestId(testId).waitFor({state: 'visible', timeout: 7500});
+  }
+
+  async read(testId: string): Promise<string|null> {
+    return await this.page.getByTestId(testId).textContent();
+  }
+
+  async readValue(testId: string): Promise<string|null> {
+    return await this.page.getByTestId(testId).getAttribute('data-value');
+  }
+
+  async fill(testId: string, value: string): None {
+    await this.page.getByTestId(testId).fill(value);
+  }
 }
 
 type None = Promise<void>;

@@ -1,4 +1,6 @@
 import {JobOffer} from '../jobBoard';
+import {PaymentNotification} from "../paymentProvider";
+import {PaymentStatus} from "../paymentService";
 import {Screen, UserInterface, ViewListener} from './ui/ui';
 
 export type Toast = 'created'|'edited'|'paid';
@@ -29,6 +31,14 @@ export class View {
   setJobOffers(jobOffers: JobOffer[]): void {
     this.jobOffers = jobOffers;
     this.filterJobOffers();
+  }
+
+  setPaymentNotification(notification: PaymentNotification): void {
+    this.ui.setPaymentNotification(notification);
+  }
+
+  setPaymentStatus(notification: PaymentStatus): void {
+    this.ui.setPaymentStatus(notification);
   }
 
   private filterJobOffers(): void {

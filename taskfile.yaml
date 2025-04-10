@@ -1,6 +1,7 @@
 version: '3'
 
 tasks:
+  webhook:listen: ngrok http http://localhost:8882/
   test:
     - task: web:test
     - task: web:bundle

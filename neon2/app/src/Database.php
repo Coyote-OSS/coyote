@@ -1,8 +1,10 @@
 <?php
 namespace Neon2;
 
+use PDO;
+
 class Database {
-    private \PDO $pdo;
+    private PDO $pdo;
 
     public function __construct() {
         $file = __DIR__ . '/../database.db';

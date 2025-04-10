@@ -10,9 +10,14 @@ export class JobBoardBackend {
       .then(() => updated());
   }
 
-  initiateJobOfferPayment(id: number, initiated: () => void): void {
-    request('POST', '/neon2/job-offers/payment', {jobOfferId: id.toString()})
-      .then(() => initiated());
+  preparePayment(paymentId: string): Promise<BackendPreparedPayment> {
+    return request('POST', '/neon2/job-offers/payment', {paymentId: paymentId})
+      .then(response => response.json());
+  }
+
+  fetchPaymentStatus(paymentId: string): Promise<BackendPaymentStatus> {
+    return fetch('/neon2/status?paymentId=' + paymentId)
+      .then(response => response.json());
   }
 
   initialJobOffers(): BackendJobOffer[] {
@@ -40,4 +45,18 @@ export interface BackendJobOffer {
   status: BackendJobOfferStatus;
 }
 
-type BackendJobOfferStatus = 'published'|'awaitingPayment';
+export type BackendJobOfferStatus = 'published'|'awaitingPayment';
+export type BackendPaymentStatus = 'awaitingPayment'|'paymentComplete'|'paymentFailed';
+export type BackendPreparedPayment = ProviderReady|ProviderNotReady;
+
+interface ProviderReady {
+  providerReady: true;
+  paymentId: string;
+  paymentToken: string;
+}
+
+interface ProviderNotReady {
+  providerReady: false;
+  paymentId: string;
+  paymentToken: null;
+}

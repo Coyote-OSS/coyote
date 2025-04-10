@@ -1,9 +1,10 @@
-import {Driver} from './driver';
+import {Driver, PaymentNotification, PaymentStatus} from './driver';
 import {Mangler} from './mangler';
 import {assertContains, assertEquals, assertNotContains} from './playwright';
 
 export type PricingType = 'free'|'paid';
 export type Payment = 'completed'|'ignored';
+export type Card = 'valid'|'declined'|'expired'|'insufficientFunds';
 
 export class Dsl {
   private mangler: Mangler;
@@ -22,7 +23,11 @@ export class Dsl {
   }
 
   async publishJobOffer(jobOffer: {title: string, pricingType?: PricingType, payment?: Payment}): None {
-    await this.driver.publishJobOffer(this.enc(jobOffer.title), jobOffer.pricingType || 'free', jobOffer.payment || 'completed');
+    await this.driver.publishJobOffer(
+      this.enc(jobOffer.title),
+      jobOffer.pricingType || 'free',
+      jobOffer.payment || 'completed',
+      this.cardNumber('valid'));
   }
 
   async updateJobOffer(update: {title: string, updatedTitle: string}): None {
@@ -53,6 +58,32 @@ export class Dsl {
 
   private enc(name: string): string {
     return this.mangler.encoded(name);
+  }
+
+  async initiatePayment(payment: {card: Card}): None {
+    await this.driver.initiatePayment(
+      this.enc('Job offer'),
+      this.cardNumber(payment.card || 'valid'));
+  }
+
+  private cardNumber(card: Card): string {
+    const cardNumbers: Record<Card, string> = {
+      'valid': '4242424242424242',
+      'expired': '4000000000000069',
+      'insufficientFunds': '4000000000009995',
+      'declined': '4000000000000002',
+    };
+    return cardNumbers[card];
+  }
+
+  async assertPaymentNotification(assertion: {expectedPaymentNotification: PaymentNotification}): None {
+    assertEquals(assertion.expectedPaymentNotification,
+      await this.driver.readPaymentNotification());
+  }
+
+  async assertPaymentStatus(assertion: {expectedPaymentStatus: PaymentStatus}): None {
+    assertEquals(assertion.expectedPaymentStatus,
+      await this.driver.readPaymentStatus());
   }
 }
 

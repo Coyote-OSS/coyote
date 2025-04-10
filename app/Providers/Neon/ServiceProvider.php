@@ -14,7 +14,14 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Neon;
+use Neon2\JobBoard;
 use Neon2\JobBoard\JobBoardGate;
+use Neon2\JobBoardView;
+use Neon2\Payment\PaymentGate;
+use Neon2\Payment\PaymentService;
+use Neon2\Payment\PaymentStatus;
+use Neon2\Payment\Provider\TestPaymentProvider;
+use Neon2\Payment\Provider\TestPaymentWebhook;
 
 class ServiceProvider extends RouteServiceProvider {
     public function loadRoutes(): void {
@@ -36,26 +43,54 @@ class ServiceProvider extends RouteServiceProvider {
                     ]);
                 });
         });
-        $this->middleware(['web'])->group(function () {
-            $this->get('/Neon', function (\Neon2\JobBoardView $jobBoardView): string {
+        $payments = new PaymentGate();
+        $jobBoardGate = new JobBoardGate();
+        $board = new JobBoard($payments, $jobBoardGate);
+        $provider = new TestPaymentProvider();
+        $webhook = new TestPaymentWebhook($provider);
+        $paymentService = new PaymentService($payments, $provider);
+        $this->middleware(['web'])->group(function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
+            $this->get('/Neon', function (JobBoardView $jobBoardView): string {
                 Gate::authorize('alpha-access');
                 return $jobBoardView->jobBoardView();
             });
-            $this->group(['prefix' => '/neon2'], function () {
-                $this->post('/job-offers', function (JobBoardGate $jobBoardGate): JsonResponse {
+            $this->group(['prefix' => '/neon2'], function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
+                $this->post('/job-offers', function () use ($jobBoardGate): JsonResponse {
                     return response()->json(
                         $jobBoardGate->addJobOffer(
                             request()->get('jobOfferTitle'),
                             request()->get('jobOfferPlan')),
                         status:201);
                 });
-                $this->post('/job-offers/payment', function (JobBoardGate $jobBoardGate): Response {
-                    $jobBoardGate->payJobOfferPayment(request()->get('jobOfferId'));
+                $this->post('/job-offers/payment', function () use ($paymentService) {
+                    $payment = $paymentService->preparePayment(2000, request()->get('paymentId'));
+                    return response()->json([
+                        'providerReady' => $payment->providerReady,
+                        'paymentId'     => $payment->paymentId,
+                        'paymentToken'  => $payment->paymentToken,
+                    ]);
+                });
+                $this->patch('/job-offers', function () use ($jobBoardGate): Response {
+                    $jobBoardGate->editJobOffer(
+                        request()->get('jobOfferId'),
+                        request()->get('jobOfferTitle'));
                     return response(status:201);
                 });
-                $this->patch('/job-offers', function (JobBoardGate $jobBoardGate): Response {
-                    $jobBoardGate->editJobOffer(request()->get('jobOfferId'), request()->get('jobOfferTitle'));
-                    return response(status:201);
+                $this->post('/webhook', function () use ($webhook, $board) {
+                    $paymentUpdate = $webhook->acceptPaymentUpdate(
+                        \file_get_contents('php://input'),
+                        $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '');
+                    if ($paymentUpdate) {
+                        $board->paymentUpdate($paymentUpdate);
+                    }
+                });
+                $this->get('/status', function () use ($payments) {
+                    $status = $payments->readPaymentStatus(request()->query->get('paymentId'));
+                    return response()->json(match ($status) {
+                        PaymentStatus::Completed => 'paymentComplete',
+                        PaymentStatus::Failed    => 'paymentFailed',
+                        PaymentStatus::Awaiting  => 'awaitingPayment',
+                    });
                 });
             });
         });

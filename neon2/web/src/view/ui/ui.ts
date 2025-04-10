@@ -1,5 +1,7 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
+import {PaymentNotification} from "../../paymentProvider";
+import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
 import JobBoard, {JobBoardProps, Screen} from './JobBoard.vue';
 
@@ -9,6 +11,7 @@ export interface ViewListener {
   createJob: (title: string, plan: 'free'|'paid') => void;
   updateJob: (id: number, title: string) => void;
   payForJob: (id: number) => void;
+  managePaymentMethod: (action: 'mount'|'unmount', cssSelector?: string) => void;
 }
 
 export interface UserInterface {
@@ -20,6 +23,8 @@ export interface UserInterface {
   addSearchListener(listener: SearchListener): void;
   setScreen(screen: Screen): void;
   setCurrentJobOfferId(jobOfferId: number): void;
+  setPaymentNotification(notification: PaymentNotification): void;
+  setPaymentStatus(status: PaymentStatus): void;
 }
 
 export type NavigationListener = (screen: Screen) => void;
@@ -31,6 +36,8 @@ export class VueUi implements UserInterface {
     toast: null,
     screen: 'home',
     currentJobOfferId: null,
+    paymentNotification: null,
+    paymentStatus: null,
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
@@ -64,6 +71,14 @@ export class VueUi implements UserInterface {
     this.vueState.currentJobOfferId = jobOfferId;
   }
 
+  setPaymentNotification(notification: PaymentNotification): void {
+    this.vueState.paymentNotification = notification;
+  }
+
+  setPaymentStatus(status: PaymentStatus): void {
+    this.vueState.paymentStatus = status;
+  }
+
   mount(cssSelector: string): void {
     const render = this.vueRender.bind(this);
     createApp({render}).mount(cssSelector);
@@ -88,6 +103,12 @@ export class VueUi implements UserInterface {
       },
       onSearch(searchPhrase: string): void {
         that.searchListeners.forEach(listener => listener(searchPhrase));
+      },
+      onMountCardInput(cssSelector: string): void {
+        that.viewListeners.forEach(listener => listener.managePaymentMethod('mount', cssSelector));
+      },
+      onUnmountCardInput(): void {
+        that.viewListeners.forEach(listener => listener.managePaymentMethod('unmount'));
       },
     });
   }
