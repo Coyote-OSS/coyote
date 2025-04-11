@@ -1,10 +1,8 @@
 export class JobBoardBackend {
-  addJobOffer(title: string, plan: 'free'|'paid', created: (id: number, expiresInDays: number) => void): void {
+  addJobOffer(title: string, plan: 'free'|'paid', created: (jobOffer: BackendJobOffer) => void): void {
     request('POST', '/neon2/job-offers', {jobOfferTitle: title, jobOfferPlan: plan})
       .then(response => response.json())
-      .then((jobOffer: BackendJobOffer): void => {
-        created(jobOffer.id, jobOffer.expiresInDays);
-      });
+      .then((jobOffer: BackendJobOffer): void => created(jobOffer));
   }
 
   updateJobOffer(id: number, title: string, updated: () => void): void {
@@ -35,7 +33,7 @@ interface BackendInput {
   jobOffers: BackendJobOffer[];
 }
 
-interface BackendJobOffer {
+export interface BackendJobOffer {
   id: number;
   title: string;
   expiresInDays: number;

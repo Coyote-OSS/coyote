@@ -1,4 +1,4 @@
-import {JobBoardBackend} from "./backend";
+import {BackendJobOffer, JobBoardBackend} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
 import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
@@ -9,13 +9,9 @@ const backend = new JobBoardBackend();
 
 view.addEventListener({
   createJob(title: string, plan: 'free'|'paid'): void {
-    backend.addJobOffer(title, plan, (id: number, expiresInDays: number): void => {
-      if (plan === 'free') {
-        board.jobOfferCreated({id, title, expiresInDays, status: 'published'});
-      }
-      if (plan === 'paid') {
-        board.jobOfferCreated({id, title, expiresInDays, status: 'awaitingPayment'});
-      }
+    backend.addJobOffer(title, plan, (jobOffer: BackendJobOffer): void => {
+      const {id, title, expiresInDays, status} = jobOffer;
+      board.jobOfferCreated({id, title, expiresInDays, status});
       view.jobOfferCreated(id, plan);
     });
   },
