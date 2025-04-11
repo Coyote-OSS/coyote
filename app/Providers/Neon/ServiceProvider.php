@@ -55,9 +55,9 @@ class ServiceProvider extends RouteServiceProvider {
                 return $jobBoardView->jobBoardView();
             });
             $this->group(['prefix' => '/neon2'], function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
-                $this->post('/job-offers', function () use ($jobBoardGate): JsonResponse {
+                $this->post('/job-offers', function () use ($board): JsonResponse {
                     return response()->json(
-                        $jobBoardGate->addJobOffer(
+                        $board->addJobOffer(
                             request()->get('jobOfferTitle'),
                             request()->get('jobOfferPlan')),
                         status:201);

@@ -7,5 +7,6 @@ class JobOffer {
         public string         $title,
         public int            $expiresInDays,
         public JobOfferStatus $status,
+        public string         $paymentId,
     ) {}
 }

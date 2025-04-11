@@ -43,6 +43,7 @@ export interface BackendJobOffer {
   title: string;
   expiresInDays: number;
   status: BackendJobOfferStatus;
+  paymentId: string;
 }
 
 export type BackendJobOfferStatus = 'published'|'awaitingPayment';

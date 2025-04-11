@@ -28,7 +28,7 @@ if (($_SERVER['CONTENT_TYPE'] ?? null) === 'application/json') {
     $body = [];
 }
 if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $createdJobOffer = $jobBoardGate->addJobOffer($body['jobOfferTitle'], $body['jobOfferPlan']);
+    $createdJobOffer = $board->addJobOffer($body['jobOfferTitle'], $body['jobOfferPlan']);
     \http_response_code(201);
     \header('Content-Type: application/json');
     echo \json_encode($createdJobOffer);
