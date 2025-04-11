@@ -1,4 +1,5 @@
 <template>
+  <p>Znajdź najlepszych programistów szybciej i skuteczniej!</p>
   <button @click="emit('select', 'free')">
     Publikuj ogłoszenie
   </button>

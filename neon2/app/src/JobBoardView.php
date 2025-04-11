@@ -14,18 +14,28 @@ readonly class JobBoardView {
             'testMode'  => $isTestMode,
         ]);
         $entryUrl = "/neon2/static/{$this->vite->scriptUrl()}";
+        $styleUrl = "/neon2/static/{$this->vite->styleUrl()}";
         if ($isTestMode) {
-            $paymentProviderScript = null;
+            $resources = null;
         } else {
-            $paymentProviderScript = '<script src="https://js.stripe.com/v3/"></script>';
+            $resources =
+                '<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:400,500,700">
+                <script src="https://js.stripe.com/v3/"></script>';
         }
+        $faLightUrl = "/neon2/static/{$this->vite->fontAwesomeLightUrl()}";
+        $faRegularUrl = "/neon2/static/{$this->vite->fontAwesomeRegularUrl()}";
+        $faSolidUrl = "/neon2/static/{$this->vite->fontAwesomeSolidUrl()}";
         return <<<html
             <html>
             <head>
               <meta name="viewport" content="width=device-width,initial-scale=1">
-              $paymentProviderScript
+              <link rel="stylesheet" type="text/css" href="$styleUrl">
+              <link rel="preload" as="font" type="font/woff2" crossorigin href="$faLightUrl">
+              <link rel="preload" as="font" type="font/woff2" crossorigin href="$faRegularUrl">
+              <link rel="preload" as="font" type="font/woff2" crossorigin href="$faSolidUrl">
+              $resources
             </head>
-            <body>
+            <body class="bg-body">
               <div id="neonApplication"></div>
               <script type="module" src="$entryUrl"></script>
               <script>var backendInput = $backendInput;</script>

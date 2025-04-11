@@ -1,39 +1,41 @@
 <template>
-  4programmers > JobBoard > {{screenTitle}}
-  <span v-if="showHomeLink" @click="navigate('home')" style="cursor:pointer;">
-    > Wróć
-  </span>
-  <hr/>
-  <p v-if="toastTitle" v-text="toastTitle"/>
-  <p data-testid="paymentNotification" v-text="paymentNotificationTitle" :data-value="props.paymentNotification"/>
-  <p data-testid="paymentStatus" v-text="paymentStatusTitle"/>
-  <JobOfferPricing
-    v-if="props.screen === 'pricing'"
-    @select="selectPlan"/>
-  <JobOfferForm
-    v-if="props.screen === 'form'"
-    :plan="selectedPlan!"
-    @create="createJob"/>
-  <JobOfferPaymentForm
-    v-if="props.screen === 'payment' && props.currentJobOfferId"
-    :job-offer-id="props.currentJobOfferId"
-    @pay="payForJob"
-    @mount-card-input="mountCardInput"
-    @unmount-card-input="unmountCardInput"/>
-  <JobOfferShow
-    v-if="props.screen === 'show'"
-    :job-offer="currentJobOffer"
-    @edit="editJob"/>
-  <JobOfferEdit
-    v-if="props.screen === 'edit'"
-    :job-offer="currentJobOffer"
-    @update="updateJob"/>
-  <JobOfferHome
-    v-if="props.screen === 'home'"
-    :job-offers="props.jobOffers"
-    @show="showJob"
-    @add="showPricing"
-    @search="searchJobs"/>
+  <Design.Layout class="bg-body">
+    <Design.BannerHeading v-if="props.screen !== 'pricing'"/>
+    <span v-if="showHomeLink" @click="navigate('home')" class="cursor-pointer">
+      Wróć
+    </span>
+    <hr/>
+    <p v-if="toastTitle" v-text="toastTitle"/>
+    <p data-testid="paymentNotification" v-text="paymentNotificationTitle" :data-value="props.paymentNotification"/>
+    <p data-testid="paymentStatus" v-text="paymentStatusTitle"/>
+    <JobOfferPricing
+      v-if="props.screen === 'pricing'"
+      @select="selectPlan"/>
+    <JobOfferForm
+      v-if="props.screen === 'form'"
+      :plan="selectedPlan!"
+      @create="createJob"/>
+    <JobOfferPaymentForm
+      v-if="props.screen === 'payment' && props.currentJobOfferId"
+      :job-offer-id="props.currentJobOfferId"
+      @pay="payForJob"
+      @mount-card-input="mountCardInput"
+      @unmount-card-input="unmountCardInput"/>
+    <JobOfferShow
+      v-if="props.screen === 'show'"
+      :job-offer="currentJobOffer"
+      @edit="editJob"/>
+    <JobOfferEdit
+      v-if="props.screen === 'edit'"
+      :job-offer="currentJobOffer"
+      @update="updateJob"/>
+    <JobOfferHome
+      v-if="props.screen === 'home'"
+      :job-offers="props.jobOffers"
+      @show="showJob"
+      @add="showPricing"
+      @search="searchJobs"/>
+  </Design.Layout>
 </template>
 
 <script setup lang="ts">
@@ -42,6 +44,7 @@ import {JobOffer} from '../../jobBoard';
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
+import {Design} from "./design/design";
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
 import JobOfferForm from './JobOffer/JobOfferForm.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
@@ -125,18 +128,6 @@ function unmountCardInput(): void {
 }
 
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');
-
-const screenTitle = computed<string>(() => {
-  const titles: Record<Screen, string> = {
-    home: 'Oferty',
-    edit: 'Edycja',
-    pricing: 'Pricing',
-    form: 'Formularz',
-    payment: 'Płatność',
-    show: 'Oferta',
-  };
-  return titles[props.screen];
-});
 
 const toastTitle = computed<string|null>(() => {
   if (props.toast === null) {

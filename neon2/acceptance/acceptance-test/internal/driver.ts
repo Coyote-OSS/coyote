@@ -63,7 +63,7 @@ export class Driver {
   }
 
   async searchJobOffers(searchPhrase: string): None {
-    await this.web.fillByPlaceholder('Wyszukaj', searchPhrase);
+    await this.web.fillByPlaceholder('Szukaj po tytule', searchPhrase);
     await this.web.clickByTestId('search');
   }
 

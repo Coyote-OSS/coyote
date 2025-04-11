@@ -12,6 +12,22 @@ readonly class ViteManifest {
         return $this->manifest['src/main.ts']['file'];
     }
 
+    public function styleUrl(): string {
+        return $this->manifest['src/main.ts']['css'][0];
+    }
+
+    public function fontAwesomeLightUrl(): string {
+        return $this->manifest['src/view/ui/icons/internal/fa-light-300.woff2']['file'];
+    }
+
+    public function fontAwesomeRegularUrl(): string {
+        return $this->manifest['src/view/ui/icons/internal/fa-regular-400.woff2']['file'];
+    }
+
+    public function fontAwesomeSolidUrl(): string {
+        return $this->manifest['src/view/ui/icons/internal/fa-solid-900.woff2']['file'];
+    }
+
     private function fileContent(string $distPath): string {
         return \file_get_contents(\rTrim($this->viteRootPath, '/') . "/dist/$distPath");
     }

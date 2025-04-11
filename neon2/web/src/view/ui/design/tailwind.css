@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+:root {
+  --color-body: var(--color-navy-050);
+  --color-on-primary: white;
+  --color-accent-front: var(--color-green-800);
+  --color-accent-back: var(--color-green-050);
+  --color-gray-accent-back: var(--color-navy-100);
+  --color-gray-accent-front: var(--color-neutral-600);
+  --color-pink-accent-back: #e2d2f9;
+  --color-pink-accent-front: #16062d;
+  --color-tile: white;
+  --color-tile-nested: var(--color-navy-025);
+  --color-tile-highlight: #bbe7ca;
+  --color-word: var(--color-neutral-600);
+  --color-word-standout: var(--color-neutral-700);
+  --color-word-accent: var(--color-green-700);
+  --color-divider: var(--color-neutral-050);
+  --color-tag: var(--color-navy-100);
+
+  @variant dark {
+    --color-body: var(--color-neutral-900);
+    --color-on-primary: var(--color-navy-950);
+    --color-accent-front: var(--color-green-500);
+    --color-accent-back: var(--color-green-950);
+    --color-gray-accent-back: var(--color-neutral-950);
+    --color-gray-accent-front: var(--color-neutral-400);
+    --color-pink-accent-back: #16062d;
+    --color-pink-accent-front: #b68cf6;
+    --color-tile: var(--color-neutral-800);
+    --color-tile-nested: var(--color-neutral-900);
+    --color-tile-highlight: #0d5c28;
+    --color-word: var(--color-neutral-300);
+    --color-word-standout: var(--color-neutral-050);
+    --color-word-accent: var(--color-green-050);
+    --color-divider: var(--color-neutral-700);
+    --color-tag: var(--color-navy-950);
+  }
+}
+
+@theme {
+  --color-*: initial;
+  --color-navy-025: #f5f7fa;
+  --color-navy-050: #f0f2f5;
+  --color-navy-100: #dde4ea;
+  --color-navy-950: #0a0d10;
+  --color-neutral-050: #e4e6e7;
+  --color-neutral-300: #91969c;
+  --color-neutral-400: #767d84;
+  --color-neutral-600: #44474b;
+  --color-neutral-700: #2b2e30;
+  --color-neutral-800: #181a1b;
+  --color-neutral-900: #121314;
+  --color-neutral-950: #0a0a0b;
+  --color-green-050: #e7f7e6;
+  --color-green-500: #00a538;
+  --color-green-700: #016a24;
+  --color-green-800: #014718;
+  --color-green-950: #001407;
+
+  --color-body: var(--color-body);
+
+  --color-primary: var(--color-green-500);
+  --color-on-primary: var(--color-on-primary);
+  --color-accent-front: var(--color-accent-front);
+  --color-accent-back: var(--color-accent-back);
+  --color-gray-accent-front: var(--color-gray-accent-front);
+  --color-gray-accent-back: var(--color-gray-accent-back);
+  --color-pink-accent-front: var(--color-pink-accent-front);
+  --color-pink-accent-back: var(--color-pink-accent-back);
+  --color-divider: var(--color-divider);
+  --color-tag: var(--color-tag);
+
+  --color-tile: var(--color-tile);
+  --color-tile-nested: var(--color-tile-nested);
+  --color-tile-highlight: var(--color-tile-highlight);
+
+  --color-word: var(--color-word);
+  --color-word-standout: var(--color-word-standout);
+  --color-word-accent: var(--color-word-accent);
+
+  --text-xs: 0.625rem;
+  --text-sm: 0.75rem;
+  --text-base: 0.875rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.25rem;
+  --text-3xl: 1.5rem;
+  --text-4xl: 1.875rem;
+
+  --text-xs--line-height: calc(1 / 0.625);
+  --text-sm--line-height: calc(1 / 0.75);
+  --text-base--line-height: calc(1.25 / 0.875);
+  --text-lg--line-height: calc(1.5 / 1);
+  --text-xl--line-height: calc(1.75 / 1.125);
+  --text-2xl--line-height: calc(1.75 / 1.25);
+  --text-3xl--line-height: calc(2 / 1.5);
+  --text-4xl--line-height: calc(2.25 / 1.875);
+}
+
+@utility tile-highlight {
+  background-image: linear-gradient(45deg, var(--color-tile), var(--color-tile), var(--color-tile-highlight));
+}
+
+@utility tile-highlight-long {
+  background-image: linear-gradient(45deg, var(--color-tile) 0%, var(--color-tile) 70%, var(--color-tile-highlight) 140%);
+}
