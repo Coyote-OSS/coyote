@@ -48,6 +48,7 @@ class RouteServiceProvider extends ServiceProvider {
     private function requestJobOfferSubmit(Request $request): JobOfferSubmit {
         return new JobOfferSubmit(
             $request->get('jobOfferTitle'),
-            $request->get('jobOfferDescription'));
+            $request->get('jobOfferDescription'),
+            $request->get('jobOfferCompanyName'));
     }
 }

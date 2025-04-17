@@ -10,6 +10,7 @@ export class HttpDriver {
       jobOfferPlan,
       jobOfferTitle,
       jobOfferDescription: 'description',
+      jobOfferCompanyName: 'company name',
     });
     return jobOfferCreated['id'];
   }

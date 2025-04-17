@@ -22,5 +22,6 @@ function create(jobOffer: SubmitJobOffer): void {
 const newJobOffer: SubmitJobOffer = {
   title: '',
   description: '',
+  companyName: '',
 };
 </script>

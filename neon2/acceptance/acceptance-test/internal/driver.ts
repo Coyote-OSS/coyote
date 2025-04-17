@@ -30,8 +30,9 @@ export class Driver {
     payment: Payment,
     paymentCardNumber: string,
     description: string,
+    companyName: string,
   ): None {
-    await this.createJobOffer(title, pricingPlan, payment, description);
+    await this.createJobOffer(title, pricingPlan, payment, description, companyName);
     if (pricingPlan === 'free') {
       await this.web.waitForText('Dodano ogłoszenie!');
     } else {
@@ -48,25 +49,27 @@ export class Driver {
     pricingPlan: PricingPlan,
     payment: Payment,
     description: string,
+    companyName: string,
   ) {
     await this.web.click('Dodaj ogłoszenie');
     if (payment !== 'redeem-bundle') {
       await this.selectPricingPlan(pricingPlan);
     }
-    await this.submitJobOfferForm(title, description);
+    await this.submitJobOfferForm(title, description, companyName);
   }
 
   async initiatePayment(jobOfferTitle: string, cardNumber: string): None {
     await this.web.click('Dodaj ogłoszenie');
     await this.selectPricingPlan('premium');
-    await this.submitJobOfferForm(jobOfferTitle, 'description');
+    await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName');
     await this.fillCardDetails(cardNumber);
     await this.proceedCardPayment();
   }
 
-  private async submitJobOfferForm(title: string, description: string): None {
+  private async submitJobOfferForm(title: string, description: string, companyName: string): None {
     await this.web.fillByLabel('Tytuł ogłoszenia', title);
     await this.web.fillByLabel('Opis ogłoszenia', description);
+    await this.web.fillByLabel('Nazwa firmy', companyName);
     await this.web.click('Dodaj');
     await this.web.waitForText('Dodano ogłoszenie!');
   }
@@ -177,9 +180,15 @@ export class Driver {
     return await this.web.isVisible('planBundle');
   }
 
-  async findJobOfferField(jobOfferTitle: string, field: 'description'): Promise<string> {
+  async findJobOfferField(jobOfferTitle: string, field: 'description'|'companyName'): Promise<string> {
     await this.web.click(jobOfferTitle);
-    return await this.web.readStringByTestId('jobOfferDescription');
+    if (field === 'description') {
+      return await this.web.readStringByTestId('jobOfferDescription');
+    }
+    if (field === 'companyName') {
+      return await this.web.readStringByTestId('jobOfferCompanyName');
+    }
+    throw new Error('Failed to find job offer field.');
   }
 }
 

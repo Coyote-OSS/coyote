@@ -13,6 +13,7 @@ readonly class JobBoardGate {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             description TEXT NOT NULL,
+            companyName TEXT NOT NULL,
             duration INTEGER NOT NULL,
             pricingPlan TEXT NOT NULL,
             status TEXT NOT NULL,
@@ -27,6 +28,7 @@ readonly class JobBoardGate {
         $record = new JobOffer(0,
             $jobOffer->title,
             $jobOffer->description,
+            $jobOffer->companyName,
             $pricingPlan === 'free' ? 14 : 30,
             $pricingPlan === 'free' ? JobOfferStatus::Published : JobOfferStatus::AwaitingPayment,
             $paymentId);
@@ -37,11 +39,12 @@ readonly class JobBoardGate {
 
     public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
         $this->database->execute('UPDATE job_offers
-            SET title = :title, description = :description
+            SET title = :title, description = :description, companyName = :companyName
             WHERE id = :id;', [
             'id'          => $jobOfferId,
             'title'       => $jobOffer->title,
             'description' => $jobOffer->description,
+            'companyName' => $jobOffer->companyName,
         ]);
     }
 
@@ -60,6 +63,7 @@ readonly class JobBoardGate {
             $row['id'],
             $row['title'],
             $row['description'],
+            '',
             $row['duration'],
             $this->parse($row['status']),
             $row['paymentId']),
@@ -71,10 +75,11 @@ readonly class JobBoardGate {
     }
 
     private function insertJobOffer(JobOffer $jobOffer, string $pricingPlan): int {
-        return $this->database->insert('INSERT INTO job_offers (title, description, duration, pricingPlan, status, paymentId) 
-            VALUES (:title, :description, :duration, :pricingPlan, :status, :paymentId);', [
+        return $this->database->insert('INSERT INTO job_offers (title, description, companyName, duration, pricingPlan, status, paymentId) 
+            VALUES (:title, :description, :companyName, :duration, :pricingPlan, :status, :paymentId);', [
             'title'       => $jobOffer->title,
             'description' => $jobOffer->description,
+            'companyName' => $jobOffer->companyName,
             'duration'    => $jobOffer->expiresInDays,
             'pricingPlan' => $pricingPlan,
             'status'      => $this->format($jobOffer->status),

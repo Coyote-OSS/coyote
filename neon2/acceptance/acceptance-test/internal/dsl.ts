@@ -43,13 +43,15 @@ export class Dsl {
     pricingType?: PricingType,
     payment?: Payment,
     description?: string,
+    companyName?: string,
   }): None {
     await this.driver.publishJobOffer(
       this.enc(jobOffer.title),
       this.pricingPlan(jobOffer.plan, jobOffer.pricingType, jobOffer.payment),
       jobOffer.payment || 'completed',
       this.cardPaymentFor(jobOffer.payment),
-      jobOffer.description || 'Description');
+      jobOffer.description || 'Description',
+      jobOffer.companyName || 'Company name');
   }
 
   async finishPayment(): None {
@@ -161,10 +163,21 @@ export class Dsl {
     assertEquals(false, await this.driver.hasPlanBundle());
   }
 
-  async assertJobOfferField(assertion: {jobOfferTitle: string, expectedDescription: string}): None {
-    assertEquals(
-      assertion.expectedDescription,
-      await this.driver.findJobOfferField(this.enc(assertion.jobOfferTitle), 'description'));
+  async assertJobOfferField(assertion: {
+    jobOfferTitle: string,
+    expectedDescription?: string,
+    expectedCompanyName?: string,
+  }): None {
+    if (assertion.expectedDescription) {
+      assertEquals(
+        assertion.expectedDescription,
+        await this.driver.findJobOfferField(this.enc(assertion.jobOfferTitle), 'description'));
+    }
+    if (assertion.expectedCompanyName) {
+      assertEquals(
+        assertion.expectedCompanyName,
+        await this.driver.findJobOfferField(this.enc(assertion.jobOfferTitle), 'companyName'));
+    }
   }
 }
 

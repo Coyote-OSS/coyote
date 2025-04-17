@@ -18,10 +18,11 @@ export class JobBoard {
     this.updateView();
   }
 
-  jobOfferUpdated(id: number, targetTitle: string, targetDescription: string): void {
+  jobOfferUpdated(id: number, targetTitle: string, targetDescription: string, targetCompanyName: string): void {
     const jobOffer = this.findJobOffer(id);
     jobOffer.title = targetTitle;
     jobOffer.description = targetDescription;
+    jobOffer.companyName = targetCompanyName;
     this.updateView();
   }
 
@@ -49,6 +50,7 @@ export interface JobOffer {
   expiresInDays: number;
   status: 'published'|'awaitingPayment';
   description: string;
+  companyName: string;
 }
 
 function copyArray<T>(array: T[]): T[] {

@@ -11,6 +11,9 @@
     <div>
       <span data-testid="jobOfferDescription" v-text="props.jobOffer.description"/>
     </div>
+    <div>
+      <span data-testid="jobOfferCompanyName" v-text="props.jobOffer.companyName"/>
+    </div>
     <Design.Button primary-outline @click="editJob">Edytuj</Design.Button>
   </Design.Tile>
 </template>

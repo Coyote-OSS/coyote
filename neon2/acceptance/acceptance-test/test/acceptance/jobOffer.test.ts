@@ -14,4 +14,8 @@ describe('Job offer contains various job offer fields.', () => {
     await dsl.updateJobOffer({title: 'Updated', updatedDescription: 'After'});
     await dsl.assertJobOfferField({jobOfferTitle: 'Updated', expectedDescription: 'After'});
   });
+  test('Job offer has company name.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Offer', companyName: 'Januszsoft'});
+    await dsl.assertJobOfferField({jobOfferTitle: 'Offer', expectedCompanyName: 'Januszsoft'});
+  });
 });

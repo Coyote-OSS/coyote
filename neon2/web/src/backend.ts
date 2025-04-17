@@ -10,6 +10,7 @@ export class JobBoardBackend {
       jobOfferPlan: pricingPlan,
       jobOfferTitle: jobOffer.title,
       jobOfferDescription: jobOffer.description,
+      jobOfferCompanyName: jobOffer.companyName,
     })
       .then(response => response.json())
       .then((jobOffer: BackendJobOffer): void => created(jobOffer));
@@ -20,6 +21,7 @@ export class JobBoardBackend {
       jobOfferId: id.toString(),
       jobOfferTitle: jobOffer.title,
       jobOfferDescription: jobOffer.description,
+      jobOfferCompanyName: jobOffer.companyName,
     })
       .then(() => updated());
   }
@@ -81,6 +83,7 @@ export interface BackendJobOffer {
   status: BackendJobOfferStatus;
   paymentId: string|null;
   description: string;
+  companyName: string;
 }
 
 export type BackendJobOfferStatus = 'published'|'awaitingPayment';

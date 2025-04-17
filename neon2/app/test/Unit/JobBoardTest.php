@@ -27,7 +27,7 @@ class JobBoardTest extends TestCase {
     #[Test]
     public function freeJobOffers_dontContainPaymentIdUnnecessarily(): void {
         $this->expectPaymentId(null);
-        $this->jobBoard->createJobOffer('free', new JobOfferSubmit('Offer', ''));
+        $this->jobBoard->createJobOffer('free', new JobOfferSubmit('Offer', '', ''));
     }
 
     private function expectPaymentId(?string $expectedPaymentId): void {

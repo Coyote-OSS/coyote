@@ -11,6 +11,12 @@
       <Design.TextField placeholder="Miejsce na szczegółowy opis oferty" v-model="jobOffer.description"/>
     </label>
   </Design.Card>
+  <Design.Card title="Zatrudniająca firma">
+    <label>
+      Nazwa firmy
+      <Design.TextField placeholder="Podaj nazwę firmy dla której chcesz dodać ogłoszenie" v-model="jobOffer.companyName"/>
+    </label>
+  </Design.Card>
   <Design.Tile>
     <Design.Row>
       <Design.RowEnd>

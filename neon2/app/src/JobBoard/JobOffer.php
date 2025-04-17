@@ -6,6 +6,7 @@ class JobOffer {
         public int            $id,
         public string         $title,
         public string         $description,
+        public string         $companyName,
         public int            $expiresInDays,
         public JobOfferStatus $status,
         public ?string        $paymentId,

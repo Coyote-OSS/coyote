@@ -23,13 +23,14 @@ export type PricingPlan = 'free'|'premium'|PlanBundleName;
 export interface SubmitJobOffer {
   title: string;
   description: string;
+  companyName: string;
 }
 
 view.addEventListener({
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
     backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
-      const {id, title, expiresInDays, status, description} = jobOffer;
-      board.jobOfferCreated({id, title, description, expiresInDays, status});
+      const {id, title, expiresInDays, status, description, companyName} = jobOffer;
+      board.jobOfferCreated({id, title, description, expiresInDays, status, companyName});
       if (pricingPlan === 'free') {
         view.jobOfferCreatedFree();
       } else {
@@ -40,7 +41,7 @@ view.addEventListener({
   },
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
     backend.updateJobOffer(jobOfferId, jobOffer, (): void => {
-      board.jobOfferUpdated(jobOfferId, jobOffer.title, jobOffer.description);
+      board.jobOfferUpdated(jobOfferId, jobOffer.title, jobOffer.description, jobOffer.companyName);
       view.jobOfferEdited();
     });
   },
