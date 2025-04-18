@@ -54,7 +54,10 @@ export class WebDriver {
   }
 
   async waitForText(text: string): None {
-    await this.page.getByText(text).waitFor({timeout: 500});
+    // Locally, timeout of 400ms is sufficient, but occasionally
+    // tests fail on github actions because of the timeout,
+    // thus timeout of 1250ms is used.
+    await this.page.getByText(text).waitFor({timeout: 1250});
   }
 
   async waitUntilVisible(testId: string): None {
