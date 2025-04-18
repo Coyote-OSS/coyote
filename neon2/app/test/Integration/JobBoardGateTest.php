@@ -1,6 +1,11 @@
 <?php
 namespace Test\Neon2\Integration;
 
+use Neon\Currency;
+use Neon\LegalForm;
+use Neon\Rate;
+use Neon\WorkExperience;
+use Neon\WorkMode;
 use Neon2\JobBoard\JobBoardGate;
 use Neon2\JobBoard\JobOffer;
 use Neon2\JobBoard\JobOfferStatus;
@@ -27,7 +32,7 @@ class JobBoardGateTest extends TestCase {
     public function addJobOffer(): void {
         $this->addFreeOffer('Foo');
         [$jobOffer] = $this->board->listJobOffers();
-        $this->assertEquals('Foo', $jobOffer->title);
+        $this->assertEquals('Foo', $jobOffer->fields->title);
     }
 
     #[Test]
@@ -54,10 +59,10 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function editJobOffer(): void {
-        $jobOffer = $this->board->createJobOffer(new JobOfferSubmit('Foo', '', ''), 'free', '');
-        $this->board->updateJobOffer($jobOffer->id, new JobOfferSubmit('New title', '', ''));
+        $jobOffer = $this->board->createJobOffer($this->fields('Foo'), 'free', '');
+        $this->board->updateJobOffer($jobOffer->id, $this->fields('New title'));
         [$jobOffer] = $this->board->listJobOffers();
-        $this->assertEquals('New title', $jobOffer->title);
+        $this->assertEquals('New title', $jobOffer->fields->title);
     }
 
     #[Test]
@@ -84,7 +89,7 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function readJobOfferIdByPaymentId(): void {
-        $jobOffer = $this->board->createJobOffer(new JobOfferSubmit('Foo', '', ''), 'free', 'payment-id');
+        $jobOffer = $this->board->createJobOffer($this->fields('Foo'), 'free', 'payment-id');
         $this->assertEquals(
             $jobOffer->id,
             $this->board->jobOfferIdByPaymentId('payment-id'));
@@ -92,15 +97,34 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function readPricingPlanByPaymentId(): void {
-        $this->board->createJobOffer(new JobOfferSubmit('Foo', '', ''), 'scale', 'payment-id-123');
+        $this->board->createJobOffer($this->fields('Foo'), 'scale', 'payment-id-123');
         $this->assertSame('scale', $this->board->pricingPlanByPaymentId('payment-id-123'));
     }
 
     private function addFreeOffer(string $title): void {
-        $this->board->createJobOffer(new JobOfferSubmit($title, '', ''), 'free', '');
+        $this->board->createJobOffer($this->fields($title), 'free', '');
     }
 
     private function addPaidOffer(string $title): JobOffer {
-        return $this->board->createJobOffer(new JobOfferSubmit($title, '', ''), 'premium', '');
+        return $this->board->createJobOffer($this->fields($title), 'premium', '');
+    }
+
+    private function fields(string $title): JobOfferSubmit {
+        return new JobOfferSubmit(
+            $title,
+            '',
+            '',
+            0,
+            0,
+            '',
+            Currency::PLN,
+            Rate::Monthly,
+            [],
+            '',
+            [],
+            WorkMode::Hybrid,
+            LegalForm::BusinessToBusiness,
+            WorkExperience::Intern,
+        );
     }
 }

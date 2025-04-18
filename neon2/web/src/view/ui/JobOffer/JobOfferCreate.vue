@@ -23,5 +23,16 @@ const newJobOffer: SubmitJobOffer = {
   title: '',
   description: '',
   companyName: '',
+  salaryRangeFrom: 0,
+  salaryRangeTo: 0,
+  salaryIsNet: true,
+  salaryCurrency: 'PLN',
+  salaryRate: 'monthly',
+  locations: [''],
+  companyLogoUrl: '',
+  tagNames: [''],
+  workMode: 'stationary',
+  legalForm: 'employment',
+  experience: 'not-provided',
 };
 </script>

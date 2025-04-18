@@ -8,6 +8,7 @@
   },
   "autoload": {
     "psr-4": {
+      "Neon\\": "../../neon/src/",
       "Neon2\\": "./src/"
     }
   },

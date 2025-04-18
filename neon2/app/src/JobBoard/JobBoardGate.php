@@ -11,9 +11,7 @@ readonly class JobBoardGate {
         $this->database = new Database();
         $this->database->execute('CREATE TABLE IF NOT EXISTS job_offers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            description TEXT NOT NULL,
-            companyName TEXT NOT NULL,
+            fields TEXT NOT NULL,
             duration INTEGER NOT NULL,
             pricingPlan TEXT NOT NULL,
             status TEXT NOT NULL,
@@ -26,25 +24,19 @@ readonly class JobBoardGate {
         ?string        $paymentId,
     ): JobOffer {
         $record = new JobOffer(0,
-            $jobOffer->title,
-            $jobOffer->description,
-            $jobOffer->companyName,
             $pricingPlan === 'free' ? 14 : 30,
             $pricingPlan === 'free' ? JobOfferStatus::Published : JobOfferStatus::AwaitingPayment,
-            $paymentId);
+            $paymentId,
+            $jobOffer);
         $id = $this->insertJobOffer($record, $pricingPlan);
         $record->id = $id;
         return $record;
     }
 
     public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
-        $this->database->execute('UPDATE job_offers
-            SET title = :title, description = :description, companyName = :companyName
-            WHERE id = :id;', [
-            'id'          => $jobOfferId,
-            'title'       => $jobOffer->title,
-            'description' => $jobOffer->description,
-            'companyName' => $jobOffer->companyName,
+        $this->database->execute('UPDATE job_offers SET fields = :fields WHERE id = :id;', [
+            'id'     => $jobOfferId,
+            'fields' => \serialize($jobOffer),
         ]);
     }
 
@@ -61,13 +53,12 @@ readonly class JobBoardGate {
     public function listJobOffers(): array {
         return array_map(fn(array $row) => new JobOffer(
             $row['id'],
-            $row['title'],
-            $row['description'],
-            $row['companyName'],
             $row['duration'],
             $this->parse($row['status']),
-            $row['paymentId']),
-            $this->database->query('SELECT id, title, description, companyName, duration, status, paymentId FROM job_offers;'));
+            $row['paymentId'],
+            \unserialize($row['fields']),
+        ),
+            $this->database->query('SELECT id, fields, duration, status, paymentId FROM job_offers;'));
     }
 
     public function clear(): void {
@@ -75,11 +66,9 @@ readonly class JobBoardGate {
     }
 
     private function insertJobOffer(JobOffer $jobOffer, string $pricingPlan): int {
-        return $this->database->insert('INSERT INTO job_offers (title, description, companyName, duration, pricingPlan, status, paymentId) 
-            VALUES (:title, :description, :companyName, :duration, :pricingPlan, :status, :paymentId);', [
-            'title'       => $jobOffer->title,
-            'description' => $jobOffer->description,
-            'companyName' => $jobOffer->companyName,
+        return $this->database->insert('INSERT INTO job_offers (fields, duration, pricingPlan, status, paymentId) 
+            VALUES (:fields, :duration, :pricingPlan, :status, :paymentId);', [
+            'fields'      => \serialize($jobOffer->fields),
             'duration'    => $jobOffer->expiresInDays,
             'pricingPlan' => $pricingPlan,
             'status'      => $this->format($jobOffer->status),

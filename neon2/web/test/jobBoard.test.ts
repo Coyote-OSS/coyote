@@ -76,13 +76,13 @@ describe('Job board', () => {
     test('Given a job offer, when its title is updated, the title is no longer passed to view.', () => {
       jobOfferCreated('Before');
       const [offer] = publishedOffers();
-      board.jobOfferUpdated(offer.id, 'After');
+      board.jobOfferUpdated(offer.id, {title: 'After'});
       assertNotContains('Before', publishedOfferTitles());
     });
     test('Given a job offer, when its title is updated, the new title is passed to view.', () => {
       jobOfferCreated('Before');
       const [offer] = publishedOffers();
-      board.jobOfferUpdated(offer.id, 'After');
+      board.jobOfferUpdated(offer.id, {title: 'After'});
       assertContains('After', publishedOfferTitles());
     });
     test('When a non-existing job offer is edited, an exception is thrown.', () => {

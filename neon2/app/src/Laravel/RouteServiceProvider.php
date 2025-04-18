@@ -4,6 +4,11 @@ namespace Neon2\Laravel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider;
+use Neon\Currency;
+use Neon\LegalForm;
+use Neon\Rate;
+use Neon\WorkExperience;
+use Neon\WorkMode;
 use Neon2\JobBoardInteractor;
 use Neon2\Request\JobOfferSubmit;
 
@@ -47,8 +52,20 @@ class RouteServiceProvider extends ServiceProvider {
 
     private function requestJobOfferSubmit(Request $request): JobOfferSubmit {
         return new JobOfferSubmit(
-            $request->get('jobOfferTitle'),
-            $request->get('jobOfferDescription'),
-            $request->get('jobOfferCompanyName'));
+            $request->get('jobOfferTitle') ?? '',
+            $request->get('jobOfferDescription') ?? '',
+            $request->get('jobOfferCompanyName') ?? '',
+            $request->get('jobOfferSalaryRangeFrom'),
+            $request->get('jobOfferSalaryRangeTo'),
+            $request->get('jobOfferSalaryIsNet'),
+            Currency::from($request->get('jobOfferSalaryCurrency')),
+            Rate::from($request->get('jobOfferSalaryRate')),
+            $request->get('jobOfferLocations'),
+            $request->get('jobOfferCompanyLogoUrl') ?? '',
+            $request->get('jobOfferTagNames'),
+            WorkMode::from($request->get('jobOfferWorkMode')),
+            LegalForm::from($request->get('jobOfferLegalForm')),
+            WorkExperience::from($request->get('jobOfferExperience')),
+        );
     }
 }

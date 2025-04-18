@@ -1,4 +1,4 @@
-import {BackendJobOffer, JobBoardBackend} from "./backend";
+import {BackendJobOffer, JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferPayments} from "./jobOfferPayments";
 import {PaymentNotification, PaymentProvider, Stripe, TestPaymentProvider} from "./paymentProvider";
@@ -24,24 +24,40 @@ export interface SubmitJobOffer {
   title: string;
   description: string;
   companyName: string;
+  salaryRangeFrom: number;
+  salaryRangeTo: number;
+  salaryIsNet: boolean;
+  salaryCurrency: Currency;
+  salaryRate: Rate;
+  locations: string[];
+  companyLogoUrl: string;
+  tagNames: string[];
+  workMode: WorkMode;
+  legalForm: LegalForm;
+  experience: WorkExperience;
 }
+
+export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
+export type LegalForm = 'employment'|'b2b'|'of-mandate'|'specific-task';
+export type WorkExperience = 'intern'|'junior'|'mid-level'|'senior'|'lead'|'manager'|'not-provided';
+export type Rate = 'monthly'|'hourly'|'yearly'|'weekly';
+export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
 
 view.addEventListener({
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
     backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
-      const {id, title, expiresInDays, status, description, companyName} = jobOffer;
-      board.jobOfferCreated({id, title, description, expiresInDays, status, companyName});
+      board.jobOfferCreated(toJobOffer(jobOffer));
       if (pricingPlan === 'free') {
         view.jobOfferCreatedFree();
       } else {
-        payments.addJobOffer({jobOfferId: id, paymentId: jobOffer.paymentId, pricingPlan});
-        view.jobOfferCreatedRequirePayment(id);
+        payments.addJobOffer({jobOfferId: jobOffer.id, paymentId: jobOffer.paymentId, pricingPlan});
+        view.jobOfferCreatedRequirePayment(jobOffer.id);
       }
     });
   },
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
     backend.updateJobOffer(jobOfferId, jobOffer, (): void => {
-      board.jobOfferUpdated(jobOfferId, jobOffer.title, jobOffer.description, jobOffer.companyName);
+      board.jobOfferUpdated(jobOfferId, jobOffer);
       view.jobOfferEdited();
     });
   },
@@ -105,6 +121,6 @@ if (bundle.hasBundle) {
 }
 
 backend.initialJobOffers()
-  .forEach(offer => board.jobOfferCreated({...offer}));
+  .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
 
 view.mount('#neonApplication');

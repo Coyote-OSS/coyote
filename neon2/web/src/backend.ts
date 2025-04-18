@@ -1,4 +1,24 @@
-import {PricingPlan, SubmitJobOffer} from "./main";
+import {JobOffer} from "./jobBoard";
+import {Currency, LegalForm, PricingPlan, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
+
+function jobOfferFields(jobOffer: SubmitJobOffer): object {
+  return {
+    jobOfferTitle: jobOffer.title,
+    jobOfferDescription: jobOffer.description,
+    jobOfferCompanyName: jobOffer.companyName,
+    jobOfferSalaryRangeFrom: jobOffer.salaryRangeFrom,
+    jobOfferSalaryRangeTo: jobOffer.salaryRangeTo,
+    jobOfferSalaryIsNet: jobOffer.salaryIsNet,
+    jobOfferSalaryCurrency: jobOffer.salaryCurrency,
+    jobOfferSalaryRate: jobOffer.salaryRate,
+    jobOfferLocations: jobOffer.locations,
+    jobOfferCompanyLogoUrl: jobOffer.companyLogoUrl,
+    jobOfferTagNames: jobOffer.tagNames,
+    jobOfferWorkMode: jobOffer.workMode,
+    jobOfferLegalForm: jobOffer.legalForm,
+    jobOfferExperience: jobOffer.experience,
+  };
+}
 
 export class JobBoardBackend {
   addJobOffer(
@@ -8,9 +28,7 @@ export class JobBoardBackend {
   ): void {
     request('POST', '/neon2/job-offers', {
       jobOfferPlan: pricingPlan,
-      jobOfferTitle: jobOffer.title,
-      jobOfferDescription: jobOffer.description,
-      jobOfferCompanyName: jobOffer.companyName,
+      ...jobOfferFields(jobOffer),
     })
       .then(response => response.json())
       .then((jobOffer: BackendJobOffer): void => created(jobOffer));
@@ -19,9 +37,7 @@ export class JobBoardBackend {
   updateJobOffer(id: number, jobOffer: SubmitJobOffer, updated: () => void): void {
     request('PATCH', '/neon2/job-offers', {
       jobOfferId: id.toString(),
-      jobOfferTitle: jobOffer.title,
-      jobOfferDescription: jobOffer.description,
-      jobOfferCompanyName: jobOffer.companyName,
+      ...jobOfferFields(jobOffer),
     })
       .then(() => updated());
   }
@@ -78,12 +94,25 @@ interface BackendInput {
 
 export interface BackendJobOffer {
   id: number;
-  title: string;
   expiresInDays: number;
   status: BackendJobOfferStatus;
   paymentId: string|null;
-  description: string;
-  companyName: string;
+  fields: {
+    title: string;
+    description: string;
+    companyName: string;
+    salaryRangeFrom: number;
+    salaryRangeTo: number;
+    salaryIsNet: boolean;
+    salaryCurrency: Currency;
+    salaryRate: Rate;
+    locations: string[];
+    companyLogoUrl: string;
+    tagNames: string[];
+    workMode: WorkMode;
+    legalForm: LegalForm;
+    experience: WorkExperience;
+  };
 }
 
 export type BackendJobOfferStatus = 'published'|'awaitingPayment';
@@ -106,4 +135,9 @@ interface BackendPlanBundle {
   hasBundle: boolean;
   remainingJobOffers?: number;
   planBundleName?: 'strategic'|'growth'|'scale';
+}
+
+export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
+  const {fields, ...operationalFields} = jobOffer;
+  return {...operationalFields, ...fields};
 }

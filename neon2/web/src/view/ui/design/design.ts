@@ -2,6 +2,9 @@ import BannerHeading from "./BannerHeading.vue";
 import Button from "./Button.vue";
 import Card from "./Card.vue";
 import CheckBox from "./CheckBox.vue";
+import Drawer from "./Drawer.vue";
+import Dropdown from "./Dropdown.vue";
+import FieldGroup from "./FieldGroup.vue";
 import Layout from "./Layout.vue";
 import Material from "./Material.vue";
 import Row from "./Row.vue";
@@ -19,6 +22,9 @@ export const Design = {
   Toast,
   Card,
   CheckBox,
+  Drawer,
+  Dropdown,
+  FieldGroup,
   Layout,
   Material,
   Row,

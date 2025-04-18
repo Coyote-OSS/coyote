@@ -1,3 +1,5 @@
+import {Currency, LegalForm, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
+
 interface JobBoardObserver {
   (jobOffers: JobOffer[]): void;
 }
@@ -18,11 +20,9 @@ export class JobBoard {
     this.updateView();
   }
 
-  jobOfferUpdated(id: number, targetTitle: string, targetDescription: string, targetCompanyName: string): void {
-    const jobOffer = this.findJobOffer(id);
-    jobOffer.title = targetTitle;
-    jobOffer.description = targetDescription;
-    jobOffer.companyName = targetCompanyName;
+  jobOfferUpdated(id: number, jobOffer: SubmitJobOffer): void {
+    const originalJobOffer = this.findJobOffer(id);
+    Object.assign(originalJobOffer, jobOffer);
     this.updateView();
   }
 
@@ -51,6 +51,17 @@ export interface JobOffer {
   status: 'published'|'awaitingPayment';
   description: string;
   companyName: string;
+  salaryRangeFrom: number;
+  salaryRangeTo: number;
+  salaryIsNet: boolean;
+  salaryCurrency: Currency;
+  salaryRate: Rate;
+  locations: string[];
+  companyLogoUrl: string;
+  tagNames: string[];
+  workMode: WorkMode;
+  legalForm: LegalForm;
+  experience: WorkExperience;
 }
 
 function copyArray<T>(array: T[]): T[] {

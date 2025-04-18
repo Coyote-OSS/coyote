@@ -1,6 +1,11 @@
 <?php
 namespace Test\Neon2\Unit;
 
+use Neon\Currency;
+use Neon\LegalForm;
+use Neon\Rate;
+use Neon\WorkExperience;
+use Neon\WorkMode;
 use Neon2\JobBoard;
 use Neon2\Payment;
 use Neon2\Request\JobOfferSubmit;
@@ -27,7 +32,7 @@ class JobBoardTest extends TestCase {
     #[Test]
     public function freeJobOffers_dontContainPaymentIdUnnecessarily(): void {
         $this->expectPaymentId(null);
-        $this->jobBoard->createJobOffer('free', new JobOfferSubmit('Offer', '', ''));
+        $this->jobBoard->createJobOffer('free', $this->jobOffer('Offer'));
     }
 
     private function expectPaymentId(?string $expectedPaymentId): void {
@@ -37,5 +42,24 @@ class JobBoardTest extends TestCase {
                 $this->assertSame($expectedPaymentId, $paymentId);
                 return $this->createMock(JobBoard\JobOffer::class);
             });
+    }
+
+    private function jobOffer(string $title): JobOfferSubmit {
+        return new JobOfferSubmit(
+            $title,
+            '',
+            '',
+            0,
+            0,
+            '',
+            Currency::PLN,
+            Rate::Monthly,
+            [],
+            '',
+            [],
+            WorkMode::Hybrid,
+            LegalForm::BusinessToBusiness,
+            WorkExperience::Intern,
+        );
     }
 }

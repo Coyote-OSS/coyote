@@ -9,8 +9,20 @@ export class HttpDriver {
     const jobOfferCreated = await this.post('/neon2/job-offers', {
       jobOfferPlan,
       jobOfferTitle,
-      jobOfferDescription: 'description',
+      jobOfferCompanyLogoUrl: '',
+      jobOfferCompanyName: '',
       jobOfferCompanyName: 'company name',
+      jobOfferDescription: 'description',
+      jobOfferExperience: 'not-provided',
+      jobOfferLegalForm: 'employment',
+      jobOfferLocations: [],
+      jobOfferSalaryCurrency: 'PLN',
+      jobOfferSalaryIsNet: true,
+      jobOfferSalaryRangeFrom: 0,
+      jobOfferSalaryRangeTo: 0,
+      jobOfferSalaryRate: 'monthly',
+      jobOfferTagNames: [],
+      jobOfferWorkMode: 'stationary',
     });
     return jobOfferCreated['id'];
   }
