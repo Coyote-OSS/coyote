@@ -46,9 +46,11 @@ export class JobBoard {
 
 export interface JobOffer {
   id: number;
-  title: string;
   expiresInDays: number;
   status: 'published'|'awaitingPayment';
+  isNew: boolean;
+  isFavourite: boolean;
+  title: string;
   description: string;
   companyName: string;
   salaryRangeFrom: number;

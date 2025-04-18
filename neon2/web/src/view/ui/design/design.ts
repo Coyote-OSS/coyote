@@ -2,9 +2,16 @@ import BannerHeading from "./BannerHeading.vue";
 import Button from "./Button.vue";
 import Card from "./Card.vue";
 import CheckBox from "./CheckBox.vue";
+import Divider from "./Divider.vue";
 import Drawer from "./Drawer.vue";
 import Dropdown from "./Dropdown.vue";
 import FieldGroup from "./FieldGroup.vue";
+import JobOfferBadge from "./JobOffer/JobOfferBadge.vue";
+import JobOfferFavouriteButton from "./JobOffer/JobOfferFavouriteButton.vue";
+import JobOfferListItem from "./JobOffer/JobOfferListItem.vue";
+import JobOfferSalary from "./JobOffer/JobOfferSalary.vue";
+import JobOfferSalaryNotProvided from "./JobOffer/JobOfferSalaryNotProvided.vue";
+import JobOfferTagList from "./JobOffer/JobOfferTagList.vue";
 import Layout from "./Layout.vue";
 import Material from "./Material.vue";
 import Row from "./Row.vue";
@@ -22,9 +29,16 @@ export const Design = {
   Toast,
   Card,
   CheckBox,
+  Divider,
   Drawer,
   Dropdown,
   FieldGroup,
+  JobOfferBadge,
+  JobOfferFavouriteButton,
+  JobOfferListItem,
+  JobOfferSalary,
+  JobOfferSalaryNotProvided,
+  JobOfferTagList,
   Layout,
   Material,
   Row,

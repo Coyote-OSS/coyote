@@ -143,7 +143,7 @@ interface BackendPlanBundle {
 
 export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
   const {fields, ...operationalFields} = jobOffer;
-  return {...operationalFields, ...fields};
+  return {...operationalFields, ...fields, url: '', isNew: true, isFavourite: true};
 }
 
 function invoiceInfoFields(invoiceInfo: InvoiceInformation): object {

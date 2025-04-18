@@ -10,12 +10,15 @@
       <Design.Button test-id="search" icon="jobOfferSearch" primary square/>
     </Design.TextField>
   </Design.Tile>
-  <Design.Tile
-    v-for="job in props.jobOffers"
-    :key="job.id"
-    data-testid="jobOfferTitle"
-    @click="emit('show', job.id)"
-    v-text="job.title"/>
+  <Design.JobOfferListItem
+    v-for="jobOffer in props.jobOffers"
+    :key="jobOffer.id"
+    :job-offer="jobOffer"
+    @select="emit('show', jobOffer.id)"
+    @favourite-change=""/>
+  <Design.Material v-if="props.jobOffers.length === 0" nested class="text-word text-center my-2 py-6">
+    Nie znaleźliśmy żadnych ofert, pasujących do Twoich kryteriów wyszukiwania.
+  </Design.Material>
 </template>
 
 <script setup lang="ts">
