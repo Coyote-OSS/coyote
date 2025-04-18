@@ -1,5 +1,5 @@
 import {JobOffer} from "./jobBoard";
-import {Currency, LegalForm, PricingPlan, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
+import {Currency, InvoiceInformation, LegalForm, PricingPlan, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
 
 function jobOfferFields(jobOffer: SubmitJobOffer): object {
   return {
@@ -42,8 +42,12 @@ export class JobBoardBackend {
       .then(() => updated());
   }
 
-  preparePayment(paymentId: string): Promise<BackendPreparedPayment> {
-    return request('POST', '/neon2/job-offers/payment', {paymentId, userId: this.userId()})
+  preparePayment(paymentId: string, invoiceInfo: InvoiceInformation): Promise<BackendPreparedPayment> {
+    return request('POST', '/neon2/job-offers/payment', {
+      paymentId,
+      userId: this.userId(),
+      ...invoiceInfoFields(invoiceInfo),
+    })
       .then(response => response.json());
   }
 
@@ -140,4 +144,15 @@ interface BackendPlanBundle {
 export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
   const {fields, ...operationalFields} = jobOffer;
   return {...operationalFields, ...fields};
+}
+
+function invoiceInfoFields(invoiceInfo: InvoiceInformation): object {
+  return {
+    invoiceVatId: invoiceInfo.vatId,
+    invoiceCountryCode: invoiceInfo.countryCode,
+    invoiceCompanyName: invoiceInfo.companyName,
+    invoiceCompanyAddress: invoiceInfo.companyAddress,
+    invoiceCompanyPostalCode: invoiceInfo.companyPostalCode,
+    invoiceCompanyCity: invoiceInfo.companyCity,
+  };
 }

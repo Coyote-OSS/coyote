@@ -9,6 +9,7 @@ use Neon\LegalForm;
 use Neon\Rate;
 use Neon\WorkExperience;
 use Neon\WorkMode;
+use Neon2\JobBoard\InvoiceInformation;
 use Neon2\JobBoardInteractor;
 use Neon2\Request\JobOfferSubmit;
 
@@ -30,7 +31,8 @@ class RouteServiceProvider extends ServiceProvider {
             $preparedPayment = $listener->preparePayment(
                 request()->get('userId'),
                 request()->get('paymentId'),
-                2000);
+                2000,
+                $this->requestInvoiceInfo(request()));
             return response()->json($preparedPayment, status:201);
         });
         Facades\Route::post('/neon2/job-offers/redeem-bundle', function (JobBoardInteractor $listener) {
@@ -67,5 +69,15 @@ class RouteServiceProvider extends ServiceProvider {
             LegalForm::from($request->get('jobOfferLegalForm')),
             WorkExperience::from($request->get('jobOfferExperience')),
         );
+    }
+
+    private function requestInvoiceInfo(Request $request): InvoiceInformation {
+        return new InvoiceInformation(
+            $request->get('invoiceVatId'),
+            $request->get('invoiceCountryCode'),
+            $request->get('invoiceCompanyName'),
+            $request->get('invoiceCompanyAddress'),
+            $request->get('invoiceCompanyPostalCode'),
+            $request->get('invoiceCompanyCity'));
     }
 }

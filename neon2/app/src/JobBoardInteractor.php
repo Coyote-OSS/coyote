@@ -1,6 +1,7 @@
 <?php
 namespace Neon2;
 
+use Neon2\JobBoard\InvoiceInformation;
 use Neon2\JobBoard\JobBoardGate;
 use Neon2\JobBoard\JobOffer;
 use Neon2\Payment\PaymentGate;
@@ -52,7 +53,12 @@ readonly class JobBoardInteractor {
         $this->jobBoardGate->updateJobOffer($jobOfferId, $jobOffer);
     }
 
-    public function preparePayment(int $userId, string $paymentId, int $amount): PreparedPayment {
+    public function preparePayment(
+        int                $userId,
+        string             $paymentId,
+        int                $amount,
+        InvoiceInformation $invoiceInfo,
+    ): PreparedPayment {
         return $this->paymentService->preparePayment($userId, $amount, $paymentId);
     }
 

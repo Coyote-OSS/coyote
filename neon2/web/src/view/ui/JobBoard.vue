@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {PlanBundleName, PricingPlan, SubmitJobOffer} from "../../main";
+import {InvoiceInformation, PlanBundleName, PricingPlan, SubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -88,7 +88,7 @@ interface Emit {
   (event: 'update', jobOfferId: number, jobOffer: SubmitJobOffer): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string);
-  (event: 'pay', id: number): void;
+  (event: 'pay', id: number, invoiceInfo: InvoiceInformation): void;
   (event: 'redeem-bundle', jobOfferId: number): void;
   (event: 'mount-card-input', cssSelector: string): void;
   (event: 'unmount-card-input'): void;
@@ -120,8 +120,8 @@ function showJob(id: number): void {
   navigate('show', id);
 }
 
-function payForJob(jobOfferId: number): void {
-  emit('pay', jobOfferId);
+function payForJob(jobOfferId: number, invoiceInfo: InvoiceInformation): void {
+  emit('pay', jobOfferId, invoiceInfo);
 }
 
 function redeemBundle(jobOfferId: number): void {

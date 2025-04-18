@@ -1,4 +1,5 @@
 import {BackendPaymentStatus, BackendPreparedPayment, JobBoardBackend} from "./backend";
+import {InvoiceInformation} from "./main";
 import {PaymentNotification, PaymentProvider} from "./paymentProvider";
 
 export type PaymentStatus = 'paymentComplete'|'paymentFailed';
@@ -16,8 +17,8 @@ export class PaymentService {
     this.listeners.push(listener);
   }
 
-  async initiatePayment(paymentId: string): Promise<void> {
-    const payment = await this.backend.preparePayment(paymentId);
+  async initiatePayment(paymentId: string, invoiceInfo: InvoiceInformation): Promise<void> {
+    const payment = await this.backend.preparePayment(paymentId, invoiceInfo);
     this.updatePaymentNotification(await this.performPayment(payment));
     this.updatePaymentStatus(paymentId, await this.readPaymentStatus(payment.paymentId));
   }

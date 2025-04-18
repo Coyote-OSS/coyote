@@ -15,6 +15,7 @@ interface Props {
   verticalCenter?: boolean;
   apart?: boolean;
   wrap?: boolean;
+  columns?: boolean;
 }
 
 const props = defineProps<Props>();

@@ -43,6 +43,15 @@ export type WorkExperience = 'intern'|'junior'|'mid-level'|'senior'|'lead'|'mana
 export type Rate = 'monthly'|'hourly'|'yearly'|'weekly';
 export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
 
+export interface InvoiceInformation {
+  companyName: string,
+  countryCode: string,
+  vatId: string,
+  companyAddress: string,
+  companyPostalCode: string,
+  companyCity: string,
+}
+
 view.addEventListener({
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
     backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
@@ -61,8 +70,8 @@ view.addEventListener({
       view.jobOfferEdited();
     });
   },
-  payForJob(jobOfferId: number): void {
-    payment.initiatePayment(payments.paymentId(jobOfferId));
+  payForJob(jobOfferId: number, invoiceInfo: InvoiceInformation): void {
+    payment.initiatePayment(payments.paymentId(jobOfferId), invoiceInfo);
   },
   redeemBundle(jobOfferId: number): void {
     backend.publishJobOfferUsingBundle(jobOfferId).then(() => {
