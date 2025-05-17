@@ -1,14 +1,5 @@
 import {Location} from "../../../locationProvider/LocationProvider";
-import {
-  ApplicationMode,
-  Currency,
-  HiringType,
-  LegalForm,
-  Rate,
-  SubmitJobOffer,
-  WorkExperience,
-  WorkMode,
-} from "../../../main";
+import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, WorkExperience} from "../../../main";
 
 export interface FormModel {
   title: string;
@@ -20,7 +11,7 @@ export interface FormModel {
   salaryIsNet: boolean;
   locations: Location[];
   tagNames: string;
-  workMode: WorkMode;
+  workModeRemoteRange: number;
   legalForm: LegalForm;
   experience: WorkExperience;
   applicationMode: ApplicationMode;
@@ -48,6 +39,7 @@ export function toFormModel(jobOffer: SubmitJobOffer): FormModel {
     description: jobOffer.description || '',
     applicationEmail: jobOffer.applicationEmail || '',
     applicationExternalAts: jobOffer.applicationExternalAts || '',
+    workModeRemoteRange: 0,
     companyWebsiteUrl: jobOffer.companyWebsiteUrl || '',
     companyDescription: jobOffer.companyDescription || '',
     companyVideoUrl: jobOffer.companyVideoUrl || '',
@@ -69,6 +61,7 @@ export function fromFormModel(formModel: FormModel): SubmitJobOffer {
     description: parseString(formModel.description),
     applicationEmail: parseString(formModel.applicationEmail),
     applicationExternalAts: parseString(formModel.applicationExternalAts),
+    workMode: 'stationary',
     companyWebsiteUrl: parseString(formModel.companyWebsiteUrl),
     companyDescription: parseString(formModel.companyDescription),
     companyVideoUrl: parseString(formModel.companyVideoUrl),

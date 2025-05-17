@@ -8,6 +8,7 @@
     :openToLeft="props.openToLeft"
     :scrollable="props.scrollable"
     :has-error="hasError"
+    :disabled="props.disabled"
     no-space
     v-model:open="open">
     <div
@@ -45,6 +46,7 @@ interface Props {
   openToLeft?: boolean;
   default?: string;
   scrollable?: boolean;
+  disabled?: boolean;
 }
 
 const props = defineProps<Props>();

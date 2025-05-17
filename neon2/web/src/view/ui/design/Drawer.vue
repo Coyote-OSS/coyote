@@ -1,8 +1,9 @@
 <template>
   <Design.Material
     :nested="props.nested"
-    class="cursor-pointer relative"
-    :class="borderClass"
+    class="relative"
+    :class="[borderClass, disabledClass]"
+    :disabled="props.disabled"
     @click="toggle">
     <div class="flex" :data-testid="props.testId">
       <Icon :name="props.icon" v-if="props.icon" class="mr-2"/>
@@ -29,7 +30,8 @@
 
 <script setup lang="ts">
 import {computed, watch} from 'vue';
-import Icon, {IconName} from "../icons/Icon.vue";
+import Icon from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
 import {useClickOutside} from "../vue/clickOutside";
 import {Design} from "./design";
 
@@ -44,6 +46,7 @@ interface Props {
   blip?: string;
   openToLeft?: boolean;
   hasError?: boolean;
+  disabled?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -51,7 +54,9 @@ const open = defineModel('open', {default: false, type: Boolean});
 const clickOutside = useClickOutside(true);
 
 function toggle(): void {
-  open.value = !open.value;
+  if (!props.disabled) {
+    open.value = !open.value;
+  }
 }
 
 watch(open, (newValue: boolean): void => {
@@ -73,5 +78,12 @@ const borderClass = computed(() => {
     return 'border border-red-500';
   }
   return 'border border-neutral-100';
+});
+
+const disabledClass = computed(() => {
+  if (props.disabled) {
+    return 'text-neutral-400 border border-neutral-100';
+  }
+  return 'cursor-pointer';
 });
 </script>

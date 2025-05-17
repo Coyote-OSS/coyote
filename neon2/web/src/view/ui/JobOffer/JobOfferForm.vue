@@ -107,7 +107,16 @@
       </Design.Row>
     </Design.Card>
     <Design.Card space title="Tryb pracy">
-      <Design.RadioGroup :options="workModeOptions" v-model="jobOffer.workMode"/>
+      <Design.RadioGroup
+        :options="workModeOptions"
+        :model-value="jobOfferWorkMode"
+        @update:model-value="updateWorkMode"/>
+      <Design.FieldGroup label="Zakres pracy zdalnej">
+        <Design.Dropdown
+          :disabled="jobOfferWorkMode !== 'hybrid'"
+          :options="workModeRemoteRangeOptions"
+          v-model="jobOffer.workModeRemoteRange"/>
+      </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Lokalizacja">
       <JobOfferLocationSet v-model="jobOffer.locations"/>
@@ -331,8 +340,21 @@ const legalFormOptions: DrawerOption<LegalForm>[] = [
 ];
 const workModeOptions: DrawerOption<WorkMode>[] = [
   {value: 'stationary', title: formatWorkMode('stationary')},
-  {value: 'fullyRemote', title: formatWorkMode('fullyRemote')},
   {value: 'hybrid', title: formatWorkMode('hybrid')},
+  {value: 'fullyRemote', title: formatWorkMode('fullyRemote')},
+];
+const workModeRemoteRangeOptions: DrawerOption<number>[] = [
+  {value: 0, title: '0%'},
+  {value: 10, title: '10%'},
+  {value: 20, title: '20%'},
+  {value: 30, title: '30%'},
+  {value: 40, title: '40%'},
+  {value: 50, title: '50%'},
+  {value: 60, title: '60%'},
+  {value: 70, title: '70%'},
+  {value: 80, title: '80%'},
+  {value: 90, title: '90%'},
+  {value: 100, title: '100%'},
 ];
 const hiringTypeOptions: DrawerOption<HiringType>[] = [
   {value: 'direct', title: formatHiringType('direct')},
@@ -369,4 +391,27 @@ const companySizeOptions: DrawerOption<number|null>[] = [
   {value: 10, title: formatCompanySizeLevel(10)},
   {value: 11, title: formatCompanySizeLevel(11)},
 ];
+
+const jobOfferWorkMode = computed((): WorkMode => {
+  if (jobOffer.workModeRemoteRange === 0) {
+    return 'stationary';
+  }
+  if (jobOffer.workModeRemoteRange === 100) {
+    return 'fullyRemote';
+  }
+  return 'hybrid';
+});
+
+function updateWorkMode(workMode: WorkMode): void {
+  if (workMode === 'stationary') {
+    jobOffer.workModeRemoteRange = 0;
+  }
+  if (workMode === 'fullyRemote') {
+    jobOffer.workModeRemoteRange = 100;
+  }
+
+  if (workMode === 'hybrid') {
+    jobOffer.workModeRemoteRange = 50;
+  }
+}
 </script>

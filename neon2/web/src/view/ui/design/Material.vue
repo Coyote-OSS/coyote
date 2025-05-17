@@ -17,6 +17,7 @@ interface Props {
   space?: boolean;
   round?: MaterialRound;
   href?: string;
+  disabled?: boolean;
 }
 
 export type MaterialRound = 'regular'|'large'|'full';
@@ -24,6 +25,9 @@ export type MaterialRound = 'regular'|'large'|'full';
 const tileClass = computed(() => [background(), rounded(), padding()]);
 
 function background(): string {
+  if (props.disabled) {
+    return 'bg-neutral-050';
+  }
   return props.nested ? 'bg-tile-nested' : 'bg-tile';
 }
 
