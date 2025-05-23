@@ -122,9 +122,9 @@
               <Icon class="ml-2" name="jobOfferApplyExternally" v-if="props.jobOffer.applyExternally"/>
             </Design.Button>
           </Design.Card>
-          <Design.Card space border v-if="props.jobOffer.tagNames.length">
+          <Design.Card space border v-if="props.jobOffer.tags.length">
             <JobOfferField title="Technologie">
-              <JobOfferTagList :tag-names="props.jobOffer.tagNames" :max="20"/>
+              <JobOfferTagPriorities :tags="props.jobOffer.tags"/>
             </JobOfferField>
           </Design.Card>
           <Design.Card space border v-if="companyCard">
@@ -178,6 +178,7 @@ import JobOfferSalary from "./JobOfferSalary.vue";
 import JobOfferSalaryNotProvided from "./JobOfferSalaryNotProvided.vue";
 import {JobOfferShow} from "./JobOfferShow";
 import JobOfferTagList from "./JobOfferTagList.vue";
+import JobOfferTagPriorities from "./JobOfferTagPriorities.vue";
 import VideoPlayer from "./VideoPlayer.vue";
 
 const props = defineProps<Props>();

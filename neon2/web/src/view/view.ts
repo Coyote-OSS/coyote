@@ -1,4 +1,4 @@
-import {JobOffer, jobOfferCities} from '../jobBoard';
+import {JobOffer, jobOfferCities, jobOfferTagNames} from '../jobBoard';
 import {JobOfferFilter, sortInPlace} from "../jobOfferFilter";
 import {PlanBundleName} from "../main";
 import {Screen, VueUi} from './ui/ui';
@@ -83,7 +83,7 @@ export class View {
       }
     }
     if (this.filter.tags.length) {
-      if (!this.haveCommonElement(this.filter.tags, jobOffer.tagNames)) {
+      if (!this.haveCommonElement(this.filter.tags, jobOfferTagNames(jobOffer))) {
         return false;
       }
     }
@@ -98,7 +98,7 @@ export class View {
   private jobOfferMatchesSearchPhrase(jobOffer: JobOffer, searchPhrase: string): boolean {
     return jobOffer.title.toLowerCase().includes(searchPhrase.toLowerCase())
       || jobOffer.companyName.toLowerCase().includes(searchPhrase.toLowerCase())
-      || jobOffer.tagNames.some(tagName => tagName.toLowerCase().includes(searchPhrase.toLowerCase()))
+      || jobOfferTagNames(jobOffer).some(tagName => tagName.toLowerCase().includes(searchPhrase.toLowerCase()))
       || this.jobOfferDescriptionPlain(jobOffer).toLowerCase().includes(searchPhrase.toLowerCase())
       || this.jobOfferCompanyDescriptionPlain(jobOffer).toLowerCase().includes(searchPhrase.toLowerCase());
   }

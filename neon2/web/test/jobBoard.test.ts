@@ -47,7 +47,7 @@ describe('Job board', () => {
       salaryCurrency: 'PLN',
       salaryRate: 'monthly',
       locations: [],
-      tagNames: [],
+      tags: [],
       workMode: 'stationary',
       workModeRemoteRange: 0,
       legalForm: 'b2b',

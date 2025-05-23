@@ -83,7 +83,16 @@
     </Design.Card>
     <Design.Card space title="Technologie">
       <Design.FieldGroup label="Wymagane technologie">
-        <Design.TextField placeholder="Np. java, python, kotlin, c#, etc." v-model="jobOffer.tagNames"/>
+        <Design.TextField
+          placeholder="Np. java, python, kotlin, c#, etc."
+          v-model="jobOffer.tagNames"
+          @update:model-value="updateTagNames"/>
+        <Design.FieldHelp class="mb-6">
+          Podaj tylko technologie programistyczne, np. Python, Kotlin, JavaScript, Laravel, React.
+        </Design.FieldHelp>
+        <JobOfferTagPrioritiesEditor
+          v-model="jobOffer.tags"
+          @update:model-value="updateTags"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Forma zatrudnienia i wynagrodzenie">
@@ -234,6 +243,7 @@ import JobOfferPhotoSet from './JobOfferPhotoSet.vue';
 import {fromSubmitToJobOfferShow} from "./JobOfferShow";
 import JobOfferShow from "./JobOfferShow.vue";
 import JobOfferStepper, {JobOfferCreatorStep} from "./JobOfferStepper.vue";
+import JobOfferTagPrioritiesEditor from "./JobOfferTagPrioritiesEditor.vue";
 import {ValidationBag} from './ValidationBag';
 
 const props = defineProps<Props>();
@@ -411,5 +421,22 @@ const jobOfferWorkMode = computed((): WorkMode => parseWorkMode(jobOffer.workMod
 
 function updateWorkMode(workMode: WorkMode): void {
   jobOffer.workModeRemoteRange = formatWorkMode(workMode);
+}
+
+function updateTags(): void {
+  jobOffer.tagNames = jobOffer.tags.map(tag => tag.tagName).join(', ');
+  console.log(jobOffer.tagNames);
+}
+
+function updateTagNames(): void {
+  jobOffer.tags = jobOffer.tagNames
+    .split(',')
+    .filter(tagName => tagName.trim().length > 0)
+    .map(tagName => {
+      return {
+        tagName,
+        priority: 2,
+      };
+    });
 }
 </script>

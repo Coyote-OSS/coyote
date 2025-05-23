@@ -10,6 +10,7 @@ import {
   PricingPlan,
   Rate,
   SubmitJobOffer,
+  Tag,
   Theme,
   WorkExperience,
 } from "./main";
@@ -27,7 +28,8 @@ function jobOfferFields(jobOffer: SubmitJobOffer): object {
     jobOfferSalaryRate: jobOffer.salaryRate,
     jobOfferLocations: jobOffer.locations,
     jobOfferCompanyLogoUrl: jobOffer.companyLogoUrl,
-    jobOfferTagNames: jobOffer.tagNames,
+    jobOfferTagNames: jobOffer.tags.map(tag => tag.tagName),
+    jobOfferTagPriorities: jobOffer.tags.map(tag => tag.priority),
     jobOfferWorkModeRemoteRange: jobOffer.workModeRemoteRange,
     jobOfferLegalForm: jobOffer.legalForm,
     jobOfferExperience: jobOffer.experience,
@@ -228,6 +230,7 @@ export interface BackendJobOffer {
     salaryRate: Rate;
     locations: BackendJobOfferLocation[];
     tagNames: string[];
+    tagPriorities: BackendJobOfferTagPriority[];
     workModeRemoteRange: number;
     legalForm: LegalForm;
     experience: WorkExperience;
@@ -246,6 +249,8 @@ export interface BackendJobOffer {
     companyHiringType: HiringType,
   };
 }
+
+export type BackendJobOfferTagPriority = 1|2|3;
 
 export interface BackendJobOfferLocation {
   latitude: number;
@@ -286,7 +291,17 @@ export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
     ...fields,
     isFavourite: false,
     workMode: parseWorkMode(jobOffer.fields.workModeRemoteRange),
+    tags: jobOfferTags(jobOffer),
   };
+}
+
+function jobOfferTags(jobOffer: BackendJobOffer): Tag[] {
+  return jobOffer.fields.tagNames.map((tagName: string, index: number): Tag => {
+    return {
+      tagName,
+      priority: jobOffer.fields.tagPriorities[index],
+    };
+  });
 }
 
 function invoiceInfoFields(invoiceInfo: InvoiceInformation): object {

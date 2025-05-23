@@ -132,7 +132,7 @@ readonly class CoyoteIntegration implements Integration {
         $job->firm->user_id = $user->id;
         $this->submitJob->connection->transaction(function () use ($jobOffer, $user, $job) {
             $this->submitJob->saveRelations($job, $user,
-                $this->unmapper->coyoteTagNames($jobOffer->tagNames));
+                $this->unmapper->coyoteTagNames($jobOffer->tagNames, $jobOffer->tagPriorities));
             $job->firm->assets()->sync($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
             $this->submitJob->createJobPayment($user, $job);
             event(new JobWasSaved($job)); // we don't queue listeners for this event
@@ -193,7 +193,7 @@ readonly class CoyoteIntegration implements Integration {
             $job->firm->save();
             $job->firm->assets()->sync($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
             $this->submitJob->saveRelations($job, $user,
-                $this->unmapper->coyoteTagNames($jobOffer->tagNames));
+                $this->unmapper->coyoteTagNames($jobOffer->tagNames, $jobOffer->tagPriorities));
             event(new JobWasSaved($job)); // we don't queue listeners for this event
         });
     }

@@ -7,6 +7,7 @@ import {
   LegalForm,
   Rate,
   SubmitJobOffer,
+  Tag,
   WorkExperience,
   WorkMode,
 } from "./main";
@@ -57,9 +58,13 @@ export class JobBoard {
   jobOfferFilters(): JobOfferFilters {
     return {
       locations: [...new Set(this.jobOffers.flatMap(offer => jobOfferCities(offer)))],
-      tags: [...new Set(this.jobOffers.flatMap(offer => offer.tagNames))],
+      tags: [...new Set(this.jobOffers.flatMap(offer => jobOfferTagNames(offer)))],
     };
   }
+}
+
+export function jobOfferTagNames(jobOffer: JobOffer): string[] {
+  return jobOffer.tags.map(tag => tag.tagName);
 }
 
 export function jobOfferCities(jobOffer: JobOffer): string[] {
@@ -86,7 +91,7 @@ export interface JobOffer {
   salaryCurrency: Currency;
   salaryRate: Rate;
   locations: BackendJobOfferLocation[];
-  tagNames: string[];
+  tags: Tag[];
   workMode: WorkMode;
   workModeRemoteRange: number;
   legalForm: LegalForm;

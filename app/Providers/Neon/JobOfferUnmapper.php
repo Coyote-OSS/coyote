@@ -66,10 +66,11 @@ class JobOfferUnmapper {
             ->id;
     }
 
-    public function coyoteTagNames(array $tagNames): array {
+    public function coyoteTagNames(array $tagNames, array $tagPriorities): array {
         return \array_map(
-            fn(string $tagName) => ['name' => $tagName, 'priority' => 2],
-            $tagNames);
+            fn(string $tagName, int $tagPriority) => ['name' => $tagName, 'priority' => $tagPriority],
+            $tagNames,
+            $tagPriorities);
     }
 
     private function coyoteLegalForm(\Neon2\JobBoard\LegalForm $legalForm): string {

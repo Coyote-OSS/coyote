@@ -1,6 +1,6 @@
 import {BackendJobOfferLocation} from "../../../backend";
 import {JobOffer} from "../../../jobBoard";
-import {Currency, LegalForm, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "../../../main";
+import {Currency, LegalForm, Rate, SubmitJobOffer, Tag, WorkExperience, WorkMode} from "../../../main";
 import {parseWorkMode} from "../../../workMode";
 
 export interface JobOfferShow {
@@ -8,7 +8,7 @@ export interface JobOfferShow {
   description: string|null;
   expiresInDays: number;
   locationCities: string[];
-  tagNames: string[];
+  tags: Tag[];
   workMode: WorkMode;
   legalForm: LegalForm;
   experience: WorkExperience;

@@ -44,7 +44,7 @@ const newJobOffer: SubmitJobOffer = {
   salaryRate: 'monthly',
   locations: [],
   companyLogoUrl: null,
-  tagNames: [],
+  tags: [],
   workModeRemoteRange: 0,
   legalForm: 'employment',
   experience: 'not-provided',

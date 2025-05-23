@@ -1,4 +1,11 @@
-import {BackendJobOffer, BackendJobOfferLocation, JobBoardBackend, JobOfferPaymentIntent, toJobOffer} from "./backend";
+import {
+  BackendJobOffer,
+  BackendJobOfferLocation,
+  BackendJobOfferTagPriority,
+  JobBoardBackend,
+  JobOfferPaymentIntent,
+  toJobOffer,
+} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
@@ -46,7 +53,7 @@ export interface SubmitJobOffer {
   salaryCurrency: Currency;
   salaryRate: Rate;
   locations: BackendJobOfferLocation[];
-  tagNames: string[];
+  tags: Tag[];
   workModeRemoteRange: number;
   legalForm: LegalForm;
   experience: WorkExperience;
@@ -63,6 +70,11 @@ export interface SubmitJobOffer {
   companyFundingYear: number|null;
   companyAddress: BackendJobOfferLocation|null;
   companyHiringType: HiringType;
+}
+
+export interface Tag {
+  tagName: string;
+  priority: BackendJobOfferTagPriority;
 }
 
 export function toSubmitJobOffer(jobOffer: JobOffer): SubmitJobOffer {

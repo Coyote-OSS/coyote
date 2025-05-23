@@ -1,5 +1,14 @@
 import {Location} from "../../../location/LocationInput";
-import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, WorkExperience} from "../../../main";
+import {
+  ApplicationMode,
+  Currency,
+  HiringType,
+  LegalForm,
+  Rate,
+  SubmitJobOffer,
+  Tag,
+  WorkExperience,
+} from "../../../main";
 import {prependJsUrlProtocol, strippedNumericString} from "./ValidationBag";
 
 export interface FormModel {
@@ -12,6 +21,7 @@ export interface FormModel {
   salaryIsNet: boolean;
   locations: Location[];
   tagNames: string;
+  tags: Tag[];
   workModeRemoteRange: number;
   legalForm: LegalForm;
   experience: WorkExperience;
@@ -36,7 +46,7 @@ export function toFormModel(jobOffer: SubmitJobOffer): FormModel {
     salaryRangeFrom: formatNumber(jobOffer.salaryRangeFrom),
     salaryRangeTo: formatNumber(jobOffer.salaryRangeTo),
     locations: jobOffer.locations,
-    tagNames: jobOffer.tagNames.join(', '),
+    tagNames: jobOffer.tags.map(tag => tag.tagName).join(', '),
     description: jobOffer.description || '',
     applicationEmail: jobOffer.applicationEmail || '',
     applicationExternalAts: jobOffer.applicationExternalAts || '',
@@ -56,7 +66,6 @@ export function fromFormModel(formModel: FormModel): SubmitJobOffer {
     salaryRangeFrom: parseNumber(formModel.salaryRangeFrom),
     salaryRangeTo: parseNumber(formModel.salaryRangeTo),
     salaryIsNet: formModel.salaryIsNet,
-    tagNames: formModel.tagNames.split(',').map(s => s.trim()).filter(t => t.length),
     locations: formModel.locations,
     description: parseString(formModel.description),
     applicationEmail: parseString(formModel.applicationEmail),

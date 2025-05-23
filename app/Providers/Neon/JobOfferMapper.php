@@ -24,6 +24,7 @@ readonly class JobOfferMapper {
             Rate::from($jobOffer->rate),
             $this->neonLocations($jobOffer),
             $this->neonTagNames($jobOffer),
+            $this->neonTagPriorities($jobOffer),
             $this->neonWorkModeRemoteRange($jobOffer),
             $this->neonLegalForm($jobOffer),
             $this->neonWorkExperience($jobOffer),
@@ -91,6 +92,13 @@ readonly class JobOfferMapper {
      */
     private function neonTagNames(Coyote\Job $jobOffer): array {
         return $jobOffer->tags->pluck('name')->toArray();
+    }
+
+    /**
+     * @return int[]
+     */
+    private function neonTagPriorities(Coyote\Job $jobOffer): array {
+        return $jobOffer->tags->pluck('pivot.priority')->toArray();
     }
 
     private function neonWorkModeRemoteRange(Job $jobOffer): int {

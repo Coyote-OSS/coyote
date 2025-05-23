@@ -84,6 +84,7 @@ class RouteServiceProvider extends ServiceProvider {
                 $this->requestLocation(...),
                 $request->get('jobOfferLocations')),
             $request->get('jobOfferTagNames'),
+            $request->get('jobOfferTagPriorities'),
             $request->get('jobOfferWorkModeRemoteRange'),
             LegalForm::from($request->get('jobOfferLegalForm')),
             WorkExperience::from($request->get('jobOfferExperience')),

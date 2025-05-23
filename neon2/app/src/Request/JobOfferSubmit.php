@@ -10,6 +10,7 @@ readonly class JobOfferSubmit {
     /**
      * @param JobOfferLocation[] $locations
      * @param string[] $tagNames
+     * @param int[] $tagPriorities
      * @param string[] $companyPhotoUrls
      */
     public function __construct(
@@ -22,6 +23,7 @@ readonly class JobOfferSubmit {
         public Rate              $salaryRate,
         public array             $locations,
         public array             $tagNames,
+        public array             $tagPriorities,
         public int               $workModeRemoteRange,
         public LegalForm         $legalForm,
         public WorkExperience    $experience,

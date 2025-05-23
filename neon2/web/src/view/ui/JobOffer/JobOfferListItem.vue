@@ -28,7 +28,7 @@
           <Design.Row apart class="max-md:hidden mt-2" vertical-center>
             <Design.Row vertical-center class="space-x-2">
               <span v-if="jobOffer.companyName" v-text="jobOffer.companyName" class="text-neutral2-900"/>
-              <JobOfferTagList :tag-names="jobOffer.tagNames" :max="5"/>
+              <JobOfferTagList :tag-names="jobOfferTagNames(jobOffer)" :max="5"/>
             </Design.Row>
             <Design.Row class="space-x-2 text-sm">
               <div v-for="badge in badges">
@@ -48,10 +48,10 @@
             <JobOfferSalaryNotProvided v-else/>
           </Design.RowEnd>
         </Design.Row>
-        <template v-if="jobOffer.tagNames.length">
+        <template v-if="jobOffer.tags.length">
           <Design.Divider/>
           <Design.Row>
-            <JobOfferTagList :tag-names="jobOffer.tagNames" :max="5"/>
+            <JobOfferTagList :tag-names="jobOfferTagNames(jobOffer)" :max="5"/>
           </Design.Row>
         </template>
       </div>
@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import {JobOffer} from "../../../jobBoard";
+import {JobOffer, jobOfferTagNames} from "../../../jobBoard";
 import {Design} from "../design/design";
 import Icon from "../icons/Icon.vue";
 import {IconName} from "../icons/icons";
