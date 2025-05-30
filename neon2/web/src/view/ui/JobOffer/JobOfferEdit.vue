@@ -3,7 +3,7 @@
     mode="update"
     :view-listener="screen.viewListener"
     :job-offer="toSubmitJobOffer(route.routeJobOffer!)"
-    :job-offer-expires-in-days="route.routeJobOffer!.id"
+    :job-offer-expires-in-days="route.routeJobOffer!.expiresInDays"
     :tag-autocomplete="screen.tagAutocomplete"
     :upload="screen.upload"
     :four-steps="false"
