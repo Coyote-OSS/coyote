@@ -1,5 +1,6 @@
 <template>
   <input
+    ref="plainControl"
     v-if="props.type === 'plain'"
     v-model="model"
     :placeholder="props.placeholder"
@@ -14,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import {ref} from "vue";
 import TextFieldFormat from "../external/TextFieldFormat.vue";
 
 const props = defineProps<Props>();
@@ -26,4 +28,12 @@ interface Props {
   disabled?: boolean;
   labelId?: string;
 }
+
+const plainControl = ref<HTMLInputElement|null>(null);
+
+function focus(): void {
+  plainControl.value!.focus();
+}
+
+defineExpose({focus});
 </script>

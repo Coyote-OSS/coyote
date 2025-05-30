@@ -4,15 +4,6 @@ export class WebDriver {
   constructor(private page: Page) {
   }
 
-  async navigate(url: string): None {
-    await this.page.goto(url);
-  }
-
-  queryParam(queryParam: string): string {
-    const url = new URL(this.page.url());
-    return url.searchParams.get(queryParam)!;
-  }
-
   currentUrl(): string {
     return this.page.url();
   }
@@ -23,6 +14,12 @@ export class WebDriver {
 
   async reload(): None {
     await this.page.goto('/Job');
+  }
+
+  async setAcceptanceTags(tagNames: string[]): None {
+    await this.page.goto('/Job?' + new URLSearchParams({
+      acceptanceTagNames: JSON.stringify(tagNames),
+    }));
   }
 
   async click(text: string): None {

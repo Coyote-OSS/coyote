@@ -16,6 +16,7 @@ readonly class JobBoardView {
         private bool                       $darkTheme,
         private string                     $themeMode,
         private ?int                       $includeExpired,
+        private array                      $acceptanceTagNames,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
@@ -80,6 +81,7 @@ readonly class JobBoardView {
             'paymentInvoiceCountries'  => $this->countries->invoiceCountries(),
             'darkTheme'                => $this->darkTheme,
             'themeMode'                => $this->themeMode,
+            'acceptanceTagNames'       => $this->acceptanceTagNames,
         ]);
     }
 

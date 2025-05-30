@@ -1,4 +1,5 @@
 import {createApp, h, reactive} from 'vue';
+import {BackendTag} from "../../backend";
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
 import {LocationInput} from "../../location/LocationInput";
@@ -67,6 +68,9 @@ export interface UiController {
 export type CanEdit = (jobOfferId: number) => boolean;
 export type PricingPlanSelected = () => boolean;
 
+export type TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult) => void;
+export type TagAutocompleteResult = (tags: BackendTag[]) => void;
+
 export class VueUi {
   private readonly gate: Policy;
   private readonly screens: Screens;
@@ -78,6 +82,7 @@ export class VueUi {
   constructor(locationInput: LocationInput, isAuthenticated: boolean) {
     this.vueState = reactive<JobBoardProperties>({
       viewListener: null,
+      tagAutocomplete: null,
       jobOffers: [],
       jobOfferFilters: {
         tags: [],
@@ -252,6 +257,10 @@ export class VueUi {
 
   setVatIdState(state: VatIdState): void {
     this.vueState.paymentVatIdState = state;
+  }
+
+  setTagAutocomplete(tagAutocomplete: TagAutocomplete): void {
+    this.vueState.tagAutocomplete = tagAutocomplete;
   }
 
   mount(element: Element): void {

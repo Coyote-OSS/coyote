@@ -73,6 +73,13 @@ class ServiceProvider extends RouteServiceProvider {
             if (\request()->query->has('revokeBundle')) {
                 $integration->revokePlanBundle(auth()->id());
             }
+            if (request()->query->has('acceptanceTagNames')) {
+                $acceptanceTagNames = json_decode(request()->query->get('acceptanceTagNames'));
+            } else {
+                $acceptanceTagNames = [];
+            }
+        } else {
+            $acceptanceTagNames = [];
         }
         $jobBoardView = new JobBoardView(
             $integration,
@@ -85,7 +92,8 @@ class ServiceProvider extends RouteServiceProvider {
             app('session')->token(),
             $theme->isThemeDark(),
             $theme->themeMode(),
-            request()->route()->parameter('id'));
+            request()->route()->parameter('id'),
+            $acceptanceTagNames);
         return view('job.home_modern', [
             'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
             'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),

@@ -1,6 +1,6 @@
 <template>
   <Dropdown
-    scrollable
+    scroll="scrollablePadding"
     :nested="nested"
     :test-id="props.testId"
     :title="props.title"

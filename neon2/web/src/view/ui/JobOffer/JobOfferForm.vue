@@ -87,16 +87,14 @@
     </Design.Card>
     <Design.Card space title="Technologie">
       <Design.FieldGroup label="Wymagane technologie">
-        <Design.TextField
-          placeholder="Np. java, python, kotlin, c#, etc."
-          v-model="jobOffer.tagNames"
-          @update:model-value="updateTagNames"/>
+        <JobOfferTagSelector
+          placeholder="Np. java, python, kotlin, docker, etc."
+          :autocomplete="props.tagAutocomplete"
+          @select="addTag"/>
         <Design.FieldHelp class="mb-6">
-          Podaj tylko technologie programistyczne, np. Python, Kotlin, JavaScript, Laravel, React.
+          Podaj tylko technologie programistyczne, np. Python, Kotlin, Docker, JavaScript, AWS, Laravel, React.
         </Design.FieldHelp>
-        <JobOfferTagPrioritiesEditor
-          v-model="jobOffer.tags"
-          @update:model-value="updateTags"/>
+        <JobOfferTagPrioritiesEditor v-model="jobOffer.tags"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Forma zatrudnienia i wynagrodzenie">
@@ -233,7 +231,7 @@ import {formatWorkMode, parseWorkMode} from "../../../workMode";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/DropdownSingle.vue";
 import LocationField from "../design/LocationField.vue";
-import {ViewListener} from "../ui";
+import {TagAutocomplete, ViewListener} from "../ui";
 import {
   formatCompanySizeLevel,
   formatHiringType,
@@ -248,6 +246,7 @@ import {fromSubmitToJobOfferShow} from "./JobOfferShow";
 import JobOfferShow from "./JobOfferShow.vue";
 import JobOfferStepper, {JobOfferCreatorStep} from "./JobOfferStepper.vue";
 import JobOfferTagPrioritiesEditor from "./JobOfferTagPrioritiesEditor.vue";
+import JobOfferTagSelector from "./JobOfferTagSelector.vue";
 import {ValidationBag} from './ValidationBag';
 
 const props = defineProps<Props>();
@@ -255,6 +254,7 @@ const emit = defineEmits<Emit>();
 
 interface Props {
   viewListener: ViewListener;
+  tagAutocomplete: TagAutocomplete;
   jobOffer: SubmitJobOffer;
   jobOfferExpiresInDays: number;
   mode: 'create'|'update';
@@ -427,20 +427,13 @@ function updateWorkMode(workMode: WorkMode): void {
   jobOffer.workModeRemoteRange = formatWorkMode(workMode);
 }
 
-function updateTags(): void {
-  jobOffer.tagNames = jobOffer.tags.map(tag => tag.tagName).join(', ');
-  console.log(jobOffer.tagNames);
+function addTag(tagName: string): void {
+  if (!tagExists(tagName)) {
+    jobOffer.tags.push({tagName, priority: 2});
+  }
 }
 
-function updateTagNames(): void {
-  jobOffer.tags = jobOffer.tagNames
-    .split(',')
-    .filter(tagName => tagName.trim().length > 0)
-    .map(tagName => {
-      return {
-        tagName,
-        priority: 2,
-      };
-    });
+function tagExists(tagName: string): boolean {
+  return jobOffer.tags.filter(tag => tag.tagName === tagName).length > 0;
 }
 </script>

@@ -29,10 +29,6 @@ export class Dsl {
     this.mangler.invalidate();
   }
 
-  userId(): number {
-    return this.driver.userId();
-  }
-
   async resetClient(): None {
     await this.driver.reloadApplication();
   }
@@ -247,6 +243,22 @@ export class Dsl {
     assertEquals(
       true,
       await this.driver.accessJobOffer(jobOfferUrl, title));
+  }
+
+  async setAcceptanceTags(tagNames: string[]): Promise<void> {
+    await this.driver.setAcceptanceTags(tagNames);
+  }
+
+  async jobOfferFormProvideTechnology(providedTechnology: string): Promise<void> {
+    await this.driver.navigateToForm('free', 'ignored');
+    await this.driver.fillJobOfferCompanyName('Company name');
+    await this.driver.fillJobOfferTechnology(providedTechnology);
+  }
+
+  async assertSuggestedTechnology(assertion: {expectedTag: string}): Promise<void> {
+    assertContains(
+      assertion.expectedTag,
+      await this.driver.findAutocompleteValues());
   }
 }
 

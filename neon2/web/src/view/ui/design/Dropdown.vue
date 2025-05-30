@@ -10,16 +10,13 @@
       <span class="mr-2 font-medium" v-text="props.title"/>
       <Icon name="dropdownClosed" class="ml-auto"/>
     </div>
-    <Material
-      @click.stop
+    <Drawer
       v-if="open"
-      :space="!props.noSpace"
-      class="absolute z-[1] min-w-full w-max border border-tile-border"
-      :class="props.openToLeft ? 'right-0' : 'left-0'">
-      <div :class="{'space-y-4': !props.noSpace, 'max-h-96 overflow-y-auto pr-12 -mr-3': props.scrollable}">
-        <slot/>
-      </div>
-    </Material>
+      :no-space="props.noSpace"
+      :scroll="props.scroll"
+      :open-to-left="props.openToLeft">
+      <slot/>
+    </Drawer>
     <div v-if="props.blip" v-text="props.blip" :class="[
       'absolute -top-1 -right-1',
       'rounded-full size-4 leading-4 text-center text-xs',
@@ -33,6 +30,8 @@ import {computed, watch} from 'vue';
 import Icon from "../icons/Icon.vue";
 import {IconName} from "../icons/icons";
 import {useClickOutside} from "../vue/clickOutside";
+import {DrawerScroll} from "./Drawer";
+import Drawer from "./Drawer.vue";
 import Material from "./Material.vue";
 
 interface Props {
@@ -42,7 +41,7 @@ interface Props {
   nested?: boolean;
   nestedFlush?: boolean;
   noSpace?: boolean;
-  scrollable?: boolean;
+  scroll: DrawerScroll;
   blip?: string;
   openToLeft?: boolean;
   hasError?: boolean;

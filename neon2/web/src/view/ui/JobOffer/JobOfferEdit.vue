@@ -4,6 +4,7 @@
     :view-listener="screen.viewListener"
     :job-offer="toSubmitJobOffer(route.routeJobOffer!)"
     :job-offer-expires-in-days="route.routeJobOffer!.id"
+    :tag-autocomplete="screen.tagAutocomplete"
     :upload="screen.upload"
     :four-steps="false"
     @submit="update"
@@ -14,7 +15,7 @@
 import {inject} from "vue";
 import {SubmitJobOffer, toSubmitJobOffer, UploadAssets} from "../../../main";
 import {RouteProperties} from "../screen/Screens";
-import {UiController, ViewListener} from "../ui";
+import {TagAutocomplete, UiController, ViewListener} from "../ui";
 import JobOfferForm from "./JobOfferForm.vue";
 
 const screen = inject('screen') as Screen;
@@ -23,6 +24,7 @@ const route = defineProps<RouteProperties>();
 interface Screen {
   uiController: UiController;
   viewListener: ViewListener;
+  tagAutocomplete: TagAutocomplete;
   upload: UploadAssets;
 }
 

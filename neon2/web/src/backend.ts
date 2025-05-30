@@ -165,12 +165,6 @@ export class JobBoardBackend {
     };
   }
 
-  jobOfferPayment(jobOfferId: number): BackendPaymentIntent {
-    return this.backendInput.jobOffers
-      .find(jobOffer => jobOffer.id === jobOfferId)!
-      .payment!;
-  }
-
   jobOfferPayments(): JobOfferPaymentIntent[] {
     return this.backendInput
       .jobOffers
@@ -182,6 +176,29 @@ export class JobBoardBackend {
         };
       });
   }
+
+  async tagsAutocomplete(prompt: string): Promise<BackendTag[]> {
+    if (this.testMode()) {
+      return this.backendInput.acceptanceTagNames.map(tagName => {
+        return {tagName, title: null, timesUsed: 0};
+      });
+    }
+    return fetch('/completion/prompt/tags?q=' + encodeURIComponent(prompt))
+      .then(response => response.json())
+      .then(tags => tags.map((coyoteTag: any) => {
+        return {
+          tagName: coyoteTag.name,
+          title: coyoteTag.real_name,
+          timesUsed: coyoteTag.topics + coyoteTag.jobs + coyoteTag.microblogs,
+        };
+      }));
+  }
+}
+
+export interface BackendTag {
+  tagName: string;
+  title: string|null;
+  timesUsed: number;
 }
 
 export interface JobOfferPaymentIntent {
@@ -208,6 +225,7 @@ export interface BackendInput {
   paymentInvoiceCountries: Array<{countryCode: string; countryName: string}>;
   darkTheme: boolean;
   themeMode: 'dark'|'light'|'system';
+  acceptanceTagNames: string[];
 }
 
 export interface BackendJobOffer {

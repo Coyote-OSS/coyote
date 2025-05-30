@@ -3,6 +3,7 @@ import Button from "./Button.vue";
 import Card from "./Card.vue";
 import CheckBox from "./CheckBox.vue";
 import Divider from "./Divider.vue";
+import Drawer from "./Drawer.vue";
 import Dropdown from "./Dropdown.vue";
 import DropdownLabel from "./DropdownLabel.vue";
 import DropdownMultiple from "./DropdownMultiple.vue";
@@ -25,6 +26,8 @@ import Stepper from "./Stepper.vue";
 import Tabs from "./Tabs.vue";
 import TagName from "./TagName.vue";
 import TextField from "./TextField.vue";
+import TextInput from "./TextInput.vue";
+import TextInputOutline from "./TextInputOutline.vue";
 import Tile from "./Tile.vue";
 import Toast from "./Toast.vue";
 
@@ -37,6 +40,7 @@ export const Design = {
   Card,
   CheckBox,
   Divider,
+  Drawer,
   Dropdown,
   DropdownLabel,
   DropdownMultiple,
@@ -59,5 +63,7 @@ export const Design = {
   Tabs,
   TagName,
   TextField,
+  TextInput,
+  TextInputOutline,
   Tile,
 };

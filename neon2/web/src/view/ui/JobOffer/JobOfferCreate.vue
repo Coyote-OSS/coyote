@@ -4,6 +4,7 @@
     :view-listener="screen.viewListener"
     :job-offer="newJobOffer"
     :job-offer-expires-in-days="expiresInDays"
+    :tag-autocomplete="screen.tagAutocomplete"
     :upload="screen.upload"
     :four-steps="fourSteps"
     @submit="create"
@@ -13,7 +14,7 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue';
 import {PricingPlan, SubmitJobOffer, UploadAssets} from "../../../main";
-import {UiController, ViewListener} from "../ui";
+import {TagAutocomplete, UiController, ViewListener} from "../ui";
 import JobOfferForm from "./JobOfferForm.vue";
 
 const screen = inject('screen') as Screen;
@@ -21,6 +22,7 @@ const screen = inject('screen') as Screen;
 interface Screen {
   uiController: UiController;
   viewListener: ViewListener;
+  tagAutocomplete: TagAutocomplete;
   upload: UploadAssets;
   pricingPlan: PricingPlan;
   applicationEmail: string;

@@ -12,12 +12,12 @@ export class Driver {
     this.web = new WebDriver(page);
   }
 
-  userId(): number {
-    return parseInt(this.web.queryParam('userId'));
-  }
-
   async reloadApplication(): None {
     await this.web.reload();
+  }
+
+  async setAcceptanceTags(tagNames: string[]): Promise<void> {
+    await this.web.setAcceptanceTags(tagNames);
   }
 
   async publishJobOffer(
@@ -54,16 +54,20 @@ export class Driver {
     description: string,
     companyName: string,
     expired: boolean,
-  ) {
-    await this.web.click('Dodaj ogłoszenie od 0zł');
-    if (payment !== 'redeem-bundle') {
-      await this.selectPricingPlan(pricingPlan);
-    }
+  ): None {
+    await this.navigateToForm(pricingPlan, payment);
     await this.submitJobOfferForm(title,
       description,
       companyName,
       pricingPlan === 'free' ? 'free' : 'paid',
       expired);
+  }
+
+  async navigateToForm(pricingPlan: PricingPlan, payment: Payment): None {
+    await this.web.click('Dodaj ogłoszenie od 0zł');
+    if (payment !== 'redeem-bundle') {
+      await this.selectPricingPlan(pricingPlan);
+    }
   }
 
   async initiateCardPayment(jobOfferTitle: string, cardNumber: string): None {
@@ -102,7 +106,7 @@ export class Driver {
     await this.fillJobOfferDetails(title, description, expired);
   }
 
-  private async fillJobOfferCompanyName(companyName: string): None {
+  async fillJobOfferCompanyName(companyName: string): None {
     await this.web.fillByLabel('Nazwa firmy', companyName);
     await this.web.click('Dalej');
   }
@@ -351,6 +355,14 @@ export class Driver {
   async accessJobOffer(jobOfferUrl: string, jobOfferTitle: string): Promise<boolean> {
     await this.web.loadJobOffer(jobOfferUrl);
     return await this.web.read('jobOfferTitle') === jobOfferTitle;
+  }
+
+  async fillJobOfferTechnology(value: string): None {
+    await this.web.fillByLabel('Wymagane technologie', value);
+  }
+
+  async findAutocompleteValues(): Promise<string[]> {
+    return this.web.listStringByTestId('autocompleteValue');
   }
 }
 

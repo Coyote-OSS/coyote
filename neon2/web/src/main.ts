@@ -17,7 +17,7 @@ import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
 import {TestPaymentProvider} from './paymentProvider/TestPaymentProvider';
 import {PlanBundle} from "./planBundle";
 import {runInShadowDom, setDarkTheme} from "./view/shadowDom/shadowDom";
-import {VueUi} from './view/ui/ui';
+import {TagAutocompleteResult, VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
 const backend = new JobBoardBackend();
@@ -167,6 +167,10 @@ ui.setViewListener({
     window.location.href = '/Login';
     return false;
   },
+});
+
+ui.setTagAutocomplete((tagPrompt: string, result: TagAutocompleteResult): void => {
+  backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
 });
 
 function paymentSummary(jobOfferId: number): PaymentSummary {

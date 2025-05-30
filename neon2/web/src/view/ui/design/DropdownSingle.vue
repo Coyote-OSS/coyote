@@ -6,7 +6,7 @@
     :nested="props.nested"
     :nested-flush="props.nestedFlush"
     :openToLeft="props.openToLeft"
-    :scrollable="props.scrollable"
+    :scroll="scroll"
     :has-error="hasError"
     :disabled="props.disabled"
     no-space
@@ -29,6 +29,7 @@
 import {computed, inject, ref} from "vue";
 import Icon from "../icons/Icon.vue";
 import {IconName} from "../icons/icons";
+import {DrawerScroll} from "./Drawer";
 import Dropdown from "./Dropdown.vue";
 
 export interface DrawerOption<T> {
@@ -66,5 +67,12 @@ const title = computed((): string => {
     return props.title;
   }
   return props.options.find(option => option.value === selected.value)?.title || props.default || '';
+});
+
+const scroll = computed((): DrawerScroll => {
+  if (props.scrollable) {
+    return 'scrollable';
+  }
+  return 'none';
 });
 </script>
