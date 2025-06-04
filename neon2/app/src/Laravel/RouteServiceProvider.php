@@ -26,7 +26,8 @@ class RouteServiceProvider extends ServiceProvider {
                 $createdJobOffer = $integration->createJobOffer(
                     request()->get('jobOfferPlan'),
                     $jobOffer,
-                    $test->isTestMode() && $this->acceptanceTestExpired($jobOffer));
+                    $test->isTestMode() && $this->acceptanceTestExpired($jobOffer),
+                    false);
                 return response()->json($createdJobOffer, status:201);
             });
             Facades\Route::patch('/neon2/job-offers', function (Integration $integration) {

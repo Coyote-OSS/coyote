@@ -24,6 +24,7 @@ interface Integration {
         string         $jobOfferPlan,
         JobOfferSubmit $jobOffer,
         bool           $acceptanceTestExpired,
+        bool           $shortExpiryDate,
     ): JobOffer;
 
     public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void;

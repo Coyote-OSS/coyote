@@ -117,17 +117,10 @@ readonly class JobOfferMapper {
     }
 
     private function neonLocation(Coyote\Job\Location $location): ?JobOfferLocation {
-        if (!$location->latitude || !$location->longitude) {
-            return null;
+        if ($this->isCityLocation($location)) {
+            return $this->cityLocation($location);
         }
-        return new JobOfferLocation(
-            $location->latitude,
-            $location->longitude,
-            $location->city,
-            $location->street,
-            $location->street_number,
-            $location->country?->code,
-            null);
+        return $this->exactLocation($location);
     }
 
     private function neonCompanyAddress(Coyote\Firm $firm): ?JobOfferLocation {
@@ -142,5 +135,36 @@ readonly class JobOfferMapper {
             $firm->street_number,
             $firm->country?->code,
             $firm->postcode);
+    }
+
+    private function isCityLocation(Job\Location $location): bool {
+        return $location->city !== null
+            && $location->longitude === null
+            && $location->latitude === null;
+    }
+
+    private function cityLocation(Job\Location $location): JobOfferLocation {
+        return new JobOfferLocation(
+            0,
+            0,
+            $location->city,
+            null,
+            null,
+            null,
+            null);
+    }
+
+    private function exactLocation(Job\Location $location): ?JobOfferLocation {
+        if (!$location->latitude || !$location->longitude) {
+            return null;
+        }
+        return new JobOfferLocation(
+            $location->latitude,
+            $location->longitude,
+            $location->city,
+            $location->street,
+            $location->street_number,
+            $location->country?->code,
+            null);
     }
 }

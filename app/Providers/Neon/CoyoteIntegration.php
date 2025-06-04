@@ -128,6 +128,7 @@ readonly class CoyoteIntegration implements Integration {
         string         $jobOfferPlan,
         JobOfferSubmit $jobOffer,
         bool           $acceptanceTestExpired,
+        bool           $shortExpiryDate,
     ): JobOffer {
         $user = $this->loggedUser();
         $job = new Job();
@@ -148,6 +149,10 @@ readonly class CoyoteIntegration implements Integration {
             event(new PaymentPaid($payment));
             if ($acceptanceTestExpired) {
                 $job->deadline_at = Carbon::now()->subDays(10);
+                $job->save();
+            }
+            if ($shortExpiryDate) {
+                $job->deadline_at = Carbon::now()->addDays(25);
                 $job->save();
             }
             return $this->neonJobOffer($job->fresh(), null);

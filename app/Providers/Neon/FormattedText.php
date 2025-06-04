@@ -14,7 +14,7 @@ class FormattedText {
             'Core.Encoding'                  => 'UTF-8',
             'Core.ConvertDocumentToFragment' => false,
 
-            'HTML.Allowed'   => 'i,b,u,p,ul,ol,li',
+            'HTML.Allowed'   => 'i,b,u,p,ul,ol,li,br,strong,em',
             'HTML.TidyLevel' => 'none',
 
             'AutoFormat.AutoParagraph'          => true,
