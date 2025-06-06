@@ -13,6 +13,8 @@ use Neon2\Request\JobOfferLocation;
 use Neon2\Request\JobOfferSubmit;
 
 readonly class JobOfferMapper {
+    public function __construct(private CachedString $cache) {}
+
     public function jobOfferFields(Coyote\Job $jobOffer): JobOfferSubmit {
         return new JobOfferSubmit(
             $jobOffer->title,
@@ -49,7 +51,7 @@ readonly class JobOfferMapper {
             return null;
         }
         $formattedText = new FormattedText();
-        return $formattedText->stripFormatting($text);
+        return $this->cache->cached($text, fn() => $formattedText->stripFormatting($text));
     }
 
     private function companyLogoUrl(Coyote\Job $jobOffer): ?string {
