@@ -1,33 +1,61 @@
 import {Currency, Rate} from "../../../main";
 
-export function formatSalary(salary: SalaryJobOffer): string {
+function mapSalaryToUniform(salary: SalaryJobOffer): string {
+  if (salary.salaryRate === 'monthly') {
+    return salaryRange(salary.salaryRangeFrom, salary.salaryRangeTo);
+  }
+  if (salary.salaryRate === 'hourly') {
+    return salaryRange(round(salary.salaryRangeFrom * 160), round(salary.salaryRangeTo * 160));
+  }
+  if (salary.salaryRate === 'yearly') {
+    return salaryRange(round(salary.salaryRangeFrom / 12), round(salary.salaryRangeTo / 12));
+  }
+  if (salary.salaryRate === 'weekly') {
+    return salaryRange(round(salary.salaryRangeFrom * 4.33), round(salary.salaryRangeTo * 4.33));
+  }
+  throw new Error('Failed to map salary.');
+}
+
+export function formatSalary(salary: SalaryJobOffer, mapToMonths: boolean): string {
+  if (mapToMonths) {
+    return [
+      mapSalaryToUniform(salary),
+      salary.salaryCurrency,
+      salary.salaryIsNet ? 'netto' : 'brutto',
+      rateTitle('monthly'),
+    ].join(' ');
+  }
   return [
-    salaryRange(salary),
+    salaryRange(salary.salaryRangeFrom, salary.salaryRangeTo),
     salary.salaryCurrency,
     salary.salaryIsNet ? 'netto' : 'brutto',
-    rateTitle(salary),
+    rateTitle(salary.salaryRate),
   ].join(' ');
 }
 
-function rateTitle(salary: SalaryJobOffer): string {
+function rateTitle(rate: Rate): string {
   const titles: Record<Rate, string> = {
     'hourly': '/ h',
     'weekly': '/ tygodniowo',
     'monthly': '',
     'yearly': '/ rocznie',
   };
-  return titles[salary.salaryRate];
+  return titles[rate];
 }
 
-function salaryRange(salary: SalaryJobOffer): string {
-  if (salary.salaryRangeFrom === salary.salaryRangeTo) {
-    return formatNumber(salary.salaryRangeFrom);
+function salaryRange(from: number, to: number): string {
+  if (from === to) {
+    return formatNumber(from);
   }
-  return `${formatNumber(salary.salaryRangeFrom)} - ${formatNumber(salary.salaryRangeTo)}`;
+  return `${formatNumber(from)} - ${formatNumber(to)}`;
 }
 
 function formatNumber(number: number): string {
   return addThousandSeparator(number, ' ');
+}
+
+function round(number: number): number {
+  return Math.round(number / 250) * 250;
 }
 
 function addThousandSeparator(number: number, separator: string): string {

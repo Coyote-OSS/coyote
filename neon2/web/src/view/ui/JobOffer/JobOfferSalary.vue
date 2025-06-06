@@ -12,7 +12,8 @@ const props = defineProps<Props>();
 interface Props {
   salary: SalaryJobOffer;
   nowrap?: boolean;
+  mapToMonths: boolean;
 }
 
-const salaryFormat = computed((): string => formatSalary(props.salary));
+const salaryFormat = computed((): string => formatSalary(props.salary, props.mapToMonths));
 </script>

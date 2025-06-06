@@ -21,7 +21,7 @@
           <Design.Row vertical-center apart>
             <p class="text-lg leading-6" v-text="jobOffer.title" data-testid="jobOfferTitle"/>
             <div class="max-md:hidden">
-              <JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
+              <JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary" :map-to-months="props.mapToMonths"/>
               <JobOfferSalaryNotProvided v-else/>
             </div>
           </Design.Row>
@@ -44,7 +44,7 @@
         <Design.Row wrap vertical-center>
           <span>{{jobOffer.companyName}}</span>
           <Design.RowEnd>
-            <JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
+            <JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary" :map-to-months="props.mapToMonths"/>
             <JobOfferSalaryNotProvided v-else/>
           </Design.RowEnd>
         </Design.Row>
@@ -80,6 +80,7 @@ const emit = defineEmits<Emit>();
 interface Props {
   jobOffer: JobOffer;
   jobOfferUrl: string;
+  mapToMonths: boolean;
 }
 
 interface Emit {

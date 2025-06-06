@@ -16,11 +16,18 @@
       :filter="screen.jobOfferFilter"
       :filters="screen.jobOfferFilters"
       @filter="screen.uiController.filter"/>
+    <div class="flex justify-end">
+      <label>
+        <input type="checkbox" v-model="mapToMonths">
+        Pokaż na miesiąc
+      </label>
+    </div>
     <JobOfferListItem
       v-for="jobOffer in screen.jobOffers"
       :key="jobOffer.id"
       :job-offer="jobOffer"
       :job-offer-url="screen.uiController.jobOfferUrl(jobOffer)"
+      :map-to-months="mapToMonths"
       @select="screen.uiController.showJobOffer(jobOffer)"
       @favourite-change=""/>
     <Design.Material v-if="screen.jobOffers.length === 0" nested class="text-center my-2 py-6">
@@ -66,4 +73,6 @@ function changeTab(tab: string): void {
 }
 
 const filtersVisible = computed(() => tab.value === 'jobBoardHome');
+
+const mapToMonths = ref<boolean>(false);
 </script>
