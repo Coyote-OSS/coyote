@@ -56,7 +56,7 @@ readonly class JobOfferMapper {
 
     private function companyLogoUrl(Coyote\Job $jobOffer): ?string {
         $logo = $jobOffer->firm->logo;
-        if ($logo->getFilename() && $logo->size() > 0) {
+        if ($logo->getFilename()) {
             return (string)$jobOffer->firm->logo->url();
         }
         return null;
