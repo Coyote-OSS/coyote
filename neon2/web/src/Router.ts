@@ -8,9 +8,8 @@ import {
   Router as VueRouter,
   useRoute,
 } from "vue-router";
-import {Screen} from "./ui";
 
-export class Router {
+export class Router<R extends string> {
   private readonly router: VueRouter = createRouter({
     history: createWebHistory(),
     routes: [],
@@ -23,19 +22,19 @@ export class Router {
     app.use(this.router);
   }
 
-  addDefaultScreen(screen: Screen): void {
-    this.router.addRoute({path: '/', redirect: {name: screen}});
+  addDefaultRoute(route: R): void {
+    this.router.addRoute({path: '/', redirect: {name: route}});
   }
 
-  addScreen(
+  addRoute(
     component: Component,
-    screen: Screen,
+    route: R,
     vueRouterRoute: string,
-    before?: (params: RouteParamsGeneric) => Screen|null,
+    before?: (params: RouteParamsGeneric) => R|null,
   ): void {
     this.router.addRoute({
       component,
-      name: screen,
+      name: route,
       path: vueRouterRoute,
       beforeEnter: before ? [((route: RouteLocationNormalized) => {
         const redirectTo = before(route.params);
@@ -46,9 +45,9 @@ export class Router {
     });
   }
 
-  navigate(screen: Screen, routeArguments: RouteParamsRawGeneric): void {
+  navigate(route: R, routeArguments: RouteParamsRawGeneric): void {
     this.router.push({
-      name: screen,
+      name: route,
       params: routeArguments,
     });
   }

@@ -11,27 +11,27 @@ import {Router} from "./Router";
 import {Screen} from "./ui";
 
 export class Screens {
-  private router: Router;
+  private router: Router<Screen>;
 
   constructor(policy: Policy) {
-    this.router = new Router();
-    this.router.addScreen(JobOfferHome, 'home', '/Job');
-    this.router.addScreen(JobOfferShowScreen, 'show', '/Job/:slug/:id');
-    this.router.addScreen(JobOfferPricing, 'pricing', '/Job/pricing');
-    this.router.addScreen(JobOfferCreate, 'form', '/Job/new', () => {
+    this.router = new Router<Screen>();
+    this.router.addRoute(JobOfferHome, 'home', '/Job');
+    this.router.addRoute(JobOfferShowScreen, 'show', '/Job/:slug/:id');
+    this.router.addRoute(JobOfferPricing, 'pricing', '/Job/pricing');
+    this.router.addRoute(JobOfferCreate, 'form', '/Job/new', () => {
       if (!policy.createCreateJobOffer()) {
         return 'pricing';
       }
       return null;
     });
-    this.router.addScreen(JobOfferEdit, 'edit', '/Job/:id/edit', params => {
+    this.router.addRoute(JobOfferEdit, 'edit', '/Job/:id/edit', params => {
       if (!policy.canEditJobOffer(Number(params.id))) {
         return 'home';
       }
       return null;
     });
-    this.router.addScreen(JobOfferPaymentScreen, 'payment', '/Job/:id/payment');
-    this.router.addDefaultScreen('home');
+    this.router.addRoute(JobOfferPaymentScreen, 'payment', '/Job/:id/payment');
+    this.router.addDefaultRoute('home');
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {
