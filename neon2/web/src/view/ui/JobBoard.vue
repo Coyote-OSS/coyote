@@ -34,7 +34,7 @@
 import {computed, provide} from 'vue';
 import {ValuePropositionEvent} from "../../main";
 import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
-import {PaymentStatus} from "../../PaymentService";
+import {PaymentStatus} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Toast} from '../view';
 import {Design} from "../../neon3/Apps/VueApp/DesignSystem/design";
 import {JobBoardProperties} from "./JobBoardProperties";

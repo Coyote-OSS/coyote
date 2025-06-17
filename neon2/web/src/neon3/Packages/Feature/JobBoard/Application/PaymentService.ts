@@ -1,25 +1,18 @@
-import {JobBoardBackend} from "./backend";
-import {VatIdState} from "./main";
-import {BackendPaymentStatus, BackendPreparedPayment} from "./neon3/Packages/Core/Backend/backendInput";
-import {PaymentMethod, PaymentNotification, PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
-import {InvoiceInformation} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
-
-interface PaymentListener {
-  processingStarted(): void;
-  processingFinished(): void;
-  paymentInitiationVatIdState(vatId: VatIdState): void;
-  notificationReceived(notification: string): void;
-  statusChanged(paymentId: string, status: PaymentStatus): void;
-}
-
-export type PaymentStatus = 'paymentComplete'|'paymentFailed';
+import {JobBoardBackend} from "../../../../../backend";
+import {PaymentMethod, PaymentNotification, PaymentProvider} from "../../../Core/Application/PaymentProvider";
+import {BackendPaymentStatus, BackendPreparedPayment} from "../../../Core/Backend/backendInput";
+import {PaymentListener} from "./PaymentListener";
+import {InvoiceInformation, PaymentStatus} from "../Domain/Model";
 
 export class PaymentService {
   private listeners: PaymentListener[] = [];
 
-  constructor(private backend: JobBoardBackend, private provider: PaymentProvider) {}
+  constructor(
+    private backend: JobBoardBackend,
+    private provider: PaymentProvider,
+  ) {}
 
-  addEventListener(listener: PaymentListener) {
+  addEventListener(listener: PaymentListener): void {
     this.listeners.push(listener);
   }
 

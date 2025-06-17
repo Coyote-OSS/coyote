@@ -1,6 +1,15 @@
 import {Tag} from "../../../../../main";
+import {PaymentMethod} from "../../../Core/Application/PaymentProvider";
 import {BackendJobOfferLocation} from "../../../Core/Backend/backendInput";
-import {ApplicationMode, Currency, HiringType, LegalForm, Rate, WorkExperience} from "../Domain/Model";
+import {
+  ApplicationMode,
+  Currency,
+  HiringType,
+  InvoiceInformation,
+  LegalForm,
+  Rate,
+  WorkExperience,
+} from "../Domain/Model";
 import {JobOffer} from "./JobOffer";
 
 export interface SubmitJobOffer {
@@ -33,4 +42,10 @@ export interface SubmitJobOffer {
 
 export function toSubmitJobOffer(jobOffer: JobOffer): SubmitJobOffer {
   return jobOffer;
+}
+
+export interface InitiatePayment {
+  jobOfferId: number;
+  invoiceInfo: InvoiceInformation;
+  paymentMethod: PaymentMethod;
 }

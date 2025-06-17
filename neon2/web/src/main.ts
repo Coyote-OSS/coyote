@@ -9,13 +9,12 @@ import {BackendJobOffer, BackendJobOfferTagPriority} from "./neon3/Packages/Core
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Application/JobOffer";
 import {JobOfferPayments} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferPayments";
-import {SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
-import {InitiatePayment} from "./neon3/Packages/Feature/JobBoard/Application/payment";
+import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
-import {PlanBundleName, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {PaymentStatus, PlanBundleName, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
-import {PaymentService, PaymentStatus} from "./PaymentService";
+import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundle} from "./planBundle";
 import {TagAutocompleteResult, VueUi} from './view/ui/ui';
 import {View} from "./view/view";

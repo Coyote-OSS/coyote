@@ -24,3 +24,5 @@ export interface JobOfferPayment {
   paymentPriceVat: number;
   paymentPricingPlan: PaidPricingPlan;
 }
+
+export type PaymentStatus = 'paymentComplete'|'paymentFailed';
