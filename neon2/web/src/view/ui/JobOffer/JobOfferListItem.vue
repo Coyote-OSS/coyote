@@ -71,8 +71,8 @@
 import {computed} from "vue";
 import {JobOffer, jobOfferTagNames} from "../../../jobBoard";
 import {Design} from "../design/design";
-import Icon from "../icons/Icon.vue";
-import {IconName} from "../icons/icons";
+import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
+import {IconName} from "../../../neon3/Core/View/Icon/icons";
 import {formatLegalForm, formatWorkMode} from "./format";
 import JobOfferBadge from "./JobOfferBadge.vue";
 import JobOfferFavouriteButton from "./JobOfferFavouriteButton.vue";

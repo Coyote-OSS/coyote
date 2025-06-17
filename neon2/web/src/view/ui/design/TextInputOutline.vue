@@ -10,8 +10,8 @@
 
 <script setup lang="ts">
 import {computed, inject} from "vue";
-import Icon from '../icons/Icon.vue';
-import {IconName} from "../icons/icons";
+import Icon from '../../../neon3/Core/View/Icon/Icon.vue';
+import {IconName} from "../../../neon3/Core/View/Icon/icons";
 
 interface Props {
   icon?: IconName;

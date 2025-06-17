@@ -30,7 +30,7 @@
 import {ModelRef} from "vue";
 import {BackendJobOfferTagPriority} from "../../../backend";
 import {Tag} from "../../../main";
-import Icon from "../icons/Icon.vue";
+import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
 import JobOfferTagPriority from "./JobOfferTagPriority.vue";
 
 const model: ModelRef<Tag[]> = defineModel<Tag[]>({required: true});

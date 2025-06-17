@@ -8,7 +8,7 @@
 import {exec, init} from 'pell';
 import {onMounted, ref, watch} from 'vue';
 import 'pell/dist/pell.min.css';
-import {htmlIconFormatBold, htmlIconFormatListOrdered, htmlIconFormatListUnordered} from "../icons/icons";
+import {htmlIconFormatBold, htmlIconFormatListOrdered, htmlIconFormatListUnordered} from "../../../neon3/Core/View/Icon/icons";
 
 const props = defineProps<Props>();
 

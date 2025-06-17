@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import Icon from "../icons/Icon.vue";
+import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();

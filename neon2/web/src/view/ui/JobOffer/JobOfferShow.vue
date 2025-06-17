@@ -168,8 +168,8 @@
 <script setup lang="ts">
 import {computed, onMounted, ref} from "vue";
 import {Design} from "../design/design";
-import Icon from "../icons/Icon.vue";
-import {IconName} from "../icons/icons";
+import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
+import {IconName} from "../../../neon3/Core/View/Icon/icons";
 import {ViewListener} from "../ui";
 import {
   formatCompanySizeLevel,

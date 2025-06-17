@@ -132,8 +132,8 @@ import {JobOfferFilter} from "../../../jobOfferFilter";
 import {JobOfferFilters, LegalForm, WorkExperience, WorkMode} from "../../../main";
 import {Design} from "../design/design";
 import {DropdownOption} from "../design/DropdownOption";
-import Icon from "../icons/Icon.vue";
-import {IconName} from "../icons/icons";
+import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
+import {IconName} from "../../../neon3/Core/View/Icon/icons";
 import {emptyJobOfferFilter} from "./JobOfferFilters";
 
 const props = defineProps<Props>();

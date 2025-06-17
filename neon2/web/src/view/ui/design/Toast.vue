@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "../icons/Icon.vue";
+import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
 
 const props = defineProps<Props>();
 
