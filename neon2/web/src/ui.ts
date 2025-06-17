@@ -20,7 +20,11 @@ export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
 export type CanEdit = (jobOfferId: number) => boolean;
 export type PricingPlanSelected = () => boolean;
-export type TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult) => void;
+
+export interface TagAutocomplete {
+  (tagPrompt: string, result: TagAutocompleteResult): void;
+}
+
 export type TagAutocompleteResult = (tags: Tag[]) => void;
 
 export class VueUiFactory {
@@ -29,7 +33,6 @@ export class VueUiFactory {
   private readonly app;
 
   private viewListener: ViewListener|null = null;
-  private tagAutocomplete: TagAutocomplete|null = null;
 
   constructor(
     private locationInput: LocationInput,
@@ -39,6 +42,7 @@ export class VueUiFactory {
     private planBundle: PlanBundleRepository,
     private filterRepo: FilterRepository,
     private filterService: JobOfferFilterService,
+    private tagAutocomplete: TagAutocomplete,
   ) {
     this.screens = new Screens(new Policy(
       isAuthenticated,
@@ -59,10 +63,6 @@ export class VueUiFactory {
 
   setViewListener(viewListener: ViewListener): void {
     this.viewListener = viewListener;
-  }
-
-  setTagAutocomplete(tagAutocomplete: TagAutocomplete): void {
-    this.tagAutocomplete = tagAutocomplete;
   }
 
   setJobOfferFavourite(jobOfferId: number, favourite: boolean): void {

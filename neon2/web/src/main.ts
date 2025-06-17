@@ -25,7 +25,7 @@ import {
   PricingPlan,
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
-import {TagAutocompleteResult, VueUiFactory} from './ui';
+import {TagAutocomplete, TagAutocompleteResult, VueUiFactory} from './ui';
 
 const filterRepo = new FilterRepository();
 const jobOffersRepo = new JobOfferRepository();
@@ -36,6 +36,10 @@ const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
 const filterService = new JobOfferFilterService(jobOffersRepo);
 
+const tagAutocomplete: TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult): void => {
+  backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
+};
+
 const ui = new VueUiFactory(
   locationInput(backend.testMode()),
   backend.isAuthenticated(),
@@ -43,7 +47,8 @@ const ui = new VueUiFactory(
   jobOffersRepo,
   planBundleRepo,
   filterRepo,
-  filterService);
+  filterService,
+  tagAutocomplete);
 
 const board = new JobBoard((jobOffers: JobOffer[]): void => {
   jobOffersRepo.setJobOffers(jobOffers);
@@ -149,10 +154,6 @@ function jobOfferApply(jobOffer: JobOffer): void {
 }
 
 export type ValuePropositionEvent = 'vpAccepted'|'vpDeclined'|'vpSubscribed'|'vpApply';
-
-ui.setTagAutocomplete((tagPrompt: string, result: TagAutocompleteResult): void => {
-  backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
-});
 
 function paymentSummary(jobOfferId: number): PaymentSummary {
   const payment = jobOfferPayments.jobOfferPayment(jobOfferId);
