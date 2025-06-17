@@ -88,11 +88,11 @@ export class VueUi {
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
   private view: View|null = null;
-  private viewListener: ViewListener|null;
+  private viewListener: ViewListener|null = null;
   private uiController: UiController;
+  private tagAutocomplete: TagAutocomplete|null = null;
 
   constructor(locationInput: LocationInput, isAuthenticated: boolean) {
-    this.viewListener = null;
     this.uiController = {
       showForm: this.showForm.bind(this),
       selectPlan: this.selectPlan.bind(this),
@@ -109,7 +109,6 @@ export class VueUi {
     };
 
     this.vueState = reactive<JobBoardProperties>({
-      tagAutocomplete: null,
       jobOffers: [],
       jobOfferFilters: {
         tags: [],
@@ -292,7 +291,7 @@ export class VueUi {
   }
 
   setTagAutocomplete(tagAutocomplete: TagAutocomplete): void {
-    this.vueState.tagAutocomplete = tagAutocomplete;
+    this.tagAutocomplete = tagAutocomplete;
   }
 
   setJobOfferFavourite(jobOfferId: number, favourite: boolean): void {
@@ -323,7 +322,8 @@ export class VueUi {
       store,
       this.viewListener!,
       this.uiController,
-      this.vueState.tagAutocomplete!,
+      this.tagAutocomplete!,
+      this.vueState.upload!,
     ));
     this.screens.useIn(app);
     app.mount(element);

@@ -1,4 +1,5 @@
 import {JobOfferFilter} from "../../../../../jobOfferFilter";
+import {UploadAssets} from "../../../../../main";
 import {Screen, TagAutocomplete, TagAutocompleteResult, UiController, ViewListener} from "../../../../../view/ui/ui";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
@@ -11,6 +12,7 @@ export class JobBoardService {
     private viewListener: ViewListener,
     private uiController: UiController,
     private _tagAutocomplete: TagAutocomplete,
+    private upload: UploadAssets,
   ) {}
 
   redeemBundle(jobOfferId: number): void {
@@ -88,5 +90,13 @@ export class JobBoardService {
 
   tagAutocomplete(tagPrompt: string, result: TagAutocompleteResult): void {
     this._tagAutocomplete(tagPrompt, result);
+  }
+
+  uploadLogo(file: File): Promise<string> {
+    return this.upload.uploadLogo(file);
+  }
+
+  uploadAsset(file: File): Promise<string> {
+    return this.upload.uploadAsset(file);
   }
 }

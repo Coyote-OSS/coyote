@@ -3,7 +3,6 @@
     mode="create"
     :job-offer="newJobOffer"
     :job-offer-expires-in-days="expiresInDays"
-    :upload="screen.upload"
     :four-steps="fourSteps"
     @submit="create"
     @abort="service.navigate('pricing', null)"/>
@@ -11,7 +10,6 @@
 
 <script setup lang="ts">
 import {computed, inject} from 'vue';
-import {UploadAssets} from "../../../../main";
 import {JobBoardService} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {jobBoardServiceInjectKey} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {SubmitJobOffer} from "../../../../neon3/Packages/Feature/JobBoard/Application/Model";
@@ -22,7 +20,6 @@ const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 const screen = inject('screen') as Screen;
 
 interface Screen {
-  upload: UploadAssets;
   pricingPlan: PricingPlan;
   applicationEmail: string;
 }

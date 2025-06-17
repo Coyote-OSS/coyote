@@ -5,7 +5,7 @@
       <Design.FieldLabel title="Logo firmy"/>
       <Design.Row>
         <div class="mr-8">
-          <Design.ImageUpload v-model="jobOffer.companyLogoUrl" :upload="props.upload.uploadLogo"/>
+          <Design.ImageUpload v-model="jobOffer.companyLogoUrl" :upload="f => service.uploadLogo(f)"/>
           <Design.FieldHelp>Format: JPEG, PNG. Maksymalny rozmiar 5MB</Design.FieldHelp>
         </div>
         <div class="flex-grow-1 space-y-6">
@@ -66,7 +66,7 @@
       </Design.FieldGroup>
       <Design.FieldGroup label="Dodaj zdjęcia firmowe">
         <div class="flex space-x-2">
-          <JobOfferPhotoSet v-model="jobOffer.companyPhotoUrls" :upload="props.upload.uploadAsset"/>
+          <JobOfferPhotoSet v-model="jobOffer.companyPhotoUrls" :upload="f => service.uploadAsset(f)"/>
         </div>
         <Design.FieldHelp>Format: JPEG, PNG. Maksymalny rozmiar 5MB</Design.FieldHelp>
       </Design.FieldGroup>
@@ -216,7 +216,6 @@
 
 <script setup lang="ts">
 import {computed, inject, reactive, ref} from 'vue';
-import {UploadAssets} from "../../../main";
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
 import {DrawerOption} from "../../../neon3/Apps/VueApp/DesignSystem/DropdownSingle.vue";
 import LocationField from "../../../neon3/Apps/VueApp/DesignSystem/LocationField.vue";
@@ -257,7 +256,6 @@ interface Props {
   jobOffer: SubmitJobOffer;
   jobOfferExpiresInDays: number;
   mode: 'create'|'update';
-  upload: UploadAssets;
   fourSteps: boolean;
 }
 

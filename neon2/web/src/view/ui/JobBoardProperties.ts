@@ -10,7 +10,6 @@ import {Toast} from "../view";
 import {Screen, TagAutocomplete} from "./ui";
 
 export interface JobBoardProperties {
-  tagAutocomplete: TagAutocomplete|null;
   jobOffers: JobOffer[];
   jobOfferFilter: JobOfferFilter;
   jobOfferFilters: JobOfferFilters;
