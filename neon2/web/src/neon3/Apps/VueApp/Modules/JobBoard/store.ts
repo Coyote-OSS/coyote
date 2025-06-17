@@ -1,9 +1,8 @@
 import {defineStore} from 'pinia';
-import {VatIdState} from "../../../../../main";
 import {emptyJobOfferFilter} from "./View/component/JobOfferFilters";
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
 import {Filter, FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
-import {PlanBundle} from "../../../../Packages/Feature/JobBoard/Application/Model";
+import {PlanBundle, VatIdState} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {Country, PaymentStatus, PaymentSummary, PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {Screen, Toast} from "../../../../Packages/Feature/JobBoard/Presenter/Model";

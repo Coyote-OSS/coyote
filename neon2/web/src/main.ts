@@ -13,7 +13,7 @@ import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/Fi
 import {JobBoardServiceFactory} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardServiceFactory";
 import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
-import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
+import {InitiatePayment, SubmitJobOffer, VatIdState} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
@@ -219,5 +219,3 @@ ui.mount(
 export interface UploadImage {
   (file: File): Promise<string>;
 }
-
-export type VatIdState = 'valid'|'invalid'|'pending';

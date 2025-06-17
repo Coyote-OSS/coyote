@@ -1,5 +1,5 @@
-import {VatIdState} from "../../../../../main";
 import {PaymentStatus} from "../Domain/Model";
+import {VatIdState} from "./Model";
 
 export interface PaymentListener {
   processingStarted(): void;

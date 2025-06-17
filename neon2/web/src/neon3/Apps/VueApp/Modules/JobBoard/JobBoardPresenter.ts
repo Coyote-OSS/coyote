@@ -1,7 +1,7 @@
-import {VatIdState} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
 import {FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
+import {VatIdState} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {
   Country,

@@ -62,3 +62,5 @@ export interface FilterCriteria {
   filterOnlyMine: boolean;
   filter: Filter|null;
 }
+
+export type VatIdState = 'valid'|'invalid'|'pending';

@@ -86,7 +86,8 @@
 
 <script setup lang="ts">
 import {computed, inject, onBeforeUnmount, onMounted, reactive, ref} from "vue";
-import {VatIdState} from "../../../../../../../main";
+
+import {VatIdState} from "../../../../../../Packages/Feature/JobBoard/Application/Model";
 import {Design} from "../../../../DesignSystem/design";
 import {DrawerOption} from "../../../../DesignSystem/DropdownSingle.vue";
 import {JobBoardService} from "../../JobBoardService";
