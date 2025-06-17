@@ -221,7 +221,7 @@ import {
   UploadAssets,
   
 } from "../../../main";
-import {SubmitJobOffer} from "../../../neon3/Feature/JobBoard/Application/Model";
+import {SubmitJobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {
   Currency,
   HiringType,
@@ -229,11 +229,11 @@ import {
   Rate,
   WorkExperience,
   WorkMode,
-} from "../../../neon3/Feature/JobBoard/Domain/Model";
-import {formatWorkMode, parseWorkMode} from "../../../neon3/Feature/JobBoard/Domain/workMode";
-import {Design} from "../../../neon3/Core/View/DesignSystem/design";
-import {DrawerOption} from "../../../neon3/Core/View/DesignSystem/DropdownSingle.vue";
-import LocationField from "../../../neon3/Core/View/DesignSystem/LocationField.vue";
+} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
+import {formatWorkMode, parseWorkMode} from "../../../neon3/Packages/Feature/JobBoard/Domain/workMode";
+import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
+import {DrawerOption} from "../../../neon3/Apps/VueApp/DesignSystem/DropdownSingle.vue";
+import LocationField from "../../../neon3/Apps/VueApp/DesignSystem/LocationField.vue";
 import {TagAutocomplete, ViewListener} from "../ui";
 import {
   formatCompanySizeLevel,

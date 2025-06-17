@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 
-import {BackendJobOfferTagPriority} from "../../../neon3/Core/Backend/backendInput";
+import {BackendJobOfferTagPriority} from "../../../neon3/Packages/Core/Backend/backendInput";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();

@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import Icon from '../../../neon3/Core/View/Icon/Icon.vue';
+import Icon from '../../../neon3/Apps/VueApp/Icon/Icon.vue';
 import {ColorSet} from './JobOfferPricingCard.vue';
 
 const props = defineProps<Props>();

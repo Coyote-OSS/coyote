@@ -1,4 +1,4 @@
-import {PricingPlan} from "../src/neon3/Feature/JobBoard/Domain/Model";
+import {PricingPlan} from "../src/neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PlanBundle} from "../src/planBundle";
 import {assertEquals, assertThrows, describe, test} from "./assertion";
 

@@ -1,5 +1,4 @@
-
-import {Currency, Rate} from "../../../neon3/Feature/JobBoard/Domain/Model";
+import {Currency, Rate} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 
 export function formatSalary(salary: SalaryJobOffer): string {
   return [

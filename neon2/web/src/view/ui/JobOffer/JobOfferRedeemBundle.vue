@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import {Design} from "../../../neon3/Core/View/DesignSystem/design";
+import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
 import {PlanBundle, ViewListener} from "../ui";
 import JobOfferStepper from './JobOfferStepper.vue';
 

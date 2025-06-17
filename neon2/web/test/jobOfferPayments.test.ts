@@ -1,6 +1,6 @@
 import {JobOfferPayments} from "../src/jobOfferPayments";
-import {PaidPricingPlan} from "../src/neon3/Feature/JobBoard/Domain/Model";
-import {JobOfferPaymentIntent} from "../src/neon3/Feature/JobBoard/JobBoard";
+import {PaidPricingPlan} from "../src/neon3/Packages/Feature/JobBoard/Domain/Model";
+import {JobOfferPaymentIntent} from "../src/neon3/Packages/Feature/JobBoard/JobBoard";
 import {assertEquals, describe, test} from "./assertion";
 
 describe('Job offers association with payments.', () => {

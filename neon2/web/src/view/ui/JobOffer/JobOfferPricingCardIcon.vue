@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import {PricingPlan} from "../../../neon3/Feature/JobBoard/Domain/Model";
+import {PricingPlan} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 
 interface Props {
   plan: PricingPlan;

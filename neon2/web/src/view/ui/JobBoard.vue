@@ -33,12 +33,12 @@
 <script setup lang="ts">
 import {computed, provide} from 'vue';
 import {ValuePropositionEvent} from "../../main";
-import {PaymentNotification} from "../../neon3/Core/Application/PaymentProvider";
+import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
-import {Design} from "../../neon3/Core/View/DesignSystem/design";
+import {Design} from "../../neon3/Apps/VueApp/DesignSystem/design";
 import {JobBoardProperties} from "./JobBoardProperties";
-import ValuePropositionModal from "../../neon3/Feature/Vp/ValuePropositionModal.vue";
+import ValuePropositionModal from "../../neon3/Packages/Feature/Vp/ValuePropositionModal.vue";
 
 const props = defineProps<JobBoardProperties>();
 

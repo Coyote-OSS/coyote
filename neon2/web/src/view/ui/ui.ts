@@ -8,13 +8,13 @@ import {
   ValuePropositionEvent,
   VatIdState,
 } from "../../main";
-import {BackendTag} from "../../neon3/Core/Backend/backendInput";
-import {LocationInput} from "../../neon3/Core/Application/LocationInput";
-import {PaymentNotification} from "../../neon3/Core/Application/PaymentProvider";
-import {JobOffer} from "../../neon3/Feature/JobBoard/Application/JobOffer";
-import {SubmitJobOffer} from "../../neon3/Feature/JobBoard/Application/Model";
-import {InitiatePayment} from "../../neon3/Feature/JobBoard/Application/payment";
-import {PlanBundleName, PricingPlan} from "../../neon3/Feature/JobBoard/Domain/Model";
+import {BackendTag} from "../../neon3/Packages/Core/Backend/backendInput";
+import {LocationInput} from "../../neon3/Packages/Core/Application/LocationInput";
+import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
+import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Application/JobOffer";
+import {SubmitJobOffer} from "../../neon3/Packages/Feature/JobBoard/Application/Model";
+import {InitiatePayment} from "../../neon3/Packages/Feature/JobBoard/Application/payment";
+import {PlanBundleName, PricingPlan} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast, View} from '../view';
 import JobBoard from './JobBoard.vue';

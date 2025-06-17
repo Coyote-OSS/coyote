@@ -2,15 +2,15 @@ import {
   Tag,
   
 } from "../../../main";
-import {Location} from "../../../neon3/Core/Application/LocationInput";
-import {SubmitJobOffer} from "../../../neon3/Feature/JobBoard/Application/Model";
+import {Location} from "../../../neon3/Packages/Core/Application/LocationInput";
+import {SubmitJobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {
   ApplicationMode,
   Currency,
   HiringType, LegalForm,
   Rate,
   WorkExperience,
-} from "../../../neon3/Feature/JobBoard/Domain/Model";
+} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {prependJsUrlProtocol, strippedNumericString} from "./ValidationBag";
 
 export interface FormModel {

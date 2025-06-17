@@ -36,11 +36,11 @@
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
 
-import {BackendTag} from "../../../neon3/Core/Backend/backendInput";
-import {Design} from "../../../neon3/Core/View/DesignSystem/design";
-import TextInput from "../../../neon3/Core/View/DesignSystem/TextInput.vue";
+import {BackendTag} from "../../../neon3/Packages/Core/Backend/backendInput";
+import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
+import TextInput from "../../../neon3/Apps/VueApp/DesignSystem/TextInput.vue";
 import {TagAutocomplete} from "../ui";
-import {useClickOutside} from "../../../neon3/Core/View/Vue/clickOutside";
+import {useClickOutside} from "../../../neon3/Apps/VueApp/Vue/clickOutside";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();

@@ -130,11 +130,11 @@
 import {computed, reactive, ref, watch} from "vue";
 import {JobOfferFilter} from "../../../jobOfferFilter";
 import {JobOfferFilters} from "../../../main";
-import {Design} from "../../../neon3/Core/View/DesignSystem/design";
-import {DropdownOption} from "../../../neon3/Core/View/DesignSystem/DropdownOption";
-import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
-import {IconName} from "../../../neon3/Core/View/Icon/icons";
-import {LegalForm, WorkExperience, WorkMode} from "../../../neon3/Feature/JobBoard/Domain/Model";
+import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
+import {DropdownOption} from "../../../neon3/Apps/VueApp/DesignSystem/DropdownOption";
+import Icon from "../../../neon3/Apps/VueApp/Icon/Icon.vue";
+import {IconName} from "../../../neon3/Apps/VueApp/Icon/icons";
+import {LegalForm, WorkExperience, WorkMode} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {emptyJobOfferFilter} from "./JobOfferFilters";
 
 const props = defineProps<Props>();

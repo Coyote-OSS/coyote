@@ -1,8 +1,8 @@
 import {JobBoardBackend} from "../backend";
 import {VatIdState} from "../main";
-import {BackendPaymentStatus, BackendPreparedPayment} from "../neon3/Core/Backend/backendInput";
-import {PaymentMethod, PaymentNotification, PaymentProvider} from "../neon3/Core/Application/PaymentProvider";
-import {InvoiceInformation} from "../neon3/Feature/JobBoard/Domain/Model";
+import {BackendPaymentStatus, BackendPreparedPayment} from "../neon3/Packages/Core/Backend/backendInput";
+import {PaymentMethod, PaymentNotification, PaymentProvider} from "../neon3/Packages/Core/Application/PaymentProvider";
+import {InvoiceInformation} from "../neon3/Packages/Feature/JobBoard/Domain/Model";
 
 interface PaymentListener {
   processingStarted(): void;

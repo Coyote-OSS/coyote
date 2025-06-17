@@ -1,9 +1,9 @@
 import {Tag} from "../../../main";
-import {BackendJobOfferLocation} from "../../../neon3/Core/Backend/backendInput";
-import {JobOffer} from "../../../neon3/Feature/JobBoard/Application/JobOffer";
-import {SubmitJobOffer} from "../../../neon3/Feature/JobBoard/Application/Model";
-import {Currency, LegalForm, Rate, WorkExperience, WorkMode} from "../../../neon3/Feature/JobBoard/Domain/Model";
-import {parseWorkMode} from "../../../neon3/Feature/JobBoard/Domain/workMode";
+import {BackendJobOfferLocation} from "../../../neon3/Packages/Core/Backend/backendInput";
+import {JobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/JobOffer";
+import {SubmitJobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/Model";
+import {Currency, LegalForm, Rate, WorkExperience, WorkMode} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
+import {parseWorkMode} from "../../../neon3/Packages/Feature/JobBoard/Domain/workMode";
 
 export interface JobOfferShow {
   title: string;

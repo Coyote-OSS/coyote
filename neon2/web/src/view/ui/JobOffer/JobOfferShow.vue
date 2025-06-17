@@ -167,9 +167,9 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from "vue";
-import {Design} from "../../../neon3/Core/View/DesignSystem/design";
-import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
-import {IconName} from "../../../neon3/Core/View/Icon/icons";
+import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
+import Icon from "../../../neon3/Apps/VueApp/Icon/Icon.vue";
+import {IconName} from "../../../neon3/Apps/VueApp/Icon/icons";
 import {ViewListener} from "../ui";
 import {
   formatCompanySizeLevel,
@@ -260,7 +260,7 @@ const companyCard = computed<boolean>((): boolean => {
 </script>
 
 <style>
-@import "../../../neon3/Core/View/DesignSystem/tailwind.css";
+@import "../../../neon3/Apps/VueApp/DesignSystem/tailwind.css";
 
 .job-offer-description b {
   @apply text-neutral2-800;

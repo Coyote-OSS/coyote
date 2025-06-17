@@ -24,9 +24,9 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import {Design} from "../../../neon3/Core/View/DesignSystem/design";
-import LocationField from "../../../neon3/Core/View/DesignSystem/LocationField.vue";
-import {Location} from "../../../neon3/Core/Application/LocationInput";
+import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
+import LocationField from "../../../neon3/Apps/VueApp/DesignSystem/LocationField.vue";
+import {Location} from "../../../neon3/Packages/Core/Application/LocationInput";
 
 const model = defineModel<Location[]>({required: true});
 const locationFields = ref<LocationField[]>([]);
