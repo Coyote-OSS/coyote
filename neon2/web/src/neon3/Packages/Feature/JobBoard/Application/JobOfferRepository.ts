@@ -11,6 +11,10 @@ export class JobOfferRepository {
     return this.jobOffers;
   }
 
+  onlyMine(): JobOffer[] {
+    return this.jobOffers.filter(jobOffer => jobOffer.isMine);
+  }
+
   findJobOffer(jobOfferId: number): JobOffer|null {
     const jobOffer = this.jobOffers.find(o => o.id === jobOfferId);
     if (jobOffer) {

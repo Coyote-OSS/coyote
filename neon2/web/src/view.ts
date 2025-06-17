@@ -7,40 +7,29 @@ import {VueUiFactory} from './ui';
 
 export class View {
   private filter: Filter|null = null;
-  private filterOnlyMine: boolean = false;
-  private filterListener: FilterListener|null = null;
+  public filterOnlyMine: boolean = false;
 
   constructor(
     private ui: VueUiFactory,
     private jobOffers: JobOfferRepository,
-  ) {
-    this.ui.addFilterListener({
-      filter: (filter: Filter): void => {
-        this.filter = filter;
-        this.filterListener!.filterChange(filter);
-        this.filterJobOffers();
-      },
-      filterOnlyMine: (onlyMine: boolean): void => {
-        this.filterOnlyMine = onlyMine;
-        this.filterJobOffers();
-      },
-    });
-  }
+  ) {}
 
   filterJobOffers(): void {
     if (this.filterOnlyMine) {
-      const jobOffers = this.jobOffers.all().filter(jobOffer => jobOffer.isMine);
-      jobOffers.sort();
+      this.ui.setJobOffers(this.jobOffers.onlyMine());
+    } else {
+      const jobOffers = this.jobOffers.all()
+        .filter(jobOffer => jobOffer.status === 'published')
+        .filter(jobOffer => this.jobOfferMatches(jobOffer));
+      if (this.filter) {
+        sortInPlace(jobOffers, this.filter.sort);
+      }
       this.ui.setJobOffers(jobOffers);
-      return;
     }
-    const jobOffers = this.jobOffers.all()
-      .filter(jobOffer => jobOffer.status === 'published')
-      .filter(jobOffer => this.jobOfferMatches(jobOffer));
-    if (this.filter) {
-      sortInPlace(jobOffers, this.filter.sort);
-    }
-    this.ui.setJobOffers(jobOffers);
+  }
+
+  notifyFilterChanged(filter: Filter): void {
+    this.filter = filter;
   }
 
   private jobOfferMatches(jobOffer: JobOffer): boolean {
@@ -107,12 +96,4 @@ export class View {
   private haveCommonElement(array1: string[], array2: string[]): boolean {
     return array1.some(item => array2.includes(item));
   }
-
-  addFilterListener(listener: FilterListener): void {
-    this.filterListener = listener;
-  }
-}
-
-export interface FilterListener {
-  filterChange(filter: Filter): void;
 }

@@ -9,10 +9,10 @@ import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
-import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
-import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
+import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
+import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
@@ -40,9 +40,22 @@ const ui = new VueUiFactory(
   planBundle);
 
 const view = new View(ui, allJobOffers);
+
+ui.addFilterListener({
+  filter: (filter: Filter): void => {
+    ui.setJobOfferFilter(filter);
+    view.notifyFilterChanged(filter);
+    view.filterJobOffers();
+  },
+  filterOnlyMine: (onlyMine: boolean): void => {
+    view.filterOnlyMine = onlyMine;
+    view.filterJobOffers();
+  },
+});
+
 const board = new JobBoard((jobOffers: JobOffer[]): void => {
   allJobOffers.setJobOffers(jobOffers);
-  return view.filterJobOffers();
+  view.filterJobOffers();
 });
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
@@ -199,12 +212,6 @@ backend.initialJobOffers()
 presenter.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 presenter.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 ui.setJobOfferFilters(board.jobOfferFilters());
-
-view.addFilterListener({
-  filterChange(filter: Filter): void {
-    ui.setJobOfferFilter(filter);
-  },
-});
 
 ui.mount(document.querySelector('#neonApplication')!);
 
