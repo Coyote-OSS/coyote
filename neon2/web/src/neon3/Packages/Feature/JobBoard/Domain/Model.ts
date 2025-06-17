@@ -18,3 +18,9 @@ export interface InvoiceInformation {
 export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|PaidPricingPlan;
 export type PaidPricingPlan = 'premium'|PlanBundleName;
+
+export interface JobOfferPayment {
+  paymentPriceBase: number;
+  paymentPriceVat: number;
+  paymentPricingPlan: PaidPricingPlan;
+}

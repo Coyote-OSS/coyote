@@ -17,8 +17,9 @@
 
 <script setup lang="ts">
 import {inject} from "vue";
-import {Country, PaymentSummary, VatIdState} from "../../../main";
+import {Country, VatIdState} from "../../../main";
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
+import {PaymentSummary} from "../../../neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {RouteProperties} from "../screen/Screens";
 import {PlanBundle, ViewListener} from "../ui";
 import JobOfferPaymentForm from "./JobOfferPaymentForm.vue";

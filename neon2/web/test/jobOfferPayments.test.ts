@@ -1,4 +1,4 @@
-import {JobOfferPayments} from "../src/jobOfferPayments";
+import {JobOfferPayments} from "../src/neon3/Packages/Feature/JobBoard/Application/JobOfferPayments";
 import {PaidPricingPlan} from "../src/neon3/Packages/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "../src/neon3/Packages/Feature/JobBoard/JobBoard";
 import {assertEquals, describe, test} from "./assertion";

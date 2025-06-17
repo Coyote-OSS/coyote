@@ -1,7 +1,6 @@
 import {EventMetadata, JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from './jobBoard';
 import {JobOfferFilter} from "./jobOfferFilter";
-import {JobOfferPayments} from "./jobOfferPayments";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
 import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider";
@@ -9,11 +8,13 @@ import {PaymentNotification, PaymentProvider} from "./neon3/Packages/Core/Applic
 import {BackendJobOffer, BackendJobOfferTagPriority} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Application/JobOffer";
+import {JobOfferPayments} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferPayments";
 import {SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {InitiatePayment} from "./neon3/Packages/Feature/JobBoard/Application/payment";
 import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {PlanBundleName, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
+import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {PaymentService, PaymentStatus} from "./PaymentService";
 import {PlanBundle} from "./planBundle";
 import {TagAutocompleteResult, VueUi} from './view/ui/ui';
@@ -208,13 +209,6 @@ export interface UploadImage {
 export interface UploadAssets {
   uploadLogo: UploadImage;
   uploadAsset: UploadImage;
-}
-
-export interface PaymentSummary {
-  basePrice: number;
-  vat: number;
-  bundleSize: 1|3|5|20;
-  vatIncluded: boolean;
 }
 
 export interface Country {

@@ -1,5 +1,5 @@
-import {PaidPricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
-import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
+import {JobOfferPayment, PaidPricingPlan} from "../Domain/Model";
+import {JobOfferPaymentIntent} from "../JobBoard";
 
 export class JobOfferPayments {
   private paymentIntents: JobOfferPaymentIntent[] = [];
@@ -40,10 +40,4 @@ export class JobOfferPayments {
       paymentPricingPlan: intent.paymentPricingPlan,
     };
   }
-}
-
-export interface JobOfferPayment {
-  paymentPriceBase: number;
-  paymentPriceVat: number;
-  paymentPricingPlan: PaidPricingPlan;
 }
