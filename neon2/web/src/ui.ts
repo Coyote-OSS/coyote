@@ -59,26 +59,24 @@ export type TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult)
 export type TagAutocompleteResult = (tags: Tag[]) => void;
 
 export class VueUi {
-  private readonly gate: Policy;
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
-  private screens: Screens|null = null;
+  private readonly screens: Screens|null = null;
   private view: View|null = null;
   private viewListener: ViewListener|null = null;
   private tagAutocomplete: TagAutocomplete|null = null;
-  private store: BoardStore|null = null;
-  private app;
+  private readonly store: BoardStore;
+  private readonly app;
 
   constructor(
     private locationInput: LocationInput,
     isAuthenticated: boolean,
     private backendImageApi: BackendImageApi,
   ) {
-    this.gate = new Policy(
+    this.screens = new Screens(new Policy(
       isAuthenticated,
       (jobOfferId: number): boolean => this.findJobOffer(jobOfferId)?.canEdit ?? false,
-      () => this.store!.pricingPlan !== null,
-    );
+      () => this.store.pricingPlan !== null));
     this.app = createApp(JobBoard);
     const pinia = createPinia();
     this.app.use(pinia);
@@ -91,7 +89,7 @@ export class VueUi {
 
   selectPlan(plan: PricingPlan): void {
     if (this.viewListener!.assertUserAuthenticated()) {
-      this.store!.pricingPlan = plan;
+      this.store.pricingPlan = plan;
       this.setScreen('form', null);
     }
   }
@@ -105,47 +103,46 @@ export class VueUi {
 
   setViewListener(viewListener: ViewListener): void {
     this.viewListener = viewListener;
-    this.screens = new Screens(viewListener, this.gate);
   }
 
   setJobOfferFilters(filters: FilterOptions): void {
-    this.store!.jobOfferFilters = filters;
+    this.store.jobOfferFilters = filters;
   }
 
   setJobOfferFilter(filter: Filter): void {
-    this.store!.jobOfferFilter = filter;
+    this.store.jobOfferFilter = filter;
   }
 
   setPaymentNotification(notification: PaymentNotification): void {
-    this.store!.paymentNotification = notification;
+    this.store.paymentNotification = notification;
   }
 
   setPaymentStatus(status: PaymentStatus): void {
-    this.store!.paymentStatus = status;
+    this.store.paymentStatus = status;
   }
 
   setJobOfferApplicationEmail(applicationEmail: string): void {
-    this.store!.applicationEmail = applicationEmail;
+    this.store.applicationEmail = applicationEmail;
   }
 
   setPaymentSummary(summary: PaymentSummary): void {
-    this.store!.paymentSummary = summary;
+    this.store.paymentSummary = summary;
   }
 
   setPaymentInvoiceCountries(countries: Country[]): void {
-    this.store!.invoiceCountries = countries;
+    this.store.invoiceCountries = countries;
   }
 
   setPaymentProcessing(processing: boolean): void {
-    this.store!.paymentProcessing = processing;
+    this.store.paymentProcessing = processing;
   }
 
   setVatIncluded(vatIncluded: boolean): void {
-    this.store!.paymentSummary!.vatIncluded = vatIncluded;
+    this.store.paymentSummary!.vatIncluded = vatIncluded;
   }
 
   setVatIdState(state: VatIdState): void {
-    this.store!.paymentVatIdState = state;
+    this.store.paymentVatIdState = state;
   }
 
   setTagAutocomplete(tagAutocomplete: TagAutocomplete): void {
@@ -167,34 +164,34 @@ export class VueUi {
   }
 
   setToast(toast: Toast|null): void {
-    this.store!.toast = toast;
+    this.store.toast = toast;
   }
 
   showValueProposition(jobOffer: JobOffer): void {
-    this.store!.vpVisibleFor = jobOffer;
+    this.store.vpVisibleFor = jobOffer;
   }
 
   hideValueProposition(): void {
-    this.store!.vpVisibleFor = null;
+    this.store.vpVisibleFor = null;
   }
 
   setJobOffers(jobOffers: JobOffer[]): void {
-    this.store!.jobOffers = jobOffers;
+    this.store.jobOffers = jobOffers;
   }
 
   /**
    * This can only be run after ui create, before mount
    */
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
-    this.store!.planBundle = {bundleName, remainingJobOffers, canRedeem};
-    this.store!.pricingPlan = bundleName;
+    this.store.planBundle = {bundleName, remainingJobOffers, canRedeem};
+    this.store.pricingPlan = bundleName;
   }
 
   mount(element: Element): void {
     this.app.provide(jobBoardServiceInjectKey, new JobBoardService(
       this,
       this.view!,
-      this.store!,
+      this.store,
       this.screens!,
       this.locationInput,
       this.viewListener!,
@@ -208,7 +205,7 @@ export class VueUi {
   }
 
   private findJobOfferReactive(jobOfferId: number): JobOffer {
-    const jobOffer = this.store!.jobOffers.find(o => o.id === jobOfferId);
+    const jobOffer = this.store.jobOffers.find(o => o.id === jobOfferId);
     if (jobOffer) {
       return jobOffer;
     }
@@ -221,7 +218,7 @@ export class VueUi {
     throw new Error(
       'Failed to render job offer.' +
       ' offers in domain' + this.view!.jobOffers.length +
-      ' offers in view' + this.store!.jobOffers.length);
+      ' offers in view' + this.store.jobOffers.length);
   }
 
   findJobOffer(jobOfferId: number): JobOffer|null {

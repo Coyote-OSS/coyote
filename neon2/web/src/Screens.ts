@@ -7,17 +7,13 @@ import JobOfferPricing from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferP
 import JobOfferShowScreen from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferShowScreen.vue";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {Policy} from "./Policy";
-
 import {Router} from "./Router";
-import {Screen, ViewListener} from "./ui";
+import {Screen} from "./ui";
 
 export class Screens {
   private router: Router;
 
-  constructor(
-    viewListener: ViewListener,
-    policy: Policy,
-  ) {
+  constructor(policy: Policy) {
     this.router = new Router();
     this.router.addScreen(JobOfferHome, 'home', '/Job');
     this.router.addScreen(JobOfferShowScreen, 'show', '/Job/:slug/:id');

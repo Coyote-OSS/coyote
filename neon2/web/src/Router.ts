@@ -4,6 +4,7 @@ import {
   createWebHistory,
   RouteLocationNormalized,
   RouteParamsGeneric,
+  RouteParamsRawGeneric,
   Router as VueRouter,
   useRoute,
 } from "vue-router";
@@ -45,7 +46,7 @@ export class Router {
     });
   }
 
-  navigate(screen: Screen, routeArguments: {id: number|null, slug?: string}): void {
+  navigate(screen: Screen, routeArguments: RouteParamsRawGeneric): void {
     this.router.push({
       name: screen,
       params: routeArguments,
