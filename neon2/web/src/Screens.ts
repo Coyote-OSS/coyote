@@ -22,22 +22,20 @@ export class Screens {
     this.router.addScreen(JobOfferHome, 'home', '/Job');
     this.router.addScreen(JobOfferShowScreen, 'show', '/Job/:slug/:id');
     this.router.addScreen(JobOfferPricing, 'pricing', '/Job/pricing');
-    this.router.addScreen(JobOfferCreate, 'form', '/Job/new');
-    this.router.addScreen(JobOfferEdit, 'edit', '/Job/:id/edit');
-    this.router.addScreen(JobOfferPaymentScreen, 'payment', '/Job/:id/payment');
-    this.router.addDefaultScreen('home');
-    this.router.onNavigate((screen: Screen, jobOfferId: number|null): Screen|null => {
-      if (screen === 'form' && !policy.createCreateJobOffer()) {
+    this.router.addScreen(JobOfferCreate, 'form', '/Job/new', () => {
+      if (!policy.createCreateJobOffer()) {
         return 'pricing';
-      }
-      if (screen === 'edit' && !policy.canEditJobOffer(jobOfferId!)) {
-        return 'home';
-      }
-      if (screen === 'payment') {
-        viewListener.resumePayment(jobOfferId!);
       }
       return null;
     });
+    this.router.addScreen(JobOfferEdit, 'edit', '/Job/:id/edit', params => {
+      if (!policy.canEditJobOffer(Number(params.id))) {
+        return 'home';
+      }
+      return null;
+    });
+    this.router.addScreen(JobOfferPaymentScreen, 'payment', '/Job/:id/payment');
+    this.router.addDefaultScreen('home');
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {

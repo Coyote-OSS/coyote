@@ -1,4 +1,4 @@
-import {UploadAssets, ValuePropositionEvent} from "../../../../../main";
+import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
 import {
   FilterListener,
@@ -122,5 +122,9 @@ export class JobBoardService {
 
   mountLocationInput(input: HTMLInputElement, listener: LocationListener): void {
     this.locationInput.mount(input, listener);
+  }
+
+  resumePayment(jobOfferId: number): void {
+    this.viewListener!.resumePayment(jobOfferId);
   }
 }

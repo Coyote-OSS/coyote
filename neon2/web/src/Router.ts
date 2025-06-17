@@ -1,5 +1,11 @@
 import {App, Component} from "vue";
-import {createRouter, createWebHistory, RouteLocationNormalized, Router as VueRouter} from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  RouteLocationNormalized,
+  RouteParamsGeneric,
+  Router as VueRouter,
+} from "vue-router";
 import {RouteProperties} from "./Screens";
 import {Screen} from "./ui";
 
@@ -29,7 +35,12 @@ export class Router {
     this.router.addRoute({path: '/', redirect: {name: screen}});
   }
 
-  addScreen(component: Component, screen: Screen, vueRouterRoute: string): void {
+  addScreen(
+    component: Component,
+    screen: Screen,
+    vueRouterRoute: string,
+    before?: (params: RouteParamsGeneric) => Screen|null,
+  ): void {
     this.router.addRoute({
       component,
       name: screen,
@@ -37,6 +48,12 @@ export class Router {
       props: (route: RouteLocationNormalized): RouteProperties => {
         return {routeJobOfferId: this.jobOfferId(route)};
       },
+      beforeEnter: before ? [((route: RouteLocationNormalized) => {
+        const redirectTo = before(route.params);
+        if (redirectTo) {
+          return {name: redirectTo};
+        }
+      })] : [],
     });
   }
 

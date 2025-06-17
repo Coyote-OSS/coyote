@@ -14,12 +14,18 @@
 </template>
 
 <script setup lang="ts">
+import {inject} from "vue";
 import {Design} from "../../neon3/Apps/VueApp/DesignSystem/design";
+import {JobBoardService} from "../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore, useBoardStore} from "../../neon3/Apps/VueApp/Modules/JobBoard/store";
+import {jobBoardServiceInjectKey} from "../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {RouteProperties} from "../../Screens";
 import JobOfferPaymentForm from "../JobOfferPaymentForm.vue";
 import JobOfferRedeemBundle from "../JobOfferRedeemBundle.vue";
 
 const route = defineProps<RouteProperties>();
 const store: BoardStore = useBoardStore();
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
+
+service.resumePayment(route.routeJobOfferId!);
 </script>
