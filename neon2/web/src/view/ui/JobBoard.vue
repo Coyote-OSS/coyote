@@ -36,7 +36,7 @@ import {ValuePropositionEvent} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
-import {Design} from "./design/design";
+import {Design} from "../../neon3/Core/View/DesignSystem/design";
 import {JobBoardProperties} from "./JobBoardProperties";
 import ValuePropositionModal from "./vp/ValuePropositionModal.vue";
 

@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import {ValuePropositionEvent} from "../../../main";
-import {Design} from "../design/design";
+import {Design} from "../../../neon3/Core/View/DesignSystem/design";
 import logo from "./survey.svg";
 
 const props = defineProps<Props>();

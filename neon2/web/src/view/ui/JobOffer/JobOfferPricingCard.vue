@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {PricingPlan} from '../../../main';
-import {Design} from "../design/design";
+import {Design} from "../../../neon3/Core/View/DesignSystem/design";
 import JobOfferPricingCardIcon from './JobOfferPricingCardIcon.vue';
 import JobOfferPricingCardList from './JobOfferPricingCardList.vue';
 

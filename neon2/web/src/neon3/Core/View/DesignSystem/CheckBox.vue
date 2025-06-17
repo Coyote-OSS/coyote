@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
-import {IconName} from "../../../neon3/Core/View/Icon/icons";
+import Icon from "../Icon/Icon.vue";
+import {IconName} from "../Icon/icons";
 
 interface Props {
   label: string;

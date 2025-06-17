@@ -36,8 +36,8 @@
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
 import {BackendTag} from "../../../backend";
-import {Design} from "../design/design";
-import TextInput from "../design/TextInput.vue";
+import {Design} from "../../../neon3/Core/View/DesignSystem/design";
+import TextInput from "../../../neon3/Core/View/DesignSystem/TextInput.vue";
 import {TagAutocomplete} from "../ui";
 import {useClickOutside} from "../vue/clickOutside";
 

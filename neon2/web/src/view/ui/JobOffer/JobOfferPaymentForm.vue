@@ -88,8 +88,8 @@
 import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import {Country, InvoiceInformation, PaymentSummary, VatIdState} from "../../../main";
 import {PaymentMethod} from "../../../paymentProvider/PaymentProvider";
-import {Design} from "../design/design";
-import {DrawerOption} from "../design/DropdownSingle.vue";
+import {Design} from "../../../neon3/Core/View/DesignSystem/design";
+import {DrawerOption} from "../../../neon3/Core/View/DesignSystem/DropdownSingle.vue";
 import {ViewListener} from "../ui";
 import {ValidationBag} from "./ValidationBag";
 import JobOfferStepper from './JobOfferStepper.vue';

@@ -44,8 +44,8 @@
 
 <script setup lang="ts" generic="T extends string">
 import {computed, ref} from "vue";
-import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
-import {IconName} from "../../../neon3/Core/View/Icon/icons";
+import Icon from "../Icon/Icon.vue";
+import {IconName} from "../Icon/icons";
 import CheckBox from "./CheckBox.vue";
 import Dropdown from "./Dropdown.vue";
 import {clamp} from "./DropdownMultiple";

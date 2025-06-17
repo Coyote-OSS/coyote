@@ -70,7 +70,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {JobOffer, jobOfferTagNames} from "../../../jobBoard";
-import {Design} from "../design/design";
+import {Design} from "../../../neon3/Core/View/DesignSystem/design";
 import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
 import {IconName} from "../../../neon3/Core/View/Icon/icons";
 import {formatLegalForm, formatWorkMode} from "./format";

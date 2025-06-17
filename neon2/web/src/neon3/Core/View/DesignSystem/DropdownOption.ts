@@ -1,4 +1,4 @@
-import {IconName} from "../../../neon3/Core/View/Icon/icons";
+import {IconName} from "../Icon/icons";
 
 export interface DropdownOption<T extends string> {
   value: T;

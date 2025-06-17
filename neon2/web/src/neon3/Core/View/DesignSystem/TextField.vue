@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
-import {IconName} from "../../../neon3/Core/View/Icon/icons";
+import {IconName} from "../Icon/icons";
 import TextInput from "./TextInput.vue";
 import TextInputOutline from "./TextInputOutline.vue";
 

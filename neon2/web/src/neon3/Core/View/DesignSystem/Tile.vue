@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
-import {IconName} from "../../../neon3/Core/View/Icon/icons";
+import Icon from "../Icon/Icon.vue";
+import {IconName} from "../Icon/icons";
 import Material, {MaterialRound} from "./Material.vue";
 
 const props = defineProps<Props>();

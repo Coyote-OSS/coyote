@@ -27,8 +27,8 @@
 
 <script setup lang="ts" generic="U extends string|number|boolean|null">
 import {computed, inject, ref} from "vue";
-import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
-import {IconName} from "../../../neon3/Core/View/Icon/icons";
+import Icon from "../Icon/Icon.vue";
+import {IconName} from "../Icon/icons";
 import {DrawerScroll} from "./Drawer";
 import Dropdown from "./Dropdown.vue";
 

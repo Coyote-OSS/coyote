@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import TagName from "../design/TagName.vue";
+import TagName from "../../../neon3/Core/View/DesignSystem/TagName.vue";
 
 interface Props {
   tagNames: string[];

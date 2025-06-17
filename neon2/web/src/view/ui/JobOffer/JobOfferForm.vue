@@ -228,9 +228,9 @@ import {
   WorkMode,
 } from "../../../main";
 import {formatWorkMode, parseWorkMode} from "../../../workMode";
-import {Design} from "../design/design";
-import {DrawerOption} from "../design/DropdownSingle.vue";
-import LocationField from "../design/LocationField.vue";
+import {Design} from "../../../neon3/Core/View/DesignSystem/design";
+import {DrawerOption} from "../../../neon3/Core/View/DesignSystem/DropdownSingle.vue";
+import LocationField from "../../../neon3/Core/View/DesignSystem/LocationField.vue";
 import {TagAutocomplete, ViewListener} from "../ui";
 import {
   formatCompanySizeLevel,

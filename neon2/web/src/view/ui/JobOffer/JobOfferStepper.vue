@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {Design} from "../design/design";
+import {Design} from "../../../neon3/Core/View/DesignSystem/design";
 
 export type JobOfferCreatorStep = 'company'|'jobOffer'|'preview';
 export type JobOfferStep = JobOfferCreatorStep|'publish';

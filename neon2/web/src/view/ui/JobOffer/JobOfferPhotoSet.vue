@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {UploadImage} from '../../../main';
-import {Design} from "../design/design";
+import {Design} from "../../../neon3/Core/View/DesignSystem/design";
 
 const props = defineProps<Props>();
 

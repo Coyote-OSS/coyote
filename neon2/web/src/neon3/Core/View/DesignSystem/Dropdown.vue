@@ -27,9 +27,9 @@
 
 <script setup lang="ts">
 import {computed, watch} from 'vue';
-import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
-import {IconName} from "../../../neon3/Core/View/Icon/icons";
-import {useClickOutside} from "../vue/clickOutside";
+import Icon from "../Icon/Icon.vue";
+import {IconName} from "../Icon/icons";
+import {useClickOutside} from "../../../../view/ui/vue/clickOutside";
 import {DrawerScroll} from "./Drawer";
 import Drawer from "./Drawer.vue";
 import Material from "./Material.vue";

@@ -130,8 +130,8 @@
 import {computed, reactive, ref, watch} from "vue";
 import {JobOfferFilter} from "../../../jobOfferFilter";
 import {JobOfferFilters, LegalForm, WorkExperience, WorkMode} from "../../../main";
-import {Design} from "../design/design";
-import {DropdownOption} from "../design/DropdownOption";
+import {Design} from "../../../neon3/Core/View/DesignSystem/design";
+import {DropdownOption} from "../../../neon3/Core/View/DesignSystem/DropdownOption";
 import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
 import {IconName} from "../../../neon3/Core/View/Icon/icons";
 import {emptyJobOfferFilter} from "./JobOfferFilters";

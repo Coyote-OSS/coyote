@@ -19,8 +19,8 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {UploadImage} from "../../../main";
-import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
+import {UploadImage} from "../../../../main";
+import Icon from "../Icon/Icon.vue";
 
 interface Props {
   upload: UploadImage;

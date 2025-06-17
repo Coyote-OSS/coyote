@@ -1,5 +1,5 @@
-import {clamp} from "../src/view/ui/design/DropdownMultiple";
-import {assertEquals, describe, test} from "./assertion";
+import {clamp} from "../../../../src/neon3/Core/View/DesignSystem/DropdownMultiple";
+import {assertEquals, describe, test} from "../../../assertion";
 
 describe('Clamp number.', () => {
   test('Returns the value.', () => {
