@@ -28,12 +28,14 @@ const allJobOffers = new AllJobOffers();
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
+const planBundle = new PlanBundle();
 const ui = new VueUiFactory(
   locationInput(backend.testMode()),
   backend.isAuthenticated(),
   backendImageApi,
   allJobOffers,
-);
+  planBundle);
+
 const view = new View(ui, allJobOffers);
 const board = new JobBoard((jobOffers: JobOffer[]): void => {
   allJobOffers.setJobOffers(jobOffers);
@@ -42,7 +44,6 @@ const board = new JobBoard((jobOffers: JobOffer[]): void => {
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const jobOfferPayments = new JobOfferPayments();
-const planBundle = new PlanBundle();
 const _locationDisplay = locationDisplay(backend.testMode());
 const presenter = new JobBoardPresenter(ui.store, ui.screens);
 
@@ -182,7 +183,7 @@ payments.addEventListener({
 });
 
 planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
-  view.setPlanBundle(plan, remainingJobOffers);
+  ui.setPlanBundle(plan, remainingJobOffers, remainingJobOffers > 0);
 });
 
 const bundle = backend.initialPlanBundle();

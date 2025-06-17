@@ -1,20 +1,19 @@
-import {AllJobOffers} from "../../../../Packages/Feature/JobBoard/Application/AllJobOffers";
 import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
 import {
   FilterListener,
-  NavigationListener,
   Screen,
   TagAutocomplete,
   TagAutocompleteResult,
   ViewListener,
   VueUiFactory,
 } from "../../../../../ui";
-import {View} from "../../../../../view";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "../../../../Packages/Core/Backend/BackendImageApi";
+import {AllJobOffers} from "../../../../Packages/Feature/JobBoard/Application/AllJobOffers";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
+import {PlanBundle} from "../../../../Packages/Feature/JobBoard/Application/PlanBundle";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
@@ -28,9 +27,9 @@ export class JobBoardService {
     private readonly viewListener: ViewListener,
     private readonly _tagAutocomplete: TagAutocomplete,
     private readonly filterListeners: FilterListener[],
-    private readonly navigationListener: NavigationListener,
     private readonly backendImageApi: BackendImageApi,
     private readonly allJobOffers: AllJobOffers,
+    private readonly planBundle: PlanBundle,
   ) {}
 
   redeemBundle(jobOfferId: number): void {
@@ -50,7 +49,11 @@ export class JobBoardService {
   }
 
   showForm(): void {
-    this.navigationListener!.showJobOfferForm();
+    if (this.planBundle.canRedeem()) {
+      this.screens.navigate('form', null);
+    } else {
+      this.ui.screens.navigate('pricing', null);
+    }
   }
 
   mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {

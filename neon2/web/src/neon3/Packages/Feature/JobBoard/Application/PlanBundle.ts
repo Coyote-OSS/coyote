@@ -23,6 +23,13 @@ export class PlanBundle {
     this.updateListeners();
   }
 
+  canRedeem(): boolean {
+    if (this.plan === null) {
+      return false;
+    }
+    return this.remainingJobOffers! > 0;
+  }
+
   private updateListeners(): void {
     this.listeners.forEach(listener => listener(this.plan!, this.remainingJobOffers!));
   }

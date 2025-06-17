@@ -1,6 +1,5 @@
 import {createPinia} from "pinia";
 import {createApp} from 'vue';
-import {AllJobOffers} from "./neon3/Packages/Feature/JobBoard/Application/AllJobOffers";
 import JobBoard from './JobBoard.vue';
 import {ValuePropositionEvent} from "./main";
 import {JobBoardService} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
@@ -8,8 +7,10 @@ import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/st
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
+import {AllJobOffers} from "./neon3/Packages/Feature/JobBoard/Application/AllJobOffers";
 import {Filter, FilterOptions} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
+import {PlanBundle} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundle";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PlanBundleName, PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
@@ -35,10 +36,6 @@ export interface ViewListener {
     email?: string): void;
 }
 
-export interface NavigationListener {
-  showJobOfferForm(): void;
-}
-
 export interface FilterListener {
   filter(filter: Filter): void;
   filterOnlyMine(onlyMine: boolean): void;
@@ -54,7 +51,6 @@ export class VueUiFactory {
   public readonly store: BoardStore;
 
   private readonly filterListeners: FilterListener[] = [];
-  private navigationListener: NavigationListener|null = null;
   private viewListener: ViewListener|null = null;
   private tagAutocomplete: TagAutocomplete|null = null;
   private readonly app;
@@ -64,6 +60,7 @@ export class VueUiFactory {
     isAuthenticated: boolean,
     private backendImageApi: BackendImageApi,
     private allJobOffers: AllJobOffers,
+    private planBundle: PlanBundle,
   ) {
     this.screens = new Screens(new Policy(
       isAuthenticated,
@@ -80,10 +77,6 @@ export class VueUiFactory {
       this.store.pricingPlan = plan;
       this.screens.navigate('form', null);
     }
-  }
-
-  setScreen(screen: Screen, jobOfferId: number|null): void {
-    this.screens.navigate(screen, jobOfferId);
   }
 
   // from main:
@@ -114,10 +107,6 @@ export class VueUiFactory {
 
   // from view
 
-  setNavigationListener(navigationListener: NavigationListener): void {
-    this.navigationListener = navigationListener;
-  }
-
   addFilterListener(listener: FilterListener): void {
     this.filterListeners.push(listener);
   }
@@ -140,9 +129,9 @@ export class VueUiFactory {
       this.viewListener!,
       this.tagAutocomplete!,
       this.filterListeners,
-      this.navigationListener!,
       this.backendImageApi,
       this.allJobOffers,
+      this.planBundle,
     ));
     this.screens.useIn(this.app);
     this.app.mount(element);

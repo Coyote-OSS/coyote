@@ -1,9 +1,7 @@
 import {jobOfferCities, jobOfferTagNames} from './jobBoard';
 import {AllJobOffers} from "./neon3/Packages/Feature/JobBoard/Application/AllJobOffers";
-
 import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {PlanBundleName} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {sortInPlace} from "./neon3/Packages/Feature/JobBoard/Presenter/orderBy";
 import {VueUiFactory} from './ui';
 
@@ -12,22 +10,12 @@ export type Toast = 'created'|'edited'|'bundle-used';
 export class View {
   private filter: Filter|null = null;
   private filterOnlyMine: boolean = false;
-  private planBundleCanRedeem: boolean = false;
   private filterListener: FilterListener|null = null;
 
   constructor(
     private ui: VueUiFactory,
     private allJobOffers: AllJobOffers,
   ) {
-    this.ui.setNavigationListener({
-      showJobOfferForm: (): void => {
-        if (this.planBundleCanRedeem) {
-          this.ui.setScreen('form', null);
-        } else {
-          this.ui.setScreen('pricing', null);
-        }
-      },
-    });
     this.ui.addFilterListener({
       filter: (filter: Filter): void => {
         this.filter = filter;
@@ -120,11 +108,6 @@ export class View {
 
   private haveCommonElement(array1: string[], array2: string[]): boolean {
     return array1.some(item => array2.includes(item));
-  }
-
-  setPlanBundle(planName: PlanBundleName, remainingJobOffers: number): void {
-    this.planBundleCanRedeem = remainingJobOffers > 0;
-    this.ui.setPlanBundle(planName, remainingJobOffers, this.planBundleCanRedeem);
   }
 
   addFilterListener(listener: FilterListener): void {
