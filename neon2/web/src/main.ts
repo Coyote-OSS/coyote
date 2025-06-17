@@ -19,13 +19,17 @@ import {PaymentStatus, PlanBundleName, PricingPlan} from "./neon3/Packages/Featu
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
-import {TagAutocompleteResult, VueUi} from './view/ui/ui';
-import {View} from "./view/view";
+import {TagAutocompleteResult, VueUi} from './ui';
+import {View} from "./view";
 
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
-const ui = new VueUi(locationInput(backend.testMode()), backend.isAuthenticated());
+const ui = new VueUi(
+  locationInput(backend.testMode()),
+  backend.isAuthenticated(),
+  backendImageApi,
+);
 const view = new View(ui);
 const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
@@ -185,15 +189,6 @@ backend.initialJobOffers()
 ui.setJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 ui.setPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 ui.setJobOfferFilters(board.jobOfferFilters());
-ui.upload({
-  async uploadLogo(file: File): Promise<string> {
-    return await backendImageApi.uploadLogoReturnUrl(file);
-  },
-  async uploadAsset(file: File): Promise<string> {
-    return await backendImageApi.uploadAssetReturnUrl(file);
-  },
-});
-
 view.addFilterListener({
   filterChange(filter: Filter): void {
     ui.setJobOfferFilter(filter);
@@ -212,4 +207,3 @@ export interface UploadAssets {
 }
 
 export type VatIdState = 'valid'|'invalid'|'pending';
-

@@ -1,5 +1,5 @@
 import {UploadAssets, ValuePropositionEvent} from "../../../../../main";
-import {Screens} from "../../../../../view/ui/screen/Screens";
+import {Screens} from "../../../../../Screens";
 import {
   FilterListener,
   NavigationListener,
@@ -8,9 +8,10 @@ import {
   TagAutocompleteResult,
   ViewListener,
   VueUi,
-} from "../../../../../view/ui/ui";
-import {View} from "../../../../../view/view";
+} from "../../../../../ui";
+import {View} from "../../../../../view";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
+import {BackendImageApi} from "../../../../Packages/Core/Backend/BackendImageApi";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
@@ -26,9 +27,9 @@ export class JobBoardService {
     private readonly locationInput: LocationInput,
     private readonly viewListener: ViewListener,
     private readonly _tagAutocomplete: TagAutocomplete,
-    private readonly upload: UploadAssets,
     private readonly filterListeners: FilterListener[],
     private readonly navigationListener: NavigationListener,
+    private readonly backendImageApi: BackendImageApi,
   ) {}
 
   redeemBundle(jobOfferId: number): void {
@@ -105,11 +106,11 @@ export class JobBoardService {
   }
 
   uploadLogo(file: File): Promise<string> {
-    return this.upload.uploadLogo(file);
+    return this.backendImageApi.uploadLogoReturnUrl(file);
   }
 
   uploadAsset(file: File): Promise<string> {
-    return this.upload.uploadAsset(file);
+    return this.backendImageApi.uploadAssetReturnUrl(file);
   }
 
   valuePropositionAccepted(
