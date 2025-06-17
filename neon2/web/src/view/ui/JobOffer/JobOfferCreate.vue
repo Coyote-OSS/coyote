@@ -13,7 +13,8 @@
 
 <script setup lang="ts">
 import {computed, inject} from 'vue';
-import {PricingPlan, SubmitJobOffer, UploadAssets} from "../../../main";
+import {PricingPlan, UploadAssets} from "../../../main";
+import {SubmitJobOffer} from "../../../neon3/Feature/JobBoard/Application/Model";
 import {TagAutocomplete, UiController, ViewListener} from "../ui";
 import JobOfferForm from "./JobOfferForm.vue";
 

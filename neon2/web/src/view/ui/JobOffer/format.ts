@@ -1,4 +1,5 @@
-import {HiringType, LegalForm, WorkExperience, WorkMode} from "../../../main";
+
+import {HiringType, LegalForm, WorkExperience, WorkMode} from "../../../neon3/Feature/JobBoard/Domain/Model";
 
 export function formatExpiresInDays(expiresInDays: number): string {
   return 'za ' + expiresInDays.toString() + ' dni';

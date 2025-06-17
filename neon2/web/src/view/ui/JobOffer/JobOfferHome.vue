@@ -34,7 +34,7 @@ import {computed, inject, ref} from "vue";
 import {JobOfferFilter} from "../../../jobOfferFilter";
 import {JobOfferFilters as Filters} from "../../../main";
 import {Design} from "../../../neon3/Core/View/DesignSystem/design";
-import {JobOffer} from "../../../neon3/Feature/JobBoard/Model/JobOffer";
+import {JobOffer} from "../../../neon3/Feature/JobBoard/Application/JobOffer";
 import {UiController} from "../ui";
 import JobOfferFilters from "./JobOfferFilters.vue";
 import JobOfferListItem from "./JobOfferListItem.vue";

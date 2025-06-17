@@ -1,4 +1,4 @@
-import {WorkMode} from "./main";
+import {WorkMode} from "./Model";
 
 export function parseWorkMode(workModeRemoteRange: number): WorkMode {
   if (workModeRemoteRange === 0) {

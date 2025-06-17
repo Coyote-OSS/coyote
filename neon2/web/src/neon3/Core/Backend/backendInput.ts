@@ -1,4 +1,12 @@
-import {ApplicationMode, Currency, HiringType, LegalForm, PaidPricingPlan, Rate, WorkExperience} from "../../../main";
+import {PaidPricingPlan} from "../../../main";
+import {
+  ApplicationMode,
+  Currency,
+  HiringType,
+  LegalForm,
+  Rate,
+  WorkExperience,
+} from "../../Feature/JobBoard/Domain/Model";
 
 declare global {
   interface Window {

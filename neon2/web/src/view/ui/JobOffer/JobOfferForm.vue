@@ -218,16 +218,19 @@
 <script setup lang="ts">
 import {computed, reactive, ref} from 'vue';
 import {
+  UploadAssets,
+  
+} from "../../../main";
+import {SubmitJobOffer} from "../../../neon3/Feature/JobBoard/Application/Model";
+import {
   Currency,
   HiringType,
   LegalForm,
   Rate,
-  SubmitJobOffer,
-  UploadAssets,
   WorkExperience,
   WorkMode,
-} from "../../../main";
-import {formatWorkMode, parseWorkMode} from "../../../workMode";
+} from "../../../neon3/Feature/JobBoard/Domain/Model";
+import {formatWorkMode, parseWorkMode} from "../../../neon3/Feature/JobBoard/Domain/workMode";
 import {Design} from "../../../neon3/Core/View/DesignSystem/design";
 import {DrawerOption} from "../../../neon3/Core/View/DesignSystem/DropdownSingle.vue";
 import LocationField from "../../../neon3/Core/View/DesignSystem/LocationField.vue";

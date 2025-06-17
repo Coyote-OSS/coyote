@@ -1,25 +1,23 @@
-import {
-  EventMetadata,
-  JobBoardBackend,
-  toJobOffer,
-} from "./backend";
+import {EventMetadata, JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from './jobBoard';
 import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
-import {TestLocationInput} from "./neon3/Core/Acceptance/TestLocationInput";
-import {LocationDisplay} from "./neon3/Core/Application/LocationDisplay";
-import {GoogleMapsAutocomplete} from "./neon3/Core/External/GoogleMaps/GoogleMapsAutocomplete";
 import {TestLocationDisplay} from "./neon3/Core/Acceptance/TestLocationDisplay";
-import {BackendJobOffer, BackendJobOfferLocation, BackendJobOfferTagPriority} from "./neon3/Core/Backend/backendInput";
-import {isVatIncluded} from "./neon3/Core/Domain/vat";
-import {GoogleMapsMap} from "./neon3/Core/External/GoogleMaps/GoogleMapsMap";
-import {LocationInput} from "./neon3/Core/Application/LocationInput";
-import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
-import {PaymentMethod, PaymentNotification, PaymentProvider} from "./neon3/Core/Application/PaymentProvider";
-import {JobOffer} from "./neon3/Feature/JobBoard/Model/JobOffer";
-import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
-import {StripePaymentProvider} from './neon3/Core/External/Stripe/StripePaymentProvider';
+import {TestLocationInput} from "./neon3/Core/Acceptance/TestLocationInput";
 import {TestPaymentProvider} from './neon3/Core/Acceptance/TestPaymentProvider';
+import {LocationDisplay} from "./neon3/Core/Application/LocationDisplay";
+import {LocationInput} from "./neon3/Core/Application/LocationInput";
+import {PaymentMethod, PaymentNotification, PaymentProvider} from "./neon3/Core/Application/PaymentProvider";
+import {BackendJobOffer, BackendJobOfferTagPriority} from "./neon3/Core/Backend/backendInput";
+import {isVatIncluded} from "./neon3/Core/Domain/vat";
+import {GoogleMapsAutocomplete} from "./neon3/Core/External/GoogleMaps/GoogleMapsAutocomplete";
+import {GoogleMapsMap} from "./neon3/Core/External/GoogleMaps/GoogleMapsMap";
+import {StripePaymentProvider} from './neon3/Core/External/Stripe/StripePaymentProvider';
+import {JobOffer} from "./neon3/Feature/JobBoard/Application/JobOffer";
+import {SubmitJobOffer} from "./neon3/Feature/JobBoard/Application/Model";
+import {InvoiceInformation} from "./neon3/Feature/JobBoard/Domain/Model";
+import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
+import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {PlanBundle} from "./planBundle";
 import {TagAutocompleteResult, VueUi} from './view/ui/ui';
 import {View} from "./view/view";
@@ -48,34 +46,6 @@ export interface InitiatePayment {
   paymentMethod: PaymentMethod;
 }
 
-export interface SubmitJobOffer {
-  title: string;
-  description: string|null;
-  salaryRangeFrom: number|null;
-  salaryRangeTo: number|null;
-  salaryIsNet: boolean;
-  salaryCurrency: Currency;
-  salaryRate: Rate;
-  locations: BackendJobOfferLocation[];
-  tags: Tag[];
-  workModeRemoteRange: number;
-  legalForm: LegalForm;
-  experience: WorkExperience;
-  applicationMode: ApplicationMode;
-  applicationEmail: string|null;
-  applicationExternalAts: string|null;
-  companyName: string;
-  companyLogoUrl: string|null;
-  companyWebsiteUrl: string|null;
-  companyDescription: string|null;
-  companyPhotoUrls: string[];
-  companyVideoUrl: string|null;
-  companySizeLevel: number|null;
-  companyFundingYear: number|null;
-  companyAddress: BackendJobOfferLocation|null;
-  companyHiringType: HiringType;
-}
-
 export interface Tag {
   tagName: string;
   priority: BackendJobOfferTagPriority;
@@ -83,23 +53,6 @@ export interface Tag {
 
 export function toSubmitJobOffer(jobOffer: JobOffer): SubmitJobOffer {
   return jobOffer;
-}
-
-export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
-export type LegalForm = 'employment'|'b2b'|'of-mandate'|'specific-task';
-export type WorkExperience = 'intern'|'junior'|'mid-level'|'senior'|'lead'|'manager'|'not-provided';
-export type Rate = 'monthly'|'hourly'|'yearly'|'weekly';
-export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
-export type ApplicationMode = '4programmers'|'external-ats';
-export type HiringType = 'direct'|'agency';
-
-export interface InvoiceInformation {
-  companyName: string,
-  countryCode: string,
-  vatId: string,
-  companyAddress: string,
-  companyPostalCode: string,
-  companyCity: string,
 }
 
 function bundleSize(pricingPlan: PaidPricingPlan): 1|3|5|20 {

@@ -1,5 +1,6 @@
-import {JobOfferFilters, SubmitJobOffer} from "./main";
-import {JobOffer} from "./neon3/Feature/JobBoard/Model/JobOffer";
+import {JobOfferFilters} from "./main";
+import {JobOffer} from "./neon3/Feature/JobBoard/Application/JobOffer";
+import {SubmitJobOffer} from "./neon3/Feature/JobBoard/Application/Model";
 
 interface JobBoardObserver {
   (jobOffers: JobOffer[]): void;
