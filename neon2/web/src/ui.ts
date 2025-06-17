@@ -11,12 +11,10 @@ import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Applicati
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
 import {ViewListener} from "./ViewListener";
-
-export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
 export type CanEdit = (jobOfferId: number) => boolean;
 export type PricingPlanSelected = () => boolean;
@@ -54,19 +52,8 @@ export class VueUiFactory {
     this.store = useBoardStore();
   }
 
-  selectPlan(plan: PricingPlan): void {
-    if (this.viewListener!.assertUserAuthenticated()) {
-      this.store.pricingPlan = plan;
-      this.screens.navigate('form', null);
-    }
-  }
-
   setViewListener(viewListener: ViewListener): void {
     this.viewListener = viewListener;
-  }
-
-  setJobOfferFavourite(jobOfferId: number, favourite: boolean): void {
-    this.findJobOfferReactive(jobOfferId)!.isFavourite = favourite;
   }
 
   mount(element: Element): void {
@@ -85,6 +72,10 @@ export class VueUiFactory {
     ));
     this.screens.useIn(this.app);
     this.app.mount(element);
+  }
+
+  setJobOfferFavourite(jobOfferId: number, favourite: boolean): void {
+    this.findJobOfferReactive(jobOfferId)!.isFavourite = favourite;
   }
 
   private findJobOfferReactive(jobOfferId: number): JobOffer {

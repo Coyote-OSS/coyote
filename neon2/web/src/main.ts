@@ -118,12 +118,12 @@ ui.setViewListener({
   mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
     _locationDisplay.mount(element, latitude, longitude);
   },
-  assertUserAuthenticated(): boolean {
+  selectPlan(plan: PricingPlan): void {
     if (backend.isAuthenticated()) {
-      return true;
+      presenter.notifyPlanSelected(plan);
+    } else {
+      window.location.href = '/Login';
     }
-    window.location.href = '/Login';
-    return false;
   },
   apply(jobOffer: JobOffer): void {
     presenter.showValueProposition(jobOffer);

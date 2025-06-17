@@ -6,9 +6,9 @@ import JobOfferPaymentScreen from "./neon3/Apps/VueApp/Modules/JobBoard/View/Job
 import JobOfferPricing from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferPricing.vue";
 import JobOfferShowScreen from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferShowScreen.vue";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
+import {Screen} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {Policy} from "./Policy";
 import {Router} from "./Router";
-import {Screen} from "./ui";
 
 export class Screens {
   private router: Router<Screen>;

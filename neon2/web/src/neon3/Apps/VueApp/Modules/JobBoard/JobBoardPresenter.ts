@@ -8,6 +8,7 @@ import {
   PaymentStatus,
   PaymentSummary,
   PlanBundleName,
+  PricingPlan,
 } from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
 
@@ -43,6 +44,11 @@ export class JobBoardPresenter {
   notifyPlanBundleUsed(): void {
     this.store.toast = 'bundle-used';
     this.navigateHome();
+  }
+
+  notifyPlanSelected(plan: PricingPlan): void {
+    this.store.pricingPlan = plan;
+    this.screens.navigate('form', null);
   }
 
   notifyPaymentProcessingStarted(): void {

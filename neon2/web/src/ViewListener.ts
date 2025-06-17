@@ -12,7 +12,7 @@ export interface ViewListener {
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void;
   mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void;
   vatDetailsChanged(countryCode: string, vatId: string): void;
-  assertUserAuthenticated(): boolean;
+  selectPlan(plan: PricingPlan): void;
   markAsFavourite(jobOfferId: number, favourite: boolean): void;
   apply(jobOffer: JobOffer): void;
   valuePropositionAccepted(
