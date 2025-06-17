@@ -166,11 +166,12 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref} from "vue";
+import {computed, inject, onMounted, ref} from "vue";
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
 import Icon from "../../../neon3/Apps/VueApp/Icon/Icon.vue";
 import {IconName} from "../../../neon3/Apps/VueApp/Icon/icons";
-import {ViewListener} from "../ui";
+import {JobBoardService} from "../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {jobBoardServiceInjectKey} from "../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {
   formatCompanySizeLevel,
   formatExpiresInDays,
@@ -190,12 +191,12 @@ import VideoPlayer from "./VideoPlayer.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 interface Props {
   jobOffer: JobOfferShow;
   preview?: boolean;
   canEdit: boolean;
-  viewListener: ViewListener;
 }
 
 interface Emit {
@@ -223,7 +224,7 @@ onMounted(() => {
   if (props.jobOffer.companyAddress === null) {
     return;
   }
-  props.viewListener.mountLocationDisplay(
+  service.mountLocationDisplay(
     address.value!,
     props.jobOffer.companyAddress.latitude,
     props.jobOffer.companyAddress.longitude);

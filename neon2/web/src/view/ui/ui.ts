@@ -317,7 +317,11 @@ export class VueUi {
     const pinia = createPinia();
     app.use(pinia);
     const store = useBoardStore();
-    app.provide(jobBoardServiceInjectKey, new JobBoardService(store, this.vueState.viewListener!));
+    app.provide(jobBoardServiceInjectKey, new JobBoardService(
+      store,
+      this.vueState.viewListener!,
+      this.vueState.uiController,
+    ));
     this.screens.useIn(app);
     app.mount(element);
   }

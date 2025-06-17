@@ -85,8 +85,10 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import {computed, inject, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import {VatIdState} from "../../../main";
+import {JobBoardService} from "../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {jobBoardServiceInjectKey} from "../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {PaymentMethod} from "../../../neon3/Packages/Core/Application/PaymentProvider";
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
 import {DrawerOption} from "../../../neon3/Apps/VueApp/DesignSystem/DropdownSingle.vue";
@@ -97,6 +99,7 @@ import {ValidationBag} from "./ValidationBag";
 import JobOfferStepper from './JobOfferStepper.vue';
 
 const props = defineProps<Props>();
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 interface Props {
   viewListener: ViewListener;

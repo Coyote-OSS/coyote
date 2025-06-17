@@ -186,7 +186,6 @@
   </div>
   <JobOfferShow
     v-if="step === 'preview'"
-    :view-listener="props.viewListener"
     preview
     :can-edit="false"
     @edit="previousStep"
@@ -216,11 +215,13 @@
 </template>
 
 <script setup lang="ts">
-import {computed, reactive, ref} from 'vue';
+import {computed, inject, reactive, ref} from 'vue';
 import {
   UploadAssets,
   
 } from "../../../main";
+import {JobBoardService} from "../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {jobBoardServiceInjectKey} from "../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {SubmitJobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {
   Currency,
@@ -254,6 +255,7 @@ import {ValidationBag} from './ValidationBag';
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 interface Props {
   viewListener: ViewListener;

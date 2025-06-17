@@ -8,7 +8,6 @@
     </Design.Button>
   </Design.Card>
   <JobOfferShow
-    :view-listener="screen.viewListener"
     :job-offer="toJobOfferShow(routeJobOffer)"
     :can-edit="routeJobOffer.canEdit"
     @edit="editJob"
@@ -19,42 +18,38 @@
 <script setup lang="ts">
 import {computed, inject} from "vue";
 import {Design} from "../../../../neon3/Apps/VueApp/DesignSystem/design";
+import {JobBoardService} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {jobBoardServiceInjectKey} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {JobOffer} from "../../../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {RouteProperties} from "../../screen/Screens";
-import {UiController, ViewListener} from "../../ui";
 import JobOfferButtonPill from "../JobOfferButtonPill.vue";
 import {toJobOfferShow} from "../JobOfferShow";
 import JobOfferShow from "../JobOfferShow.vue";
 
-const screen = inject('screen') as Screen;
 const route = defineProps<RouteProperties>();
-
-interface Screen {
-  uiController: UiController;
-  viewListener: ViewListener;
-}
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 function navigateHome(): void {
-  screen.uiController.navigate('home', null);
+  service.navigate('home', null);
 }
 
 function editJob(): void {
-  screen.uiController.navigate('edit', route.routeJobOfferId!);
+  service.navigate('edit', route.routeJobOfferId!);
 }
 
 function applyForJob(): void {
-  screen.uiController.applyForJob(route.routeJobOfferId!);
+  service.applyForJob(route.routeJobOfferId!);
 }
 
 function resumePayment(): void {
-  screen.uiController.navigate('payment', route.routeJobOfferId!);
+  service.navigate('payment', route.routeJobOfferId!);
 }
 
 const routeJobOffer = computed((): JobOffer => {
-  return screen.uiController.findJobOffer(route.routeJobOfferId!)!;
+  return service.findJobOffer(route.routeJobOfferId!)!;
 });
 
 function markAsFavourite(favourite: boolean): void {
-  screen.uiController.markAsFavourite(route.routeJobOfferId!, favourite);
+  service.markAsFavourite(route.routeJobOfferId!, favourite);
 }
 </script>

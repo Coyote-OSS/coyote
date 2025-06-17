@@ -18,6 +18,8 @@
 import {inject} from "vue";
 import {VatIdState} from "../../../../main";
 import {Design} from "../../../../neon3/Apps/VueApp/DesignSystem/design";
+import {JobBoardService} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {jobBoardServiceInjectKey} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {PlanBundle} from "../../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {Country} from "../../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "../../../../neon3/Packages/Feature/JobBoard/Presenter/Model";
@@ -28,6 +30,7 @@ import JobOfferRedeemBundle from "../JobOfferRedeemBundle.vue";
 
 const screen = inject('screen') as Screen;
 const route = defineProps<RouteProperties>();
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 interface Screen {
   viewListener: ViewListener;
