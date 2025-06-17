@@ -2,17 +2,12 @@ import {EventMetadata, JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from './jobBoard';
 import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
-import {TestLocationDisplay} from "./neon3/Packages/Core/Acceptance/TestLocationDisplay";
-import {TestLocationInput} from "./neon3/Packages/Core/Acceptance/TestLocationInput";
-import {TestPaymentProvider} from './neon3/Packages/Core/Acceptance/TestPaymentProvider';
-import {LocationDisplay} from "./neon3/Packages/Core/Application/LocationDisplay";
-import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
+import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
+import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
+import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider";
 import {PaymentNotification, PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
 import {BackendJobOffer, BackendJobOfferTagPriority} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
-import {GoogleMapsAutocomplete} from "./neon3/Packages/Core/External/GoogleMaps/GoogleMapsAutocomplete";
-import {GoogleMapsMap} from "./neon3/Packages/Core/External/GoogleMaps/GoogleMapsMap";
-import {StripePaymentProvider} from './neon3/Packages/Core/External/Stripe/StripePaymentProvider';
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Application/JobOffer";
 import {SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {InitiatePayment} from "./neon3/Packages/Feature/JobBoard/Application/payment";
@@ -28,15 +23,11 @@ const backend = new JobBoardBackend();
 const ui = new VueUi(locationInput(backend.testMode()), backend.isAuthenticated());
 const view = new View(ui);
 const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
-const paymentProvider: PaymentProvider = backend.testMode()
-  ? new TestPaymentProvider()
-  : new StripePaymentProvider(backend.stripeKey()!);
-const payments = new PaymentService(backend, paymentProvider);
+const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
+const payments = new PaymentService(backend, _paymentProvider);
 const jobOfferPayments = new JobOfferPayments();
 const planBundle = new PlanBundle();
-const locationDisplay: LocationDisplay = backend.testMode()
-  ? new TestLocationDisplay()
-  : new GoogleMapsMap();
+const _locationDisplay = locationDisplay(backend.testMode());
 
 export interface Tag {
   tagName: string;
@@ -95,13 +86,13 @@ ui.setViewListener({
   },
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void {
     if (action === 'mount') {
-      paymentProvider.mountCardInput(cssSelector!);
+      _paymentProvider.mountCardInput(cssSelector!);
     } else {
-      paymentProvider.unmountCardInput();
+      _paymentProvider.unmountCardInput();
     }
   },
   mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
-    locationDisplay.mount(element, latitude, longitude);
+    _locationDisplay.mount(element, latitude, longitude);
   },
   assertUserAuthenticated(): boolean {
     if (backend.isAuthenticated()) {
@@ -185,12 +176,6 @@ payments.addEventListener({
 planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
   view.setPlanBundle(plan, remainingJobOffers);
 });
-
-function locationInput(testMode: boolean): LocationInput {
-  return testMode
-    ? new TestLocationInput()
-    : new GoogleMapsAutocomplete();
-}
 
 function remainingJobOffers(planBundle: PlanBundleName): number {
   if (planBundle === 'strategic') {
