@@ -31,26 +31,30 @@
 </template>
 
 <script setup lang="ts">
-import {computed, provide} from 'vue';
+import {computed, inject, provide} from 'vue';
 import {ValuePropositionEvent} from "../../main";
+import {Design} from "../../neon3/Apps/VueApp/DesignSystem/design";
+import {JobBoardService} from "../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {useBoardStore} from "../../neon3/Apps/VueApp/Modules/JobBoard/store";
+import {jobBoardServiceInjectKey} from "../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
 import {PaymentStatus} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
-import {Toast} from '../view';
-import {Design} from "../../neon3/Apps/VueApp/DesignSystem/design";
-import {JobBoardProperties} from "./JobBoardProperties";
 import ValuePropositionModal from "../../neon3/Packages/Feature/Vp/ValuePropositionModal.vue";
+import {Toast} from '../view';
+import {JobBoardProperties} from "./JobBoardProperties";
 
 const props = defineProps<JobBoardProperties>();
+const store = useBoardStore();
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 provide('locationInput', props.locationInput!);
-provide('screen', props);
 
 function navigateHome(): void {
-  props.uiController.navigate('home', null);
+  service.navigate('home', null);
 }
 
 function vpAccept(event: ValuePropositionEvent, email?: string): void {
-  props.uiController.valuePropositionAccepted(event, email);
+  service.valuePropositionAccepted(event, email);
 }
 
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');
@@ -68,10 +72,10 @@ const toastTitle = computed<string|null>(() => {
 });
 
 const planBundleToast = computed<string|null>(() => {
-  if (props.planBundle === null) {
+  if (store.planBundle === null) {
     return null;
   }
-  return `Pozostało ${props.planBundle.remainingJobOffers} ogłoszeń z Pakietu ${capitalize(props.planBundle.bundleName)}.`;
+  return `Pozostało ${store.planBundle.remainingJobOffers} ogłoszeń z Pakietu ${capitalize(store.planBundle.bundleName)}.`;
 });
 
 function capitalize(string: string): string {

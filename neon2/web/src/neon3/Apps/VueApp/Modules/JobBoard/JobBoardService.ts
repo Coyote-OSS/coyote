@@ -1,4 +1,4 @@
-import {UploadAssets} from "../../../../../main";
+import {UploadAssets, ValuePropositionEvent} from "../../../../../main";
 import {Screen, TagAutocomplete, TagAutocompleteResult, UiController, ViewListener} from "../../../../../view/ui/ui";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
@@ -98,5 +98,9 @@ export class JobBoardService {
 
   uploadAsset(file: File): Promise<string> {
     return this.upload.uploadAsset(file);
+  }
+
+  valuePropositionAccepted(event: ValuePropositionEvent, email?: string): void {
+    this.uiController.valuePropositionAccepted(event, email);
   }
 }
