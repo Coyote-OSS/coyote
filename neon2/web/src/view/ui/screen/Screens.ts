@@ -1,11 +1,10 @@
 import {App} from "vue";
-
+import JobOfferPricing from "../../../neon3/Apps/VueApp/Modules/JobBoard/JobOfferPricing.vue";
 import {JobOffer} from "../../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import JobOfferCreate from "../JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from "../JobOffer/JobOfferEdit.vue";
 import JobOfferHome from "../JobOffer/JobOfferHome.vue";
 import JobOfferPaymentScreen from "../JobOffer/JobOfferPaymentScreen.vue";
-import JobOfferPricing from "../JobOffer/JobOfferPricing.vue";
 import JobOfferShowScreen from "../JobOffer/JobOfferShowScreen.vue";
 import {Screen} from "../ui";
 import {Policy} from "./Policy";

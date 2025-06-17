@@ -38,11 +38,12 @@
 
 <script setup lang="ts">
 import {inject, ref} from 'vue';
-import {PricingPlan} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
-import {UiController} from "../ui";
-import JobOfferPricingCard, {JobOfferPricingCardColor} from './JobOfferPricingCard.vue';
-import JobOfferPricingTab, {PricingTab} from './JobOfferPricingTab.vue';
-import JobOfferPricingTestimonial from "./JobOfferPricingTestimonial.vue";
+import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
+import {bundlePlans, offerPlans, PlanCard} from "../../../../Packages/Feature/JobBoard/Domain/plans";
+import {UiController} from "../../../../../view/ui/ui";
+import JobOfferPricingCard from '../../../../../view/ui/JobOffer/JobOfferPricingCard.vue';
+import JobOfferPricingTab, {PricingTab} from '../../../../../view/ui/JobOffer/JobOfferPricingTab.vue';
+import JobOfferPricingTestimonial from "../../../../../view/ui/JobOffer/JobOfferPricingTestimonial.vue";
 
 const screen = inject('screen') as Screen;
 
@@ -50,58 +51,7 @@ interface Screen {
   uiController: UiController;
 }
 
-interface PlanCard {
-  name: PricingPlan;
-  title: string;
-  price: number;
-  expiresIn: number;
-  bundleSize: number;
-  bundlePrice?: number;
-  bundleDiscount?: string;
-  free?: boolean;
-  color: JobOfferPricingCardColor;
-}
-
 const pricingTab = ref<PricingTab>('offers');
-
-const offerPlans: PlanCard[] = [
-  {name: 'free', title: 'Free*', price: 0, expiresIn: 14, bundleSize: 1, free: true, color: 'yellow'},
-  {name: 'premium', title: 'Premium', price: 159, expiresIn: 30, bundleSize: 1, color: 'blue'},
-];
-
-const bundlePlans: PlanCard[] = [
-  {name: 'premium', title: 'Premium', price: 159, expiresIn: 30, bundleSize: 1, color: 'phantom'},
-  {
-    name: 'strategic',
-    title: 'Strategic',
-    price: 119,
-    expiresIn: 30,
-    bundleSize: 3,
-    bundlePrice: 3 * 119,
-    bundleDiscount: '25%',
-    color: 'blue',
-  },
-  {
-    name: 'growth',
-    title: 'Growth',
-    price: 99,
-    expiresIn: 30,
-    bundleSize: 5,
-    bundlePrice: 5 * 99,
-    bundleDiscount: '38%',
-    color: 'violet',
-  },
-  {
-    name: 'scale',
-    title: 'Scale',
-    price: 79,
-    expiresIn: 30,
-    bundleSize: 20,
-    bundlePrice: 20 * 79,
-    bundleDiscount: '50%',
-    color: 'green',
-  },
-];
 
 function buttonTitle(plan: PlanCard): string {
   const titles: Record<PricingPlan, string> = {

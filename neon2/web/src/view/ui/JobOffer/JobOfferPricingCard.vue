@@ -41,6 +41,7 @@
 import {computed} from 'vue';
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
 import {PricingPlan} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
+import {PricingCardColor} from "../../../neon3/Packages/Feature/JobBoard/Domain/plans";
 import JobOfferPricingCardIcon from './JobOfferPricingCardIcon.vue';
 import JobOfferPricingCardList from './JobOfferPricingCardList.vue';
 
@@ -58,7 +59,7 @@ interface Props {
   content: PlanContent;
   bundleDiscount?: string;
   phantom?: boolean;
-  color: JobOfferPricingCardColor;
+  color: PricingCardColor;
 }
 
 interface Emit {
@@ -66,9 +67,8 @@ interface Emit {
 }
 
 export type PlanContent = 'restricted'|'full'|'premium-summary';
-export type JobOfferPricingCardColor = 'yellow'|'blue'|'violet'|'green'|'phantom';
 
-const colorSets: Record<JobOfferPricingCardColor, ColorSet> = {
+const colorSets: Record<PricingCardColor, ColorSet> = {
   yellow: {weak: '#f7f5e6', medium: '#dbd7bb', strong: '#3d3709'},
   blue: {weak: '#eff5ff', medium: '#dbeafe', strong: '#2563eb'},
   violet: {weak: '#ebe8fc', medium: '#cac5e9', strong: '#3620c2'},
