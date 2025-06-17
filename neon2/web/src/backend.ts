@@ -11,7 +11,6 @@ import {
   Rate,
   SubmitJobOffer,
   Tag,
-  Theme,
   WorkExperience,
 } from "./main";
 import {parseWorkMode} from "./workMode";
@@ -50,7 +49,6 @@ function jobOfferFields(jobOffer: SubmitJobOffer): object {
 declare global {
   interface Window {
     backendInput: BackendInput;
-    neonOnChangeTheme?(isDarkTheme: boolean): void;
   }
 }
 
@@ -160,16 +158,6 @@ export class JobBoardBackend {
 
   isAuthenticated(): boolean {
     return this.backendInput.userId !== null;
-  }
-
-  onChangeTheme(listener: (theme: Theme) => void): void {
-    listener(this.backendInput.darkTheme ? 'dark' : 'light');
-    if (this.backendInput.themeMode === 'system') {
-      listener(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    }
-    window['neonOnChangeTheme'] = function (isDarkTheme: boolean): void {
-      listener(isDarkTheme ? 'dark' : 'light');
-    };
   }
 
   jobOfferPayments(): JobOfferPaymentIntent[] {
