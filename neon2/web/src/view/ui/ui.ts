@@ -91,6 +91,7 @@ export class VueUi {
   private viewListener: ViewListener|null = null;
   private uiController: UiController;
   private tagAutocomplete: TagAutocomplete|null = null;
+  private _upload: UploadAssets|null = null;
 
   constructor(locationInput: LocationInput, isAuthenticated: boolean) {
     this.uiController = {
@@ -121,7 +122,6 @@ export class VueUi {
       paymentStatus: null,
       planBundle: null,
       pricingPlan: null,
-      upload: null,
       applicationEmail: null,
       paymentSummary: null,
       paymentVatIdState: 'valid',
@@ -279,7 +279,7 @@ export class VueUi {
   }
 
   upload(upload: UploadAssets): void {
-    this.vueState.upload = upload;
+    this._upload = upload;
   }
 
   setVatIncluded(vatIncluded: boolean): void {
@@ -323,7 +323,7 @@ export class VueUi {
       this.viewListener!,
       this.uiController,
       this.tagAutocomplete!,
-      this.vueState.upload!,
+      this._upload!,
     ));
     this.screens.useIn(app);
     app.mount(element);
