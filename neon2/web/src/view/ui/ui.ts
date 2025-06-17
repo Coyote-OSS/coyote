@@ -1,5 +1,5 @@
 import {createPinia} from "pinia";
-import {createApp, h, reactive} from 'vue';
+import {createApp} from 'vue';
 import {UploadAssets, ValuePropositionEvent, VatIdState} from "../../main";
 import {JobBoardService} from "../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore, useBoardStore} from "../../neon3/Apps/VueApp/Modules/JobBoard/store";
@@ -19,7 +19,6 @@ import {
 import {PaymentSummary} from "../../neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {Toast, View} from '../view';
 import JobBoard from './JobBoard.vue';
-import {JobBoardProperties} from "./JobBoardProperties";
 import {Policy} from "./screen/Policy";
 import {RouteProperties, Screens} from "./screen/Screens";
 
@@ -79,7 +78,6 @@ export type TagAutocompleteResult = (tags: Tag[]) => void;
 export class VueUi {
   private readonly gate: Policy;
   private readonly screens: Screens;
-  private readonly vueState: JobBoardProperties;
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
   private view: View|null = null;
@@ -105,13 +103,6 @@ export class VueUi {
       findJobOffer: this.findJobOfferReactive.bind(this),
       valuePropositionAccepted: this.valuePropositionAccepted.bind(this),
     };
-    this.vueState = reactive<JobBoardProperties>({
-      toast: null,
-      screen: 'home',
-      paymentNotification: null,
-      paymentStatus: null,
-      vpVisibleFor: null,
-    });
     this.gate = new Policy(
       isAuthenticated,
       (jobOfferId: number): boolean => this.findJobOffer(jobOfferId)?.canEdit ?? false,
@@ -128,7 +119,7 @@ export class VueUi {
         this.viewListener!.resumePayment(jobOfferId);
       },
     }, this.gate);
-    this.app = createApp({render: () => h(JobBoard, this.vueState)});
+    this.app = createApp(JobBoard);
     const pinia = createPinia();
     this.app.use(pinia);
     this.store = useBoardStore();
@@ -211,7 +202,7 @@ export class VueUi {
   }
 
   setToast(toast: Toast|null): void {
-    this.vueState.toast = toast;
+    this.store!.toast = toast;
   }
 
   private findJobOffer(jobOfferId: number): JobOffer|null {
@@ -236,11 +227,11 @@ export class VueUi {
   }
 
   setPaymentNotification(notification: PaymentNotification): void {
-    this.vueState.paymentNotification = notification;
+    this.store!.paymentNotification = notification;
   }
 
   setPaymentStatus(status: PaymentStatus): void {
-    this.vueState.paymentStatus = status;
+    this.store!.paymentStatus = status;
   }
 
   /**
@@ -288,18 +279,18 @@ export class VueUi {
   }
 
   showValueProposition(jobOffer: JobOffer): void {
-    this.vueState.vpVisibleFor = jobOffer;
+    this.store!.vpVisibleFor = jobOffer;
   }
 
   hideValueProposition(): void {
-    this.vueState.vpVisibleFor = null;
+    this.store!.vpVisibleFor = null;
   }
 
   valuePropositionAccepted(
     event: ValuePropositionEvent,
     email?: string,
   ): void {
-    this.viewListener!.valuePropositionAccepted(this.vueState.vpVisibleFor!, event, email);
+    this.viewListener!.valuePropositionAccepted(this.store!.vpVisibleFor!, event, email);
   }
 
   mount(element: Element): void {

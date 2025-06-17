@@ -1,17 +1,26 @@
 import {defineStore} from 'pinia';
 import {VatIdState} from "../../../../../main";
 import {emptyJobOfferFilter} from "../../../../../view/ui/JobOffer/JobOfferFilters";
+import {Screen} from "../../../../../view/ui/ui";
+import {Toast} from "../../../../../view/view";
+import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
 import {Filter, FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {PlanBundle} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
-import {Country, PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
+import {Country, PaymentStatus, PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "../../../../Packages/Feature/JobBoard/Presenter/Model";
 
 export const useBoardStore = defineStore('jobBoard', {
   state(): State {
     return {
-      applicationEmail: null,
-      pricingPlan: null,
+      // layout
+      toast: null,
+      screen: 'home',
+      paymentNotification: null,
+      paymentStatus: null,
+      vpVisibleFor: null,
+
+      // search
       jobOffers: [],
       jobOfferFilters: {
         tags: [],
@@ -19,6 +28,11 @@ export const useBoardStore = defineStore('jobBoard', {
       },
       jobOfferFilter: emptyJobOfferFilter(),
 
+      // create job offer
+      applicationEmail: null,
+      pricingPlan: null,
+
+      // payment
       planBundle: null,
       paymentSummary: null,
       paymentVatIdState: 'valid',
@@ -29,6 +43,13 @@ export const useBoardStore = defineStore('jobBoard', {
 });
 
 interface State {
+  // layout
+  screen: Screen;
+  toast: Toast|null;
+  paymentNotification: PaymentNotification|null;
+  paymentStatus: PaymentStatus|null;
+  vpVisibleFor: JobOffer|null;
+
   // search
   jobOffers: JobOffer[];
   jobOfferFilter: Filter;

@@ -1,12 +1,12 @@
 <template>
   <div class="relative">
     <ValuePropositionModal
-      v-if="vpVisibleFor"
-      :company-name="vpVisibleFor.companyName"
+      v-if="store.vpVisibleFor"
+      :company-name="store.vpVisibleFor.companyName"
       @accept="vpAccept"/>
     <Design.Layout class="bg-body">
       <Design.BannerHeading
-        :pricing="props.screen === 'pricing'"
+        :pricing="store.screen === 'pricing'"
         :back="showHomeLink"
         @back="navigateHome"/>
       <Design.Toast
@@ -18,7 +18,7 @@
         test-id="planBundle"/>
       <Design.Toast
         test-id="paymentNotification"
-        :test-value="props.paymentNotification!"
+        :test-value="store.paymentNotification!"
         v-if="paymentNotificationTitle"
         :title="paymentNotificationTitle"/>
       <Design.Toast
@@ -41,9 +41,7 @@ import {PaymentNotification} from "../../neon3/Packages/Core/Application/Payment
 import {PaymentStatus} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import ValuePropositionModal from "../../neon3/Packages/Feature/Vp/ValuePropositionModal.vue";
 import {Toast} from '../view';
-import {JobBoardProperties} from "./JobBoardProperties";
 
-const props = defineProps<JobBoardProperties>();
 const store = useBoardStore();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
@@ -55,10 +53,10 @@ function vpAccept(event: ValuePropositionEvent, email?: string): void {
   service.valuePropositionAccepted(event, email);
 }
 
-const showHomeLink = computed<boolean>(() => props.screen !== 'home');
+const showHomeLink = computed<boolean>(() => store.screen !== 'home');
 
 const toastTitle = computed<string|null>(() => {
-  if (props.toast === null) {
+  if (store.toast === null) {
     return null;
   }
   const titles: Record<Toast, string> = {
@@ -66,7 +64,7 @@ const toastTitle = computed<string|null>(() => {
     edited: 'Zaktualizowano ogłoszenie!',
     'bundle-used': 'Skorzystałeś z pakietu, żeby opublikować ogłoszenie!',
   };
-  return titles[props.toast];
+  return titles[store.toast];
 });
 
 const planBundleToast = computed<string|null>(() => {
@@ -81,18 +79,18 @@ function capitalize(string: string): string {
 }
 
 const paymentStatusTitle = computed<string|null>(() => {
-  if (props.paymentStatus === null) {
+  if (store.paymentStatus === null) {
     return null;
   }
   const titles: Record<PaymentStatus, string> = {
     paymentComplete: 'Płatność zaksięgowana!',
     paymentFailed: 'Płatność odrzucona.',
   };
-  return titles[props.paymentStatus];
+  return titles[store.paymentStatus];
 });
 
 const paymentNotificationTitle = computed<string|null>(() => {
-  if (props.paymentNotification === null) {
+  if (store.paymentNotification === null) {
     return null;
   }
   const titles: Record<PaymentNotification, string> = {
@@ -103,6 +101,6 @@ const paymentNotificationTitle = computed<string|null>(() => {
     declinedPayment: 'Nie udało się przetworzyć płatności. Spróbuj ponownie lub wybierz inną metodę płatności.',
     unexpectedProviderResponse: 'Wystąpił nieoczekiwany błąd po stronie operatora płatności. Spróbuj ponownie za chwilę lub wybierz inną metodę płatności.',
   };
-  return titles[props.paymentNotification];
+  return titles[store.paymentNotification];
 });
 </script>
