@@ -10,6 +10,7 @@ import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
+import {JobBoardServiceFactory} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardServiceFactory";
 import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
@@ -55,9 +56,8 @@ const _locationDisplay = locationDisplay(backend.testMode());
 
 jobOfferPayments.initJobOffers(backend.jobOfferPayments());
 
-const ui = new VueUiFactory(
+const factory = new JobBoardServiceFactory(
   locationInput(backend.testMode()),
-  backend.isAuthenticated(),
   backendImageApi,
   jobOffersRepo,
   planBundleRepo,
@@ -65,6 +65,7 @@ const ui = new VueUiFactory(
   filterService,
   tagAutocomplete);
 
+const ui = new VueUiFactory(backend.isAuthenticated(), jobOffersRepo, factory);
 const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, ui.store);
 
 const presenter = new JobBoardPresenter(ui.store, ui.screens);

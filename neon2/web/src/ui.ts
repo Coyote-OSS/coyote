@@ -1,16 +1,10 @@
 import {createPinia} from "pinia";
 import {createApp} from 'vue';
-import {JobBoardService} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
 import JobBoard from './neon3/Apps/VueApp/Modules/JobBoard/View/JobBoard.vue';
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/View/vue";
-import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
-import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
-import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
-import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
+import {JobBoardServiceFactory} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardServiceFactory";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
-import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
-import {TagAutocomplete} from "./neon3/Packages/Feature/JobBoard/Application/TagAutocomplete";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
 import {ViewListener} from "./ViewListener";
@@ -23,14 +17,9 @@ export class VueUiFactory {
   private viewListener: ViewListener|null = null;
 
   constructor(
-    private locationInput: LocationInput,
     isAuthenticated: boolean,
-    private backendImageApi: BackendImageApi,
-    private allJobOffers: JobOfferRepository,
-    private planBundle: PlanBundleRepository,
-    private filterRepo: FilterRepository,
-    private filterService: JobOfferFilterService,
-    private tagAutocomplete: TagAutocomplete,
+    allJobOffers: JobOfferRepository,
+    private factory: JobBoardServiceFactory,
   ) {
     this.app = createApp(JobBoard);
     const pinia = createPinia();
@@ -49,19 +38,8 @@ export class VueUiFactory {
   }
 
   mount(element: Element): void {
-    this.app.provide(jobBoardServiceInjectKey, new JobBoardService(
-      this,
-      this.store,
-      this.screens,
-      this.locationInput,
-      this.viewListener!,
-      this.tagAutocomplete!,
-      this.backendImageApi,
-      this.allJobOffers,
-      this.planBundle,
-      this.filterRepo,
-      this.filterService,
-    ));
+    this.app.provide(jobBoardServiceInjectKey,
+      this.factory.create(this.viewListener!, this.screens, this.store));
     this.screens.useIn(this.app);
     this.app.mount(element);
   }

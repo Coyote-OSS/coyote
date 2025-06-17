@@ -1,6 +1,5 @@
 import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
-import {VueUiFactory} from "../../../../../ui";
 import {ViewListener} from "../../../../../ViewListener";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "../../../../Packages/Core/Backend/BackendImageApi";
@@ -21,7 +20,6 @@ import {BoardStore} from "./store";
 
 export class JobBoardService {
   constructor(
-    private readonly ui: VueUiFactory,
     private readonly store: BoardStore,
     private readonly screens: Screens,
     private readonly locationInput: LocationInput,
