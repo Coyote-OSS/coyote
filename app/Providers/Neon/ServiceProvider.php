@@ -3,7 +3,6 @@ namespace Coyote\Providers\Neon;
 
 use Coyote;
 use Coyote\Domain\Settings\UserTheme;
-use Coyote\Domain\StringHtml;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\Response;
 use Jenssegers\Agent\Agent;
@@ -50,6 +49,8 @@ class ServiceProvider extends RouteServiceProvider {
                 ->get('/Job/pricing', $this->indexView(...));
             $this
                 ->get('/Job/{id}/edit', $this->indexView(...));
+            $this
+                ->get('/Job/{id}/payment', $this->indexView(...));
             $this
                 ->name('neon.jobOffer.show')
                 ->get('/Job/{slug}/{id}', $this->indexView(...));
