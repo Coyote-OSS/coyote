@@ -1,5 +1,6 @@
 import {JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from './jobBoard';
+import {JobBoardPresenter} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardPresenter";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
 import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider";
@@ -37,6 +38,7 @@ const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const jobOfferPayments = new JobOfferPayments();
 const planBundle = new PlanBundle();
 const _locationDisplay = locationDisplay(backend.testMode());
+const presenter = new JobBoardPresenter(ui.store, ui.screens);
 
 backend.jobOfferPayments()
   .forEach((paymentIntent: JobOfferPaymentIntent): void => jobOfferPayments.addJobOffer(paymentIntent));
@@ -46,11 +48,12 @@ ui.setViewListener({
     backendApi.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
       board.jobOfferCreated(toJobOffer(jobOffer));
       if (pricingPlan === 'free') {
-        view.jobOfferCreatedFree(jobOffer.id);
+        presenter.notifyJobOfferCreatedFree(jobOffer.id);
       } else {
         jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: jobOffer.payment!});
-        ui.setPaymentSummary(paymentSummary(jobOffer.id));
-        view.jobOfferCreatedRequirePayment(jobOffer.id);
+        presenter.notifyJobOfferCreatedRequirePayment(
+          jobOffer.id,
+          paymentSummary(jobOffer.id));
       }
     });
   },
@@ -64,7 +67,7 @@ ui.setViewListener({
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
     backendApi.updateJobOffer(jobOfferId, jobOffer, (): void => {
       board.jobOfferUpdated(jobOfferId, jobOffer);
-      view.jobOfferEdited(jobOfferId);
+      presenter.notifyJobOfferEdited(jobOfferId);
     });
   },
   payForJob(initiatePayment: InitiatePayment): void {
@@ -74,15 +77,14 @@ ui.setViewListener({
       initiatePayment.paymentMethod);
   },
   resumePayment(jobOfferId: number): void {
-    ui.setPaymentSummary(paymentSummary(jobOfferId));
+    presenter.populateRequirePayment(paymentSummary(jobOfferId));
   },
   redeemBundle(jobOfferId: number): void {
     backendApi
       .publishJobOfferUsingBundle(jobOfferId, backend.userId())
       .then(() => {
         board.jobOfferPaid(jobOfferId);
-        view.planBundleUsed();
-        view.jobOfferPaid();
+        presenter.notifyPlanBundleUsed();
         planBundle.decrease();
       });
   },
@@ -169,7 +171,7 @@ payments.addEventListener({
       if (pricingPlan !== 'premium') {
         planBundle.set(pricingPlan, remainingJobOffers(pricingPlan));
       }
-      view.jobOfferPaid();
+      presenter.notifyJobOfferPaid();
     }
   },
 });

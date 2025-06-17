@@ -133,32 +133,6 @@ export class View {
     return array1.some(item => array2.includes(item));
   }
 
-  jobOfferCreatedFree(jobOfferId: number): void {
-    this.ui.setToast('created');
-    this.ui.setScreen('home', null);
-  }
-
-  jobOfferCreatedRequirePayment(jobOfferId: number): void {
-    this.ui.setToast('created');
-    this.ui.setScreen('payment', jobOfferId);
-  }
-
-  jobOfferEdited(jobOfferId: number): void {
-    this.ui.setToast('edited');
-    this.ui.setScreen('home', null);
-  }
-
-  planBundleUsed(): void {
-    this.ui.setToast('bundle-used');
-  }
-
-  jobOfferPaid(): void {
-    this.ui.setScreen('home', null);
-  }
-
-  /**
-   * This can only be run after ui create, before mount
-   */
   setPlanBundle(planName: PlanBundleName, remainingJobOffers: number): void {
     this.planBundleCanRedeem = remainingJobOffers > 0;
     this.ui.setPlanBundle(planName, remainingJobOffers, this.planBundleCanRedeem);

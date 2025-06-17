@@ -18,7 +18,6 @@ import {
   PricingPlan,
   Tag,
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
-import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
 import {Toast, View} from './view';
@@ -58,13 +57,14 @@ export type TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult)
 export type TagAutocompleteResult = (tags: Tag[]) => void;
 
 export class VueUiFactory {
+  public readonly screens: Screens;
+  public readonly store: BoardStore;
+
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
-  private readonly screens: Screens|null = null;
   private view: View|null = null;
   private viewListener: ViewListener|null = null;
   private tagAutocomplete: TagAutocomplete|null = null;
-  private readonly store: BoardStore;
   private readonly app;
 
   constructor(
@@ -124,10 +124,6 @@ export class VueUiFactory {
     this.store.applicationEmail = applicationEmail;
   }
 
-  setPaymentSummary(summary: PaymentSummary): void {
-    this.store.paymentSummary = summary;
-  }
-
   setPaymentInvoiceCountries(countries: Country[]): void {
     this.store.invoiceCountries = countries;
   }
@@ -178,9 +174,6 @@ export class VueUiFactory {
     this.store.jobOffers = jobOffers;
   }
 
-  /**
-   * This can only be run after ui create, before mount
-   */
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
     this.store.planBundle = {bundleName, remainingJobOffers, canRedeem};
     this.store.pricingPlan = bundleName;
