@@ -18,7 +18,7 @@ import {PaymentStatus, PlanBundleName, PricingPlan} from "./neon3/Packages/Featu
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
-import {PlanBundle} from "./planBundle";
+import {PlanBundle} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundle";
 import {TagAutocompleteResult, VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 

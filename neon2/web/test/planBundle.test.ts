@@ -1,5 +1,5 @@
 import {PricingPlan} from "../src/neon3/Packages/Feature/JobBoard/Domain/Model";
-import {PlanBundle} from "../src/planBundle";
+import {PlanBundle} from "../src/neon3/Packages/Feature/JobBoard/Application/PlanBundle";
 import {assertEquals, assertThrows, describe, test} from "./assertion";
 
 describe('Plan bundle.', () => {
