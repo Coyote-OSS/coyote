@@ -34,7 +34,7 @@ import {computed, inject, ref} from "vue";
 import {Design} from "../../../DesignSystem/design";
 import {JobBoardService} from "../JobBoardService";
 import {useBoardStore} from "../store";
-import {jobBoardServiceInjectKey} from "../vue";
+import {jobBoardServiceInjectKey} from "./vue";
 import JobOfferFilters from "./component/JobOfferFilters.vue";
 import JobOfferListItem from "./component/JobOfferListItem.vue";
 

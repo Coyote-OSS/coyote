@@ -14,7 +14,7 @@ import {useRouteId} from "../../../../../../Router";
 import {SubmitJobOffer, toSubmitJobOffer} from "../../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {JobBoardService} from "../JobBoardService";
-import {jobBoardServiceInjectKey} from "../vue";
+import {jobBoardServiceInjectKey} from "./vue";
 import JobOfferForm from "./component/JobOfferForm.vue";
 
 const jobOfferId = useRouteId();

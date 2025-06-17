@@ -1,11 +1,11 @@
 import {createPinia} from "pinia";
 import {createApp} from 'vue';
-import JobBoard from './JobBoard.vue';
+import JobBoard from './neon3/Apps/VueApp/Modules/JobBoard/View/JobBoard.vue';
 import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {ValuePropositionEvent} from "./main";
 import {JobBoardService} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
-import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
+import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/View/vue";
 import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";

@@ -13,7 +13,7 @@
 import {inject, onMounted, ref} from "vue";
 import {Location} from "../../../Packages/Core/Application/LocationInput";
 import {JobBoardService} from "../Modules/JobBoard/JobBoardService";
-import {jobBoardServiceInjectKey} from "../Modules/JobBoard/vue";
+import {jobBoardServiceInjectKey} from "../Modules/JobBoard/View/vue";
 import TextInputOutline from "./TextInputOutline.vue";
 
 const modelLocation = defineModel<Location|null>({required: true});

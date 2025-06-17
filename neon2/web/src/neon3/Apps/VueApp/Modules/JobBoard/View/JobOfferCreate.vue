@@ -12,7 +12,7 @@
 import {computed, inject} from 'vue';
 import {JobBoardService} from "../JobBoardService";
 import {useBoardStore} from "../store";
-import {jobBoardServiceInjectKey} from "../vue";
+import {jobBoardServiceInjectKey} from "./vue";
 import {SubmitJobOffer} from "../../../../../Packages/Feature/JobBoard/Application/Model";
 import JobOfferForm from "./component/JobOfferForm.vue";
 

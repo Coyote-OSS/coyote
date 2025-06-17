@@ -90,7 +90,7 @@ import {VatIdState} from "../../../../../../../main";
 import {Design} from "../../../../DesignSystem/design";
 import {DrawerOption} from "../../../../DesignSystem/DropdownSingle.vue";
 import {JobBoardService} from "../../JobBoardService";
-import {jobBoardServiceInjectKey} from "../../vue";
+import {jobBoardServiceInjectKey} from "../vue";
 import {PaymentMethod} from "../../../../../../Packages/Core/Application/PaymentProvider";
 import {Country, InvoiceInformation, PaymentSummary} from "../../../../../../Packages/Feature/JobBoard/Domain/Model";
 import JobOfferStepper from './JobOfferStepper.vue';

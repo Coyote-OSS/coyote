@@ -21,7 +21,7 @@ import {useRouteId} from "../../../../../../Router";
 import {JobOffer} from "../../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {Design} from "../../../DesignSystem/design";
 import {JobBoardService} from "../JobBoardService";
-import {jobBoardServiceInjectKey} from "../vue";
+import {jobBoardServiceInjectKey} from "./vue";
 import JobOfferButtonPill from "./component/JobOfferButtonPill.vue";
 import {toJobOfferShow} from "./component/JobOfferShow";
 import JobOfferShow from "./component/JobOfferShow.vue";

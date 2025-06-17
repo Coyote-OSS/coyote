@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import {inject, ref} from 'vue';
 import {JobBoardService} from "../JobBoardService";
-import {jobBoardServiceInjectKey} from "../vue";
+import {jobBoardServiceInjectKey} from "./vue";
 import {PricingPlan} from "../../../../../Packages/Feature/JobBoard/Domain/Model";
 import {bundlePlans, offerPlans, PlanCard} from "../../../../../Packages/Feature/JobBoard/Domain/plans";
 import JobOfferPricingCard from './component/JobOfferPricingCard.vue';

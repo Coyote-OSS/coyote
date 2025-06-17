@@ -171,7 +171,7 @@ import {Design} from "../../../../DesignSystem/design";
 import Icon from "../../../../Icon/Icon.vue";
 import {IconName} from "../../../../Icon/icons";
 import {JobBoardService} from "../../JobBoardService";
-import {jobBoardServiceInjectKey} from "../../vue";
+import {jobBoardServiceInjectKey} from "../vue";
 import {
   formatCompanySizeLevel,
   formatExpiresInDays,

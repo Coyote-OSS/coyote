@@ -32,15 +32,15 @@
 
 <script setup lang="ts">
 import {computed, inject} from 'vue';
-import {ValuePropositionEvent} from "./main";
-import {Design} from "./neon3/Apps/VueApp/DesignSystem/design";
-import {JobBoardService} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
-import {useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
-import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
-import {PaymentNotification} from "./neon3/Packages/Core/Application/PaymentProvider";
-import {PaymentStatus} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
-import {Toast} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
-import ValuePropositionModal from "./neon3/Packages/Feature/Vp/ValuePropositionModal.vue";
+import {ValuePropositionEvent} from "../../../../../../main";
+import {PaymentNotification} from "../../../../../Packages/Core/Application/PaymentProvider";
+import {PaymentStatus} from "../../../../../Packages/Feature/JobBoard/Domain/Model";
+import {Toast} from "../../../../../Packages/Feature/JobBoard/Presenter/Model";
+import ValuePropositionModal from "../../../../../Packages/Feature/Vp/ValuePropositionModal.vue";
+import {Design} from "../../../DesignSystem/design";
+import {JobBoardService} from "../JobBoardService";
+import {useBoardStore} from "../store";
+import {jobBoardServiceInjectKey} from "./vue";
 
 const store = useBoardStore();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;

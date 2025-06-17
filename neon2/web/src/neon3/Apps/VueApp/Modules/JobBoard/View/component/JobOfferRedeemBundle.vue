@@ -19,7 +19,7 @@
 import {inject} from "vue";
 import {Design} from "../../../../DesignSystem/design";
 import {JobBoardService} from "../../JobBoardService";
-import {jobBoardServiceInjectKey} from "../../vue";
+import {jobBoardServiceInjectKey} from "../vue";
 import {PlanBundle} from "../../../../../../Packages/Feature/JobBoard/Application/Model";
 import JobOfferStepper from './JobOfferStepper.vue';
 

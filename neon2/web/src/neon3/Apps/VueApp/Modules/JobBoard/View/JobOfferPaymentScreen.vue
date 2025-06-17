@@ -19,7 +19,7 @@ import {useRouteId} from "../../../../../../Router";
 import {Design} from "../../../DesignSystem/design";
 import {JobBoardService} from "../JobBoardService";
 import {BoardStore, useBoardStore} from "../store";
-import {jobBoardServiceInjectKey} from "../vue";
+import {jobBoardServiceInjectKey} from "./vue";
 import JobOfferPaymentForm from "./component/JobOfferPaymentForm.vue";
 import JobOfferRedeemBundle from "./component/JobOfferRedeemBundle.vue";
 

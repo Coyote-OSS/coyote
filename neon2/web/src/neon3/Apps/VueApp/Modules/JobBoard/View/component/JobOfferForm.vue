@@ -220,7 +220,7 @@ import {Design} from "../../../../DesignSystem/design";
 import {DrawerOption} from "../../../../DesignSystem/DropdownSingle.vue";
 import LocationField from "../../../../DesignSystem/LocationField.vue";
 import {JobBoardService} from "../../JobBoardService";
-import {jobBoardServiceInjectKey} from "../../vue";
+import {jobBoardServiceInjectKey} from "../vue";
 import {SubmitJobOffer} from "../../../../../../Packages/Feature/JobBoard/Application/Model";
 import {
   Currency,
