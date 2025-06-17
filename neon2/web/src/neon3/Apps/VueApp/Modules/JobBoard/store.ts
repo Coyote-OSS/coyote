@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 import {VatIdState} from "../../../../../main";
-import {emptyJobOfferFilter} from "../../../../../JobOffer/JobOfferFilters";
+import {emptyJobOfferFilter} from "./View/component/JobOfferFilters";
 import {Screen} from "../../../../../ui";
 import {Toast} from "../../../../../view";
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
