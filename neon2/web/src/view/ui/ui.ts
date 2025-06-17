@@ -3,10 +3,9 @@ import {JobOfferFilter} from "../../jobOfferFilter";
 import {Country, JobOfferFilters, UploadAssets, ValuePropositionEvent, VatIdState} from "../../main";
 import {LocationInput} from "../../neon3/Packages/Core/Application/LocationInput";
 import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
-import {BackendTag} from "../../neon3/Packages/Core/Backend/backendInput";
 import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Application/JobOffer";
 import {InitiatePayment, SubmitJobOffer} from "../../neon3/Packages/Feature/JobBoard/Application/Model";
-import {PaymentStatus, PlanBundleName, PricingPlan} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
+import {PaymentStatus, PlanBundleName, PricingPlan, Tag} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "../../neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {Toast, View} from '../view';
 import JobBoard from './JobBoard.vue';
@@ -70,7 +69,7 @@ export type CanEdit = (jobOfferId: number) => boolean;
 export type PricingPlanSelected = () => boolean;
 
 export type TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult) => void;
-export type TagAutocompleteResult = (tags: BackendTag[]) => void;
+export type TagAutocompleteResult = (tags: Tag[]) => void;
 
 export class VueUi {
   private readonly gate: Policy;

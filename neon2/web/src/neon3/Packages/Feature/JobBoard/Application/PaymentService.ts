@@ -1,14 +1,16 @@
 import {JobBoardBackend} from "../../../../../backend";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "../../../Core/Application/PaymentProvider";
+import {BackendApi} from "../../../Core/Backend/BackendApi";
 import {BackendPaymentStatus, BackendPreparedPayment} from "../../../Core/Backend/backendInput";
-import {PaymentListener} from "./PaymentListener";
 import {InvoiceInformation, PaymentStatus} from "../Domain/Model";
+import {PaymentListener} from "./PaymentListener";
 
 export class PaymentService {
   private listeners: PaymentListener[] = [];
 
   constructor(
     private backend: JobBoardBackend,
+    private backendApi: BackendApi,
     private provider: PaymentProvider,
   ) {}
 
@@ -18,7 +20,10 @@ export class PaymentService {
 
   async initiatePayment(paymentId: string, invoiceInfo: InvoiceInformation, paymentMethod: PaymentMethod): Promise<void> {
     this.listeners.forEach(listener => listener.processingStarted());
-    const response = await this.backend.preparePayment(paymentId, invoiceInfo);
+    const response = await this.backendApi.preparePayment(
+      this.backend.userId(),
+      paymentId,
+      invoiceInfo);
     this.listeners.forEach(listener => {
       const vatId = response.status === 'failedInvalidVatId' ? 'invalid' : 'valid';
       return listener.paymentInitiationVatIdState(vatId);
@@ -40,7 +45,7 @@ export class PaymentService {
     let counter = 0;
     while (true) {
       counter++;
-      const status: BackendPaymentStatus = await this.backend.fetchPaymentStatus(paymentId);
+      const status: BackendPaymentStatus = await this.backendApi.fetchPaymentStatus(paymentId);
       if (status !== 'awaitingPayment') {
         return status;
       }

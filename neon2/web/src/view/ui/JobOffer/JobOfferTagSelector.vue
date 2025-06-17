@@ -36,9 +36,9 @@
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
 
-import {BackendTag} from "../../../neon3/Packages/Core/Backend/backendInput";
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
 import TextInput from "../../../neon3/Apps/VueApp/DesignSystem/TextInput.vue";
+import {Tag} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {TagAutocomplete} from "../ui";
 import {useClickOutside} from "../../../neon3/Apps/VueApp/Vue/clickOutside";
 
@@ -57,10 +57,10 @@ interface Emit {
 }
 
 const tagPrompt = ref<string>('');
-const autocompletedTags = ref<BackendTag[]>([]);
+const autocompletedTags = ref<Tag[]>([]);
 
 function updateAutocomplete(text: string): void {
-  props.autocomplete(text, (tags: BackendTag[]): void => {
+  props.autocomplete(text, (tags: Tag[]): void => {
     autocompletedTags.value = tags;
     keyboardCursor.value = 0;
   });
@@ -74,7 +74,7 @@ onMounted(() => {
   clickOutside.addClickListener(() => closeAutocomplete());
 });
 
-function selectTag(tag: BackendTag): void {
+function selectTag(tag: Tag): void {
   selectTagName(tag.tagName);
 }
 

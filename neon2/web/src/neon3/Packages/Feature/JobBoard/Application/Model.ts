@@ -1,4 +1,4 @@
-import {Tag} from "../../../../../main";
+import {JobOfferTag} from "../../../../../main";
 import {PaymentMethod} from "../../../Core/Application/PaymentProvider";
 import {BackendJobOfferLocation} from "../../../Core/Backend/backendInput";
 import {
@@ -21,7 +21,7 @@ export interface SubmitJobOffer {
   salaryCurrency: Currency;
   salaryRate: Rate;
   locations: BackendJobOfferLocation[];
-  tags: Tag[];
+  tags: JobOfferTag[];
   workModeRemoteRange: number;
   legalForm: LegalForm;
   experience: WorkExperience;

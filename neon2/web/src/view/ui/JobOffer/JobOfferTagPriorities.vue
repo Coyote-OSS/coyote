@@ -15,11 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import {Tag} from "../../../main";
+import {JobOfferTag} from "../../../main";
 
 const props = defineProps<Props>();
 
 interface Props {
-  tags: Tag[];
+  tags: JobOfferTag[];
 }
 </script>

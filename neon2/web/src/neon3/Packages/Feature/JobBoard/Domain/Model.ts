@@ -26,3 +26,9 @@ export interface JobOfferPayment {
 }
 
 export type PaymentStatus = 'paymentComplete'|'paymentFailed';
+
+export interface Tag {
+  tagName: string;
+  title: string|null;
+  timesUsed: number;
+}

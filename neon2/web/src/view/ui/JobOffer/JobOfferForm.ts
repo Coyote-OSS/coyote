@@ -1,5 +1,5 @@
 import {
-  Tag,
+  JobOfferTag,
   
 } from "../../../main";
 import {Location} from "../../../neon3/Packages/Core/Application/LocationInput";
@@ -23,7 +23,7 @@ export interface FormModel {
   salaryIsNet: boolean;
   locations: Location[];
   tagNames: string;
-  tags: Tag[];
+  tags: JobOfferTag[];
   workModeRemoteRange: number;
   legalForm: LegalForm;
   experience: WorkExperience;

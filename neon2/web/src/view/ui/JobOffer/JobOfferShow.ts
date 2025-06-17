@@ -1,4 +1,4 @@
-import {Tag} from "../../../main";
+import {JobOfferTag} from "../../../main";
 import {BackendJobOfferLocation} from "../../../neon3/Packages/Core/Backend/backendInput";
 import {JobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/JobOffer";
 import {SubmitJobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/Model";
@@ -13,7 +13,7 @@ export interface JobOfferShow {
   expiresInDays: number|null;
   expiryDate: string|null;
   locationCities: string[];
-  tags: Tag[];
+  tags: JobOfferTag[];
   workMode: WorkMode;
   legalForm: LegalForm;
   experience: WorkExperience;

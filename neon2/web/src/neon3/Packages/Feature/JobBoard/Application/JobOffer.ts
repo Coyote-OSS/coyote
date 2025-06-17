@@ -1,4 +1,4 @@
-import {Tag} from "../../../../../main";
+import {JobOfferTag} from "../../../../../main";
 import {BackendJobOfferLocation} from "../../../Core/Backend/backendInput";
 import {ApplicationMode, Currency, HiringType, LegalForm, Rate, WorkExperience, WorkMode} from "../Domain/Model";
 
@@ -21,7 +21,7 @@ export interface JobOffer {
   salaryCurrency: Currency;
   salaryRate: Rate;
   locations: BackendJobOfferLocation[];
-  tags: Tag[];
+  tags: JobOfferTag[];
   workMode: WorkMode;
   workModeRemoteRange: number;
   legalForm: LegalForm;

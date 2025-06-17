@@ -28,12 +28,12 @@
 
 <script setup lang="ts">
 import {ModelRef} from "vue";
-import {Tag} from "../../../main";
+import {JobOfferTag} from "../../../main";
 import {BackendJobOfferTagPriority} from "../../../neon3/Packages/Core/Backend/backendInput";
 import Icon from "../../../neon3/Apps/VueApp/Icon/Icon.vue";
 import JobOfferTagPriority from "./JobOfferTagPriority.vue";
 
-const model: ModelRef<Tag[]> = defineModel<Tag[]>({required: true});
+const model: ModelRef<JobOfferTag[]> = defineModel<JobOfferTag[]>({required: true});
 
 function experienceTitle(priority: BackendJobOfferTagPriority): string {
   const titles: Record<BackendJobOfferTagPriority, string> = {
@@ -55,7 +55,7 @@ function arrayWithout<T>(array: T[], index: number): T[] {
   return copy;
 }
 
-function cycleTagPriority(tag: Tag): void {
+function cycleTagPriority(tag: JobOfferTag): void {
   tag.priority = (tag.priority + 1) % 4;
 }
 </script>

@@ -70,12 +70,6 @@ export interface BackendJobOffer {
   };
 }
 
-export interface BackendTag {
-  tagName: string;
-  title: string|null;
-  timesUsed: number;
-}
-
 export type BackendJobOfferTagPriority = 0|1|2|3;
 
 export interface BackendJobOfferLocation {

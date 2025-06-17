@@ -1,35 +1,38 @@
-import {EventMetadata, JobBoardBackend, toJobOffer} from "./backend";
+import {JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from './jobBoard';
 import {JobOfferFilter} from "./jobOfferFilter";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
 import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider";
 import {PaymentNotification, PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
+import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendJobOffer, BackendJobOfferTagPriority} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Application/JobOffer";
 import {JobOfferPayments} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferPayments";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
+import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {PaymentStatus, PlanBundleName, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
-import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
+import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
 import {PlanBundle} from "./planBundle";
 import {TagAutocompleteResult, VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
-const backend = new JobBoardBackend();
+const backendApi = new BackendApi();
+const backend = new JobBoardBackend(backendApi);
 const ui = new VueUi(locationInput(backend.testMode()), backend.isAuthenticated());
 const view = new View(ui);
 const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
-const payments = new PaymentService(backend, _paymentProvider);
+const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const jobOfferPayments = new JobOfferPayments();
 const planBundle = new PlanBundle();
 const _locationDisplay = locationDisplay(backend.testMode());
 
-export interface Tag {
+export interface JobOfferTag {
   tagName: string;
   priority: BackendJobOfferTagPriority;
 }
@@ -39,7 +42,7 @@ backend.jobOfferPayments()
 
 ui.setViewListener({
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
-    backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
+    backendApi.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
       board.jobOfferCreated(toJobOffer(jobOffer));
       if (pricingPlan === 'free') {
         view.jobOfferCreatedFree(jobOffer.id);
@@ -52,13 +55,13 @@ ui.setViewListener({
   },
   markAsFavourite(jobOfferId: number, favourite: boolean): void {
     ui.setJobOfferFavourite(jobOfferId, favourite);
-    backend.markJobOfferAsFavourite(jobOfferId, favourite);
+    backendApi.markJobOfferAsFavourite(jobOfferId, favourite);
   },
   vatDetailsChanged(countryCode: string, vatId: string): void {
     ui.setVatIncluded(isVatIncluded(countryCode, vatId));
   },
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
-    backend.updateJobOffer(jobOfferId, jobOffer, (): void => {
+    backendApi.updateJobOffer(jobOfferId, jobOffer, (): void => {
       board.jobOfferUpdated(jobOfferId, jobOffer);
       view.jobOfferEdited(jobOfferId);
     });
@@ -73,12 +76,14 @@ ui.setViewListener({
     ui.setPaymentSummary(paymentSummary(jobOfferId));
   },
   redeemBundle(jobOfferId: number): void {
-    backend.publishJobOfferUsingBundle(jobOfferId).then(() => {
-      board.jobOfferPaid(jobOfferId);
-      view.planBundleUsed();
-      view.jobOfferPaid();
-      planBundle.decrease();
-    });
+    backendApi
+      .publishJobOfferUsingBundle(jobOfferId, backend.userId())
+      .then(() => {
+        board.jobOfferPaid(jobOfferId);
+        view.planBundleUsed();
+        view.jobOfferPaid();
+        planBundle.decrease();
+      });
   },
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void {
     if (action === 'mount') {
@@ -115,7 +120,7 @@ ui.setViewListener({
 });
 
 function vpEvent(eventName: string, metadata: EventMetadata): Promise<void> {
-  return backend.event({eventName, metadata});
+  return backendApi.event({eventName, metadata});
 }
 
 function jobOfferApply(jobOffer: JobOffer): void {
