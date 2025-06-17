@@ -43,12 +43,8 @@ export class JobBoardService {
     this.viewListener.createJob(plan, jobOffer);
   }
 
-  showJob(
-    jobOfferId: number,
-    /** @deprecated **/
-    jobOffer: JobOffer,
-  ): void {
-    this.screens.showJobOffer(jobOffer!);
+  showJob(jobOfferId: number): void {
+    this.screens.showJobOffer(this.ui.findJobOffer(jobOfferId)!);
   }
 
   showForm(): void {

@@ -21,7 +21,7 @@
       :key="jobOffer.id"
       :job-offer="jobOffer"
       :job-offer-url="service.jobOfferUrl(jobOffer)"
-      @select="service.showJob(jobOffer.id, jobOffer)"
+      @select="service.showJob(jobOffer.id)"
       @favourite="f => service.markAsFavourite(jobOffer.id, f)"/>
     <Design.Material v-if="store.jobOffers.length === 0" nested class="text-center my-2 py-6">
       Nie znaleźliśmy żadnych ofert, pasujących do Twoich kryteriów wyszukiwania.

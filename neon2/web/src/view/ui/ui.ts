@@ -223,7 +223,7 @@ export class VueUi {
       ' offers in view' + this.store!.jobOffers.length);
   }
 
-  private findJobOffer(jobOfferId: number): JobOffer|null {
+   findJobOffer(jobOfferId: number): JobOffer|null {
     return this.view!.findJobOffer(jobOfferId);
   }
 }
