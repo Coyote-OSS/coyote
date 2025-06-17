@@ -17,14 +17,14 @@
 
 <script setup lang="ts">
 import {inject} from "vue";
-import {VatIdState} from "../../../main";
-import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
-import {Country} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
-import {PaymentSummary} from "../../../neon3/Packages/Feature/JobBoard/Presenter/Model";
-import {RouteProperties} from "../screen/Screens";
-import {PlanBundle, ViewListener} from "../ui";
-import JobOfferPaymentForm from "./JobOfferPaymentForm.vue";
-import JobOfferRedeemBundle from "./JobOfferRedeemBundle.vue";
+import {VatIdState} from "../../../../main";
+import {Design} from "../../../../neon3/Apps/VueApp/DesignSystem/design";
+import {Country} from "../../../../neon3/Packages/Feature/JobBoard/Domain/Model";
+import {PaymentSummary} from "../../../../neon3/Packages/Feature/JobBoard/Presenter/Model";
+import {RouteProperties} from "../../screen/Screens";
+import {PlanBundle, ViewListener} from "../../ui";
+import JobOfferPaymentForm from "../JobOfferPaymentForm.vue";
+import JobOfferRedeemBundle from "../JobOfferRedeemBundle.vue";
 
 const screen = inject('screen') as Screen;
 const route = defineProps<RouteProperties>();

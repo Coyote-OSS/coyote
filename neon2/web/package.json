@@ -9,6 +9,7 @@
     "@types/pell": "^1.0.4",
     "@vitejs/plugin-vue": "^5.2.3",
     "pell": "^1.0.6",
+    "pinia": "^3.0.3",
     "tailwindcss": "^4.1.4",
     "typescript": "^5.8.3",
     "vite": "^6.3.2",

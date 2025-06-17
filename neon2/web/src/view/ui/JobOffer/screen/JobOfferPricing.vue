@@ -38,12 +38,12 @@
 
 <script setup lang="ts">
 import {inject, ref} from 'vue';
-import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
-import {bundlePlans, offerPlans, PlanCard} from "../../../../Packages/Feature/JobBoard/Domain/plans";
-import {UiController} from "../../../../../view/ui/ui";
-import JobOfferPricingCard from '../../../../../view/ui/JobOffer/JobOfferPricingCard.vue';
-import JobOfferPricingTab, {PricingTab} from '../../../../../view/ui/JobOffer/JobOfferPricingTab.vue';
-import JobOfferPricingTestimonial from "../../../../../view/ui/JobOffer/JobOfferPricingTestimonial.vue";
+import {PricingPlan} from "../../../../neon3/Packages/Feature/JobBoard/Domain/Model";
+import {bundlePlans, offerPlans, PlanCard} from "../../../../neon3/Packages/Feature/JobBoard/Domain/plans";
+import {UiController} from "../../ui";
+import JobOfferPricingCard from '../JobOfferPricingCard.vue';
+import JobOfferPricingTab, {PricingTab} from '../JobOfferPricingTab.vue';
+import JobOfferPricingTestimonial from "../JobOfferPricingTestimonial.vue";
 
 const screen = inject('screen') as Screen;
 

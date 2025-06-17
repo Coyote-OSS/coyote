@@ -1,10 +1,14 @@
+import {createPinia} from "pinia";
 import {createApp, h, reactive} from 'vue';
 import {JobOfferFilter} from "../../jobOfferFilter";
 import {JobOfferFilters, UploadAssets, ValuePropositionEvent, VatIdState} from "../../main";
+import {JobBoardService} from "../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {useBoardStore} from "../../neon3/Apps/VueApp/Modules/JobBoard/store";
+import {jobBoardServiceInjectKey} from "../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {LocationInput} from "../../neon3/Packages/Core/Application/LocationInput";
 import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
-import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {InitiatePayment, SubmitJobOffer} from "../../neon3/Packages/Feature/JobBoard/Application/Model";
+import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {
   Country,
   PaymentStatus,
@@ -310,6 +314,10 @@ export class VueUi {
 
   mount(element: Element): void {
     const app = createApp({render: () => h(JobBoard, this.vueState)});
+    const pinia = createPinia();
+    app.use(pinia);
+    const store = useBoardStore();
+    app.provide(jobBoardServiceInjectKey, new JobBoardService(store));
     this.screens.useIn(app);
     app.mount(element);
   }

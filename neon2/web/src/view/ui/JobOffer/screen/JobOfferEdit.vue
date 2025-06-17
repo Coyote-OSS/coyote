@@ -13,11 +13,11 @@
 
 <script setup lang="ts">
 import {inject} from "vue";
-import {UploadAssets} from "../../../main";
-import {SubmitJobOffer, toSubmitJobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/Model";
-import {RouteProperties} from "../screen/Screens";
-import {TagAutocomplete, UiController, ViewListener} from "../ui";
-import JobOfferForm from "./JobOfferForm.vue";
+import {UploadAssets} from "../../../../main";
+import {SubmitJobOffer, toSubmitJobOffer} from "../../../../neon3/Packages/Feature/JobBoard/Application/Model";
+import {RouteProperties} from "../../screen/Screens";
+import {TagAutocomplete, UiController, ViewListener} from "../../ui";
+import JobOfferForm from "../JobOfferForm.vue";
 
 const screen = inject('screen') as Screen;
 const route = defineProps<RouteProperties>();
