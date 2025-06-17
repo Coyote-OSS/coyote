@@ -1,4 +1,3 @@
-import {PreparePaymentResponse} from "../../../../backend";
 import {SubmitJobOffer} from "../../Feature/JobBoard/Application/Model";
 import {InvoiceInformation, PricingPlan, Tag} from "../../Feature/JobBoard/Domain/Model";
 import {Event} from "../../Feature/Vp/Model";
@@ -68,6 +67,17 @@ export class BackendApi {
     return request('POST', '/neon2/job-offers/event', event)
       .then(response => response.json());
   }
+}
+
+export interface PreparePaymentResponse {
+  status: 'success'|'failedInvalidVatId';
+  preparedPayment?: BackendPreparedPayment;
+}
+
+export interface BackendPreparedPayment {
+  paymentId: string;
+  providerReady: boolean;
+  paymentToken: string|null;
 }
 
 function jobOfferFields(jobOffer: SubmitJobOffer): object {

@@ -1,7 +1,7 @@
 import {JobBoardBackend} from "../../../../../backend";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "../../../Core/Application/PaymentProvider";
-import {BackendApi} from "../../../Core/Backend/BackendApi";
-import {BackendPaymentStatus, BackendPreparedPayment} from "../../../Core/Backend/backendInput";
+import {BackendApi, BackendPreparedPayment} from "../../../Core/Backend/BackendApi";
+import {BackendPaymentStatus} from "../../../Core/Backend/backendInput";
 import {InvoiceInformation, PaymentStatus} from "../Domain/Model";
 import {PaymentListener} from "./PaymentListener";
 

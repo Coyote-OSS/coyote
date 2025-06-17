@@ -89,12 +89,6 @@ export interface BackendPaymentIntent {
   paymentPricingPlan: PaidPricingPlan;
 }
 
-export interface BackendPreparedPayment {
-  paymentId: string;
-  providerReady: boolean;
-  paymentToken: string|null;
-}
-
 export interface BackendPlanBundle {
   hasBundle: boolean;
   remainingJobOffers: number|null;

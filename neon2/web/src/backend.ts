@@ -1,11 +1,6 @@
 import {Country, JobOfferTag} from "./main";
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
-import {
-  BackendInput,
-  BackendJobOffer,
-  BackendPlanBundle,
-  BackendPreparedPayment,
-} from "./neon3/Packages/Core/Backend/backendInput";
+import {BackendInput, BackendJobOffer, BackendPlanBundle} from "./neon3/Packages/Core/Backend/backendInput";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Application/JobOffer";
 import {Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {parseWorkMode} from "./neon3/Packages/Feature/JobBoard/Domain/workMode";
@@ -94,9 +89,4 @@ function jobOfferTags(jobOffer: BackendJobOffer): JobOfferTag[] {
       priority: jobOffer.fields.tagPriorities[index],
     };
   });
-}
-
-export interface PreparePaymentResponse {
-  status: 'success'|'failedInvalidVatId';
-  preparedPayment?: BackendPreparedPayment;
 }
