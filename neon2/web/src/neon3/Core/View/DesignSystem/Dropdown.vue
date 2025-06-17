@@ -29,7 +29,7 @@
 import {computed, watch} from 'vue';
 import Icon from "../Icon/Icon.vue";
 import {IconName} from "../Icon/icons";
-import {useClickOutside} from "../../../../view/ui/vue/clickOutside";
+import {useClickOutside} from "../Vue/clickOutside";
 import {DrawerScroll} from "./Drawer";
 import Drawer from "./Drawer.vue";
 import Material from "./Material.vue";

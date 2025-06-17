@@ -39,7 +39,7 @@ import {BackendTag} from "../../../backend";
 import {Design} from "../../../neon3/Core/View/DesignSystem/design";
 import TextInput from "../../../neon3/Core/View/DesignSystem/TextInput.vue";
 import {TagAutocomplete} from "../ui";
-import {useClickOutside} from "../vue/clickOutside";
+import {useClickOutside} from "../../../neon3/Core/View/Vue/clickOutside";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
