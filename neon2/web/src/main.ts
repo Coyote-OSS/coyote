@@ -1,6 +1,5 @@
 import {JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from './jobBoard';
-import {JobOfferFilter} from "./jobOfferFilter";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
 import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider";
@@ -9,6 +8,7 @@ import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
+import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {JobOfferPayments} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferPayments";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
@@ -170,6 +170,10 @@ payments.addEventListener({
   },
 });
 
+planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
+  view.setPlanBundle(plan, remainingJobOffers);
+});
+
 const bundle = backend.initialPlanBundle();
 if (bundle.hasBundle) {
   planBundle.set(bundle.planBundleName!, bundle.remainingJobOffers!);
@@ -191,19 +195,12 @@ ui.upload({
 });
 
 view.addFilterListener({
-  filterChange(filter: JobOfferFilter): void {
+  filterChange(filter: Filter): void {
     ui.setJobOfferFilter(filter);
   },
 });
 
-ui.mount(
-  document.querySelector('#neonApplication')!,
-  () => {
-    planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
-      view.setPlanBundle(plan, remainingJobOffers);
-    });
-  },
-);
+ui.mount(document.querySelector('#neonApplication')!);
 
 export interface UploadImage {
   (file: File): Promise<string>;
@@ -216,7 +213,3 @@ export interface UploadAssets {
 
 export type VatIdState = 'valid'|'invalid'|'pending';
 
-export interface JobOfferFilters {
-  tags: string[];
-  locations: string[];
-}

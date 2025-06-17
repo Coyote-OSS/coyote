@@ -1,14 +1,16 @@
 import {jobOfferCities, jobOfferTagNames} from '../jobBoard';
-import {JobOfferFilter, sortInPlace} from "../jobOfferFilter";
+
+import {Filter} from "../neon3/Packages/Feature/JobBoard/Application/filter";
 import {JobOffer} from "../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PlanBundleName} from "../neon3/Packages/Feature/JobBoard/Domain/Model";
+import {sortInPlace} from "../neon3/Packages/Feature/JobBoard/Presenter/orderBy";
 import {Screen, VueUi} from './ui/ui';
 
 export type Toast = 'created'|'edited'|'bundle-used';
 
 export class View {
   jobOffers: JobOffer[] = [];
-  private filter: JobOfferFilter|null = null;
+  private filter: Filter|null = null;
   private filterOnlyMine: boolean = false;
   private planBundleCanRedeem: boolean = false;
   private filterListener: FilterListener|null = null;
@@ -29,7 +31,7 @@ export class View {
       },
     });
     this.ui.addFilterListener({
-      filter: (filter: JobOfferFilter): void => {
+      filter: (filter: Filter): void => {
         this.filter = filter;
         this.filterListener!.filterChange(filter);
         this.filterJobOffers();
@@ -180,5 +182,5 @@ export class View {
 }
 
 export interface FilterListener {
-  filterChange(filter: JobOfferFilter): void;
+  filterChange(filter: Filter): void;
 }

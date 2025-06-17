@@ -1,15 +1,4 @@
-import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {LegalForm, WorkExperience, WorkMode} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
-
-export interface JobOfferFilter {
-  searchPhrase: string,
-  tags: string[],
-  locations: string[],
-  workModes: WorkMode[],
-  legalForms: LegalForm[],
-  workExperiences: WorkExperience[],
-  sort: OrderBy,
-}
+import {JobOffer} from "../Domain/JobOffer";
 
 export type OrderBy = 'promoted'|'most-recent'|'highest-salary'|'lowest-salary';
 

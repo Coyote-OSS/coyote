@@ -1,4 +1,4 @@
-import {JobOfferFilters} from "./main";
+import {FilterOptions} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 
@@ -45,7 +45,7 @@ export class JobBoard {
     this.updateView();
   }
 
-  jobOfferFilters(): JobOfferFilters {
+  jobOfferFilters(): FilterOptions {
     return {
       locations: [...new Set(this.jobOffers.flatMap(offer => jobOfferCities(offer)))],
       tags: [...new Set(this.jobOffers.flatMap(offer => jobOfferTagNames(offer)))],

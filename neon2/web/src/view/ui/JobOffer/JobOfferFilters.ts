@@ -1,6 +1,6 @@
-import {JobOfferFilter} from "../../../jobOfferFilter";
+import {Filter} from "../../../neon3/Packages/Feature/JobBoard/Application/filter";
 
-export function emptyJobOfferFilter(): JobOfferFilter {
+export function emptyJobOfferFilter(): Filter {
   return {
     legalForms: [],
     locations: [],

@@ -13,17 +13,17 @@
     </Design.Row>
     <JobOfferFilters
       v-if="filtersVisible"
-      :filter="screen.jobOfferFilter"
-      :filters="screen.jobOfferFilters"
+      :filter="store.jobOfferFilter"
+      :filters="store.jobOfferFilters"
       @filter="f => service.filter(f)"/>
     <JobOfferListItem
-      v-for="jobOffer in screen.jobOffers"
+      v-for="jobOffer in store.jobOffers"
       :key="jobOffer.id"
       :job-offer="jobOffer"
       :job-offer-url="service.jobOfferUrl(jobOffer)"
       @select="service.showJob(jobOffer.id, jobOffer)"
       @favourite="f => service.markAsFavourite(jobOffer.id, f)"/>
-    <Design.Material v-if="screen.jobOffers.length === 0" nested class="text-center my-2 py-6">
+    <Design.Material v-if="store.jobOffers.length === 0" nested class="text-center my-2 py-6">
       Nie znaleźliśmy żadnych ofert, pasujących do Twoich kryteriów wyszukiwania.
     </Design.Material>
   </div>
@@ -31,23 +31,15 @@
 
 <script setup lang="ts">
 import {computed, inject, ref} from "vue";
-import {JobOfferFilter} from "../../../../jobOfferFilter";
-import {JobOfferFilters as Filters} from "../../../../main";
 import {Design} from "../../../../neon3/Apps/VueApp/DesignSystem/design";
 import {JobBoardService} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {useBoardStore} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/store";
 import {jobBoardServiceInjectKey} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
-import {JobOffer} from "../../../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import JobOfferFilters from "../JobOfferFilters.vue";
 import JobOfferListItem from "../JobOfferListItem.vue";
 
-const screen = inject('screen') as Screen;
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
-
-interface Screen {
-  jobOffers: JobOffer[];
-  jobOfferFilter: JobOfferFilter;
-  jobOfferFilters: Filters;
-}
+const store = useBoardStore();
 
 const tabs = [
   {value: 'jobBoardHome', title: 'Ogłoszenia', titleShort: 'Ogłoszenia'},

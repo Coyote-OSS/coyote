@@ -1,12 +1,12 @@
 import {createPinia} from "pinia";
 import {createApp, h, reactive} from 'vue';
-import {JobOfferFilter} from "../../jobOfferFilter";
-import {JobOfferFilters, UploadAssets, ValuePropositionEvent, VatIdState} from "../../main";
+import {UploadAssets, ValuePropositionEvent, VatIdState} from "../../main";
 import {JobBoardService} from "../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore, useBoardStore} from "../../neon3/Apps/VueApp/Modules/JobBoard/store";
 import {jobBoardServiceInjectKey} from "../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {LocationInput} from "../../neon3/Packages/Core/Application/LocationInput";
 import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
+import {Filter, FilterOptions} from "../../neon3/Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {
@@ -20,15 +20,11 @@ import {PaymentSummary} from "../../neon3/Packages/Feature/JobBoard/Presenter/Mo
 import {Toast, View} from '../view';
 import JobBoard from './JobBoard.vue';
 import {JobBoardProperties} from "./JobBoardProperties";
-import {emptyJobOfferFilter} from "./JobOffer/JobOfferFilters";
 import {Policy} from "./screen/Policy";
 import {RouteProperties, Screens} from "./screen/Screens";
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
-/**
- * @deprecated
- */
 export interface ViewListener {
   createJob(plan: PricingPlan, jobOffer: SubmitJobOffer): void;
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void;
@@ -53,7 +49,7 @@ export interface NavigationListener {
 }
 
 export interface FilterListener {
-  filter(filter: JobOfferFilter): void;
+  filter(filter: Filter): void;
   filterOnlyMine(onlyMine: boolean): void;
 }
 
@@ -64,7 +60,7 @@ export interface UiController {
   showForm(): void;
   selectPlan(plan: PricingPlan): void;
   navigate(screen: Screen, jobOfferId: number|null): void;
-  filter(filter: JobOfferFilter): void;
+  filter(filter: Filter): void;
   applyForJob(jobOfferId: number): void;
   showJobOffer(jobOffer: JobOffer): void;
   jobOfferUrl(jobOffer: JobOffer): string;
@@ -94,6 +90,7 @@ export class VueUi {
   private _upload: UploadAssets|null = null;
   private _applicationEmail: string|null = null;
   private store: BoardStore|null = null;
+  private app;
 
   constructor(locationInput: LocationInput, isAuthenticated: boolean) {
     this.uiController = {
@@ -110,14 +107,7 @@ export class VueUi {
       findJobOffer: this.findJobOfferReactive.bind(this),
       valuePropositionAccepted: this.valuePropositionAccepted.bind(this),
     };
-
     this.vueState = reactive<JobBoardProperties>({
-      jobOffers: [],
-      jobOfferFilters: {
-        tags: [],
-        locations: [],
-      },
-      jobOfferFilter: emptyJobOfferFilter(),
       toast: null,
       screen: 'home',
       paymentNotification: null,
@@ -146,6 +136,10 @@ export class VueUi {
         this.viewListener!.resumePayment(jobOfferId);
       },
     }, this.gate);
+    this.app = createApp({render: () => h(JobBoard, this.vueState)});
+    const pinia = createPinia();
+    this.app.use(pinia);
+    this.store = useBoardStore();
   }
 
   setView(view: View): void {
@@ -172,7 +166,7 @@ export class VueUi {
     window.scrollTo(0, 0);
   }
 
-  private filter(filter: JobOfferFilter): void {
+  private filter(filter: Filter): void {
     this.filterListeners.forEach(listener => listener.filter(filter));
   }
 
@@ -213,15 +207,15 @@ export class VueUi {
   }
 
   setJobOffers(jobOffers: JobOffer[]): void {
-    this.vueState.jobOffers = jobOffers;
+    this.store!.jobOffers = jobOffers;
   }
 
-  setJobOfferFilters(filters: JobOfferFilters): void {
-    this.vueState.jobOfferFilters = filters;
+  setJobOfferFilters(filters: FilterOptions): void {
+    this.store!.jobOfferFilters = filters;
   }
 
-  setJobOfferFilter(filter: JobOfferFilter): void {
-    this.vueState.jobOfferFilter = filter;
+  setJobOfferFilter(filter: Filter): void {
+    this.store!.jobOfferFilter = filter;
   }
 
   setToast(toast: Toast|null): void {
@@ -233,7 +227,7 @@ export class VueUi {
   }
 
   private findJobOfferReactive(jobOfferId: number): JobOffer {
-    const jobOffer = this.vueState.jobOffers.find(o => o.id === jobOfferId);
+    const jobOffer = this.store!.jobOffers.find(o => o.id === jobOfferId);
     if (jobOffer) {
       return jobOffer;
     }
@@ -246,7 +240,7 @@ export class VueUi {
     throw new Error(
       'Failed to render job offer.' +
       ' offers in domain' + this.view!.jobOffers.length +
-      ' offers in view' + this.vueState.jobOffers.length);
+      ' offers in view' + this.store!.jobOffers.length);
   }
 
   setPaymentNotification(notification: PaymentNotification): void {
@@ -316,24 +310,16 @@ export class VueUi {
     this.viewListener!.valuePropositionAccepted(this.vueState.vpVisibleFor!, event, email);
   }
 
-  mount(
-    element: Element,
-    beforeMount: () => void,
-  ): void {
-    const app = createApp({render: () => h(JobBoard, this.vueState)});
-    const pinia = createPinia();
-    app.use(pinia);
-    this.store = useBoardStore();
-    this.store.applicationEmail = this._applicationEmail;
-    app.provide(jobBoardServiceInjectKey, new JobBoardService(
-      this.store,
+  mount(element: Element): void {
+    this.store!.applicationEmail = this._applicationEmail;
+    this.app.provide(jobBoardServiceInjectKey, new JobBoardService(
+      this.store!,
       this.viewListener!,
       this.uiController,
       this.tagAutocomplete!,
       this._upload!,
     ));
-    this.screens.useIn(app);
-    beforeMount();
-    app.mount(element);
+    this.screens.useIn(this.app);
+    this.app.mount(element);
   }
 }

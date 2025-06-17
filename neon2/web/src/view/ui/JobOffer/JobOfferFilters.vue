@@ -128,12 +128,11 @@
 
 <script setup lang="ts">
 import {computed, reactive, ref, watch} from "vue";
-import {JobOfferFilter} from "../../../jobOfferFilter";
-import {JobOfferFilters} from "../../../main";
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
 import {DropdownOption} from "../../../neon3/Apps/VueApp/DesignSystem/DropdownOption";
 import Icon from "../../../neon3/Apps/VueApp/Icon/Icon.vue";
 import {IconName} from "../../../neon3/Apps/VueApp/Icon/icons";
+import {FilterOptions, Filter} from "../../../neon3/Packages/Feature/JobBoard/Application/filter";
 import {LegalForm, WorkExperience, WorkMode} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {emptyJobOfferFilter} from "./JobOfferFilters";
 
@@ -141,15 +140,15 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Props {
-  filter: JobOfferFilter;
-  filters: JobOfferFilters;
+  filter: Filter;
+  filters: FilterOptions;
 }
 
 interface Emit {
-  (event: 'filter', filter: JobOfferFilter): void;
+  (event: 'filter', filter: Filter): void;
 }
 
-const state = reactive<JobOfferFilter>(props.filter);
+const state = reactive<Filter>(props.filter);
 
 watch(
   () => state,

@@ -1,6 +1,6 @@
-import {JobOfferFilter} from "../../../../../jobOfferFilter";
 import {UploadAssets} from "../../../../../main";
 import {Screen, TagAutocomplete, TagAutocompleteResult, UiController, ViewListener} from "../../../../../view/ui/ui";
+import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
@@ -43,7 +43,7 @@ export class JobBoardService {
     this.viewListener.mountLocationDisplay(element, latitude, longitude);
   }
 
-  filter(filter: JobOfferFilter): void {
+  filter(filter: Filter): void {
     this.uiController.filter(filter);
   }
 
