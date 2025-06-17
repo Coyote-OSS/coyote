@@ -14,8 +14,6 @@ export class VueUiFactory {
   public readonly store: BoardStore;
   private readonly app;
 
-  private viewListener: ViewListener|null = null;
-
   constructor(
     isAuthenticated: boolean,
     allJobOffers: JobOfferRepository,
@@ -25,7 +23,6 @@ export class VueUiFactory {
     const pinia = createPinia();
     this.app.use(pinia);
     this.store = useBoardStore();
-
     this.screens = new Screens(new Policy(
       isAuthenticated,
       allJobOffers,
@@ -33,13 +30,9 @@ export class VueUiFactory {
     ));
   }
 
-  setViewListener(viewListener: ViewListener): void {
-    this.viewListener = viewListener;
-  }
-
-  mount(element: Element): void {
+  mount(element: Element, viewListener: ViewListener): void {
     this.app.provide(jobBoardServiceInjectKey,
-      this.factory.create(this.viewListener!, this.screens, this.store));
+      this.factory.create(viewListener, this.screens, this.store));
     this.screens.useIn(this.app);
     this.app.mount(element);
   }

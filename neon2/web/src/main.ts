@@ -66,9 +66,78 @@ const factory = new JobBoardServiceFactory(
   tagAutocomplete);
 
 const ui = new VueUiFactory(backend.isAuthenticated(), jobOffersRepo, factory);
-const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, ui.store);
+const uiStore = ui.store;
+const uiScreens = ui.screens;
 
-const presenter = new JobBoardPresenter(ui.store, ui.screens);
+const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, uiStore);
+
+const presenter = new JobBoardPresenter(uiStore, uiScreens);
+
+function vpEvent(eventName: string, metadata: EventMetadata): Promise<void> {
+  return backendApi.event({eventName, metadata});
+}
+
+function jobOfferApply(jobOffer: JobOffer): void {
+  if (jobOffer.applicationMode === 'external-ats') {
+    window.open(jobOffer.applicationUrl, '_blank');
+  } else {
+    window.location.href = jobOffer.applicationUrl;
+  }
+}
+
+export type ValuePropositionEvent = 'vpAccepted'|'vpDeclined'|'vpSubscribed'|'vpApply';
+
+function paymentSummary(jobOfferId: number): PaymentSummary {
+  const payment = jobOfferPayments.jobOfferPayment(jobOfferId);
+  return {
+    bundleSize: bundleSize(payment.paymentPricingPlan),
+    basePrice: payment.paymentPriceBase,
+    vat: payment.paymentPriceVat,
+    vatIncluded: true,
+  };
+}
+
+payments.addEventListener({
+  processingStarted(): void {
+    presenter.notifyPaymentProcessingStarted();
+  },
+  processingFinished(): void {
+    presenter.notifyPaymentProcessingFinished();
+  },
+  paymentInitiationVatIdState(vatId: VatIdState): void {
+    presenter.notifyPaymentVatIdState(vatId);
+  },
+  notificationReceived(notification: PaymentNotification): void {
+    presenter.notifyPaymentNotification(notification);
+  },
+  statusChanged(paymentId: string, status: PaymentStatus): void {
+    presenter.setPaymentStatus(status);
+    if (status === 'paymentComplete') {
+      board.jobOfferPaid(jobOfferPayments.jobOfferId(paymentId));
+      const pricingPlan = jobOfferPayments.pricingPlan(paymentId);
+      if (pricingPlan !== 'premium') {
+        planBundleRepo.set(pricingPlan, remainingJobOffers(pricingPlan));
+      }
+      presenter.notifyJobOfferPaid();
+    }
+  },
+});
+
+planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
+  presenter.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
+});
+
+const bundle = backend.initialPlanBundle();
+if (bundle.hasBundle) {
+  planBundleRepo.set(bundle.planBundleName!, bundle.remainingJobOffers!);
+}
+
+backend.initialJobOffers()
+  .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
+
+presenter.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
+presenter.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
+presenter.setJobOfferFilters(board.jobOfferFilters());
 
 const viewListener: ViewListener = {
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
@@ -148,75 +217,10 @@ const viewListener: ViewListener = {
   },
 };
 
-ui.setViewListener(viewListener);
-
-function vpEvent(eventName: string, metadata: EventMetadata): Promise<void> {
-  return backendApi.event({eventName, metadata});
-}
-
-function jobOfferApply(jobOffer: JobOffer): void {
-  if (jobOffer.applicationMode === 'external-ats') {
-    window.open(jobOffer.applicationUrl, '_blank');
-  } else {
-    window.location.href = jobOffer.applicationUrl;
-  }
-}
-
-export type ValuePropositionEvent = 'vpAccepted'|'vpDeclined'|'vpSubscribed'|'vpApply';
-
-function paymentSummary(jobOfferId: number): PaymentSummary {
-  const payment = jobOfferPayments.jobOfferPayment(jobOfferId);
-  return {
-    bundleSize: bundleSize(payment.paymentPricingPlan),
-    basePrice: payment.paymentPriceBase,
-    vat: payment.paymentPriceVat,
-    vatIncluded: true,
-  };
-}
-
-payments.addEventListener({
-  processingStarted(): void {
-    presenter.notifyPaymentProcessingStarted();
-  },
-  processingFinished(): void {
-    presenter.notifyPaymentProcessingFinished();
-  },
-  paymentInitiationVatIdState(vatId: VatIdState): void {
-    presenter.notifyPaymentVatIdState(vatId);
-  },
-  notificationReceived(notification: PaymentNotification): void {
-    presenter.notifyPaymentNotification(notification);
-  },
-  statusChanged(paymentId: string, status: PaymentStatus): void {
-    presenter.setPaymentStatus(status);
-    if (status === 'paymentComplete') {
-      board.jobOfferPaid(jobOfferPayments.jobOfferId(paymentId));
-      const pricingPlan = jobOfferPayments.pricingPlan(paymentId);
-      if (pricingPlan !== 'premium') {
-        planBundleRepo.set(pricingPlan, remainingJobOffers(pricingPlan));
-      }
-      presenter.notifyJobOfferPaid();
-    }
-  },
-});
-
-planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
-  presenter.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
-});
-
-const bundle = backend.initialPlanBundle();
-if (bundle.hasBundle) {
-  planBundleRepo.set(bundle.planBundleName!, bundle.remainingJobOffers!);
-}
-
-backend.initialJobOffers()
-  .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
-
-presenter.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
-presenter.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
-presenter.setJobOfferFilters(board.jobOfferFilters());
-
-ui.mount(document.querySelector('#neonApplication')!);
+ui.mount(
+  document.querySelector('#neonApplication')!,
+  viewListener,
+);
 
 export interface UploadImage {
   (file: File): Promise<string>;
