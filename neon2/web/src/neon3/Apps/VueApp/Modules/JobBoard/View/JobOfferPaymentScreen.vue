@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import {inject} from "vue";
-import {useRoute} from "vue-router";
+import {useRouteId} from "../../../../../../Router";
 import {Design} from "../../../DesignSystem/design";
 import {JobBoardService} from "../JobBoardService";
 import {BoardStore, useBoardStore} from "../store";
@@ -25,9 +25,7 @@ import JobOfferRedeemBundle from "./component/JobOfferRedeemBundle.vue";
 
 const store: BoardStore = useBoardStore();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
-
-const route = useRoute();
-const jobOfferId = Number(route.params.id)!;
+const jobOfferId = useRouteId();
 
 service.resumePayment(jobOfferId!);
 </script>

@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import {computed, inject} from "vue";
-import {useRoute} from "vue-router";
+import {useRouteId} from "../../../../../../Router";
 import {JobOffer} from "../../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {Design} from "../../../DesignSystem/design";
 import {JobBoardService} from "../JobBoardService";
@@ -27,9 +27,7 @@ import {toJobOfferShow} from "./component/JobOfferShow";
 import JobOfferShow from "./component/JobOfferShow.vue";
 
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
-
-const route = useRoute();
-const jobOfferId = Number(route.params.id)!;
+const jobOfferId = useRouteId();
 
 function navigateHome(): void {
   service.navigate('home', null);

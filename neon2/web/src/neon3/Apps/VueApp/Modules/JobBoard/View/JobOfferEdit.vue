@@ -10,15 +10,14 @@
 
 <script setup lang="ts">
 import {inject} from "vue";
-import {useRoute} from 'vue-router';
-import {JobBoardService} from "../JobBoardService";
-import {jobBoardServiceInjectKey} from "../vue";
+import {useRouteId} from "../../../../../../Router";
 import {SubmitJobOffer, toSubmitJobOffer} from "../../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../../Packages/Feature/JobBoard/Domain/JobOffer";
+import {JobBoardService} from "../JobBoardService";
+import {jobBoardServiceInjectKey} from "../vue";
 import JobOfferForm from "./component/JobOfferForm.vue";
 
-const route = useRoute();
-const jobOfferId = Number(route.params.id)!;
+const jobOfferId = useRouteId();
 
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 const jobOffer: JobOffer = service.findJobOffer(jobOfferId)!;
