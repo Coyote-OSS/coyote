@@ -20,7 +20,7 @@ import {
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
-import {Toast, View} from './view';
+import {View} from './view';
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
@@ -89,13 +89,12 @@ export class VueUiFactory {
   selectPlan(plan: PricingPlan): void {
     if (this.viewListener!.assertUserAuthenticated()) {
       this.store.pricingPlan = plan;
-      this.setScreen('form', null);
+      this.screens.navigate('form', null);
     }
   }
 
   setScreen(screen: Screen, jobOfferId: number|null): void {
-    this.screens!.navigate(screen, jobOfferId);
-    window.scrollTo(0, 0);
+    this.screens.navigate(screen, jobOfferId);
   }
 
   // from main:
@@ -158,18 +157,6 @@ export class VueUiFactory {
     this.filterListeners.push(listener);
   }
 
-  setToast(toast: Toast|null): void {
-    this.store.toast = toast;
-  }
-
-  showValueProposition(jobOffer: JobOffer): void {
-    this.store.vpVisibleFor = jobOffer;
-  }
-
-  hideValueProposition(): void {
-    this.store.vpVisibleFor = null;
-  }
-
   setJobOffers(jobOffers: JobOffer[]): void {
     this.store.jobOffers = jobOffers;
   }
@@ -184,7 +171,7 @@ export class VueUiFactory {
       this,
       this.view!,
       this.store,
-      this.screens!,
+      this.screens,
       this.locationInput,
       this.viewListener!,
       this.tagAutocomplete!,
@@ -192,7 +179,7 @@ export class VueUiFactory {
       this.navigationListener!,
       this.backendImageApi,
     ));
-    this.screens!.useIn(this.app);
+    this.screens.useIn(this.app);
     this.app.mount(element);
   }
 

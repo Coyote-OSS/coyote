@@ -61,8 +61,8 @@ export class JobBoardService {
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {
-    this.ui.setToast(null);
-    this.ui.setScreen(screen, jobOfferId);
+    this.store.toast = null;
+    this.screens.navigate(screen, jobOfferId);
   }
 
   applyForJob(jobOfferId: number): void {

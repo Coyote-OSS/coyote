@@ -106,7 +106,7 @@ ui.setViewListener({
     return false;
   },
   apply(jobOffer: JobOffer): void {
-    view.showValueProposition(jobOffer);
+    presenter.showValueProposition(jobOffer);
   },
   valuePropositionAccepted(
     jobOffer: JobOffer,
@@ -115,7 +115,7 @@ ui.setViewListener({
   ): void {
     const result = vpEvent(event, {jobOfferId: jobOffer.id, email});
     if (event === 'vpDeclined' || event === 'vpApply') {
-      view.hideValueProposition();
+      presenter.hideValueProposition();
       result.finally(() => jobOfferApply(jobOffer));
     }
   },

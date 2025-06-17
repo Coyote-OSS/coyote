@@ -1,4 +1,5 @@
 import {Screens} from "../../../../../Screens";
+import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentSummary} from "../../../../Packages/Feature/JobBoard/Presenter/Model";
 import {BoardStore} from "./store";
 
@@ -38,6 +39,14 @@ export class JobBoardPresenter {
 
   populateRequirePayment(summary: PaymentSummary): void {
     this.store.paymentSummary = summary;
+  }
+
+  showValueProposition(jobOffer: JobOffer): void {
+    this.store.vpVisibleFor = jobOffer;
+  }
+
+  hideValueProposition(): void {
+    this.store.vpVisibleFor = null;
   }
 
   private navigateHome(): void {
