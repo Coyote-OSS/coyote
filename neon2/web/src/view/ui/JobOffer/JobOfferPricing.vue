@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import {inject, ref} from 'vue';
-import {PricingPlan} from "../../../main";
+import {PricingPlan} from "../../../neon3/Feature/JobBoard/Domain/Model";
 import {UiController} from "../ui";
 import JobOfferPricingCard, {JobOfferPricingCardColor} from './JobOfferPricingCard.vue';
 import JobOfferPricingTab, {PricingTab} from './JobOfferPricingTab.vue';

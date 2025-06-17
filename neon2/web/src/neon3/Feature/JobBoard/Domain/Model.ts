@@ -14,3 +14,7 @@ export interface InvoiceInformation {
   companyPostalCode: string,
   companyCity: string,
 }
+
+export type PlanBundleName = 'strategic'|'growth'|'scale';
+export type PricingPlan = 'free'|PaidPricingPlan;
+export type PaidPricingPlan = 'premium'|PlanBundleName;

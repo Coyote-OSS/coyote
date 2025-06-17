@@ -1,4 +1,4 @@
-import {PlanBundleName} from "./main";
+import {PlanBundleName} from "./neon3/Feature/JobBoard/Domain/Model";
 
 export class PlanBundle {
   private listeners: PlanBundleListener[] = [];

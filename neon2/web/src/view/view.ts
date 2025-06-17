@@ -1,7 +1,7 @@
 import {jobOfferCities, jobOfferTagNames} from '../jobBoard';
 import {JobOfferFilter, sortInPlace} from "../jobOfferFilter";
-import {PlanBundleName} from "../main";
 import {JobOffer} from "../neon3/Feature/JobBoard/Application/JobOffer";
+import {PlanBundleName} from "../neon3/Feature/JobBoard/Domain/Model";
 import {Screen, VueUi} from './ui/ui';
 
 export type Toast = 'created'|'edited'|'bundle-used';

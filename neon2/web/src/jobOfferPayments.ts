@@ -1,4 +1,4 @@
-import {PaidPricingPlan} from "./main";
+import {PaidPricingPlan} from "./neon3/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
 
 export class JobOfferPayments {

@@ -1,4 +1,4 @@
-import {Country, PricingPlan, Tag} from "./main";
+import {Country, Tag} from "./main";
 import {
   BackendInput,
   BackendJobOffer,
@@ -9,7 +9,7 @@ import {
 } from "./neon3/Core/Backend/backendInput";
 import {request} from "./neon3/Core/Backend/http";
 import {SubmitJobOffer} from "./neon3/Feature/JobBoard/Application/Model";
-import {InvoiceInformation} from "./neon3/Feature/JobBoard/Domain/Model";
+import {InvoiceInformation, PricingPlan} from "./neon3/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
 import {JobOffer} from "./neon3/Feature/JobBoard/Application/JobOffer";
 import {parseWorkMode} from "./neon3/Feature/JobBoard/Domain/workMode";

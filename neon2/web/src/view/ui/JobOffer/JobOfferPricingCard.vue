@@ -39,8 +39,8 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {PricingPlan} from '../../../main';
 import {Design} from "../../../neon3/Core/View/DesignSystem/design";
+import {PricingPlan} from "../../../neon3/Feature/JobBoard/Domain/Model";
 import JobOfferPricingCardIcon from './JobOfferPricingCardIcon.vue';
 import JobOfferPricingCardList from './JobOfferPricingCardList.vue';
 

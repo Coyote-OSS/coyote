@@ -7,7 +7,7 @@ import {TestLocationInput} from "./neon3/Core/Acceptance/TestLocationInput";
 import {TestPaymentProvider} from './neon3/Core/Acceptance/TestPaymentProvider';
 import {LocationDisplay} from "./neon3/Core/Application/LocationDisplay";
 import {LocationInput} from "./neon3/Core/Application/LocationInput";
-import {PaymentMethod, PaymentNotification, PaymentProvider} from "./neon3/Core/Application/PaymentProvider";
+import {PaymentNotification, PaymentProvider} from "./neon3/Core/Application/PaymentProvider";
 import {BackendJobOffer, BackendJobOfferTagPriority} from "./neon3/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Core/Domain/vat";
 import {GoogleMapsAutocomplete} from "./neon3/Core/External/GoogleMaps/GoogleMapsAutocomplete";
@@ -15,7 +15,9 @@ import {GoogleMapsMap} from "./neon3/Core/External/GoogleMaps/GoogleMapsMap";
 import {StripePaymentProvider} from './neon3/Core/External/Stripe/StripePaymentProvider';
 import {JobOffer} from "./neon3/Feature/JobBoard/Application/JobOffer";
 import {SubmitJobOffer} from "./neon3/Feature/JobBoard/Application/Model";
-import {InvoiceInformation} from "./neon3/Feature/JobBoard/Domain/Model";
+import {InitiatePayment} from "./neon3/Feature/JobBoard/Application/payment";
+import {bundleSize} from "./neon3/Feature/JobBoard/Domain/bundleSize";
+import {PlanBundleName, PricingPlan} from "./neon3/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {PlanBundle} from "./planBundle";
@@ -36,16 +38,6 @@ const locationDisplay: LocationDisplay = backend.testMode()
   ? new TestLocationDisplay()
   : new GoogleMapsMap();
 
-export type PlanBundleName = 'strategic'|'growth'|'scale';
-export type PricingPlan = 'free'|PaidPricingPlan;
-export type PaidPricingPlan = 'premium'|PlanBundleName;
-
-export interface InitiatePayment {
-  jobOfferId: number;
-  invoiceInfo: InvoiceInformation;
-  paymentMethod: PaymentMethod;
-}
-
 export interface Tag {
   tagName: string;
   priority: BackendJobOfferTagPriority;
@@ -53,16 +45,6 @@ export interface Tag {
 
 export function toSubmitJobOffer(jobOffer: JobOffer): SubmitJobOffer {
   return jobOffer;
-}
-
-function bundleSize(pricingPlan: PaidPricingPlan): 1|3|5|20 {
-  const bundleSizes: Record<PaidPricingPlan, 1|3|5|20> = {
-    'premium': 1,
-    'strategic': 3,
-    'growth': 5,
-    'scale': 20,
-  };
-  return bundleSizes[pricingPlan];
 }
 
 backend.jobOfferPayments()
