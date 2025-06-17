@@ -9,6 +9,7 @@ import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
+import {AllJobOffers} from "./neon3/Packages/Feature/JobBoard/Application/AllJobOffers";
 import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {JobOfferPayments} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferPayments";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
@@ -23,6 +24,7 @@ import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
 import {TagAutocompleteResult, VueUiFactory} from './ui';
 import {View} from "./view";
 
+const allJobOffers = new AllJobOffers();
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
@@ -30,9 +32,13 @@ const ui = new VueUiFactory(
   locationInput(backend.testMode()),
   backend.isAuthenticated(),
   backendImageApi,
+  allJobOffers,
 );
-const view = new View(ui);
-const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
+const view = new View(ui, allJobOffers);
+const board = new JobBoard((jobOffers: JobOffer[]): void => {
+  allJobOffers.setJobOffers(jobOffers);
+  return view.filterJobOffers();
+});
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const jobOfferPayments = new JobOfferPayments();
@@ -62,7 +68,7 @@ ui.setViewListener({
     backendApi.markJobOfferAsFavourite(jobOfferId, favourite);
   },
   vatDetailsChanged(countryCode: string, vatId: string): void {
-    ui.setVatIncluded(isVatIncluded(countryCode, vatId));
+    presenter.notifyVatIncludedChanged(isVatIncluded(countryCode, vatId));
   },
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
     backendApi.updateJobOffer(jobOfferId, jobOffer, (): void => {
@@ -77,7 +83,7 @@ ui.setViewListener({
       initiatePayment.paymentMethod);
   },
   resumePayment(jobOfferId: number): void {
-    presenter.populateRequirePayment(paymentSummary(jobOfferId));
+    presenter.initRequirePayment(paymentSummary(jobOfferId));
   },
   redeemBundle(jobOfferId: number): void {
     backendApi
@@ -151,17 +157,16 @@ function paymentSummary(jobOfferId: number): PaymentSummary {
 
 payments.addEventListener({
   processingStarted(): void {
-    ui.setPaymentProcessing(true);
-    ui.setVatIdState('pending');
+    presenter.notifyPaymentProcessingStarted();
   },
   processingFinished(): void {
-    ui.setPaymentProcessing(false);
+    presenter.notifyPaymentProcessingFinished();
   },
   paymentInitiationVatIdState(vatId: VatIdState): void {
-    ui.setVatIdState(vatId);
+    presenter.notifyPaymentVatIdState(vatId);
   },
   notificationReceived(notification: PaymentNotification): void {
-    ui.setPaymentNotification(notification);
+    presenter.notifyPaymentNotification(notification);
   },
   statusChanged(paymentId: string, status: PaymentStatus): void {
     ui.setPaymentStatus(status);
@@ -188,9 +193,10 @@ if (bundle.hasBundle) {
 backend.initialJobOffers()
   .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
 
-ui.setJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
-ui.setPaymentInvoiceCountries(backend.paymentInvoiceCountries());
+presenter.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
+presenter.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 ui.setJobOfferFilters(board.jobOfferFilters());
+
 view.addFilterListener({
   filterChange(filter: Filter): void {
     ui.setJobOfferFilter(filter);
@@ -201,11 +207,6 @@ ui.mount(document.querySelector('#neonApplication')!);
 
 export interface UploadImage {
   (file: File): Promise<string>;
-}
-
-export interface UploadAssets {
-  uploadLogo: UploadImage;
-  uploadAsset: UploadImage;
 }
 
 export type VatIdState = 'valid'|'invalid'|'pending';

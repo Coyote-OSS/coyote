@@ -1,4 +1,5 @@
 import {jobOfferCities, jobOfferTagNames} from './jobBoard';
+import {AllJobOffers} from "./neon3/Packages/Feature/JobBoard/Application/AllJobOffers";
 
 import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
@@ -9,14 +10,15 @@ import {VueUiFactory} from './ui';
 export type Toast = 'created'|'edited'|'bundle-used';
 
 export class View {
-  jobOffers: JobOffer[] = [];
   private filter: Filter|null = null;
   private filterOnlyMine: boolean = false;
   private planBundleCanRedeem: boolean = false;
   private filterListener: FilterListener|null = null;
 
-  constructor(private ui: VueUiFactory) {
-    ui.setView(this);
+  constructor(
+    private ui: VueUiFactory,
+    private allJobOffers: AllJobOffers,
+  ) {
     this.ui.setNavigationListener({
       showJobOfferForm: (): void => {
         if (this.planBundleCanRedeem) {
@@ -39,27 +41,14 @@ export class View {
     });
   }
 
-  setJobOffers(jobOffers: JobOffer[]): void {
-    this.jobOffers = jobOffers;
-    this.filterJobOffers();
-  }
-
-  findJobOffer(jobOfferId: number): JobOffer|null {
-    const jobOffer = this.jobOffers.find(o => o.id === jobOfferId);
-    if (jobOffer) {
-      return jobOffer;
-    }
-    return null;
-  }
-
-  private filterJobOffers(): void {
+  filterJobOffers(): void {
     if (this.filterOnlyMine) {
-      const jobOffers = this.jobOffers.filter(jobOffer => jobOffer.isMine);
+      const jobOffers = this.allJobOffers.all().filter(jobOffer => jobOffer.isMine);
       jobOffers.sort();
       this.ui.setJobOffers(jobOffers);
       return;
     }
-    const jobOffers = this.jobOffers
+    const jobOffers = this.allJobOffers.all()
       .filter(jobOffer => jobOffer.status === 'published')
       .filter(jobOffer => this.jobOfferMatches(jobOffer));
     if (this.filter) {

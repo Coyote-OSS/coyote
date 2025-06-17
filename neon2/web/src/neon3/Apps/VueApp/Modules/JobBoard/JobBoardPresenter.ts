@@ -1,5 +1,8 @@
+import {VatIdState} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
+import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
+import {Country} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "../../../../Packages/Feature/JobBoard/Presenter/Model";
 import {BoardStore} from "./store";
 
@@ -37,8 +40,37 @@ export class JobBoardPresenter {
     this.navigateHome();
   }
 
-  populateRequirePayment(summary: PaymentSummary): void {
+  notifyPaymentProcessingStarted(): void {
+    this.store.paymentProcessing = true;
+    this.store.paymentVatIdState = 'pending';
+  }
+
+  notifyPaymentProcessingFinished(): void {
+    this.store.paymentProcessing = false;
+  }
+
+  notifyPaymentVatIdState(vatId: VatIdState): void {
+    this.store.paymentVatIdState = vatId;
+  }
+
+  notifyPaymentNotification(notification: PaymentNotification): void {
+    this.store.paymentNotification = notification;
+  }
+
+  notifyVatIncludedChanged(vatIncluded: boolean): void {
+    this.store.paymentSummary!.vatIncluded = vatIncluded;
+  }
+
+  initRequirePayment(summary: PaymentSummary): void {
     this.store.paymentSummary = summary;
+  }
+
+  initPaymentInvoiceCountries(countries: Country[]): void {
+    this.store.invoiceCountries = countries;
+  }
+
+  initJobOfferApplicationEmail(applicationEmail: string): void {
+    this.store.applicationEmail = applicationEmail;
   }
 
   showValueProposition(jobOffer: JobOffer): void {

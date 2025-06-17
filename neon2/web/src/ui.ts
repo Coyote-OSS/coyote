@@ -1,26 +1,19 @@
 import {createPinia} from "pinia";
 import {createApp} from 'vue';
+import {AllJobOffers} from "./neon3/Packages/Feature/JobBoard/Application/AllJobOffers";
 import JobBoard from './JobBoard.vue';
-import {ValuePropositionEvent, VatIdState} from "./main";
+import {ValuePropositionEvent} from "./main";
 import {JobBoardService} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
-import {PaymentNotification} from "./neon3/Packages/Core/Application/PaymentProvider";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {Filter, FilterOptions} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {
-  Country,
-  PaymentStatus,
-  PlanBundleName,
-  PricingPlan,
-  Tag,
-} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {PaymentStatus, PlanBundleName, PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
-import {View} from './view';
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
@@ -62,7 +55,6 @@ export class VueUiFactory {
 
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
-  private view: View|null = null;
   private viewListener: ViewListener|null = null;
   private tagAutocomplete: TagAutocomplete|null = null;
   private readonly app;
@@ -71,6 +63,7 @@ export class VueUiFactory {
     private locationInput: LocationInput,
     isAuthenticated: boolean,
     private backendImageApi: BackendImageApi,
+    private allJobOffers: AllJobOffers,
   ) {
     this.screens = new Screens(new Policy(
       isAuthenticated,
@@ -80,10 +73,6 @@ export class VueUiFactory {
     const pinia = createPinia();
     this.app.use(pinia);
     this.store = useBoardStore();
-  }
-
-  setView(view: View): void {
-    this.view = view;
   }
 
   selectPlan(plan: PricingPlan): void {
@@ -111,32 +100,8 @@ export class VueUiFactory {
     this.store.jobOfferFilter = filter;
   }
 
-  setPaymentNotification(notification: PaymentNotification): void {
-    this.store.paymentNotification = notification;
-  }
-
   setPaymentStatus(status: PaymentStatus): void {
     this.store.paymentStatus = status;
-  }
-
-  setJobOfferApplicationEmail(applicationEmail: string): void {
-    this.store.applicationEmail = applicationEmail;
-  }
-
-  setPaymentInvoiceCountries(countries: Country[]): void {
-    this.store.invoiceCountries = countries;
-  }
-
-  setPaymentProcessing(processing: boolean): void {
-    this.store.paymentProcessing = processing;
-  }
-
-  setVatIncluded(vatIncluded: boolean): void {
-    this.store.paymentSummary!.vatIncluded = vatIncluded;
-  }
-
-  setVatIdState(state: VatIdState): void {
-    this.store.paymentVatIdState = state;
   }
 
   setTagAutocomplete(tagAutocomplete: TagAutocomplete): void {
@@ -169,7 +134,6 @@ export class VueUiFactory {
   mount(element: Element): void {
     this.app.provide(jobBoardServiceInjectKey, new JobBoardService(
       this,
-      this.view!,
       this.store,
       this.screens,
       this.locationInput,
@@ -178,6 +142,7 @@ export class VueUiFactory {
       this.filterListeners,
       this.navigationListener!,
       this.backendImageApi,
+      this.allJobOffers,
     ));
     this.screens.useIn(this.app);
     this.app.mount(element);
@@ -194,13 +159,10 @@ export class VueUiFactory {
       // TODO, currently, only offers in list are reactive; 
       //       but offers outside of list (like mine, expired) need to be reactive too
     }
-    throw new Error(
-      'Failed to render job offer.' +
-      ' offers in domain' + this.view!.jobOffers.length +
-      ' offers in view' + this.store.jobOffers.length);
+    throw new Error('Failed to render job offer.');
   }
 
   findJobOffer(jobOfferId: number): JobOffer|null {
-    return this.view!.findJobOffer(jobOfferId);
+    return this.allJobOffers.findJobOffer(jobOfferId);
   }
 }

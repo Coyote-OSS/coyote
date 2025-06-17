@@ -1,3 +1,4 @@
+import {AllJobOffers} from "../../../../Packages/Feature/JobBoard/Application/AllJobOffers";
 import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
 import {
@@ -21,7 +22,6 @@ import {BoardStore} from "./store";
 export class JobBoardService {
   constructor(
     private readonly ui: VueUiFactory,
-    private readonly view: View,
     private readonly store: BoardStore,
     private readonly screens: Screens,
     private readonly locationInput: LocationInput,
@@ -30,6 +30,7 @@ export class JobBoardService {
     private readonly filterListeners: FilterListener[],
     private readonly navigationListener: NavigationListener,
     private readonly backendImageApi: BackendImageApi,
+    private readonly allJobOffers: AllJobOffers,
   ) {}
 
   redeemBundle(jobOfferId: number): void {
@@ -70,7 +71,7 @@ export class JobBoardService {
   }
 
   findJobOffer(jobOfferId: number): JobOffer|null {
-    return this.view!.findJobOffer(jobOfferId);
+    return this.allJobOffers.findJobOffer(jobOfferId);
   }
 
   markAsFavourite(jobOfferId: number, favourite: boolean): void {
