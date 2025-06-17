@@ -1,5 +1,15 @@
 import {UploadAssets, ValuePropositionEvent} from "../../../../../main";
-import {Screen, TagAutocomplete, TagAutocompleteResult, UiController, ViewListener} from "../../../../../view/ui/ui";
+import {Screens} from "../../../../../view/ui/screen/Screens";
+import {
+  FilterListener,
+  NavigationListener,
+  Screen,
+  TagAutocomplete,
+  TagAutocompleteResult,
+  ViewListener,
+  VueUi,
+} from "../../../../../view/ui/ui";
+import {View} from "../../../../../view/view";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
@@ -10,11 +20,15 @@ import {BoardStore} from "./store";
 export class JobBoardService {
   constructor(
     private store: BoardStore,
+    private view: View,
+    private readonly screens: Screens,
     private locationInput: LocationInput,
     private viewListener: ViewListener,
-    private uiController: UiController,
+    private ui: VueUi,
     private _tagAutocomplete: TagAutocomplete,
     private upload: UploadAssets,
+    private readonly filterListeners: FilterListener[],
+    private navigationListener: NavigationListener,
   ) {}
 
   redeemBundle(jobOfferId: number): void {
@@ -34,11 +48,11 @@ export class JobBoardService {
     /** @deprecated **/
     jobOffer: JobOffer,
   ): void {
-    this.uiController.showJobOffer(jobOffer!);
+    this.screens.showJobOffer(jobOffer!);
   }
 
   showForm(): void {
-    this.uiController.showForm();
+    this.navigationListener!.showJobOfferForm();
   }
 
   mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
@@ -46,27 +60,27 @@ export class JobBoardService {
   }
 
   filter(filter: Filter): void {
-    this.uiController.filter(filter);
+    this.filterListeners.forEach(listener => listener.filter(filter));
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {
-    this.uiController.navigate(screen, jobOfferId);
+    this.navigationListener!.setScreen(screen, jobOfferId);
   }
 
   applyForJob(jobOfferId: number): void {
-    this.uiController.applyForJob(jobOfferId);
+    this.viewListener!.apply(this.findJobOffer(jobOfferId)!);
   }
 
   findJobOffer(jobOfferId: number): JobOffer|null {
-    return this.uiController.findJobOffer(jobOfferId);
+    return this.view!.findJobOffer(jobOfferId);
   }
 
   markAsFavourite(jobOfferId: number, favourite: boolean): void {
-    this.uiController.markAsFavourite(jobOfferId, favourite);
+    this.viewListener!.markAsFavourite(jobOfferId, favourite);
   }
 
   selectPlan(plan: PricingPlan): void {
-    this.uiController.selectPlan(plan);
+    this.ui.selectPlan(plan);
   }
 
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void {
@@ -82,12 +96,12 @@ export class JobBoardService {
   }
 
   filterOnlyMine(onlyMine: boolean): void {
-    this.uiController.filterOnlyMine(onlyMine);
+    this.filterListeners.forEach(listener => listener.filterOnlyMine(onlyMine));
   }
 
   /** @deprecated */
   jobOfferUrl(jobOffer: JobOffer): string {
-    return this.uiController.jobOfferUrl(jobOffer);
+    return this.screens.jobOfferUrl(jobOffer);
   }
 
   tagAutocomplete(tagPrompt: string, result: TagAutocompleteResult): void {
@@ -102,8 +116,11 @@ export class JobBoardService {
     return this.upload.uploadAsset(file);
   }
 
-  valuePropositionAccepted(event: ValuePropositionEvent, email?: string): void {
-    this.uiController.valuePropositionAccepted(event, email);
+  valuePropositionAccepted(
+    event: ValuePropositionEvent,
+    email?: string,
+  ): void {
+    this.viewListener!.valuePropositionAccepted(this.store!.vpVisibleFor!, event, email);
   }
 
   mountLocationInput(input: HTMLInputElement, listener: LocationListener): void {

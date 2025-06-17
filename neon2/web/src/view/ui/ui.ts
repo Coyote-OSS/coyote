@@ -52,24 +52,6 @@ export interface FilterListener {
   filterOnlyMine(onlyMine: boolean): void;
 }
 
-/**
- * @deprecated
- */
-export interface UiController {
-  showForm(): void;
-  selectPlan(plan: PricingPlan): void;
-  navigate(screen: Screen, jobOfferId: number|null): void;
-  filter(filter: Filter): void;
-  applyForJob(jobOfferId: number): void;
-  showJobOffer(jobOffer: JobOffer): void;
-  jobOfferUrl(jobOffer: JobOffer): string;
-  filterOnlyMine(onlyMine: boolean): void;
-  resumePayment(jobOfferId: number): void;
-  markAsFavourite(jobOfferId: number, favourite: boolean): void;
-  findJobOffer(jobOfferId: number): JobOffer|null;
-  valuePropositionAccepted(event: ValuePropositionEvent, email?: string): void;
-}
-
 export type CanEdit = (jobOfferId: number) => boolean;
 export type PricingPlanSelected = () => boolean;
 export type TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult) => void;
@@ -82,27 +64,12 @@ export class VueUi {
   private navigationListener: NavigationListener|null = null;
   private view: View|null = null;
   private viewListener: ViewListener|null = null;
-  private uiController: UiController;
   private tagAutocomplete: TagAutocomplete|null = null;
   private _upload: UploadAssets|null = null;
   private store: BoardStore|null = null;
   private app;
 
   constructor(private locationInput: LocationInput, isAuthenticated: boolean) {
-    this.uiController = {
-      showForm: this.showForm.bind(this),
-      selectPlan: this.selectPlan.bind(this),
-      navigate: this.navigate.bind(this),
-      filter: this.filter.bind(this),
-      filterOnlyMine: this.filterOnlyMine.bind(this),
-      applyForJob: this.applyForJob.bind(this),
-      showJobOffer: this.showJobOffer.bind(this),
-      jobOfferUrl: this.jobOfferUrl.bind(this),
-      resumePayment: this.resumePayment.bind(this),
-      markAsFavourite: this.markAsFavourite.bind(this),
-      findJobOffer: this.findJobOfferReactive.bind(this),
-      valuePropositionAccepted: this.valuePropositionAccepted.bind(this),
-    };
     this.gate = new Policy(
       isAuthenticated,
       (jobOfferId: number): boolean => this.findJobOffer(jobOfferId)?.canEdit ?? false,
@@ -129,19 +96,11 @@ export class VueUi {
     this.view = view;
   }
 
-  private showForm(): void {
-    this.navigationListener!.showJobOfferForm();
-  }
-
-  private selectPlan(plan: PricingPlan): void {
+  selectPlan(plan: PricingPlan): void {
     if (this.viewListener!.assertUserAuthenticated()) {
       this.store!.pricingPlan = plan;
       this.setScreen('form', null);
     }
-  }
-
-  private navigate(screen: Screen, jobOfferId: number|null): void {
-    this.navigationListener!.setScreen(screen, jobOfferId);
   }
 
   setScreen(screen: Screen, jobOfferId: number|null): void {
@@ -149,48 +108,10 @@ export class VueUi {
     window.scrollTo(0, 0);
   }
 
-  private filter(filter: Filter): void {
-    this.filterListeners.forEach(listener => listener.filter(filter));
-  }
-
-  private filterOnlyMine(onlyMine: boolean): void {
-    this.filterListeners.forEach(listener => listener.filterOnlyMine(onlyMine));
-  }
-
-  private applyForJob(jobOfferId: number): void {
-    this.viewListener!.apply(this.findJobOffer(jobOfferId)!);
-  }
-
-  private markAsFavourite(jobOfferId: number, favourite: boolean): void {
-    this.viewListener!.markAsFavourite(jobOfferId, favourite);
-  }
-
-  private showJobOffer(jobOffer: JobOffer): void {
-    this.screens.showJobOffer(jobOffer);
-  }
-
-  private jobOfferUrl(jobOffer: JobOffer): string {
-    return this.screens.jobOfferUrl(jobOffer);
-  }
-
-  private resumePayment(jobOfferId: number): void {
-    this.screens.navigate('payment', jobOfferId);
-  }
+  // from main:
 
   setViewListener(viewListener: ViewListener): void {
     this.viewListener = viewListener;
-  }
-
-  setNavigationListener(navigationListener: NavigationListener): void {
-    this.navigationListener = navigationListener;
-  }
-
-  addFilterListener(listener: FilterListener): void {
-    this.filterListeners.push(listener);
-  }
-
-  setJobOffers(jobOffers: JobOffer[]): void {
-    this.store!.jobOffers = jobOffers;
   }
 
   setJobOfferFilters(filters: FilterOptions): void {
@@ -201,45 +122,12 @@ export class VueUi {
     this.store!.jobOfferFilter = filter;
   }
 
-  setToast(toast: Toast|null): void {
-    this.store!.toast = toast;
-  }
-
-  private findJobOffer(jobOfferId: number): JobOffer|null {
-    return this.view!.findJobOffer(jobOfferId);
-  }
-
-  private findJobOfferReactive(jobOfferId: number): JobOffer {
-    const jobOffer = this.store!.jobOffers.find(o => o.id === jobOfferId);
-    if (jobOffer) {
-      return jobOffer;
-    }
-    const nonReactive = this.findJobOffer(jobOfferId);
-    if (nonReactive) {
-      return nonReactive;
-      // TODO, currently, only offers in list are reactive; 
-      //       but offers outside of list (like mine, expired) need to be reactive too
-    }
-    throw new Error(
-      'Failed to render job offer.' +
-      ' offers in domain' + this.view!.jobOffers.length +
-      ' offers in view' + this.store!.jobOffers.length);
-  }
-
   setPaymentNotification(notification: PaymentNotification): void {
     this.store!.paymentNotification = notification;
   }
 
   setPaymentStatus(status: PaymentStatus): void {
     this.store!.paymentStatus = status;
-  }
-
-  /**
-   * This can only be run after ui create, before mount
-   */
-  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
-    this.store!.planBundle = {bundleName, remainingJobOffers, canRedeem};
-    this.store!.pricingPlan = bundleName;
   }
 
   setJobOfferApplicationEmail(applicationEmail: string): void {
@@ -278,6 +166,20 @@ export class VueUi {
     this.findJobOfferReactive(jobOfferId)!.isFavourite = favourite;
   }
 
+  // from view
+
+  setNavigationListener(navigationListener: NavigationListener): void {
+    this.navigationListener = navigationListener;
+  }
+
+  addFilterListener(listener: FilterListener): void {
+    this.filterListeners.push(listener);
+  }
+
+  setToast(toast: Toast|null): void {
+    this.store!.toast = toast;
+  }
+
   showValueProposition(jobOffer: JobOffer): void {
     this.store!.vpVisibleFor = jobOffer;
   }
@@ -286,23 +188,53 @@ export class VueUi {
     this.store!.vpVisibleFor = null;
   }
 
-  valuePropositionAccepted(
-    event: ValuePropositionEvent,
-    email?: string,
-  ): void {
-    this.viewListener!.valuePropositionAccepted(this.store!.vpVisibleFor!, event, email);
+  setJobOffers(jobOffers: JobOffer[]): void {
+    this.store!.jobOffers = jobOffers;
+  }
+
+  /**
+   * This can only be run after ui create, before mount
+   */
+  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
+    this.store!.planBundle = {bundleName, remainingJobOffers, canRedeem};
+    this.store!.pricingPlan = bundleName;
   }
 
   mount(element: Element): void {
     this.app.provide(jobBoardServiceInjectKey, new JobBoardService(
       this.store!,
+      this.view!,
+      this.screens,
       this.locationInput,
       this.viewListener!,
-      this.uiController,
+      this,
       this.tagAutocomplete!,
       this._upload!,
+      this.filterListeners,
+      this.navigationListener!,
     ));
     this.screens.useIn(this.app);
     this.app.mount(element);
+  }
+
+  private findJobOfferReactive(jobOfferId: number): JobOffer {
+    const jobOffer = this.store!.jobOffers.find(o => o.id === jobOfferId);
+    if (jobOffer) {
+      return jobOffer;
+    }
+    const nonReactive = this.findJobOffer(jobOfferId);
+    if (nonReactive) {
+      return nonReactive;
+      // TODO, currently, only offers in list are reactive; 
+      //       but offers outside of list (like mine, expired) need to be reactive too
+    }
+    throw new Error(
+      'Failed to render job offer.' +
+      ' offers in domain' + this.view!.jobOffers.length +
+      ' offers in view' + this.store!.jobOffers.length);
+  }
+
+  private findJobOffer(jobOfferId: number): JobOffer|null {
+    return this.view!.findJobOffer(jobOfferId);
   }
 }
