@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import TextFieldFormat from "../../../../view/ui/external/TextFieldFormat.vue";
+import TextFieldFormat from "../External/TextFieldFormat.vue";
 
 const props = defineProps<Props>();
 const model = defineModel<string>({required: true});
