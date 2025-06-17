@@ -178,7 +178,7 @@ payments.addEventListener({
     presenter.notifyPaymentNotification(notification);
   },
   statusChanged(paymentId: string, status: PaymentStatus): void {
-    ui.setPaymentStatus(status);
+    presenter.setPaymentStatus(status);
     if (status === 'paymentComplete') {
       board.jobOfferPaid(jobOfferPayments.jobOfferId(paymentId));
       const pricingPlan = jobOfferPayments.pricingPlan(paymentId);
@@ -204,7 +204,7 @@ backend.initialJobOffers()
 
 presenter.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 presenter.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
-ui.setJobOfferFilters(board.jobOfferFilters());
+presenter.setJobOfferFilters(board.jobOfferFilters());
 
 ui.mount(document.querySelector('#neonApplication')!);
 

@@ -8,13 +8,12 @@ import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/st
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
-import {FilterOptions} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {PaymentStatus, PlanBundleName, PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {PlanBundleName, PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
 
@@ -81,14 +80,6 @@ export class VueUiFactory {
 
   setViewListener(viewListener: ViewListener): void {
     this.viewListener = viewListener;
-  }
-
-  setJobOfferFilters(filters: FilterOptions): void {
-    this.store.jobOfferFilters = filters;
-  }
-
-  setPaymentStatus(status: PaymentStatus): void {
-    this.store.paymentStatus = status;
   }
 
   setTagAutocomplete(tagAutocomplete: TagAutocomplete): void {

@@ -1,8 +1,9 @@
 import {VatIdState} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
+import {FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
-import {Country, PaymentSummary} from "../../../../Packages/Feature/JobBoard/Domain/Model";
+import {Country, PaymentStatus, PaymentSummary} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
 
 export class JobBoardPresenter {
@@ -56,6 +57,10 @@ export class JobBoardPresenter {
     this.store.paymentNotification = notification;
   }
 
+  setPaymentStatus(status: PaymentStatus): void {
+    this.store.paymentStatus = status;
+  }
+
   notifyVatIncludedChanged(vatIncluded: boolean): void {
     this.store.paymentSummary!.vatIncluded = vatIncluded;
   }
@@ -82,6 +87,10 @@ export class JobBoardPresenter {
 
   setJobOffers(jobOffers: JobOffer[]): void {
     this.store.jobOffers = jobOffers;
+  }
+
+  setJobOfferFilters(filters: FilterOptions): void {
+    this.store.jobOfferFilters = filters;
   }
 
   private navigateHome(): void {
