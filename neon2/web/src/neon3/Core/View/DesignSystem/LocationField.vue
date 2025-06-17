@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
-import {Location, LocationInput} from "../../../../location/LocationInput";
+import {Location, LocationInput} from "../../Application/LocationInput";
 import TextInputOutline from "./TextInputOutline.vue";
 
 const modelLocation = defineModel<Location|null>({required: true});

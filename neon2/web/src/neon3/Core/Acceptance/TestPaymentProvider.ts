@@ -1,4 +1,4 @@
-import {PaymentMethod, PaymentNotification, PaymentProvider} from './PaymentProvider';
+import {PaymentMethod, PaymentNotification, PaymentProvider} from '../Application/PaymentProvider';
 
 export class TestPaymentProvider implements PaymentProvider {
   private input: HTMLInputElement|null = null;

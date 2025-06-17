@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import {computed, provide} from 'vue';
 import {ValuePropositionEvent} from "../../main";
-import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
+import {PaymentNotification} from "../../neon3/Core/Application/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import {Design} from "../../neon3/Core/View/DesignSystem/design";

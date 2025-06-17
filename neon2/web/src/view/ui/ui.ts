@@ -1,7 +1,6 @@
 import {createApp, h, reactive} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
-import {LocationInput} from "../../location/LocationInput";
 import {
   Country,
   InitiatePayment,
@@ -15,7 +14,8 @@ import {
   VatIdState,
 } from "../../main";
 import {BackendTag} from "../../neon3/Core/Backend/backendInput";
-import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
+import {LocationInput} from "../../neon3/Core/Application/LocationInput";
+import {PaymentNotification} from "../../neon3/Core/Application/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast, View} from '../view';
 import JobBoard from './JobBoard.vue';

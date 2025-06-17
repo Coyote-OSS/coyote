@@ -1,4 +1,4 @@
-import {Location} from "../../../location/LocationInput";
+import {Location} from "../../../neon3/Core/Application/LocationInput";
 
 export class ValidationBag<T extends string> {
   constructor(

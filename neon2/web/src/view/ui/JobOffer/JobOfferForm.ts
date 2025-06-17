@@ -1,4 +1,3 @@
-import {Location} from "../../../location/LocationInput";
 import {
   ApplicationMode,
   Currency,
@@ -9,6 +8,7 @@ import {
   Tag,
   WorkExperience,
 } from "../../../main";
+import {Location} from "../../../neon3/Core/Application/LocationInput";
 import {prependJsUrlProtocol, strippedNumericString} from "./ValidationBag";
 
 export interface FormModel {

@@ -6,15 +6,19 @@ import {
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
-import {GoogleMapsPin, LocationDisplay, TestLocationDisplay} from "./location/LocationDisplay";
-import {GoogleMapsAutocomplete, LocationInput, TestLocationInput} from "./location/LocationInput";
+import {TestLocationInput} from "./neon3/Core/Acceptance/TestLocationInput";
+import {LocationDisplay} from "./neon3/Core/Application/LocationDisplay";
+import {GoogleMapsAutocomplete} from "./neon3/Core/External/GoogleMaps/GoogleMapsAutocomplete";
+import {TestLocationDisplay} from "./neon3/Core/Acceptance/TestLocationDisplay";
 import {BackendJobOffer, BackendJobOfferLocation, BackendJobOfferTagPriority} from "./neon3/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Core/Domain/vat";
+import {GoogleMapsMap} from "./neon3/Core/External/GoogleMaps/GoogleMapsMap";
+import {LocationInput} from "./neon3/Core/Application/LocationInput";
 import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
-import {PaymentMethod, PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
+import {PaymentMethod, PaymentNotification, PaymentProvider} from "./neon3/Core/Application/PaymentProvider";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
-import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
-import {TestPaymentProvider} from './paymentProvider/TestPaymentProvider';
+import {StripePaymentProvider} from './neon3/Core/External/Stripe/StripePaymentProvider';
+import {TestPaymentProvider} from './neon3/Core/Acceptance/TestPaymentProvider';
 import {PlanBundle} from "./planBundle";
 import {TagAutocompleteResult, VueUi} from './view/ui/ui';
 import {View} from "./view/view";
@@ -31,7 +35,7 @@ const jobOfferPayments = new JobOfferPayments();
 const planBundle = new PlanBundle();
 const locationDisplay: LocationDisplay = backend.testMode()
   ? new TestLocationDisplay()
-  : new GoogleMapsPin();
+  : new GoogleMapsMap();
 
 export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|PaidPricingPlan;

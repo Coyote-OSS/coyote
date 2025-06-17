@@ -1,8 +1,8 @@
 import {JobOffer} from "../../jobBoard";
 import {JobOfferFilter} from "../../jobOfferFilter";
-import {LocationInput} from "../../location/LocationInput";
 import {Country, JobOfferFilters, PaymentSummary, PricingPlan, UploadAssets, VatIdState} from "../../main";
-import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
+import {LocationInput} from "../../neon3/Core/Application/LocationInput";
+import {PaymentNotification} from "../../neon3/Core/Application/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from "../view";
 import {PlanBundle, Screen, TagAutocomplete, UiController, ViewListener} from "./ui";

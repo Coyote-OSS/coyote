@@ -1,6 +1,7 @@
 import {googleMapsLoaded} from "./googleMaps";
+import {LocationDisplay} from "../../Application/LocationDisplay";
 
-export class GoogleMapsPin implements LocationDisplay {
+export class GoogleMapsMap implements LocationDisplay {
   mount(element: HTMLElement, latitude: number, longitude: number): void {
     googleMapsLoaded(() => this.mountAddress(element, latitude, longitude));
   }
@@ -11,17 +12,6 @@ export class GoogleMapsPin implements LocationDisplay {
       zoom: 12,
       center: location,
     });
-    new google.maps.Marker({
-      position: location,
-      map: map,
-    });
+    new google.maps.Marker({position: location, map});
   }
-}
-
-export interface LocationDisplay {
-  mount(element: HTMLElement, latitude: number, longitude: number): void;
-}
-
-export class TestLocationDisplay implements LocationDisplay {
-  mount(element: HTMLElement, latitude: number, longitude: number): void {}
 }

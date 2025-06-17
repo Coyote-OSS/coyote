@@ -1,6 +1,6 @@
 import {PaymentIntentResult, Stripe, StripeCardElement, StripeError} from '@stripe/stripe-js';
 import {loadStripe} from '@stripe/stripe-js/pure';
-import {PaymentMethod, PaymentNotification, PaymentProvider} from './PaymentProvider';
+import {PaymentMethod, PaymentNotification, PaymentProvider} from '../../Application/PaymentProvider';
 
 export class StripePaymentProvider implements PaymentProvider {
   private readonly _runtime: Promise<PaymentProvider>;
