@@ -29,13 +29,13 @@ export class Router<R extends string> {
   addRoute(
     component: Component,
     route: R,
-    vueRouterRoute: string,
+    routerPath: string,
     before?: (params: RouteParamsGeneric) => R|null,
   ): void {
     this.router.addRoute({
       component,
       name: route,
-      path: vueRouterRoute,
+      path: routerPath,
       beforeEnter: before ? [((route: RouteLocationNormalized) => {
         const redirectTo = before(route.params);
         if (redirectTo) {

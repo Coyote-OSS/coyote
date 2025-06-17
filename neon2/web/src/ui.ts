@@ -44,7 +44,6 @@ export interface ViewListener {
 }
 
 export interface NavigationListener {
-  setScreen(screen: Screen, jobOfferId: number|null): void;
   showJobOfferForm(): void;
 }
 
@@ -58,7 +57,7 @@ export type PricingPlanSelected = () => boolean;
 export type TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult) => void;
 export type TagAutocompleteResult = (tags: Tag[]) => void;
 
-export class VueUi {
+export class VueUiFactory {
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
   private readonly screens: Screens|null = null;

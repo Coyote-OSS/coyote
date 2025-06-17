@@ -19,13 +19,13 @@ import {PaymentStatus, PlanBundleName, PricingPlan} from "./neon3/Packages/Featu
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
-import {TagAutocompleteResult, VueUi} from './ui';
+import {TagAutocompleteResult, VueUiFactory} from './ui';
 import {View} from "./view";
 
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
-const ui = new VueUi(
+const ui = new VueUiFactory(
   locationInput(backend.testMode()),
   backend.isAuthenticated(),
   backendImageApi,

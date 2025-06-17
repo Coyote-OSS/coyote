@@ -7,7 +7,7 @@ import {
   TagAutocomplete,
   TagAutocompleteResult,
   ViewListener,
-  VueUi,
+  VueUiFactory,
 } from "../../../../../ui";
 import {View} from "../../../../../view";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
@@ -20,7 +20,7 @@ import {BoardStore} from "./store";
 
 export class JobBoardService {
   constructor(
-    private readonly ui: VueUi,
+    private readonly ui: VueUiFactory,
     private readonly view: View,
     private readonly store: BoardStore,
     private readonly screens: Screens,
@@ -61,7 +61,8 @@ export class JobBoardService {
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {
-    this.navigationListener!.setScreen(screen, jobOfferId);
+    this.ui.setToast(null);
+    this.ui.setScreen(screen, jobOfferId);
   }
 
   applyForJob(jobOfferId: number): void {

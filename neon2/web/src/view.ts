@@ -4,7 +4,7 @@ import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PlanBundleName} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {sortInPlace} from "./neon3/Packages/Feature/JobBoard/Presenter/orderBy";
-import {Screen, VueUi} from './ui';
+import {VueUiFactory} from './ui';
 
 export type Toast = 'created'|'edited'|'bundle-used';
 
@@ -15,13 +15,9 @@ export class View {
   private planBundleCanRedeem: boolean = false;
   private filterListener: FilterListener|null = null;
 
-  constructor(private ui: VueUi) {
+  constructor(private ui: VueUiFactory) {
     ui.setView(this);
     this.ui.setNavigationListener({
-      setScreen(screen: Screen, jobOfferId: number|null): void {
-        ui.setToast(null);
-        ui.setScreen(screen, jobOfferId);
-      },
       showJobOfferForm: (): void => {
         if (this.planBundleCanRedeem) {
           this.ui.setScreen('form', null);
