@@ -1,6 +1,7 @@
 import {Screen, UiController, ViewListener} from "../../../../../view/ui/ui";
 import {SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
+import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
 
 export class JobBoardService {
@@ -44,5 +45,9 @@ export class JobBoardService {
 
   markAsFavourite(jobOfferId: number, favourite: boolean): void {
     this.uiController.markAsFavourite(jobOfferId, favourite);
+  }
+
+  selectPlan(plan: PricingPlan): void {
+    this.uiController.selectPlan(plan);
   }
 }

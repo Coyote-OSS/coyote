@@ -17,7 +17,7 @@
       :button-title="buttonTitle(plan)"
       :content="plan.free ? 'restricted' : 'full'"
       :color="plan.color"
-      @select="screen.uiController.selectPlan"/>
+      @select="p => service.selectPlan(p)"/>
     <JobOfferPricingCard
       v-else
       v-for="plan in bundlePlans"
@@ -31,26 +31,22 @@
       :content="plan.bundleDiscount ? 'premium-summary' : 'full'"
       :bundle-discount="plan.bundleDiscount"
       :color="plan.color"
-      @select="screen.uiController.selectPlan"/>
+      @select="p => service.selectPlan(p)"/>
   </div>
   <JobOfferPricingTestimonial class="mt-16"/>
 </template>
 
 <script setup lang="ts">
 import {inject, ref} from 'vue';
+import {JobBoardService} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {jobBoardServiceInjectKey} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {PricingPlan} from "../../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {bundlePlans, offerPlans, PlanCard} from "../../../../neon3/Packages/Feature/JobBoard/Domain/plans";
-import {UiController} from "../../ui";
 import JobOfferPricingCard from '../JobOfferPricingCard.vue';
 import JobOfferPricingTab, {PricingTab} from '../JobOfferPricingTab.vue';
 import JobOfferPricingTestimonial from "../JobOfferPricingTestimonial.vue";
 
-const screen = inject('screen') as Screen;
-
-interface Screen {
-  uiController: UiController;
-}
-
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 const pricingTab = ref<PricingTab>('offers');
 
 function buttonTitle(plan: PlanCard): string {
