@@ -1,6 +1,6 @@
-import {parseNumber} from "../src/view/ui/JobOffer/JobOfferForm";
-import {ValidationBag} from "../src/view/ui/JobOffer/ValidationBag";
-import {assertEquals, assertFalse, assertTrue, describe, test} from "./assertion";
+import {parseNumber} from "./JobOfferForm";
+import {ValidationBag} from "./ValidationBag";
+import {assertEquals, assertFalse, assertTrue, describe, test} from "../../../../test/assertion";
 
 describe('Validation rules.', () => {
   describe('Numeric field rule.', () => {

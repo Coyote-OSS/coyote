@@ -1,5 +1,5 @@
-import {ValidationBag} from "../src/view/ui/JobOffer/ValidationBag";
-import {assertFalse, assertTrue, describe, test} from "./assertion";
+import {ValidationBag} from "./ValidationBag";
+import {assertFalse, assertTrue, describe, test} from "../../../../test/assertion";
 
 describe('Validation rules.', () => {
   const hostnames = ['www.youtube.com', 'youtube.com', 'youtu.be'];

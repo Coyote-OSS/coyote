@@ -1,5 +1,5 @@
-import {fewLocations} from "../../src/view/ui/JobOffer/JobOfferListItem";
-import {assertEquals, describe, test} from "../assertion";
+import {assertEquals, describe, test} from "../../../../test/assertion";
+import {fewLocations} from "./JobOfferListItem";
 
 describe('Given a job offer has many locations, only a few of them are presented.', () => {
   test('No locations are presented as empty locations', () => {

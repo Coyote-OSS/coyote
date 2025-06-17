@@ -1,6 +1,6 @@
-import {PricingPlan} from "../src/neon3/Packages/Feature/JobBoard/Domain/Model";
-import {PlanBundle} from "../src/neon3/Packages/Feature/JobBoard/Application/PlanBundle";
-import {assertEquals, assertThrows, describe, test} from "./assertion";
+import {assertEquals, assertThrows, describe, test} from "../../../../../../test/assertion";
+import {PricingPlan} from "../Domain/Model";
+import {PlanBundle} from "./PlanBundle";
 
 describe('Plan bundle.', () => {
   test('Adding a bundle updates the view.', () => {

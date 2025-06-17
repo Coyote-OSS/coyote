@@ -1,5 +1,5 @@
-import {simplifiedUrl} from "../src/view/ui/JobOffer/JobOfferField";
-import {assertEquals, assertThrows, describe, test} from "./assertion";
+import {assertEquals, assertThrows, describe, test} from "../../../../test/assertion";
+import {simplifiedUrl} from "./JobOfferField";
 
 describe('Job offer show.', () => {
   describe('Simplified url', () => {

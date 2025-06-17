@@ -1,5 +1,5 @@
-import {prependJsUrlProtocol, ValidationBag} from "../src/view/ui/JobOffer/ValidationBag";
-import {assertEquals, assertFalse, assertTrue, describe, test} from "./assertion";
+import {prependJsUrlProtocol, ValidationBag} from "./ValidationBag";
+import {assertEquals, assertFalse, assertTrue, describe, test} from "../../../../test/assertion";
 
 describe('Validation rules.', () => {
   describe('Js url rule.', () => {
