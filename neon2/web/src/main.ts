@@ -16,6 +16,7 @@ import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard
 import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
+import {TagAutocomplete, TagAutocompleteResult} from "./neon3/Packages/Feature/JobBoard/Application/TagAutocomplete";
 import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {
@@ -25,7 +26,8 @@ import {
   PricingPlan,
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
-import {TagAutocomplete, TagAutocompleteResult, VueUiFactory} from './ui';
+import {Policy} from "./Policy";
+import {VueUiFactory} from './ui';
 import {ViewListener} from "./ViewListener";
 
 const filterRepo = new FilterRepository();
@@ -63,6 +65,8 @@ const ui = new VueUiFactory(
   filterService,
   tagAutocomplete);
 
+const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, ui.store);
+
 const presenter = new JobBoardPresenter(ui.store, ui.screens);
 
 const viewListener: ViewListener = {
@@ -80,7 +84,7 @@ const viewListener: ViewListener = {
     });
   },
   markAsFavourite(jobOfferId: number, favourite: boolean): void {
-    ui.setJobOfferFavourite(jobOfferId, favourite);
+    presenter.setJobOfferFavourite(jobOfferId, favourite);
     backendApi.markJobOfferAsFavourite(jobOfferId, favourite);
   },
   vatDetailsChanged(countryCode: string, vatId: string): void {

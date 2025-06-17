@@ -35,11 +35,11 @@
 
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
+import {TagAutocomplete} from "../../../../../../Packages/Feature/JobBoard/Application/TagAutocomplete";
 
 import {Design} from "../../../../DesignSystem/design";
 import TextInput from "../../../../DesignSystem/TextInput.vue";
 import {Tag} from "../../../../../../Packages/Feature/JobBoard/Domain/Model";
-import {TagAutocomplete} from "../../../../../../../ui";
 import {useClickOutside} from "../../../../Vue/clickOutside";
 
 const props = defineProps<Props>();

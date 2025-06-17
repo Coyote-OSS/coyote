@@ -10,20 +10,10 @@ import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/Fi
 import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
-import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {TagAutocomplete} from "./neon3/Packages/Feature/JobBoard/Application/TagAutocomplete";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
 import {ViewListener} from "./ViewListener";
-
-export type CanEdit = (jobOfferId: number) => boolean;
-export type PricingPlanSelected = () => boolean;
-
-export interface TagAutocomplete {
-  (tagPrompt: string, result: TagAutocompleteResult): void;
-}
-
-export type TagAutocompleteResult = (tags: Tag[]) => void;
 
 export class VueUiFactory {
   public readonly screens: Screens;
@@ -42,14 +32,16 @@ export class VueUiFactory {
     private filterService: JobOfferFilterService,
     private tagAutocomplete: TagAutocomplete,
   ) {
-    this.screens = new Screens(new Policy(
-      isAuthenticated,
-      (jobOfferId: number): boolean => this.allJobOffers.findJobOffer(jobOfferId)?.canEdit ?? false,
-      () => this.store.pricingPlan !== null));
     this.app = createApp(JobBoard);
     const pinia = createPinia();
     this.app.use(pinia);
     this.store = useBoardStore();
+
+    this.screens = new Screens(new Policy(
+      isAuthenticated,
+      allJobOffers,
+      this.store,
+    ));
   }
 
   setViewListener(viewListener: ViewListener): void {
@@ -72,23 +64,5 @@ export class VueUiFactory {
     ));
     this.screens.useIn(this.app);
     this.app.mount(element);
-  }
-
-  setJobOfferFavourite(jobOfferId: number, favourite: boolean): void {
-    this.findJobOfferReactive(jobOfferId)!.isFavourite = favourite;
-  }
-
-  private findJobOfferReactive(jobOfferId: number): JobOffer {
-    const jobOffer = this.store.jobOffers.find(o => o.id === jobOfferId);
-    if (jobOffer) {
-      return jobOffer;
-    }
-    const nonReactive = this.allJobOffers.findJobOffer(jobOfferId);
-    if (nonReactive) {
-      return nonReactive;
-      // TODO, currently, only offers in list are reactive; 
-      //       but offers outside of list (like mine, expired) need to be reactive too
-    }
-    throw new Error('Failed to render job offer.');
   }
 }

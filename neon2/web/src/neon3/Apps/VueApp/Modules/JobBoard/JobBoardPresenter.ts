@@ -109,6 +109,14 @@ export class JobBoardPresenter {
     this.store.jobOfferFilters = filters;
   }
 
+  setJobOfferFavourite(jobOfferId: number, favourite: boolean): void {
+    const jobOffer = this.store.jobOffers.find(o => o.id === jobOfferId);
+    if (jobOffer) {
+      jobOffer.isFavourite = favourite;
+    }
+    throw new Error('Failed to mark job offer.');
+  }
+
   private navigateHome(): void {
     this.screens.navigate('home', null);
   }

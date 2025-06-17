@@ -1,6 +1,6 @@
 import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
-import {TagAutocomplete, TagAutocompleteResult, VueUiFactory} from "../../../../../ui";
+import {VueUiFactory} from "../../../../../ui";
 import {ViewListener} from "../../../../../ViewListener";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "../../../../Packages/Core/Backend/BackendImageApi";
@@ -10,6 +10,10 @@ import {JobOfferFilterService} from "../../../../Packages/Feature/JobBoard/Appli
 import {JobOfferRepository} from "../../../../Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {PlanBundleRepository} from "../../../../Packages/Feature/JobBoard/Application/PlanBundleRepository";
+import {
+  TagAutocomplete,
+  TagAutocompleteResult,
+} from "../../../../Packages/Feature/JobBoard/Application/TagAutocomplete";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {Screen} from "../../../../Packages/Feature/JobBoard/Presenter/Model";

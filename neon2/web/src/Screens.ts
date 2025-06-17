@@ -19,13 +19,13 @@ export class Screens {
     this.router.addRoute(JobOfferShowScreen, 'show', '/Job/:slug/:id');
     this.router.addRoute(JobOfferPricing, 'pricing', '/Job/pricing');
     this.router.addRoute(JobOfferCreate, 'form', '/Job/new', () => {
-      if (!policy.createCreateJobOffer()) {
+      if (!policy.createJobOffer()) {
         return 'pricing';
       }
       return null;
     });
     this.router.addRoute(JobOfferEdit, 'edit', '/Job/:id/edit', params => {
-      if (!policy.canEditJobOffer(Number(params.id))) {
+      if (!policy.editJobOffer(Number(params.id))) {
         return 'home';
       }
       return null;
