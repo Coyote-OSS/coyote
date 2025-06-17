@@ -1,6 +1,5 @@
 import {JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from './jobBoard';
-import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobBoardPresenter} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardPresenter";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
@@ -11,6 +10,7 @@ import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
+import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
@@ -191,7 +191,7 @@ payments.addEventListener({
 });
 
 planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
-  ui.setPlanBundle(plan, remainingJobOffers, remainingJobOffers > 0);
+  presenter.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
 });
 
 const bundle = backend.initialPlanBundle();

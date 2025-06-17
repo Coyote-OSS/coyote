@@ -1,11 +1,12 @@
-import {JobOfferFilterService} from "../../../../Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
-import {Screen, TagAutocomplete, TagAutocompleteResult, ViewListener, VueUiFactory} from "../../../../../ui";
+import {Screen, TagAutocomplete, TagAutocompleteResult, VueUiFactory} from "../../../../../ui";
+import {ViewListener} from "../../../../../ViewListener";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "../../../../Packages/Core/Backend/BackendImageApi";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {FilterRepository} from "../../../../Packages/Feature/JobBoard/Application/FilterRepository";
+import {JobOfferFilterService} from "../../../../Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "../../../../Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {PlanBundleRepository} from "../../../../Packages/Feature/JobBoard/Application/PlanBundleRepository";
@@ -22,7 +23,7 @@ export class JobBoardService {
     private readonly viewListener: ViewListener,
     private readonly _tagAutocomplete: TagAutocomplete,
     private readonly backendImageApi: BackendImageApi,
-    private readonly allJobOffers: JobOfferRepository,
+    private readonly jobOfferRepo: JobOfferRepository,
     private readonly planBundle: PlanBundleRepository,
     private readonly filterRepo: FilterRepository,
     private readonly filterService: JobOfferFilterService,
@@ -41,14 +42,14 @@ export class JobBoardService {
   }
 
   showJob(jobOfferId: number): void {
-    this.screens.showJobOffer(this.ui.findJobOffer(jobOfferId)!);
+    this.screens.showJobOffer(this.jobOfferRepo.findJobOffer(jobOfferId)!);
   }
 
   showForm(): void {
     if (this.planBundle.canRedeem()) {
       this.screens.navigate('form', null);
     } else {
-      this.ui.screens.navigate('pricing', null);
+      this.screens.navigate('pricing', null);
     }
   }
 
@@ -79,7 +80,7 @@ export class JobBoardService {
   }
 
   findJobOffer(jobOfferId: number): JobOffer|null {
-    return this.allJobOffers.findJobOffer(jobOfferId);
+    return this.jobOfferRepo.findJobOffer(jobOfferId);
   }
 
   markAsFavourite(jobOfferId: number, favourite: boolean): void {

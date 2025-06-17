@@ -3,7 +3,12 @@ import {Screens} from "../../../../../Screens";
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
 import {FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
-import {Country, PaymentStatus, PaymentSummary} from "../../../../Packages/Feature/JobBoard/Domain/Model";
+import {
+  Country,
+  PaymentStatus,
+  PaymentSummary,
+  PlanBundleName,
+} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
 
 export class JobBoardPresenter {
@@ -75,6 +80,11 @@ export class JobBoardPresenter {
 
   initJobOfferApplicationEmail(applicationEmail: string): void {
     this.store.applicationEmail = applicationEmail;
+  }
+
+  notifyPlanBundleChanged(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
+    this.store.planBundle = {bundleName, remainingJobOffers, canRedeem};
+    this.store.pricingPlan = bundleName;
   }
 
   showValueProposition(jobOffer: JobOffer): void {

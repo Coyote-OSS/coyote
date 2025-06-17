@@ -1,41 +1,22 @@
 import {createPinia} from "pinia";
 import {createApp} from 'vue';
-import JobBoard from './neon3/Apps/VueApp/Modules/JobBoard/View/JobBoard.vue';
-import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
-import {ValuePropositionEvent} from "./main";
 import {JobBoardService} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
+import JobBoard from './neon3/Apps/VueApp/Modules/JobBoard/View/JobBoard.vue';
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/View/vue";
 import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
+import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
-import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {PlanBundleName, PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
+import {ViewListener} from "./ViewListener";
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
-
-export interface ViewListener {
-  createJob(plan: PricingPlan, jobOffer: SubmitJobOffer): void;
-  updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void;
-  payForJob(payment: InitiatePayment): void;
-  resumePayment(jobOfferId: number): void;
-  redeemBundle(jobOfferId: number): void;
-  managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void;
-  mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void;
-  vatDetailsChanged(countryCode: string, vatId: string): void;
-  assertUserAuthenticated(): boolean;
-  markAsFavourite(jobOfferId: number, favourite: boolean): void;
-  apply(jobOffer: JobOffer): void;
-  valuePropositionAccepted(
-    jobOffer: JobOffer,
-    event: ValuePropositionEvent,
-    email?: string): void;
-}
 
 export type CanEdit = (jobOfferId: number) => boolean;
 export type PricingPlanSelected = () => boolean;
@@ -45,10 +26,10 @@ export type TagAutocompleteResult = (tags: Tag[]) => void;
 export class VueUiFactory {
   public readonly screens: Screens;
   public readonly store: BoardStore;
+  private readonly app;
 
   private viewListener: ViewListener|null = null;
   private tagAutocomplete: TagAutocomplete|null = null;
-  private readonly app;
 
   constructor(
     private locationInput: LocationInput,
@@ -61,7 +42,7 @@ export class VueUiFactory {
   ) {
     this.screens = new Screens(new Policy(
       isAuthenticated,
-      (jobOfferId: number): boolean => this.findJobOffer(jobOfferId)?.canEdit ?? false,
+      (jobOfferId: number): boolean => this.allJobOffers.findJobOffer(jobOfferId)?.canEdit ?? false,
       () => this.store.pricingPlan !== null));
     this.app = createApp(JobBoard);
     const pinia = createPinia();
@@ -76,8 +57,6 @@ export class VueUiFactory {
     }
   }
 
-  // from main:
-
   setViewListener(viewListener: ViewListener): void {
     this.viewListener = viewListener;
   }
@@ -88,13 +67,6 @@ export class VueUiFactory {
 
   setJobOfferFavourite(jobOfferId: number, favourite: boolean): void {
     this.findJobOfferReactive(jobOfferId)!.isFavourite = favourite;
-  }
-
-  // from view
-
-  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
-    this.store.planBundle = {bundleName, remainingJobOffers, canRedeem};
-    this.store.pricingPlan = bundleName;
   }
 
   mount(element: Element): void {
@@ -120,16 +92,12 @@ export class VueUiFactory {
     if (jobOffer) {
       return jobOffer;
     }
-    const nonReactive = this.findJobOffer(jobOfferId);
+    const nonReactive = this.allJobOffers.findJobOffer(jobOfferId);
     if (nonReactive) {
       return nonReactive;
       // TODO, currently, only offers in list are reactive; 
       //       but offers outside of list (like mine, expired) need to be reactive too
     }
     throw new Error('Failed to render job offer.');
-  }
-
-  findJobOffer(jobOfferId: number): JobOffer|null {
-    return this.allJobOffers.findJobOffer(jobOfferId);
   }
 }
