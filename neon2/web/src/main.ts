@@ -23,7 +23,6 @@ import {
   PlanBundleName,
   PricingPlan,
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
-import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
 import {TagAutocompleteResult, VueUiFactory} from './ui';
 import {View} from "./view";
@@ -51,8 +50,7 @@ const jobOfferPayments = new JobOfferPayments();
 const _locationDisplay = locationDisplay(backend.testMode());
 const presenter = new JobBoardPresenter(ui.store, ui.screens);
 
-backend.jobOfferPayments()
-  .forEach((paymentIntent: JobOfferPaymentIntent): void => jobOfferPayments.addJobOffer(paymentIntent));
+jobOfferPayments.initJobOffers(backend.jobOfferPayments());
 
 ui.setViewListener({
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {

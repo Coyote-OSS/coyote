@@ -4,6 +4,10 @@ import {JobOfferPaymentIntent} from "../JobBoard";
 export class JobOfferPayments {
   private paymentIntents: JobOfferPaymentIntent[] = [];
 
+  initJobOffers(jobOffers: JobOfferPaymentIntent[]): void {
+    jobOffers.forEach(jobOffer => this.addJobOffer(jobOffer));
+  }
+
   addJobOffer(jobOffer: JobOfferPaymentIntent): void {
     this.paymentIntents.push(jobOffer);
   }
