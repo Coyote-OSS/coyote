@@ -80,6 +80,10 @@ export class JobBoardPresenter {
     this.store.vpVisibleFor = null;
   }
 
+  setJobOffers(jobOffers: JobOffer[]): void {
+    this.store.jobOffers = jobOffers;
+  }
+
   private navigateHome(): void {
     this.screens.navigate('home', null);
   }

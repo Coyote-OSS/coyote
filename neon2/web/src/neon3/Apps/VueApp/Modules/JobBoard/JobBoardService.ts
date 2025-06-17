@@ -1,17 +1,12 @@
 import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
-import {
-  FilterListener,
-  Screen,
-  TagAutocomplete,
-  TagAutocompleteResult,
-  ViewListener,
-  VueUiFactory,
-} from "../../../../../ui";
+import {Screen, TagAutocomplete, TagAutocompleteResult, ViewListener, VueUiFactory} from "../../../../../ui";
+import {View} from "../../../../../view";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "../../../../Packages/Core/Backend/BackendImageApi";
-import {JobOfferRepository} from "../../../../Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
+import {FilterRepository} from "../../../../Packages/Feature/JobBoard/Application/FilterRepository";
+import {JobOfferRepository} from "../../../../Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {PlanBundleRepository} from "../../../../Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
@@ -26,10 +21,11 @@ export class JobBoardService {
     private readonly locationInput: LocationInput,
     private readonly viewListener: ViewListener,
     private readonly _tagAutocomplete: TagAutocomplete,
-    private readonly filterListeners: FilterListener[],
     private readonly backendImageApi: BackendImageApi,
     private readonly allJobOffers: JobOfferRepository,
     private readonly planBundle: PlanBundleRepository,
+    private readonly filterRepo: FilterRepository,
+    private readonly view: View,
   ) {}
 
   redeemBundle(jobOfferId: number): void {
@@ -61,7 +57,14 @@ export class JobBoardService {
   }
 
   filter(filter: Filter): void {
-    this.filterListeners.forEach(listener => listener.filter(filter));
+    this.filterRepo.setFilter(filter);
+    this.store.jobOfferFilter = filter;
+    this.store.jobOffers = this.view.filterJobOffersReturn();
+  }
+
+  filterOnlyMine(onlyMine: boolean): void {
+    this.filterRepo.setFilterOnlyMine(onlyMine);
+    this.store.jobOffers = this.view.filterJobOffersReturn();
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {
@@ -95,10 +98,6 @@ export class JobBoardService {
 
   vatDetailsChanged(countryCode: string, vatId: string): void {
     this.viewListener.vatDetailsChanged(countryCode, vatId);
-  }
-
-  filterOnlyMine(onlyMine: boolean): void {
-    this.filterListeners.forEach(listener => listener.filterOnlyMine(onlyMine));
   }
 
   /** @deprecated */

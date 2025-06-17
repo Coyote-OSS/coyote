@@ -7,18 +7,23 @@ import {sortInPlace} from "./neon3/Packages/Feature/JobBoard/Presenter/orderBy";
 export class JobOfferFilterService {
   constructor(
     private jobOffers: JobOfferRepository,
-    private filter: Filter,
+    private filter: Filter|null,
   ) {}
 
   filterJobOffers(): JobOffer[] {
     const jobOffers = this.jobOffers.all()
       .filter(jobOffer => jobOffer.status === 'published')
       .filter(jobOffer => this.jobOfferMatches(jobOffer));
-    sortInPlace(jobOffers, this.filter.sort);
+    if (this.filter) {
+      sortInPlace(jobOffers, this.filter.sort);
+    }
     return jobOffers;
   }
 
   private jobOfferMatches(jobOffer: JobOffer): boolean {
+    if (this.filter === null) {
+      return true;
+    }
     if (!this.jobOfferMatchesSearchPhrase(jobOffer, this.filter.searchPhrase)) {
       return false;
     }

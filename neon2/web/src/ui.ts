@@ -7,14 +7,16 @@ import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/st
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
-import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {Filter, FilterOptions} from "./neon3/Packages/Feature/JobBoard/Application/filter";
+import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
+import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PlanBundleName, PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
+import {View} from "./view";
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
@@ -50,7 +52,6 @@ export class VueUiFactory {
   public readonly screens: Screens;
   public readonly store: BoardStore;
 
-  private readonly filterListeners: FilterListener[] = [];
   private viewListener: ViewListener|null = null;
   private tagAutocomplete: TagAutocomplete|null = null;
   private readonly app;
@@ -61,6 +62,8 @@ export class VueUiFactory {
     private backendImageApi: BackendImageApi,
     private allJobOffers: JobOfferRepository,
     private planBundle: PlanBundleRepository,
+    private filterRepo: FilterRepository,
+    private view: View,
   ) {
     this.screens = new Screens(new Policy(
       isAuthenticated,
@@ -89,10 +92,6 @@ export class VueUiFactory {
     this.store.jobOfferFilters = filters;
   }
 
-  setJobOfferFilter(filter: Filter): void {
-    this.store.jobOfferFilter = filter;
-  }
-
   setPaymentStatus(status: PaymentStatus): void {
     this.store.paymentStatus = status;
   }
@@ -107,14 +106,6 @@ export class VueUiFactory {
 
   // from view
 
-  addFilterListener(listener: FilterListener): void {
-    this.filterListeners.push(listener);
-  }
-
-  setJobOffers(jobOffers: JobOffer[]): void {
-    this.store.jobOffers = jobOffers;
-  }
-
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
     this.store.planBundle = {bundleName, remainingJobOffers, canRedeem};
     this.store.pricingPlan = bundleName;
@@ -128,10 +119,11 @@ export class VueUiFactory {
       this.locationInput,
       this.viewListener!,
       this.tagAutocomplete!,
-      this.filterListeners,
       this.backendImageApi,
       this.allJobOffers,
       this.planBundle,
+      this.filterRepo,
+      this.view,
     ));
     this.screens.useIn(this.app);
     this.app.mount(element);

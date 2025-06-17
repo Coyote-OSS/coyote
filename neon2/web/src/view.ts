@@ -1,27 +1,19 @@
 import {JobOfferFilterService} from "./JobOfferFilterService";
-import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
+import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
-import {VueUiFactory} from './ui';
+import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 
 export class View {
-  private filter: Filter|null = null;
-  public filterOnlyMine: boolean = false;
-
   constructor(
-    private ui: VueUiFactory,
     private jobOffers: JobOfferRepository,
+    private filterRepo: FilterRepository,
   ) {}
 
-  filterJobOffers(): void {
-    if (this.filterOnlyMine) {
-      this.ui.setJobOffers(this.jobOffers.onlyMine());
-    } else {
-      const f = new JobOfferFilterService(this.jobOffers, this.filter!);
-      this.ui.setJobOffers(f.filterJobOffers());
+  filterJobOffersReturn(): JobOffer[] {
+    if (this.filterRepo.filterOnlyMine) {
+      return this.jobOffers.onlyMine();
     }
-  }
-
-  notifyFilterChanged(filter: Filter): void {
-    this.filter = filter;
+    const f = new JobOfferFilterService(this.jobOffers, this.filterRepo.filter);
+    return f.filterJobOffers();
   }
 }

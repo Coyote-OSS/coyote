@@ -9,7 +9,7 @@ import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
-import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
+import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
@@ -27,36 +27,30 @@ import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
 import {TagAutocompleteResult, VueUiFactory} from './ui';
 import {View} from "./view";
 
-const allJobOffers = new JobOfferRepository();
+const filterRepo = new FilterRepository();
+const jobOffersRepo = new JobOfferRepository();
+const planBundleRepo = new PlanBundleRepository();
+
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
-const planBundle = new PlanBundleRepository();
+
+const view = new View(jobOffersRepo, filterRepo);
+
 const ui = new VueUiFactory(
   locationInput(backend.testMode()),
   backend.isAuthenticated(),
   backendImageApi,
-  allJobOffers,
-  planBundle);
-
-const view = new View(ui, allJobOffers);
-
-ui.addFilterListener({
-  filter: (filter: Filter): void => {
-    ui.setJobOfferFilter(filter);
-    view.notifyFilterChanged(filter);
-    view.filterJobOffers();
-  },
-  filterOnlyMine: (onlyMine: boolean): void => {
-    view.filterOnlyMine = onlyMine;
-    view.filterJobOffers();
-  },
-});
+  jobOffersRepo,
+  planBundleRepo,
+  filterRepo,
+  view);
 
 const board = new JobBoard((jobOffers: JobOffer[]): void => {
-  allJobOffers.setJobOffers(jobOffers);
-  view.filterJobOffers();
+  jobOffersRepo.setJobOffers(jobOffers);
+  presenter.setJobOffers(view.filterJobOffersReturn());
 });
+
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const jobOfferPayments = new PaymentIntentRepository();
@@ -107,7 +101,7 @@ ui.setViewListener({
       .then(() => {
         board.jobOfferPaid(jobOfferId);
         presenter.notifyPlanBundleUsed();
-        planBundle.decrease();
+        planBundleRepo.decrease();
       });
   },
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void {
@@ -190,20 +184,20 @@ payments.addEventListener({
       board.jobOfferPaid(jobOfferPayments.jobOfferId(paymentId));
       const pricingPlan = jobOfferPayments.pricingPlan(paymentId);
       if (pricingPlan !== 'premium') {
-        planBundle.set(pricingPlan, remainingJobOffers(pricingPlan));
+        planBundleRepo.set(pricingPlan, remainingJobOffers(pricingPlan));
       }
       presenter.notifyJobOfferPaid();
     }
   },
 });
 
-planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
+planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
   ui.setPlanBundle(plan, remainingJobOffers, remainingJobOffers > 0);
 });
 
 const bundle = backend.initialPlanBundle();
 if (bundle.hasBundle) {
-  planBundle.set(bundle.planBundleName!, bundle.remainingJobOffers!);
+  planBundleRepo.set(bundle.planBundleName!, bundle.remainingJobOffers!);
 }
 
 backend.initialJobOffers()
