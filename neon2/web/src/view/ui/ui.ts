@@ -73,7 +73,6 @@ export interface UiController {
 
 export type CanEdit = (jobOfferId: number) => boolean;
 export type PricingPlanSelected = () => boolean;
-
 export type TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult) => void;
 export type TagAutocompleteResult = (tags: Tag[]) => void;
 
@@ -88,11 +87,10 @@ export class VueUi {
   private uiController: UiController;
   private tagAutocomplete: TagAutocomplete|null = null;
   private _upload: UploadAssets|null = null;
-  private _applicationEmail: string|null = null;
   private store: BoardStore|null = null;
   private app;
 
-  constructor(locationInput: LocationInput, isAuthenticated: boolean) {
+  constructor(private locationInput: LocationInput, isAuthenticated: boolean) {
     this.uiController = {
       showForm: this.showForm.bind(this),
       selectPlan: this.selectPlan.bind(this),
@@ -112,7 +110,6 @@ export class VueUi {
       screen: 'home',
       paymentNotification: null,
       paymentStatus: null,
-      locationInput,
       vpVisibleFor: null,
     });
     this.gate = new Policy(
@@ -254,8 +251,8 @@ export class VueUi {
     this.store!.pricingPlan = bundleName;
   }
 
-  setJobOfferApplicationEmail(applicationEmail: string) {
-    this._applicationEmail = applicationEmail;
+  setJobOfferApplicationEmail(applicationEmail: string): void {
+    this.store!.applicationEmail = applicationEmail;
   }
 
   setPaymentSummary(summary: PaymentSummary): void {
@@ -306,9 +303,9 @@ export class VueUi {
   }
 
   mount(element: Element): void {
-    this.store!.applicationEmail = this._applicationEmail;
     this.app.provide(jobBoardServiceInjectKey, new JobBoardService(
       this.store!,
+      this.locationInput,
       this.viewListener!,
       this.uiController,
       this.tagAutocomplete!,

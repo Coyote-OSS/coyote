@@ -1,5 +1,6 @@
 import {UploadAssets, ValuePropositionEvent} from "../../../../../main";
 import {Screen, TagAutocomplete, TagAutocompleteResult, UiController, ViewListener} from "../../../../../view/ui/ui";
+import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
@@ -9,6 +10,7 @@ import {BoardStore} from "./store";
 export class JobBoardService {
   constructor(
     private store: BoardStore,
+    private locationInput: LocationInput,
     private viewListener: ViewListener,
     private uiController: UiController,
     private _tagAutocomplete: TagAutocomplete,
@@ -102,5 +104,9 @@ export class JobBoardService {
 
   valuePropositionAccepted(event: ValuePropositionEvent, email?: string): void {
     this.uiController.valuePropositionAccepted(event, email);
+  }
+
+  mountLocationInput(input: HTMLInputElement, listener: LocationListener): void {
+    this.locationInput.mount(input, listener);
   }
 }

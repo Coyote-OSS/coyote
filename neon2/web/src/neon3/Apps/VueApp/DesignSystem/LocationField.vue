@@ -11,18 +11,19 @@
 
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
-import {Location, LocationInput} from "../../../Packages/Core/Application/LocationInput";
+import {Location} from "../../../Packages/Core/Application/LocationInput";
+import {JobBoardService} from "../Modules/JobBoard/JobBoardService";
+import {jobBoardServiceInjectKey} from "../Modules/JobBoard/vue";
 import TextInputOutline from "./TextInputOutline.vue";
 
 const modelLocation = defineModel<Location|null>({required: true});
 const props = defineProps<Props>();
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
+const locationField = ref<HTMLInputElement|null>(null);
 
 interface Props {
   placeholder: string;
 }
-
-const locationInput: LocationInput = inject('locationInput')!;
-const locationField = ref<HTMLInputElement|null>(null);
 
 let previouslySelectedFormattedAddress: string = formatAddress(modelLocation.value);
 
@@ -30,7 +31,7 @@ const loading = ref<boolean>(true);
 
 onMounted(() => {
   locationField.value!.value = formatAddress(modelLocation.value);
-  locationInput.mount(locationField.value!, {
+  service.mountLocationInput(locationField.value!, {
     mounted(): void {
       loading.value = false;
     },

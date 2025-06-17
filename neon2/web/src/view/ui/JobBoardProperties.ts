@@ -1,4 +1,3 @@
-import {LocationInput} from "../../neon3/Packages/Core/Application/LocationInput";
 import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
 import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
@@ -10,6 +9,5 @@ export interface JobBoardProperties {
   toast: Toast|null;
   paymentNotification: PaymentNotification|null;
   paymentStatus: PaymentStatus|null;
-  locationInput: LocationInput|null;
   vpVisibleFor: JobOffer|null;
 }

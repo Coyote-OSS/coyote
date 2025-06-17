@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, inject, provide} from 'vue';
+import {computed, inject} from 'vue';
 import {ValuePropositionEvent} from "../../main";
 import {Design} from "../../neon3/Apps/VueApp/DesignSystem/design";
 import {JobBoardService} from "../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
@@ -46,8 +46,6 @@ import {JobBoardProperties} from "./JobBoardProperties";
 const props = defineProps<JobBoardProperties>();
 const store = useBoardStore();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
-
-provide('locationInput', props.locationInput!);
 
 function navigateHome(): void {
   service.navigate('home', null);
