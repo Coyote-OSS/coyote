@@ -1,3 +1,4 @@
+import {JobOfferFilter} from "../../../../../jobOfferFilter";
 import {Screen, UiController, ViewListener} from "../../../../../view/ui/ui";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
@@ -27,8 +28,16 @@ export class JobBoardService {
     this.uiController.showJobOffer(jobOffer!);
   }
 
+  showForm(): void {
+    this.uiController.showForm();
+  }
+
   mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
     this.viewListener.mountLocationDisplay(element, latitude, longitude);
+  }
+
+  filter(filter: JobOfferFilter): void {
+    this.uiController.filter(filter);
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {
@@ -61,5 +70,14 @@ export class JobBoardService {
 
   vatDetailsChanged(countryCode: string, vatId: string): void {
     this.viewListener.vatDetailsChanged(countryCode, vatId);
+  }
+
+  filterOnlyMine(onlyMine: boolean): void {
+    this.uiController.filterOnlyMine(onlyMine);
+  }
+
+  /** @deprecated */
+  jobOfferUrl(jobOffer: JobOffer): string {
+    return this.uiController.jobOfferUrl(jobOffer);
   }
 }
