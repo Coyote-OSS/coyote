@@ -1,7 +1,6 @@
 <template>
   <JobOfferForm
     mode="update"
-    :view-listener="screen.viewListener"
     :job-offer="toSubmitJobOffer(route.routeJobOffer!)"
     :job-offer-expires-in-days="route.routeJobOffer!.expiresInDays"
     :tag-autocomplete="screen.tagAutocomplete"
@@ -18,7 +17,7 @@ import {JobBoardService} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/Jo
 import {jobBoardServiceInjectKey} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {SubmitJobOffer, toSubmitJobOffer} from "../../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {RouteProperties} from "../../screen/Screens";
-import {TagAutocomplete, UiController, ViewListener} from "../../ui";
+import {TagAutocomplete} from "../../ui";
 import JobOfferForm from "../JobOfferForm.vue";
 
 const screen = inject('screen') as Screen;
@@ -26,7 +25,6 @@ const route = defineProps<RouteProperties>();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 interface Screen {
-  viewListener: ViewListener;
   tagAutocomplete: TagAutocomplete;
   upload: UploadAssets;
 }

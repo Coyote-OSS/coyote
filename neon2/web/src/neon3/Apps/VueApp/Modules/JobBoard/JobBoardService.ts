@@ -20,6 +20,10 @@ export class JobBoardService {
     this.viewListener.updateJob(jobOfferId, jobOffer);
   }
 
+  createJob(plan: PricingPlan, jobOffer: SubmitJobOffer): void {
+    this.viewListener.createJob(plan, jobOffer);
+  }
+
   showJob(
     jobOfferId: number,
     /** @deprecated **/

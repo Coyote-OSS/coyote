@@ -1,14 +1,13 @@
 <template>
   <JobOfferForm
     mode="create"
-    :view-listener="screen.viewListener"
     :job-offer="newJobOffer"
     :job-offer-expires-in-days="expiresInDays"
     :tag-autocomplete="screen.tagAutocomplete"
     :upload="screen.upload"
     :four-steps="fourSteps"
     @submit="create"
-    @abort="screen.uiController.navigate('pricing', null)"/>
+    @abort="service.navigate('pricing', null)"/>
 </template>
 
 <script setup lang="ts">
@@ -18,15 +17,13 @@ import {JobBoardService} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/Jo
 import {jobBoardServiceInjectKey} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {SubmitJobOffer} from "../../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {PricingPlan} from "../../../../neon3/Packages/Feature/JobBoard/Domain/Model";
-import {TagAutocomplete, UiController, ViewListener} from "../../ui";
+import {TagAutocomplete} from "../../ui";
 import JobOfferForm from "../JobOfferForm.vue";
 
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 const screen = inject('screen') as Screen;
 
 interface Screen {
-  uiController: UiController;
-  viewListener: ViewListener;
   tagAutocomplete: TagAutocomplete;
   upload: UploadAssets;
   pricingPlan: PricingPlan;
@@ -34,7 +31,7 @@ interface Screen {
 }
 
 function create(jobOffer: SubmitJobOffer): void {
-  screen.viewListener.createJob(screen.pricingPlan, jobOffer);
+  service.createJob(screen.pricingPlan, jobOffer);
 }
 
 const expiresInDays = computed(() => screen.pricingPlan === 'free' ? 14 : 30);

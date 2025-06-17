@@ -216,10 +216,10 @@
 
 <script setup lang="ts">
 import {computed, inject, reactive, ref} from 'vue';
-import {
-  UploadAssets,
-  
-} from "../../../main";
+import {UploadAssets} from "../../../main";
+import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
+import {DrawerOption} from "../../../neon3/Apps/VueApp/DesignSystem/DropdownSingle.vue";
+import LocationField from "../../../neon3/Apps/VueApp/DesignSystem/LocationField.vue";
 import {JobBoardService} from "../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {jobBoardServiceInjectKey} from "../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {SubmitJobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/Model";
@@ -232,10 +232,7 @@ import {
   WorkMode,
 } from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {formatWorkMode, parseWorkMode} from "../../../neon3/Packages/Feature/JobBoard/Domain/workMode";
-import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
-import {DrawerOption} from "../../../neon3/Apps/VueApp/DesignSystem/DropdownSingle.vue";
-import LocationField from "../../../neon3/Apps/VueApp/DesignSystem/LocationField.vue";
-import {TagAutocomplete, ViewListener} from "../ui";
+import {TagAutocomplete} from "../ui";
 import {
   formatCompanySizeLevel,
   formatHiringType,
@@ -258,7 +255,6 @@ const emit = defineEmits<Emit>();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 interface Props {
-  viewListener: ViewListener;
   tagAutocomplete: TagAutocomplete;
   jobOffer: SubmitJobOffer;
   jobOfferExpiresInDays: number;
