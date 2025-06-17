@@ -12,6 +12,7 @@ import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
 import {GoogleMapsPin, LocationDisplay, TestLocationDisplay} from "./location/LocationDisplay";
 import {GoogleMapsAutocomplete, LocationInput, TestLocationInput} from "./location/LocationInput";
+import {isVatIncluded} from "./neon3/Core/Domain/vat";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
@@ -313,13 +314,6 @@ export interface PaymentSummary {
 export interface Country {
   countryCode: string;
   countryName: string;
-}
-
-function isVatIncluded(countryCode: string, vatId: string): boolean {
-  if (['PL', 'UA', 'US', 'JP', 'SG'].includes(countryCode)) {
-    return true;
-  }
-  return vatId === '';
 }
 
 export type VatIdState = 'valid'|'invalid'|'pending';
