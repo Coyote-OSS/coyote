@@ -3,7 +3,7 @@ import {createApp, h, reactive} from 'vue';
 import {JobOfferFilter} from "../../jobOfferFilter";
 import {JobOfferFilters, UploadAssets, ValuePropositionEvent, VatIdState} from "../../main";
 import {JobBoardService} from "../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
-import {useBoardStore} from "../../neon3/Apps/VueApp/Modules/JobBoard/store";
+import {BoardStore, useBoardStore} from "../../neon3/Apps/VueApp/Modules/JobBoard/store";
 import {jobBoardServiceInjectKey} from "../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {LocationInput} from "../../neon3/Packages/Core/Application/LocationInput";
 import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
@@ -92,6 +92,8 @@ export class VueUi {
   private uiController: UiController;
   private tagAutocomplete: TagAutocomplete|null = null;
   private _upload: UploadAssets|null = null;
+  private _applicationEmail: string|null = null;
+  private store: BoardStore|null = null;
 
   constructor(locationInput: LocationInput, isAuthenticated: boolean) {
     this.uiController = {
@@ -121,8 +123,6 @@ export class VueUi {
       paymentNotification: null,
       paymentStatus: null,
       planBundle: null,
-      pricingPlan: null,
-      applicationEmail: null,
       paymentSummary: null,
       paymentVatIdState: 'valid',
       invoiceCountries: null,
@@ -133,7 +133,7 @@ export class VueUi {
     this.gate = new Policy(
       isAuthenticated,
       (jobOfferId: number): boolean => this.findJobOffer(jobOfferId)?.canEdit ?? false,
-      () => this.vueState.pricingPlan !== null,
+      () => this.store!.pricingPlan !== null,
     );
     this.screens = new Screens({
       routeProperties: (jobOfferId: number|null): RouteProperties => {
@@ -158,7 +158,7 @@ export class VueUi {
 
   private selectPlan(plan: PricingPlan): void {
     if (this.viewListener!.assertUserAuthenticated()) {
-      this.vueState.pricingPlan = plan;
+      this.store!.pricingPlan = plan;
       this.setScreen('form', null);
     }
   }
@@ -257,13 +257,16 @@ export class VueUi {
     this.vueState.paymentStatus = status;
   }
 
+  /**
+   * This can only be run after ui create, before mount
+   */
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
     this.vueState.planBundle = {bundleName, remainingJobOffers, canRedeem};
-    this.vueState.pricingPlan = bundleName;
+    this.store!.pricingPlan = bundleName;
   }
 
   setJobOfferApplicationEmail(applicationEmail: string) {
-    this.vueState.applicationEmail = applicationEmail;
+    this._applicationEmail = applicationEmail;
   }
 
   setPaymentSummary(summary: PaymentSummary): void {
@@ -313,19 +316,24 @@ export class VueUi {
     this.viewListener!.valuePropositionAccepted(this.vueState.vpVisibleFor!, event, email);
   }
 
-  mount(element: Element): void {
+  mount(
+    element: Element,
+    beforeMount: () => void,
+  ): void {
     const app = createApp({render: () => h(JobBoard, this.vueState)});
     const pinia = createPinia();
     app.use(pinia);
-    const store = useBoardStore();
+    this.store = useBoardStore();
+    this.store.applicationEmail = this._applicationEmail;
     app.provide(jobBoardServiceInjectKey, new JobBoardService(
-      store,
+      this.store,
       this.viewListener!,
       this.uiController,
       this.tagAutocomplete!,
       this._upload!,
     ));
     this.screens.useIn(app);
+    beforeMount();
     app.mount(element);
   }
 }

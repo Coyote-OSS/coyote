@@ -11,25 +11,20 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue';
 import {JobBoardService} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {useBoardStore} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/store";
 import {jobBoardServiceInjectKey} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {SubmitJobOffer} from "../../../../neon3/Packages/Feature/JobBoard/Application/Model";
-import {PricingPlan} from "../../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import JobOfferForm from "../JobOfferForm.vue";
 
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
-const screen = inject('screen') as Screen;
-
-interface Screen {
-  pricingPlan: PricingPlan;
-  applicationEmail: string;
-}
+const store = useBoardStore();
 
 function create(jobOffer: SubmitJobOffer): void {
-  service.createJob(screen.pricingPlan, jobOffer);
+  service.createJob(store.pricingPlan!, jobOffer);
 }
 
-const expiresInDays = computed(() => screen.pricingPlan === 'free' ? 14 : 30);
-const fourSteps = computed(() => screen.pricingPlan !== 'free');
+const expiresInDays = computed(() => store.pricingPlan === 'free' ? 14 : 30);
+const fourSteps = computed(() => store.pricingPlan !== 'free');
 
 const newJobOffer: SubmitJobOffer = {
   title: '',
@@ -48,7 +43,7 @@ const newJobOffer: SubmitJobOffer = {
   experience: 'not-provided',
   applicationMode: '4programmers',
   applicationExternalAts: null,
-  applicationEmail: screen.applicationEmail,
+  applicationEmail: store.applicationEmail,
   companyHiringType: 'direct',
   companyFundingYear: null,
   companySizeLevel: null,

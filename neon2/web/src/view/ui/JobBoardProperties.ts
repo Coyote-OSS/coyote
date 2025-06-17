@@ -18,8 +18,6 @@ export interface JobBoardProperties {
   paymentNotification: PaymentNotification|null;
   paymentStatus: PaymentStatus|null;
   planBundle: PlanBundle|null;
-  pricingPlan: PricingPlan|null;
-  applicationEmail: string|null;
   paymentSummary: PaymentSummary|null;
   paymentVatIdState: VatIdState;
   invoiceCountries: Country[]|null;

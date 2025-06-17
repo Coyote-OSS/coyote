@@ -158,6 +158,9 @@ export class View {
     this.ui.setScreen('home', null);
   }
 
+  /**
+   * This can only be run after ui create, before mount
+   */
   setPlanBundle(planName: PlanBundleName, remainingJobOffers: number): void {
     this.planBundleCanRedeem = remainingJobOffers > 0;
     this.ui.setPlanBundle(planName, remainingJobOffers, this.planBundleCanRedeem);

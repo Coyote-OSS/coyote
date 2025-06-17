@@ -12,13 +12,13 @@ import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {JobOfferPayments} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferPayments";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
+import {PlanBundle} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundle";
 import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PlanBundleName, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
-import {PlanBundle} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundle";
 import {TagAutocompleteResult, VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
@@ -170,10 +170,6 @@ payments.addEventListener({
   },
 });
 
-planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
-  view.setPlanBundle(plan, remainingJobOffers);
-});
-
 const bundle = backend.initialPlanBundle();
 if (bundle.hasBundle) {
   planBundle.set(bundle.planBundleName!, bundle.remainingJobOffers!);
@@ -200,7 +196,14 @@ view.addFilterListener({
   },
 });
 
-ui.mount(document.querySelector('#neonApplication')!);
+ui.mount(
+  document.querySelector('#neonApplication')!,
+  () => {
+    planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
+      view.setPlanBundle(plan, remainingJobOffers);
+    });
+  },
+);
 
 export interface UploadImage {
   (file: File): Promise<string>;
