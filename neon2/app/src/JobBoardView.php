@@ -30,7 +30,7 @@ readonly class JobBoardView {
         }
         return <<<html
             <meta name="viewport" content="width=device-width,initial-scale=1">
-            <link rel="stylesheet" type="text/css" href="$styleUrl" title="includeInShadowRoot">
+            <link rel="stylesheet" type="text/css" href="$styleUrl">
             $resources
             html;
     }
@@ -44,9 +44,7 @@ readonly class JobBoardView {
                 htmlResource;
         }
         return <<<html
-            <custom-neon-application>
-                <div id="creditCardInput"></div>
-            </custom-neon-application>
+            <div id="neonApplication"></div>
             <script type="module" src="{$this->entryScriptUrl()}"></script>
             <script>var backendInput = {$this->backendInput()};</script>
             <script>

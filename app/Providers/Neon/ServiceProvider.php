@@ -103,10 +103,13 @@ class ServiceProvider extends RouteServiceProvider {
             $theme->themeMode(),
             request()->route()->parameter('id'),
             $acceptanceTagNames);
-        return response(view('job.home_modern', [
-            'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
-            'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),
-        ]))
+        $view = <<<html
+            <html>
+            <head>{$jobBoardView->htmlMarkupHead()}</head>
+            <body class="bg-body">{$jobBoardView->htmlMarkupBody()}</body>
+            <html>
+            html;
+        return response($view)
             ->withCookie(cookie('control', '', httpOnly:false))
             ->withCookie(cookie('controlAt', '', httpOnly:false));
     }

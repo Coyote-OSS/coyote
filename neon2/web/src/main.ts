@@ -17,7 +17,6 @@ import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
 import {TestPaymentProvider} from './paymentProvider/TestPaymentProvider';
 import {PlanBundle} from "./planBundle";
-import {runInShadowDom, setDarkTheme} from "./view/shadowDom/shadowDom";
 import {TagAutocompleteResult, VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
@@ -293,9 +292,7 @@ view.addFilterListener({
   },
 });
 
-export type Theme = 'light'|'dark';
-backend.onChangeTheme((theme: Theme) => setDarkTheme(theme === 'dark'));
-runInShadowDom(element => ui.mount(element!));
+ui.mount(document.querySelector('#neonApplication')!);
 
 export interface UploadImage {
   (file: File): Promise<string>;
