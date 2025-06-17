@@ -92,8 +92,7 @@ import {DrawerOption} from "../../../../DesignSystem/DropdownSingle.vue";
 import {JobBoardService} from "../../JobBoardService";
 import {jobBoardServiceInjectKey} from "../../vue";
 import {PaymentMethod} from "../../../../../../Packages/Core/Application/PaymentProvider";
-import {Country, InvoiceInformation} from "../../../../../../Packages/Feature/JobBoard/Domain/Model";
-import {PaymentSummary} from "../../../../../../Packages/Feature/JobBoard/Presenter/Model";
+import {Country, InvoiceInformation, PaymentSummary} from "../../../../../../Packages/Feature/JobBoard/Domain/Model";
 import JobOfferStepper from './JobOfferStepper.vue';
 import {ValidationBag} from "./ValidationBag";
 

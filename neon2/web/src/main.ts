@@ -17,9 +17,13 @@ import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/Paym
 import {PlanBundle} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundle";
 import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {PaymentStatus, PlanBundleName, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {
+  PaymentStatus,
+  PaymentSummary,
+  PlanBundleName,
+  PricingPlan,
+} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
-import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
 import {TagAutocompleteResult, VueUiFactory} from './ui';
 import {View} from "./view";

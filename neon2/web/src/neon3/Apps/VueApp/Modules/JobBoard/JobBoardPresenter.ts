@@ -2,8 +2,7 @@ import {VatIdState} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
-import {Country} from "../../../../Packages/Feature/JobBoard/Domain/Model";
-import {PaymentSummary} from "../../../../Packages/Feature/JobBoard/Presenter/Model";
+import {Country, PaymentSummary} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
 
 export class JobBoardPresenter {

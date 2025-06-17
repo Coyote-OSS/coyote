@@ -39,8 +39,8 @@ import {useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {PaymentNotification} from "./neon3/Packages/Core/Application/PaymentProvider";
 import {PaymentStatus} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {Toast} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import ValuePropositionModal from "./neon3/Packages/Feature/Vp/ValuePropositionModal.vue";
-import {Toast} from './view';
 
 const store = useBoardStore();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;

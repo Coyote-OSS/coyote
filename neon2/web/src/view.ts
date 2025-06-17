@@ -5,8 +5,6 @@ import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {sortInPlace} from "./neon3/Packages/Feature/JobBoard/Presenter/orderBy";
 import {VueUiFactory} from './ui';
 
-export type Toast = 'created'|'edited'|'bundle-used';
-
 export class View {
   private filter: Filter|null = null;
   private filterOnlyMine: boolean = false;
