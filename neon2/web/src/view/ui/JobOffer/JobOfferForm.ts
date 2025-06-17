@@ -1,13 +1,10 @@
-import {
-  JobOfferTag,
-  
-} from "../../../main";
+
 import {Location} from "../../../neon3/Packages/Core/Application/LocationInput";
 import {SubmitJobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {
   ApplicationMode,
   Currency,
-  HiringType, LegalForm,
+  HiringType, JobOfferTag, LegalForm,
   Rate,
   WorkExperience,
 } from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";

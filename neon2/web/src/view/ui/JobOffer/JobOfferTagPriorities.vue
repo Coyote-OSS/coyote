@@ -15,7 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import {JobOfferTag} from "../../../main";
+
+import {JobOfferTag} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 
 const props = defineProps<Props>();
 

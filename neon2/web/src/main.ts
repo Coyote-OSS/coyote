@@ -7,13 +7,13 @@ import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider"
 import {PaymentNotification, PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
-import {BackendJobOffer, BackendJobOfferTagPriority} from "./neon3/Packages/Core/Backend/backendInput";
+import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
-import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Application/JobOffer";
 import {JobOfferPayments} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferPayments";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
+import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PlanBundleName, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
@@ -33,11 +33,6 @@ const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const jobOfferPayments = new JobOfferPayments();
 const planBundle = new PlanBundle();
 const _locationDisplay = locationDisplay(backend.testMode());
-
-export interface JobOfferTag {
-  tagName: string;
-  priority: BackendJobOfferTagPriority;
-}
 
 backend.jobOfferPayments()
   .forEach((paymentIntent: JobOfferPaymentIntent): void => jobOfferPayments.addJobOffer(paymentIntent));
@@ -107,7 +102,6 @@ ui.setViewListener({
   apply(jobOffer: JobOffer): void {
     view.showValueProposition(jobOffer);
   },
-
   valuePropositionAccepted(
     jobOffer: JobOffer,
     event: ValuePropositionEvent,
@@ -215,11 +209,6 @@ export interface UploadImage {
 export interface UploadAssets {
   uploadLogo: UploadImage;
   uploadAsset: UploadImage;
-}
-
-export interface Country {
-  countryCode: string;
-  countryName: string;
 }
 
 export type VatIdState = 'valid'|'invalid'|'pending';

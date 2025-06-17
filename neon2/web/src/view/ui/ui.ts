@@ -1,11 +1,17 @@
 import {createApp, h, reactive} from 'vue';
 import {JobOfferFilter} from "../../jobOfferFilter";
-import {Country, JobOfferFilters, UploadAssets, ValuePropositionEvent, VatIdState} from "../../main";
+import {JobOfferFilters, UploadAssets, ValuePropositionEvent, VatIdState} from "../../main";
 import {LocationInput} from "../../neon3/Packages/Core/Application/LocationInput";
 import {PaymentNotification} from "../../neon3/Packages/Core/Application/PaymentProvider";
-import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Application/JobOffer";
+import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {InitiatePayment, SubmitJobOffer} from "../../neon3/Packages/Feature/JobBoard/Application/Model";
-import {PaymentStatus, PlanBundleName, PricingPlan, Tag} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
+import {
+  Country,
+  PaymentStatus,
+  PlanBundleName,
+  PricingPlan,
+  Tag,
+} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "../../neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {Toast, View} from '../view';
 import JobBoard from './JobBoard.vue';

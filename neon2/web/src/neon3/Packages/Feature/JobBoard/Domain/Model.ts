@@ -1,3 +1,5 @@
+import {BackendJobOfferTagPriority} from "../../../Core/Backend/backendInput";
+
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
 export type LegalForm = 'employment'|'b2b'|'of-mandate'|'specific-task';
 export type WorkExperience = 'intern'|'junior'|'mid-level'|'senior'|'lead'|'manager'|'not-provided';
@@ -31,4 +33,14 @@ export interface Tag {
   tagName: string;
   title: string|null;
   timesUsed: number;
+}
+
+export interface Country {
+  countryCode: string;
+  countryName: string;
+}
+
+export interface JobOfferTag {
+  tagName: string;
+  priority: BackendJobOfferTagPriority;
 }

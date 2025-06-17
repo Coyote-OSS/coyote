@@ -1,8 +1,8 @@
-import {Country, JobOfferTag} from "./main";
+
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendInput, BackendJobOffer, BackendPlanBundle} from "./neon3/Packages/Core/Backend/backendInput";
-import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Application/JobOffer";
-import {Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
+import {Country, JobOfferTag, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {parseWorkMode} from "./neon3/Packages/Feature/JobBoard/Domain/workMode";
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 

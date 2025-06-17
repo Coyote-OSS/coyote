@@ -1,16 +1,16 @@
-import {JobOfferTag} from "../../../../../main";
+
 import {PaymentMethod} from "../../../Core/Application/PaymentProvider";
 import {BackendJobOfferLocation} from "../../../Core/Backend/backendInput";
 import {
   ApplicationMode,
   Currency,
   HiringType,
-  InvoiceInformation,
+  InvoiceInformation, JobOfferTag,
   LegalForm,
   Rate,
   WorkExperience,
 } from "../Domain/Model";
-import {JobOffer} from "./JobOffer";
+import {JobOffer} from "../Domain/JobOffer";
 
 export interface SubmitJobOffer {
   title: string;

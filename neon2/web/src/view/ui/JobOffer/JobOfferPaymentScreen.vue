@@ -17,8 +17,9 @@
 
 <script setup lang="ts">
 import {inject} from "vue";
-import {Country, VatIdState} from "../../../main";
+import {VatIdState} from "../../../main";
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
+import {Country} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "../../../neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {RouteProperties} from "../screen/Screens";
 import {PlanBundle, ViewListener} from "../ui";

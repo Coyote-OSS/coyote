@@ -1,6 +1,6 @@
-import {JobOfferTag} from "../../../../../main";
+
 import {BackendJobOfferLocation} from "../../../Core/Backend/backendInput";
-import {ApplicationMode, Currency, HiringType, LegalForm, Rate, WorkExperience, WorkMode} from "../Domain/Model";
+import {ApplicationMode, Currency, HiringType, JobOfferTag, LegalForm, Rate, WorkExperience, WorkMode} from "./Model";
 
 export interface JobOffer {
   id: number;

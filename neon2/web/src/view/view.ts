@@ -1,6 +1,6 @@
 import {jobOfferCities, jobOfferTagNames} from '../jobBoard';
 import {JobOfferFilter, sortInPlace} from "../jobOfferFilter";
-import {JobOffer} from "../neon3/Packages/Feature/JobBoard/Application/JobOffer";
+import {JobOffer} from "../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PlanBundleName} from "../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Screen, VueUi} from './ui/ui';
 

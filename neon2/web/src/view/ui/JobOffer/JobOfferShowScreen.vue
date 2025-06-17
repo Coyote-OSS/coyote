@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import {computed, inject} from "vue";
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
-import {JobOffer} from "../../../neon3/Packages/Feature/JobBoard/Application/JobOffer";
+import {JobOffer} from "../../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {RouteProperties} from "../screen/Screens";
 import {UiController, ViewListener} from "../ui";
 import JobOfferButtonPill from "./JobOfferButtonPill.vue";
