@@ -42,46 +42,12 @@ export class JobBoardService {
     this.viewListener.createJob(plan, jobOffer);
   }
 
-  showJob(jobOfferId: number): void {
-    this.screens.showJobOffer(this.jobOfferRepo.findJobOffer(jobOfferId)!);
-  }
-
-  showForm(): void {
-    if (this.planBundle.canRedeem()) {
-      this.screens.navigate('form', null);
-    } else {
-      this.screens.navigate('pricing', null);
-    }
-  }
-
   mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
     this.viewListener.mountLocationDisplay(element, latitude, longitude);
   }
 
-  filter(filter: Filter): void {
-    this.filterRepo.setFilter(filter);
-    this.store.jobOfferFilter = filter;
-
-    this.store.jobOffers = this.filterService.filter(this.filterRepo);
-  }
-
-  filterOnlyMine(onlyMine: boolean): void {
-    this.filterRepo.setFilterOnlyMine(onlyMine);
-
-    this.store.jobOffers = this.filterService.filter(this.filterRepo);
-  }
-
-  navigate(screen: Screen, jobOfferId: number|null): void {
-    this.store.toast = null;
-    this.screens.navigate(screen, jobOfferId);
-  }
-
   applyForJob(jobOfferId: number): void {
     this.viewListener!.apply(this.findJobOffer(jobOfferId)!);
-  }
-
-  findJobOffer(jobOfferId: number): JobOffer|null {
-    return this.jobOfferRepo.findJobOffer(jobOfferId);
   }
 
   markAsFavourite(jobOfferId: number, favourite: boolean): void {
@@ -104,6 +70,51 @@ export class JobBoardService {
     this.viewListener.vatDetailsChanged(countryCode, vatId);
   }
 
+  resumePayment(jobOfferId: number): void {
+    this.viewListener!.resumePayment(jobOfferId);
+  }
+
+  valuePropositionAccepted(
+    event: ValuePropositionEvent,
+    email?: string,
+  ): void {
+    this.viewListener!.valuePropositionAccepted(this.store!.vpVisibleFor!, event, email);
+  }
+
+  showJob(jobOfferId: number): void {
+    this.screens.showJobOffer(this.jobOfferRepo.findJobOffer(jobOfferId)!);
+  }
+
+  showForm(): void {
+    if (this.planBundle.canRedeem()) {
+      this.screens.navigate('form', null);
+    } else {
+      this.screens.navigate('pricing', null);
+    }
+  }
+
+  filter(filter: Filter): void {
+    this.filterRepo.setFilter(filter);
+    this.store.jobOfferFilter = filter;
+
+    this.store.jobOffers = this.filterService.filter(this.filterRepo);
+  }
+
+  filterOnlyMine(onlyMine: boolean): void {
+    this.filterRepo.setFilterOnlyMine(onlyMine);
+
+    this.store.jobOffers = this.filterService.filter(this.filterRepo);
+  }
+
+  navigate(screen: Screen, jobOfferId: number|null): void {
+    this.store.toast = null;
+    this.screens.navigate(screen, jobOfferId);
+  }
+
+  findJobOffer(jobOfferId: number): JobOffer|null {
+    return this.jobOfferRepo.findJobOffer(jobOfferId);
+  }
+
   /** @deprecated */
   jobOfferUrl(jobOffer: JobOffer): string {
     return this.screens.jobOfferUrl(jobOffer);
@@ -121,18 +132,7 @@ export class JobBoardService {
     return this.backendImageApi.uploadAssetReturnUrl(file);
   }
 
-  valuePropositionAccepted(
-    event: ValuePropositionEvent,
-    email?: string,
-  ): void {
-    this.viewListener!.valuePropositionAccepted(this.store!.vpVisibleFor!, event, email);
-  }
-
   mountLocationInput(input: HTMLInputElement, listener: LocationListener): void {
     this.locationInput.mount(input, listener);
-  }
-
-  resumePayment(jobOfferId: number): void {
-    this.viewListener!.resumePayment(jobOfferId);
   }
 }

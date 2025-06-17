@@ -26,6 +26,7 @@ import {
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
 import {TagAutocomplete, TagAutocompleteResult, VueUiFactory} from './ui';
+import {ViewListener} from "./ViewListener";
 
 const filterRepo = new FilterRepository();
 const jobOffersRepo = new JobOfferRepository();
@@ -40,6 +41,18 @@ const tagAutocomplete: TagAutocomplete = (tagPrompt: string, result: TagAutocomp
   backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
 };
 
+const board = new JobBoard((jobOffers: JobOffer[]): void => {
+  jobOffersRepo.setJobOffers(jobOffers);
+  presenter.setJobOffers(filterService.filter(filterRepo));
+});
+
+const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
+const payments = new PaymentService(backend, backendApi, _paymentProvider);
+const jobOfferPayments = new PaymentIntentRepository();
+const _locationDisplay = locationDisplay(backend.testMode());
+
+jobOfferPayments.initJobOffers(backend.jobOfferPayments());
+
 const ui = new VueUiFactory(
   locationInput(backend.testMode()),
   backend.isAuthenticated(),
@@ -50,20 +63,9 @@ const ui = new VueUiFactory(
   filterService,
   tagAutocomplete);
 
-const board = new JobBoard((jobOffers: JobOffer[]): void => {
-  jobOffersRepo.setJobOffers(jobOffers);
-  presenter.setJobOffers(filterService.filter(filterRepo));
-});
-
-const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
-const payments = new PaymentService(backend, backendApi, _paymentProvider);
-const jobOfferPayments = new PaymentIntentRepository();
-const _locationDisplay = locationDisplay(backend.testMode());
 const presenter = new JobBoardPresenter(ui.store, ui.screens);
 
-jobOfferPayments.initJobOffers(backend.jobOfferPayments());
-
-ui.setViewListener({
+const viewListener: ViewListener = {
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
     backendApi.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
       board.jobOfferCreated(toJobOffer(jobOffer));
@@ -139,7 +141,9 @@ ui.setViewListener({
       result.finally(() => jobOfferApply(jobOffer));
     }
   },
-});
+};
+
+ui.setViewListener(viewListener);
 
 function vpEvent(eventName: string, metadata: EventMetadata): Promise<void> {
   return backendApi.event({eventName, metadata});
