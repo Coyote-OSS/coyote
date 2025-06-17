@@ -11,7 +11,7 @@ import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Application/JobOffer";
 import {SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {InitiatePayment} from "./neon3/Packages/Feature/JobBoard/Application/payment";
-import {bundleSize} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
+import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {PlanBundleName, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "./neon3/Packages/Feature/JobBoard/JobBoard";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
@@ -32,10 +32,6 @@ const _locationDisplay = locationDisplay(backend.testMode());
 export interface Tag {
   tagName: string;
   priority: BackendJobOfferTagPriority;
-}
-
-export function toSubmitJobOffer(jobOffer: JobOffer): SubmitJobOffer {
-  return jobOffer;
 }
 
 backend.jobOfferPayments()
@@ -176,19 +172,6 @@ payments.addEventListener({
 planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
   view.setPlanBundle(plan, remainingJobOffers);
 });
-
-function remainingJobOffers(planBundle: PlanBundleName): number {
-  if (planBundle === 'strategic') {
-    return 2;
-  }
-  if (planBundle === 'growth') {
-    return 4;
-  }
-  if (planBundle === 'scale') {
-    return 19;
-  }
-  throw new Error('Failed to set remaining job offers for a pricing plan.');
-}
 
 const bundle = backend.initialPlanBundle();
 if (bundle.hasBundle) {

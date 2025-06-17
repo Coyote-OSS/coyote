@@ -1,6 +1,7 @@
 import {Tag} from "../../../../../main";
 import {BackendJobOfferLocation} from "../../../Core/Backend/backendInput";
 import {ApplicationMode, Currency, HiringType, LegalForm, Rate, WorkExperience} from "../Domain/Model";
+import {JobOffer} from "./JobOffer";
 
 export interface SubmitJobOffer {
   title: string;
@@ -28,4 +29,8 @@ export interface SubmitJobOffer {
   companyFundingYear: number|null;
   companyAddress: BackendJobOfferLocation|null;
   companyHiringType: HiringType;
+}
+
+export function toSubmitJobOffer(jobOffer: JobOffer): SubmitJobOffer {
+  return jobOffer;
 }
