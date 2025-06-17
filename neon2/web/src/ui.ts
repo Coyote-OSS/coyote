@@ -1,6 +1,7 @@
 import {createPinia} from "pinia";
 import {createApp} from 'vue';
-import {UploadAssets, ValuePropositionEvent, VatIdState} from "./main";
+import JobBoard from './JobBoard.vue';
+import {ValuePropositionEvent, VatIdState} from "./main";
 import {JobBoardService} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
@@ -18,10 +19,9 @@ import {
   Tag,
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
-import {Toast, View} from './view';
-import JobBoard from './JobBoard.vue';
 import {Policy} from "./Policy";
 import {RouteProperties, Screens} from "./Screens";
+import {Toast, View} from './view';
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
@@ -81,10 +81,7 @@ export class VueUi {
     );
     this.screens = new Screens({
       routeProperties: (jobOfferId: number|null): RouteProperties => {
-        return {
-          routeJobOfferId: jobOfferId,
-          routeJobOffer: jobOfferId ? this.findJobOffer(jobOfferId) : null,
-        };
+        return {routeJobOfferId: jobOfferId};
       },
       resumePayment: (jobOfferId: number): void => {
         this.viewListener!.resumePayment(jobOfferId);

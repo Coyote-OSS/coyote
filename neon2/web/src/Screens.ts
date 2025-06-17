@@ -1,22 +1,27 @@
 import {App} from "vue";
-import JobOfferPricing from "./JobOffer/screen/JobOfferPricing.vue";
-import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import JobOfferCreate from "./JobOffer/screen/JobOfferCreate.vue";
 import JobOfferEdit from "./JobOffer/screen/JobOfferEdit.vue";
 import JobOfferHome from "./JobOffer/screen/JobOfferHome.vue";
 import JobOfferPaymentScreen from "./JobOffer/screen/JobOfferPaymentScreen.vue";
+import JobOfferPricing from "./JobOffer/screen/JobOfferPricing.vue";
 import JobOfferShowScreen from "./JobOffer/screen/JobOfferShowScreen.vue";
-import {Screen} from "./ui";
+import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {Policy} from "./Policy";
 
 import {Router} from "./Router";
+import {Screen} from "./ui";
 
 export class Screens {
   private router: Router;
 
   constructor(listener: ScreenListener, policy: Policy) {
     this.router = new Router(listener);
-    this.addScreens();
+    this.router.addScreen(JobOfferHome, 'home', '/Job');
+    this.router.addScreen(JobOfferShowScreen, 'show', '/Job/:slug/:id');
+    this.router.addScreen(JobOfferPricing, 'pricing', '/Job/pricing');
+    this.router.addScreen(JobOfferCreate, 'form', '/Job/new');
+    this.router.addScreen(JobOfferEdit, 'edit', '/Job/:id/edit');
+    this.router.addScreen(JobOfferPaymentScreen, 'payment', '/Job/:id/payment');
     this.router.addDefaultScreen('home');
     this.router.before((screen: Screen, jobOfferId: number|null): Screen|null => {
       if (screen === 'form' && !policy.createCreateJobOffer()) {
@@ -30,15 +35,6 @@ export class Screens {
       }
       return null;
     });
-  }
-
-  private addScreens(): void {
-    this.router.addScreen(JobOfferHome, 'home', '/Job');
-    this.router.addScreen(JobOfferShowScreen, 'show', '/Job/:slug/:id');
-    this.router.addScreen(JobOfferPricing, 'pricing', '/Job/pricing');
-    this.router.addScreen(JobOfferCreate, 'form', '/Job/new');
-    this.router.addScreen(JobOfferEdit, 'edit', '/Job/:id/edit');
-    this.router.addScreen(JobOfferPaymentScreen, 'payment', '/Job/:id/payment');
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {
@@ -69,6 +65,4 @@ export interface ScreenListener {
 
 export interface RouteProperties {
   routeJobOfferId: number|null;
-  /** @deprecated properties are not reactive */
-  routeJobOffer: JobOffer|null;
 }
