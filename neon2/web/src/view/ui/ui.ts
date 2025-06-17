@@ -201,18 +201,7 @@ export class VueUi {
   }
 
   mount(element: Element): void {
-    this.app.provide(jobBoardServiceInjectKey, new JobBoardService(
-      this.store!,
-      this.view!,
-      this.screens,
-      this.locationInput,
-      this.viewListener!,
-      this,
-      this.tagAutocomplete!,
-      this._upload!,
-      this.filterListeners,
-      this.navigationListener!,
-    ));
+    this.app.provide(jobBoardServiceInjectKey, new JobBoardService(this, this.view!, this.store!, this.screens, this.locationInput, this.viewListener!, this.tagAutocomplete!, this._upload!, this.filterListeners, this.navigationListener!));
     this.screens.useIn(this.app);
     this.app.mount(element);
   }

@@ -19,16 +19,16 @@ import {BoardStore} from "./store";
 
 export class JobBoardService {
   constructor(
-    private store: BoardStore,
-    private view: View,
+    private readonly ui: VueUi,
+    private readonly view: View,
+    private readonly store: BoardStore,
     private readonly screens: Screens,
-    private locationInput: LocationInput,
-    private viewListener: ViewListener,
-    private ui: VueUi,
-    private _tagAutocomplete: TagAutocomplete,
-    private upload: UploadAssets,
+    private readonly locationInput: LocationInput,
+    private readonly viewListener: ViewListener,
+    private readonly _tagAutocomplete: TagAutocomplete,
+    private readonly upload: UploadAssets,
     private readonly filterListeners: FilterListener[],
-    private navigationListener: NavigationListener,
+    private readonly navigationListener: NavigationListener,
   ) {}
 
   redeemBundle(jobOfferId: number): void {
