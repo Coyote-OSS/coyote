@@ -1,37 +1,25 @@
 <template>
   <Design.Toast title="Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność."/>
   <JobOfferRedeemBundle
-    v-if="screen.planBundle?.canRedeem"
-    :plan-bundle="screen.planBundle"
+    v-if="store.planBundle?.canRedeem"
+    :plan-bundle="store.planBundle"
     :job-offer-id="route.routeJobOfferId!"/>
   <JobOfferPaymentForm
     v-else
     :job-offer-id="route.routeJobOfferId!"
-    :summary="screen.paymentSummary"
-    :countries="screen.invoiceCountries"
-    :vat-id-state="screen.paymentVatIdState"
-    :payment-processing="screen.paymentProcessing"/>
+    :summary="store.paymentSummary!"
+    :countries="store.invoiceCountries!"
+    :vat-id-state="store.paymentVatIdState"
+    :payment-processing="store.paymentProcessing"/>
 </template>
 
 <script setup lang="ts">
-import {inject} from "vue";
-import {VatIdState} from "../../../../main";
 import {Design} from "../../../../neon3/Apps/VueApp/DesignSystem/design";
-import {PlanBundle} from "../../../../neon3/Packages/Feature/JobBoard/Application/Model";
-import {Country} from "../../../../neon3/Packages/Feature/JobBoard/Domain/Model";
-import {PaymentSummary} from "../../../../neon3/Packages/Feature/JobBoard/Presenter/Model";
+import {BoardStore, useBoardStore} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/store";
 import {RouteProperties} from "../../screen/Screens";
 import JobOfferPaymentForm from "../JobOfferPaymentForm.vue";
 import JobOfferRedeemBundle from "../JobOfferRedeemBundle.vue";
 
-const screen = inject('screen') as Screen;
 const route = defineProps<RouteProperties>();
-
-interface Screen {
-  planBundle: PlanBundle|null;
-  invoiceCountries: Country[];
-  paymentSummary: PaymentSummary;
-  paymentVatIdState: VatIdState;
-  paymentProcessing: boolean;
-}
+const store: BoardStore = useBoardStore();
 </script>

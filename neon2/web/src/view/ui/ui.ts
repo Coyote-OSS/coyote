@@ -112,13 +112,8 @@ export class VueUi {
       screen: 'home',
       paymentNotification: null,
       paymentStatus: null,
-      planBundle: null,
-      paymentSummary: null,
-      paymentVatIdState: 'valid',
-      invoiceCountries: null,
       locationInput,
       vpVisibleFor: null,
-      paymentProcessing: false,
     });
     this.gate = new Policy(
       isAuthenticated,
@@ -255,7 +250,7 @@ export class VueUi {
    * This can only be run after ui create, before mount
    */
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
-    this.vueState.planBundle = {bundleName, remainingJobOffers, canRedeem};
+    this.store!.planBundle = {bundleName, remainingJobOffers, canRedeem};
     this.store!.pricingPlan = bundleName;
   }
 
@@ -264,15 +259,15 @@ export class VueUi {
   }
 
   setPaymentSummary(summary: PaymentSummary): void {
-    this.vueState.paymentSummary = summary;
+    this.store!.paymentSummary = summary;
   }
 
   setPaymentInvoiceCountries(countries: Country[]): void {
-    this.vueState.invoiceCountries = countries;
+    this.store!.invoiceCountries = countries;
   }
 
   setPaymentProcessing(processing: boolean): void {
-    this.vueState.paymentProcessing = processing;
+    this.store!.paymentProcessing = processing;
   }
 
   upload(upload: UploadAssets): void {
@@ -280,11 +275,11 @@ export class VueUi {
   }
 
   setVatIncluded(vatIncluded: boolean): void {
-    this.vueState.paymentSummary!.vatIncluded = vatIncluded;
+    this.store!.paymentSummary!.vatIncluded = vatIncluded;
   }
 
   setVatIdState(state: VatIdState): void {
-    this.vueState.paymentVatIdState = state;
+    this.store!.paymentVatIdState = state;
   }
 
   setTagAutocomplete(tagAutocomplete: TagAutocomplete): void {
