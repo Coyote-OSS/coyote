@@ -1,6 +1,6 @@
-import {BackendJobOfferLocation} from "../../../backend";
 import {JobOffer} from "../../../jobBoard";
 import {Currency, LegalForm, Rate, SubmitJobOffer, Tag, WorkExperience, WorkMode} from "../../../main";
+import {BackendJobOfferLocation} from "../../../neon3/Core/Backend/backendInput";
 import {parseWorkMode} from "../../../workMode";
 
 export interface JobOfferShow {

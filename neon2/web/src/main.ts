@@ -1,10 +1,6 @@
 import {
-  BackendJobOffer,
-  BackendJobOfferLocation,
-  BackendJobOfferTagPriority,
   EventMetadata,
   JobBoardBackend,
-  JobOfferPaymentIntent,
   toJobOffer,
 } from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
@@ -12,7 +8,9 @@ import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
 import {GoogleMapsPin, LocationDisplay, TestLocationDisplay} from "./location/LocationDisplay";
 import {GoogleMapsAutocomplete, LocationInput, TestLocationInput} from "./location/LocationInput";
+import {BackendJobOffer, BackendJobOfferLocation, BackendJobOfferTagPriority} from "./neon3/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Core/Domain/vat";
+import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';

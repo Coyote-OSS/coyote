@@ -1,6 +1,6 @@
-import {JobOfferPaymentIntent} from "../src/backend";
 import {JobOfferPayments} from "../src/jobOfferPayments";
 import {PaidPricingPlan} from "../src/main";
+import {JobOfferPaymentIntent} from "../src/neon3/Feature/JobBoard/JobBoard";
 import {assertEquals, describe, test} from "./assertion";
 
 describe('Job offers association with payments.', () => {

@@ -28,8 +28,8 @@
 
 <script setup lang="ts">
 import {ModelRef} from "vue";
-import {BackendJobOfferTagPriority} from "../../../backend";
 import {Tag} from "../../../main";
+import {BackendJobOfferTagPriority} from "../../../neon3/Core/Backend/backendInput";
 import Icon from "../../../neon3/Core/View/Icon/Icon.vue";
 import JobOfferTagPriority from "./JobOfferTagPriority.vue";
 

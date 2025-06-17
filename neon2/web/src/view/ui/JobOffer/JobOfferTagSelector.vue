@@ -35,7 +35,8 @@
 
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
-import {BackendTag} from "../../../backend";
+
+import {BackendTag} from "../../../neon3/Core/Backend/backendInput";
 import {Design} from "../../../neon3/Core/View/DesignSystem/design";
 import TextInput from "../../../neon3/Core/View/DesignSystem/TextInput.vue";
 import {TagAutocomplete} from "../ui";

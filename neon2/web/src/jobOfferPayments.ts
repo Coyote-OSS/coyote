@@ -1,5 +1,5 @@
-import {JobOfferPaymentIntent} from "./backend";
 import {PaidPricingPlan} from "./main";
+import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
 
 export class JobOfferPayments {
   private paymentIntents: JobOfferPaymentIntent[] = [];

@@ -1,4 +1,3 @@
-import {BackendJobOfferLocation} from "./backend";
 import {
   ApplicationMode,
   Currency,
@@ -11,6 +10,7 @@ import {
   WorkExperience,
   WorkMode,
 } from "./main";
+import {BackendJobOfferLocation} from "./neon3/Core/Backend/backendInput";
 
 interface JobBoardObserver {
   (jobOffers: JobOffer[]): void;

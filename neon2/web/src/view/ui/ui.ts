@@ -1,5 +1,4 @@
 import {createApp, h, reactive} from 'vue';
-import {BackendTag} from "../../backend";
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
 import {LocationInput} from "../../location/LocationInput";
@@ -15,6 +14,7 @@ import {
   ValuePropositionEvent,
   VatIdState,
 } from "../../main";
+import {BackendTag} from "../../neon3/Core/Backend/backendInput";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast, View} from '../view';

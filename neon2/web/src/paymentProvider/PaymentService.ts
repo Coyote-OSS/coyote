@@ -1,5 +1,6 @@
-import {BackendPaymentStatus, BackendPreparedPayment, JobBoardBackend} from "../backend";
+import {JobBoardBackend} from "../backend";
 import {InvoiceInformation, VatIdState} from "../main";
+import {BackendPaymentStatus, BackendPreparedPayment} from "../neon3/Core/Backend/backendInput";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./PaymentProvider";
 
 interface PaymentListener {
