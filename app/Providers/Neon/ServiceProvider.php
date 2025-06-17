@@ -99,10 +99,12 @@ class ServiceProvider extends RouteServiceProvider {
             $theme->themeMode(),
             request()->route()->parameter('id'),
             $acceptanceTagNames);
-        return view('job.home_modern', [
-            'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
-            'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),
-        ]);
+        return <<<html
+            <html>
+            <head>{$jobBoardView->htmlMarkupHead()}</head>
+            <body class="bg-body">{$jobBoardView->htmlMarkupBody()}</body>
+            <html>
+            html;
     }
 
     private function acceptanceTestUserId(int $workerIndex): int {
