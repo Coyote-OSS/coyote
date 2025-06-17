@@ -7,10 +7,10 @@ import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/st
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
-import {AllJobOffers} from "./neon3/Packages/Feature/JobBoard/Application/AllJobOffers";
+import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {Filter, FilterOptions} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
-import {PlanBundle} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundle";
+import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PlanBundleName, PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
@@ -59,8 +59,8 @@ export class VueUiFactory {
     private locationInput: LocationInput,
     isAuthenticated: boolean,
     private backendImageApi: BackendImageApi,
-    private allJobOffers: AllJobOffers,
-    private planBundle: PlanBundle,
+    private allJobOffers: JobOfferRepository,
+    private planBundle: PlanBundleRepository,
   ) {
     this.screens = new Screens(new Policy(
       isAuthenticated,

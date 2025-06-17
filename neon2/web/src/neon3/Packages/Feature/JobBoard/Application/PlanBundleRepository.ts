@@ -1,6 +1,6 @@
 import {PlanBundleName} from "../Domain/Model";
 
-export class PlanBundle {
+export class PlanBundleRepository {
   private listeners: PlanBundleListener[] = [];
   private plan: PlanBundleName|null = null;
   private remainingJobOffers: number|null = null;

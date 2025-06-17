@@ -1,7 +1,7 @@
 import {JobOfferPayment, PaidPricingPlan} from "../Domain/Model";
 import {JobOfferPaymentIntent} from "../JobBoard";
 
-export class JobOfferPayments {
+export class PaymentIntentRepository {
   private paymentIntents: JobOfferPaymentIntent[] = [];
 
   initJobOffers(jobOffers: JobOfferPaymentIntent[]): void {

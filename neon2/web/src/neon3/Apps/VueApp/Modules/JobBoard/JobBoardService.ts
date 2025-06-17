@@ -10,10 +10,10 @@ import {
 } from "../../../../../ui";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "../../../../Packages/Core/Backend/BackendImageApi";
-import {AllJobOffers} from "../../../../Packages/Feature/JobBoard/Application/AllJobOffers";
+import {JobOfferRepository} from "../../../../Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
-import {PlanBundle} from "../../../../Packages/Feature/JobBoard/Application/PlanBundle";
+import {PlanBundleRepository} from "../../../../Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
@@ -28,8 +28,8 @@ export class JobBoardService {
     private readonly _tagAutocomplete: TagAutocomplete,
     private readonly filterListeners: FilterListener[],
     private readonly backendImageApi: BackendImageApi,
-    private readonly allJobOffers: AllJobOffers,
-    private readonly planBundle: PlanBundle,
+    private readonly allJobOffers: JobOfferRepository,
+    private readonly planBundle: PlanBundleRepository,
   ) {}
 
   redeemBundle(jobOfferId: number): void {

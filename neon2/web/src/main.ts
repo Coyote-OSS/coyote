@@ -9,12 +9,12 @@ import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
-import {AllJobOffers} from "./neon3/Packages/Feature/JobBoard/Application/AllJobOffers";
+import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
-import {JobOfferPayments} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferPayments";
+import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
-import {PlanBundle} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundle";
+import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {
@@ -27,11 +27,11 @@ import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
 import {TagAutocompleteResult, VueUiFactory} from './ui';
 import {View} from "./view";
 
-const allJobOffers = new AllJobOffers();
+const allJobOffers = new JobOfferRepository();
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
-const planBundle = new PlanBundle();
+const planBundle = new PlanBundleRepository();
 const ui = new VueUiFactory(
   locationInput(backend.testMode()),
   backend.isAuthenticated(),
@@ -46,7 +46,7 @@ const board = new JobBoard((jobOffers: JobOffer[]): void => {
 });
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
-const jobOfferPayments = new JobOfferPayments();
+const jobOfferPayments = new PaymentIntentRepository();
 const _locationDisplay = locationDisplay(backend.testMode());
 const presenter = new JobBoardPresenter(ui.store, ui.screens);
 

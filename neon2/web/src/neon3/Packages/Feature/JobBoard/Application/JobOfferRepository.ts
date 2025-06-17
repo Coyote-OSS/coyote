@@ -1,6 +1,6 @@
 import {JobOffer} from "../Domain/JobOffer";
 
-export class AllJobOffers {
+export class JobOfferRepository {
   public jobOffers: JobOffer[] = [];
 
   setJobOffers(jobOffers: JobOffer[]): void {

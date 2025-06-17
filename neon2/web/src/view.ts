@@ -1,6 +1,6 @@
 import {jobOfferCities, jobOfferTagNames} from './jobBoard';
-import {AllJobOffers} from "./neon3/Packages/Feature/JobBoard/Application/AllJobOffers";
 import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
+import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {sortInPlace} from "./neon3/Packages/Feature/JobBoard/Presenter/orderBy";
 import {VueUiFactory} from './ui';
@@ -12,7 +12,7 @@ export class View {
 
   constructor(
     private ui: VueUiFactory,
-    private allJobOffers: AllJobOffers,
+    private jobOffers: JobOfferRepository,
   ) {
     this.ui.addFilterListener({
       filter: (filter: Filter): void => {
@@ -29,12 +29,12 @@ export class View {
 
   filterJobOffers(): void {
     if (this.filterOnlyMine) {
-      const jobOffers = this.allJobOffers.all().filter(jobOffer => jobOffer.isMine);
+      const jobOffers = this.jobOffers.all().filter(jobOffer => jobOffer.isMine);
       jobOffers.sort();
       this.ui.setJobOffers(jobOffers);
       return;
     }
-    const jobOffers = this.allJobOffers.all()
+    const jobOffers = this.jobOffers.all()
       .filter(jobOffer => jobOffer.status === 'published')
       .filter(jobOffer => this.jobOfferMatches(jobOffer));
     if (this.filter) {
