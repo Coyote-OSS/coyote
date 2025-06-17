@@ -35,7 +35,7 @@ const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
 
-const view = new View(jobOffersRepo, filterRepo);
+const view = new View(jobOffersRepo);
 
 const ui = new VueUiFactory(
   locationInput(backend.testMode()),
@@ -48,7 +48,7 @@ const ui = new VueUiFactory(
 
 const board = new JobBoard((jobOffers: JobOffer[]): void => {
   jobOffersRepo.setJobOffers(jobOffers);
-  presenter.setJobOffers(view.filterJobOffersReturn());
+  presenter.setJobOffers(view.filterJobOffers(filterRepo));
 });
 
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());

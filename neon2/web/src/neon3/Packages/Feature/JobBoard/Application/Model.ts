@@ -12,6 +12,7 @@ import {
   Rate,
   WorkExperience,
 } from "../Domain/Model";
+import {Filter} from "./filter";
 
 export interface SubmitJobOffer {
   title: string;
@@ -55,4 +56,9 @@ export interface PlanBundle {
   bundleName: PlanBundleName;
   remainingJobOffers: number;
   canRedeem: boolean;
+}
+
+export interface FilterCriteria {
+  filterOnlyMine: boolean;
+  filter: Filter|null;
 }

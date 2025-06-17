@@ -59,12 +59,14 @@ export class JobBoardService {
   filter(filter: Filter): void {
     this.filterRepo.setFilter(filter);
     this.store.jobOfferFilter = filter;
-    this.store.jobOffers = this.view.filterJobOffersReturn();
+
+    this.store.jobOffers = this.view.filterJobOffers(this.filterRepo);
   }
 
   filterOnlyMine(onlyMine: boolean): void {
     this.filterRepo.setFilterOnlyMine(onlyMine);
-    this.store.jobOffers = this.view.filterJobOffersReturn();
+
+    this.store.jobOffers = this.view.filterJobOffers(this.filterRepo);
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {
