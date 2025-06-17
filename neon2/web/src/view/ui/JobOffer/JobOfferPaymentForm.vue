@@ -87,22 +87,20 @@
 <script setup lang="ts">
 import {computed, inject, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import {VatIdState} from "../../../main";
+import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
+import {DrawerOption} from "../../../neon3/Apps/VueApp/DesignSystem/DropdownSingle.vue";
 import {JobBoardService} from "../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {jobBoardServiceInjectKey} from "../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {PaymentMethod} from "../../../neon3/Packages/Core/Application/PaymentProvider";
-import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
-import {DrawerOption} from "../../../neon3/Apps/VueApp/DesignSystem/DropdownSingle.vue";
 import {Country, InvoiceInformation} from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "../../../neon3/Packages/Feature/JobBoard/Presenter/Model";
-import {ViewListener} from "../ui";
-import {ValidationBag} from "./ValidationBag";
 import JobOfferStepper from './JobOfferStepper.vue';
+import {ValidationBag} from "./ValidationBag";
 
 const props = defineProps<Props>();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 interface Props {
-  viewListener: ViewListener;
   jobOfferId: number;
   summary: PaymentSummary;
   countries: Country[];
@@ -114,7 +112,7 @@ function pay(): void {
   const [success, failureErrors] = validate();
   Object.assign(errors, failureErrors);
   if (success) {
-    props.viewListener.payForJob({
+    service.payForJob({
       jobOfferId: props.jobOfferId,
       invoiceInfo: {
         companyName: invoiceInformation.companyName.trim(),
@@ -129,8 +127,8 @@ function pay(): void {
   }
 }
 
-onMounted(() => props.viewListener.managePaymentMethod('mount', '#creditCardInput'));
-onBeforeUnmount(() => props.viewListener.managePaymentMethod('unmount'));
+onMounted(() => service.managePaymentMethod('mount', '#creditCardInput'));
+onBeforeUnmount(() => service.managePaymentMethod('unmount'));
 
 const method = ref<PaymentMethod>('card');
 
@@ -214,7 +212,7 @@ const effectiveVat = computed(() => {
 });
 
 function vatDetailsChanged(): void {
-  props.viewListener.vatDetailsChanged(
+  service.vatDetailsChanged(
     invoiceInformation.countryCode,
     invoiceInformation.vatId.trim());
 }

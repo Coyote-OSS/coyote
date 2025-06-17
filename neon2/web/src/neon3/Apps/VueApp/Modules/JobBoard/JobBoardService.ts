@@ -1,5 +1,5 @@
 import {Screen, UiController, ViewListener} from "../../../../../view/ui/ui";
-import {SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
+import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
@@ -49,5 +49,17 @@ export class JobBoardService {
 
   selectPlan(plan: PricingPlan): void {
     this.uiController.selectPlan(plan);
+  }
+
+  managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void {
+    this.viewListener.managePaymentMethod(action, cssSelector);
+  }
+
+  payForJob(payment: InitiatePayment): void {
+    this.viewListener.payForJob(payment);
+  }
+
+  vatDetailsChanged(countryCode: string, vatId: string): void {
+    this.viewListener.vatDetailsChanged(countryCode, vatId);
   }
 }
