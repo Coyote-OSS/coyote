@@ -6,7 +6,6 @@ import {
   RouteParamsGeneric,
   Router as VueRouter,
 } from "vue-router";
-import {RouteProperties} from "./Screens";
 import {Screen} from "./ui";
 
 export class Router {
@@ -45,9 +44,6 @@ export class Router {
       component,
       name: screen,
       path: vueRouterRoute,
-      props: (route: RouteLocationNormalized): RouteProperties => {
-        return {routeJobOfferId: this.jobOfferId(route)};
-      },
       beforeEnter: before ? [((route: RouteLocationNormalized) => {
         const redirectTo = before(route.params);
         if (redirectTo) {

@@ -58,7 +58,3 @@ export class Screens {
     this.router.useIn(app);
   }
 }
-
-export interface RouteProperties {
-  routeJobOfferId: number|null;
-}

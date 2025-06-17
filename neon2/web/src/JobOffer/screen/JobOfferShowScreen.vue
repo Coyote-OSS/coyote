@@ -17,39 +17,41 @@
 
 <script setup lang="ts">
 import {computed, inject} from "vue";
+import {useRoute} from "vue-router";
 import {Design} from "../../neon3/Apps/VueApp/DesignSystem/design";
 import {JobBoardService} from "../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {jobBoardServiceInjectKey} from "../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {RouteProperties} from "../../Screens";
 import JobOfferButtonPill from "../JobOfferButtonPill.vue";
 import {toJobOfferShow} from "../JobOfferShow";
 import JobOfferShow from "../JobOfferShow.vue";
 
-const route = defineProps<RouteProperties>();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
+
+const route = useRoute();
+const jobOfferId = Number(route.params.id)!;
 
 function navigateHome(): void {
   service.navigate('home', null);
 }
 
 function editJob(): void {
-  service.navigate('edit', route.routeJobOfferId!);
+  service.navigate('edit', jobOfferId);
 }
 
 function applyForJob(): void {
-  service.applyForJob(route.routeJobOfferId!);
+  service.applyForJob(jobOfferId);
 }
 
 function resumePayment(): void {
-  service.navigate('payment', route.routeJobOfferId!);
+  service.navigate('payment', jobOfferId);
 }
 
 const routeJobOffer = computed((): JobOffer => {
-  return service.findJobOffer(route.routeJobOfferId!)!;
+  return service.findJobOffer(jobOfferId)!;
 });
 
 function markAsFavourite(favourite: boolean): void {
-  service.markAsFavourite(route.routeJobOfferId!, favourite);
+  service.markAsFavourite(jobOfferId, favourite);
 }
 </script>
