@@ -27,7 +27,6 @@ import {
   PricingPlan,
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
-import {Policy} from "./Policy";
 import {VueUiFactory} from './ui';
 import {ViewListener} from "./ViewListener";
 
@@ -66,12 +65,7 @@ const factory = new JobBoardServiceFactory(
   tagAutocomplete);
 
 const ui = new VueUiFactory(backend.isAuthenticated(), jobOffersRepo, factory);
-const uiStore = ui.store;
-const uiScreens = ui.screens;
-
-const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, uiStore);
-
-const presenter = new JobBoardPresenter(uiStore, uiScreens);
+const presenter = new JobBoardPresenter(ui.store, ui.screens);
 
 function vpEvent(eventName: string, metadata: EventMetadata): Promise<void> {
   return backendApi.event({eventName, metadata});

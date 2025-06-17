@@ -23,11 +23,7 @@ export class VueUiFactory {
     const pinia = createPinia();
     this.app.use(pinia);
     this.store = useBoardStore();
-    this.screens = new Screens(new Policy(
-      isAuthenticated,
-      allJobOffers,
-      this.store,
-    ));
+    this.screens = new Screens(new Policy(isAuthenticated, allJobOffers, this.store));
   }
 
   mount(element: Element, viewListener: ViewListener): void {

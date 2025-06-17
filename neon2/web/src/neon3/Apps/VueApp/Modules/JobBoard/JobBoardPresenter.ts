@@ -113,8 +113,9 @@ export class JobBoardPresenter {
     const jobOffer = this.store.jobOffers.find(o => o.id === jobOfferId);
     if (jobOffer) {
       jobOffer.isFavourite = favourite;
+    } else {
+      throw new Error('Failed to mark job offer.');
     }
-    throw new Error('Failed to mark job offer.');
   }
 
   private navigateHome(): void {
