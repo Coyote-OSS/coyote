@@ -47,30 +47,6 @@ export class JobBoardBackend {
     return this.backendInput.paymentInvoiceCountries;
   }
 
-  async uploadLogoReturnUrl(file: File): Promise<string> {
-    const formData = new FormData();
-    formData.append('logo', file);
-    return fetch('/Firma/Logo', {
-      method: 'POST',
-      body: formData,
-      headers: {'X-CSRF-TOKEN': this.backendInput.csrfToken},
-    })
-      .then(response => response.json())
-      .then(uploadedImage => uploadedImage.url);
-  }
-
-  async uploadAssetReturnUrl(file: File): Promise<string> {
-    const formData = new FormData();
-    formData.append('asset', file);
-    return fetch('/assets', {
-      method: 'POST',
-      body: formData,
-      headers: {'X-CSRF-TOKEN': this.backendInput.csrfToken},
-    })
-      .then(response => response.json())
-      .then(uploadedImage => uploadedImage.url);
-  }
-
   isAuthenticated(): boolean {
     return this.backendInput.userId !== null;
   }
@@ -94,6 +70,10 @@ export class JobBoardBackend {
       });
     }
     return this.backendApi.tagsAutocomplete(prompt);
+  }
+
+  csrfToken(): string {
+    return this.backendInput.csrfToken;
   }
 }
 

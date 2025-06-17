@@ -6,6 +6,7 @@ import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
 import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider";
 import {PaymentNotification, PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
+import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {BackendJobOffer, BackendJobOfferTagPriority} from "./neon3/Packages/Core/Backend/backendInput";
 import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Application/JobOffer";
@@ -23,6 +24,7 @@ import {View} from "./view/view";
 
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
+const backendImageApi = new BackendImageApi(backend.csrfToken());
 const ui = new VueUi(locationInput(backend.testMode()), backend.isAuthenticated());
 const view = new View(ui);
 const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
@@ -191,10 +193,10 @@ ui.setPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 ui.setJobOfferFilters(board.jobOfferFilters());
 ui.upload({
   async uploadLogo(file: File): Promise<string> {
-    return await backend.uploadLogoReturnUrl(file);
+    return await backendImageApi.uploadLogoReturnUrl(file);
   },
   async uploadAsset(file: File): Promise<string> {
-    return await backend.uploadAssetReturnUrl(file);
+    return await backendImageApi.uploadAssetReturnUrl(file);
   },
 });
 
