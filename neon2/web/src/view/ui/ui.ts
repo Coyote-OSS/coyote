@@ -26,6 +26,9 @@ import {RouteProperties, Screens} from "./screen/Screens";
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
+/**
+ * @deprecated
+ */
 export interface ViewListener {
   createJob(plan: PricingPlan, jobOffer: SubmitJobOffer): void;
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void;
@@ -54,12 +57,9 @@ export interface FilterListener {
   filterOnlyMine(onlyMine: boolean): void;
 }
 
-export interface PlanBundle {
-  bundleName: PlanBundleName;
-  remainingJobOffers: number;
-  canRedeem: boolean;
-}
-
+/**
+ * @deprecated
+ */
 export interface UiController {
   showForm(): void;
   selectPlan(plan: PricingPlan): void;
@@ -317,7 +317,7 @@ export class VueUi {
     const pinia = createPinia();
     app.use(pinia);
     const store = useBoardStore();
-    app.provide(jobBoardServiceInjectKey, new JobBoardService(store));
+    app.provide(jobBoardServiceInjectKey, new JobBoardService(store, this.vueState.viewListener!));
     this.screens.useIn(app);
     app.mount(element);
   }

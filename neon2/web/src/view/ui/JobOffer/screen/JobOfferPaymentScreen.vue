@@ -2,9 +2,8 @@
   <Design.Toast title="Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność."/>
   <JobOfferRedeemBundle
     v-if="screen.planBundle?.canRedeem"
-    :view-listener="screen.viewListener"
-    :job-offer-id="route.routeJobOfferId!"
-    :plan-bundle="screen.planBundle"/>
+    :plan-bundle="screen.planBundle"
+    :job-offer-id="route.routeJobOfferId!"/>
   <JobOfferPaymentForm
     v-else
     :view-listener="screen.viewListener"
@@ -19,10 +18,11 @@
 import {inject} from "vue";
 import {VatIdState} from "../../../../main";
 import {Design} from "../../../../neon3/Apps/VueApp/DesignSystem/design";
+import {PlanBundle} from "../../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {Country} from "../../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "../../../../neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {RouteProperties} from "../../screen/Screens";
-import {PlanBundle, ViewListener} from "../../ui";
+import {ViewListener} from "../../ui";
 import JobOfferPaymentForm from "../JobOfferPaymentForm.vue";
 import JobOfferRedeemBundle from "../JobOfferRedeemBundle.vue";
 

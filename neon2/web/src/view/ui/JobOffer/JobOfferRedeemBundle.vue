@@ -16,20 +16,24 @@
 </template>
 
 <script setup lang="ts">
+import {inject} from "vue";
 import {Design} from "../../../neon3/Apps/VueApp/DesignSystem/design";
-import {PlanBundle, ViewListener} from "../ui";
+import {JobBoardService} from "../../../neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
+import {jobBoardServiceInjectKey} from "../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
+import {PlanBundle} from "../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import JobOfferStepper from './JobOfferStepper.vue';
 
 const props = defineProps<Props>();
 
 interface Props {
-  viewListener: ViewListener;
-  jobOfferId: number;
   planBundle: PlanBundle;
+  jobOfferId: number;
 }
 
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
+
 function redeemBundle(): void {
-  props.viewListener.redeemBundle(props.jobOfferId);
+  service.redeemBundle(props.jobOfferId);
 }
 
 function capitalize(string: string): string {

@@ -1,16 +1,17 @@
-
 import {PaymentMethod} from "../../../Core/Application/PaymentProvider";
 import {BackendJobOfferLocation} from "../../../Core/Backend/backendInput";
+import {JobOffer} from "../Domain/JobOffer";
 import {
   ApplicationMode,
   Currency,
   HiringType,
-  InvoiceInformation, JobOfferTag,
+  InvoiceInformation,
+  JobOfferTag,
   LegalForm,
+  PlanBundleName,
   Rate,
   WorkExperience,
 } from "../Domain/Model";
-import {JobOffer} from "../Domain/JobOffer";
 
 export interface SubmitJobOffer {
   title: string;
@@ -48,4 +49,10 @@ export interface InitiatePayment {
   jobOfferId: number;
   invoiceInfo: InvoiceInformation;
   paymentMethod: PaymentMethod;
+}
+
+export interface PlanBundle {
+  bundleName: PlanBundleName;
+  remainingJobOffers: number;
+  canRedeem: boolean;
 }
