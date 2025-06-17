@@ -1,9 +1,8 @@
-import {jobOfferCities, jobOfferTagNames} from './jobBoard';
-import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
-import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
-import {FilterCriteria} from "./neon3/Packages/Feature/JobBoard/Application/Model";
-import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {sortInPlace} from "./neon3/Packages/Feature/JobBoard/Presenter/orderBy";
+import {JobOffer} from "../Domain/JobOffer";
+import {sortInPlace} from "../Presenter/orderBy";
+import {Filter} from "./filter";
+import {JobOfferRepository} from "./JobOfferRepository";
+import {FilterCriteria} from "./Model";
 
 export class JobOfferFilterService {
   constructor(private jobOffers: JobOfferRepository) {}
@@ -85,4 +84,14 @@ export class JobOfferFilterService {
   private haveCommonElement(array1: string[], array2: string[]): boolean {
     return array1.some(item => array2.includes(item));
   }
+}
+
+function jobOfferTagNames(jobOffer: JobOffer): string[] {
+  return jobOffer.tags.map(tag => tag.tagName);
+}
+
+function jobOfferCities(jobOffer: JobOffer): string[] {
+  return jobOffer.locations
+    .map(location => location.city)
+    .filter(city => city !== null);
 }

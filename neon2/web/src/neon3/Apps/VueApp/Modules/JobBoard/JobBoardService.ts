@@ -1,4 +1,4 @@
-import {JobOfferFilterService} from "../../../../../JobOfferFilterService";
+import {JobOfferFilterService} from "../../../../Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
 import {Screen, TagAutocomplete, TagAutocompleteResult, ViewListener, VueUiFactory} from "../../../../../ui";
