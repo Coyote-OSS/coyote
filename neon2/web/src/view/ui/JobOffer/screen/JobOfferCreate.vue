@@ -3,7 +3,6 @@
     mode="create"
     :job-offer="newJobOffer"
     :job-offer-expires-in-days="expiresInDays"
-    :tag-autocomplete="screen.tagAutocomplete"
     :upload="screen.upload"
     :four-steps="fourSteps"
     @submit="create"
@@ -17,14 +16,12 @@ import {JobBoardService} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/Jo
 import {jobBoardServiceInjectKey} from "../../../../neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {SubmitJobOffer} from "../../../../neon3/Packages/Feature/JobBoard/Application/Model";
 import {PricingPlan} from "../../../../neon3/Packages/Feature/JobBoard/Domain/Model";
-import {TagAutocomplete} from "../../ui";
 import JobOfferForm from "../JobOfferForm.vue";
 
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 const screen = inject('screen') as Screen;
 
 interface Screen {
-  tagAutocomplete: TagAutocomplete;
   upload: UploadAssets;
   pricingPlan: PricingPlan;
   applicationEmail: string;

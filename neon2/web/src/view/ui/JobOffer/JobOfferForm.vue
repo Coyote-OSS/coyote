@@ -89,7 +89,7 @@
       <Design.FieldGroup label="Wymagane technologie">
         <JobOfferTagSelector
           placeholder="Np. java, python, kotlin, docker, etc."
-          :autocomplete="props.tagAutocomplete"
+          :autocomplete="(p,r) => service.tagAutocomplete(p,r)"
           @select="addTag"/>
         <Design.FieldHelp class="mb-6">
           Podaj tylko technologie programistyczne, np. Python, Kotlin, Docker, JavaScript, AWS, Laravel, React.
@@ -232,7 +232,6 @@ import {
   WorkMode,
 } from "../../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {formatWorkMode, parseWorkMode} from "../../../neon3/Packages/Feature/JobBoard/Domain/workMode";
-import {TagAutocomplete} from "../ui";
 import {
   formatCompanySizeLevel,
   formatHiringType,
@@ -255,7 +254,6 @@ const emit = defineEmits<Emit>();
 const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 
 interface Props {
-  tagAutocomplete: TagAutocomplete;
   jobOffer: SubmitJobOffer;
   jobOfferExpiresInDays: number;
   mode: 'create'|'update';

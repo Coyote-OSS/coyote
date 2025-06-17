@@ -323,6 +323,7 @@ export class VueUi {
       store,
       this.viewListener!,
       this.uiController,
+      this.vueState.tagAutocomplete!,
     ));
     this.screens.useIn(app);
     app.mount(element);

@@ -1,5 +1,5 @@
 import {JobOfferFilter} from "../../../../../jobOfferFilter";
-import {Screen, UiController, ViewListener} from "../../../../../view/ui/ui";
+import {Screen, TagAutocomplete, TagAutocompleteResult, UiController, ViewListener} from "../../../../../view/ui/ui";
 import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
@@ -10,6 +10,7 @@ export class JobBoardService {
     private store: BoardStore,
     private viewListener: ViewListener,
     private uiController: UiController,
+    private _tagAutocomplete: TagAutocomplete,
   ) {}
 
   redeemBundle(jobOfferId: number): void {
@@ -83,5 +84,9 @@ export class JobBoardService {
   /** @deprecated */
   jobOfferUrl(jobOffer: JobOffer): string {
     return this.uiController.jobOfferUrl(jobOffer);
+  }
+
+  tagAutocomplete(tagPrompt: string, result: TagAutocompleteResult): void {
+    this._tagAutocomplete(tagPrompt, result);
   }
 }
