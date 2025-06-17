@@ -1,7 +1,7 @@
 import {App, Component} from "vue";
 import {createRouter, createWebHistory, RouteLocationNormalized, Router as VueRouter} from "vue-router";
+import {RouteProperties} from "./Screens";
 import {Screen} from "./ui";
-import {RouteProperties, ScreenListener} from "./Screens";
 
 export class Router {
   private readonly router: VueRouter = createRouter({
@@ -12,11 +12,9 @@ export class Router {
     },
   });
 
-  constructor(private listener: ScreenListener) {}
-
-  before(before: (screen: Screen, jobOfferId: number|null) => Screen|null): void {
+  onNavigate(change: (screen: Screen, jobOfferId: number|null) => Screen|null): void {
     this.router.beforeEach((route: RouteLocationNormalized) => {
-      const redirectTo = before(route.name as Screen, this.jobOfferId(route));
+      const redirectTo = change(route.name as Screen, this.jobOfferId(route));
       if (redirectTo !== null) {
         return {name: redirectTo};
       }
@@ -37,7 +35,7 @@ export class Router {
       name: screen,
       path: vueRouterRoute,
       props: (route: RouteLocationNormalized): RouteProperties => {
-        return this.listener.routeProperties(this.jobOfferId(route));
+        return {routeJobOfferId: this.jobOfferId(route)};
       },
     });
   }

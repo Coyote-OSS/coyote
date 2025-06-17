@@ -9,13 +9,16 @@ import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {Policy} from "./Policy";
 
 import {Router} from "./Router";
-import {Screen} from "./ui";
+import {Screen, ViewListener} from "./ui";
 
 export class Screens {
   private router: Router;
 
-  constructor(listener: ScreenListener, policy: Policy) {
-    this.router = new Router(listener);
+  constructor(
+    viewListener: ViewListener,
+    policy: Policy,
+  ) {
+    this.router = new Router();
     this.router.addScreen(JobOfferHome, 'home', '/Job');
     this.router.addScreen(JobOfferShowScreen, 'show', '/Job/:slug/:id');
     this.router.addScreen(JobOfferPricing, 'pricing', '/Job/pricing');
@@ -23,7 +26,7 @@ export class Screens {
     this.router.addScreen(JobOfferEdit, 'edit', '/Job/:id/edit');
     this.router.addScreen(JobOfferPaymentScreen, 'payment', '/Job/:id/payment');
     this.router.addDefaultScreen('home');
-    this.router.before((screen: Screen, jobOfferId: number|null): Screen|null => {
+    this.router.onNavigate((screen: Screen, jobOfferId: number|null): Screen|null => {
       if (screen === 'form' && !policy.createCreateJobOffer()) {
         return 'pricing';
       }
@@ -31,7 +34,7 @@ export class Screens {
         return 'home';
       }
       if (screen === 'payment') {
-        listener.resumePayment(jobOfferId!);
+        viewListener.resumePayment(jobOfferId!);
       }
       return null;
     });
@@ -56,11 +59,6 @@ export class Screens {
   useIn(app: App): void {
     this.router.useIn(app);
   }
-}
-
-export interface ScreenListener {
-  routeProperties(jobOfferId: number|null): RouteProperties;
-  resumePayment(jobOfferId: number): void;
 }
 
 export interface RouteProperties {

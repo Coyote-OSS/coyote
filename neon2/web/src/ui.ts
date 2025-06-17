@@ -20,7 +20,7 @@ import {
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {Policy} from "./Policy";
-import {RouteProperties, Screens} from "./Screens";
+import {Screens} from "./Screens";
 import {Toast, View} from './view';
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
@@ -60,9 +60,9 @@ export type TagAutocompleteResult = (tags: Tag[]) => void;
 
 export class VueUi {
   private readonly gate: Policy;
-  private readonly screens: Screens;
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
+  private screens: Screens|null = null;
   private view: View|null = null;
   private viewListener: ViewListener|null = null;
   private tagAutocomplete: TagAutocomplete|null = null;
@@ -79,14 +79,6 @@ export class VueUi {
       (jobOfferId: number): boolean => this.findJobOffer(jobOfferId)?.canEdit ?? false,
       () => this.store!.pricingPlan !== null,
     );
-    this.screens = new Screens({
-      routeProperties: (jobOfferId: number|null): RouteProperties => {
-        return {routeJobOfferId: jobOfferId};
-      },
-      resumePayment: (jobOfferId: number): void => {
-        this.viewListener!.resumePayment(jobOfferId);
-      },
-    }, this.gate);
     this.app = createApp(JobBoard);
     const pinia = createPinia();
     this.app.use(pinia);
@@ -105,7 +97,7 @@ export class VueUi {
   }
 
   setScreen(screen: Screen, jobOfferId: number|null): void {
-    this.screens.navigate(screen, jobOfferId);
+    this.screens!.navigate(screen, jobOfferId);
     window.scrollTo(0, 0);
   }
 
@@ -113,6 +105,7 @@ export class VueUi {
 
   setViewListener(viewListener: ViewListener): void {
     this.viewListener = viewListener;
+    this.screens = new Screens(viewListener, this.gate);
   }
 
   setJobOfferFilters(filters: FilterOptions): void {
@@ -202,7 +195,7 @@ export class VueUi {
       this,
       this.view!,
       this.store!,
-      this.screens,
+      this.screens!,
       this.locationInput,
       this.viewListener!,
       this.tagAutocomplete!,
@@ -210,7 +203,7 @@ export class VueUi {
       this.navigationListener!,
       this.backendImageApi,
     ));
-    this.screens.useIn(this.app);
+    this.screens!.useIn(this.app);
     this.app.mount(element);
   }
 
