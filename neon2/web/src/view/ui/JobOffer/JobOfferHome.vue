@@ -31,10 +31,10 @@
 
 <script setup lang="ts">
 import {computed, inject, ref} from "vue";
-import {JobOffer} from '../../../jobBoard';
 import {JobOfferFilter} from "../../../jobOfferFilter";
 import {JobOfferFilters as Filters} from "../../../main";
 import {Design} from "../../../neon3/Core/View/DesignSystem/design";
+import {JobOffer} from "../../../neon3/Feature/JobBoard/Model/JobOffer";
 import {UiController} from "../ui";
 import JobOfferFilters from "./JobOfferFilters.vue";
 import JobOfferListItem from "./JobOfferListItem.vue";

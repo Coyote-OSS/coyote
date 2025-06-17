@@ -1,5 +1,5 @@
-import {JobOffer} from "./jobBoard";
 import {LegalForm, WorkExperience, WorkMode} from "./main";
+import {JobOffer} from "./neon3/Feature/JobBoard/Model/JobOffer";
 
 export interface JobOfferFilter {
   searchPhrase: string,

@@ -1,5 +1,6 @@
-import {JobBoard, JobOffer} from "../src/jobBoard";
+import {JobBoard} from "../src/jobBoard";
 import {SubmitJobOffer} from "../src/main";
+import {JobOffer} from "../src/neon3/Feature/JobBoard/Model/JobOffer";
 import {assertContains, assertEquals, assertNotContains, assertThrows, beforeEach, describe, test} from "./assertion";
 
 describe('Job board', () => {

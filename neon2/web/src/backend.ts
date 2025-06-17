@@ -1,4 +1,3 @@
-import {JobOffer} from "./jobBoard";
 import {Country, InvoiceInformation, PricingPlan, SubmitJobOffer, Tag} from "./main";
 import {
   BackendInput,
@@ -10,6 +9,7 @@ import {
 } from "./neon3/Core/Backend/backendInput";
 import {request} from "./neon3/Core/Backend/http";
 import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
+import {JobOffer} from "./neon3/Feature/JobBoard/Model/JobOffer";
 import {parseWorkMode} from "./workMode";
 
 function jobOfferFields(jobOffer: SubmitJobOffer): object {

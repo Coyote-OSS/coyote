@@ -3,7 +3,7 @@ import {
   JobBoardBackend,
   toJobOffer,
 } from "./backend";
-import {JobBoard, JobOffer} from './jobBoard';
+import {JobBoard} from './jobBoard';
 import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
 import {TestLocationInput} from "./neon3/Core/Acceptance/TestLocationInput";
@@ -16,6 +16,7 @@ import {GoogleMapsMap} from "./neon3/Core/External/GoogleMaps/GoogleMapsMap";
 import {LocationInput} from "./neon3/Core/Application/LocationInput";
 import {JobOfferPaymentIntent} from "./neon3/Feature/JobBoard/JobBoard";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./neon3/Core/Application/PaymentProvider";
+import {JobOffer} from "./neon3/Feature/JobBoard/Model/JobOffer";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './neon3/Core/External/Stripe/StripePaymentProvider';
 import {TestPaymentProvider} from './neon3/Core/Acceptance/TestPaymentProvider';

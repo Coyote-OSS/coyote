@@ -1,16 +1,5 @@
-import {
-  ApplicationMode,
-  Currency,
-  HiringType,
-  JobOfferFilters,
-  LegalForm,
-  Rate,
-  SubmitJobOffer,
-  Tag,
-  WorkExperience,
-  WorkMode,
-} from "./main";
-import {BackendJobOfferLocation} from "./neon3/Core/Backend/backendInput";
+import {JobOfferFilters, SubmitJobOffer} from "./main";
+import {JobOffer} from "./neon3/Feature/JobBoard/Model/JobOffer";
 
 interface JobBoardObserver {
   (jobOffers: JobOffer[]): void;
@@ -71,45 +60,6 @@ export function jobOfferCities(jobOffer: JobOffer): string[] {
   return jobOffer.locations
     .map(location => location.city)
     .filter(city => city !== null);
-}
-
-export interface JobOffer {
-  id: number;
-  expiresInDays: number;
-  expiryDate: string;
-  status: 'published'|'awaitingPayment'|'expired';
-  isNew: boolean;
-  isFavourite: boolean;
-  applicationUrl: string;
-  slug: string;
-  canEdit: boolean;
-  isMine: boolean;
-  title: string;
-  description: string|null;
-  salaryRangeFrom: number|null;
-  salaryRangeTo: number|null;
-  salaryIsNet: boolean;
-  salaryCurrency: Currency;
-  salaryRate: Rate;
-  locations: BackendJobOfferLocation[];
-  tags: Tag[];
-  workMode: WorkMode;
-  workModeRemoteRange: number;
-  legalForm: LegalForm;
-  experience: WorkExperience;
-  applicationMode: ApplicationMode,
-  applicationEmail: string|null,
-  applicationExternalAts: string|null,
-  companyName: string;
-  companyLogoUrl: string|null;
-  companyWebsiteUrl: string|null;
-  companyDescription: string|null;
-  companyPhotoUrls: string[];
-  companyVideoUrl: string|null;
-  companySizeLevel: number|null;
-  companyFundingYear: number|null;
-  companyAddress: BackendJobOfferLocation|null;
-  companyHiringType: HiringType;
 }
 
 function copyArray<T>(array: T[]): T[] {

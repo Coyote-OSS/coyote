@@ -1,5 +1,6 @@
 import {App} from "vue";
-import {JobOffer} from "../../../jobBoard";
+
+import {JobOffer} from "../../../neon3/Feature/JobBoard/Model/JobOffer";
 import JobOfferCreate from "../JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from "../JobOffer/JobOfferEdit.vue";
 import JobOfferHome from "../JobOffer/JobOfferHome.vue";
