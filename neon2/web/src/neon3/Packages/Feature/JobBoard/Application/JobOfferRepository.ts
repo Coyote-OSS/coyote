@@ -11,6 +11,10 @@ export class JobOfferRepository {
     return this.jobOffers;
   }
 
+  published(): JobOffer[] {
+    return this.jobOffers.filter(jobOffer => jobOffer.status === 'published');
+  }
+
   onlyMine(): JobOffer[] {
     return this.jobOffers.filter(jobOffer => jobOffer.isMine);
   }

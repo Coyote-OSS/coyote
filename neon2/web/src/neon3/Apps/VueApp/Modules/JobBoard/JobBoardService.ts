@@ -1,7 +1,7 @@
+import {JobOfferFilterService} from "../../../../../JobOfferFilterService";
 import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
 import {Screen, TagAutocomplete, TagAutocompleteResult, ViewListener, VueUiFactory} from "../../../../../ui";
-import {View} from "../../../../../view";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "../../../../Packages/Core/Backend/BackendImageApi";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
@@ -25,7 +25,7 @@ export class JobBoardService {
     private readonly allJobOffers: JobOfferRepository,
     private readonly planBundle: PlanBundleRepository,
     private readonly filterRepo: FilterRepository,
-    private readonly view: View,
+    private readonly filterService: JobOfferFilterService,
   ) {}
 
   redeemBundle(jobOfferId: number): void {
@@ -60,13 +60,13 @@ export class JobBoardService {
     this.filterRepo.setFilter(filter);
     this.store.jobOfferFilter = filter;
 
-    this.store.jobOffers = this.view.filterJobOffers(this.filterRepo);
+    this.store.jobOffers = this.filterService.filter(this.filterRepo);
   }
 
   filterOnlyMine(onlyMine: boolean): void {
     this.filterRepo.setFilterOnlyMine(onlyMine);
 
-    this.store.jobOffers = this.view.filterJobOffers(this.filterRepo);
+    this.store.jobOffers = this.filterService.filter(this.filterRepo);
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {

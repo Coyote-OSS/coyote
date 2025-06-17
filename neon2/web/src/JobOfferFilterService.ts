@@ -1,54 +1,55 @@
 import {jobOfferCities, jobOfferTagNames} from './jobBoard';
 import {Filter} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
+import {FilterCriteria} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {sortInPlace} from "./neon3/Packages/Feature/JobBoard/Presenter/orderBy";
 
 export class JobOfferFilterService {
-  constructor(
-    private jobOffers: JobOfferRepository,
-    private filter: Filter|null,
-  ) {}
+  constructor(private jobOffers: JobOfferRepository) {}
 
-  filterJobOffers(): JobOffer[] {
-    const jobOffers = this.jobOffers.all()
-      .filter(jobOffer => jobOffer.status === 'published')
-      .filter(jobOffer => this.jobOfferMatches(jobOffer));
-    if (this.filter) {
-      sortInPlace(jobOffers, this.filter.sort);
+  filter(criteria: FilterCriteria): JobOffer[] {
+    if (criteria.filterOnlyMine) {
+      return this.jobOffers.onlyMine();
     }
-    return jobOffers;
+    if (criteria.filter) {
+      return this.filtered(criteria.filter, this.jobOffers.published());
+    }
+    return this.jobOffers.published();
   }
 
-  private jobOfferMatches(jobOffer: JobOffer): boolean {
-    if (this.filter === null) {
-      return true;
-    }
-    if (!this.jobOfferMatchesSearchPhrase(jobOffer, this.filter.searchPhrase)) {
+  private filtered(filter: Filter, jobOffers: JobOffer[]): JobOffer[] {
+    const filtered = jobOffers.filter(jobOffer => this.jobOfferMatches(filter, jobOffer));
+    sortInPlace(filtered, filter.sort);
+    return filtered;
+  }
+
+  private jobOfferMatches(filter: Filter, jobOffer: JobOffer): boolean {
+    if (!this.jobOfferMatchesSearchPhrase(jobOffer, filter.searchPhrase)) {
       return false;
     }
-    if (this.filter.workModes.length) {
-      if (!this.filter.workModes.includes(jobOffer.workMode)) {
+    if (filter.workModes.length) {
+      if (!filter.workModes.includes(jobOffer.workMode)) {
         return false;
       }
     }
-    if (this.filter.legalForms.length) {
-      if (!this.filter.legalForms.includes(jobOffer.legalForm)) {
+    if (filter.legalForms.length) {
+      if (!filter.legalForms.includes(jobOffer.legalForm)) {
         return false;
       }
     }
-    if (this.filter.workExperiences.length) {
-      if (!this.filter.workExperiences.includes(jobOffer.experience)) {
+    if (filter.workExperiences.length) {
+      if (!filter.workExperiences.includes(jobOffer.experience)) {
         return false;
       }
     }
-    if (this.filter.tags.length) {
-      if (!this.haveCommonElement(this.filter.tags, jobOfferTagNames(jobOffer))) {
+    if (filter.tags.length) {
+      if (!this.haveCommonElement(filter.tags, jobOfferTagNames(jobOffer))) {
         return false;
       }
     }
-    if (this.filter.locations.length) {
-      if (!this.haveCommonElement(this.filter.locations, jobOfferCities(jobOffer))) {
+    if (filter.locations.length) {
+      if (!this.haveCommonElement(filter.locations, jobOfferCities(jobOffer))) {
         return false;
       }
     }

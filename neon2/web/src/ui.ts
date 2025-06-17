@@ -1,13 +1,14 @@
 import {createPinia} from "pinia";
 import {createApp} from 'vue';
 import JobBoard from './JobBoard.vue';
+import {JobOfferFilterService} from "./JobOfferFilterService";
 import {ValuePropositionEvent} from "./main";
 import {JobBoardService} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/vue";
 import {LocationInput} from "./neon3/Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
-import {Filter, FilterOptions} from "./neon3/Packages/Feature/JobBoard/Application/filter";
+import {FilterOptions} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
@@ -16,7 +17,6 @@ import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PlanBundleName, PricingPlan, Tag} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
-import {View} from "./view";
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
@@ -36,11 +36,6 @@ export interface ViewListener {
     jobOffer: JobOffer,
     event: ValuePropositionEvent,
     email?: string): void;
-}
-
-export interface FilterListener {
-  filter(filter: Filter): void;
-  filterOnlyMine(onlyMine: boolean): void;
 }
 
 export type CanEdit = (jobOfferId: number) => boolean;
@@ -63,7 +58,7 @@ export class VueUiFactory {
     private allJobOffers: JobOfferRepository,
     private planBundle: PlanBundleRepository,
     private filterRepo: FilterRepository,
-    private view: View,
+    private filterService: JobOfferFilterService,
   ) {
     this.screens = new Screens(new Policy(
       isAuthenticated,
@@ -123,7 +118,7 @@ export class VueUiFactory {
       this.allJobOffers,
       this.planBundle,
       this.filterRepo,
-      this.view,
+      this.filterService,
     ));
     this.screens.useIn(this.app);
     this.app.mount(element);

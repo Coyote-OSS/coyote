@@ -1,5 +1,6 @@
 import {JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from './jobBoard';
+import {JobOfferFilterService} from "./JobOfferFilterService";
 import {JobBoardPresenter} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardPresenter";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
@@ -25,7 +26,6 @@ import {
 } from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
 import {TagAutocompleteResult, VueUiFactory} from './ui';
-import {View} from "./view";
 
 const filterRepo = new FilterRepository();
 const jobOffersRepo = new JobOfferRepository();
@@ -34,8 +34,7 @@ const planBundleRepo = new PlanBundleRepository();
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
-
-const view = new View(jobOffersRepo);
+const filterService = new JobOfferFilterService(jobOffersRepo);
 
 const ui = new VueUiFactory(
   locationInput(backend.testMode()),
@@ -44,11 +43,11 @@ const ui = new VueUiFactory(
   jobOffersRepo,
   planBundleRepo,
   filterRepo,
-  view);
+  filterService);
 
 const board = new JobBoard((jobOffers: JobOffer[]): void => {
   jobOffersRepo.setJobOffers(jobOffers);
-  presenter.setJobOffers(view.filterJobOffers(filterRepo));
+  presenter.setJobOffers(filterService.filter(filterRepo));
 });
 
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
