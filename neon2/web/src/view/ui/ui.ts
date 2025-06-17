@@ -88,10 +88,27 @@ export class VueUi {
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
   private view: View|null = null;
+  private viewListener: ViewListener|null;
+  private uiController: UiController;
 
   constructor(locationInput: LocationInput, isAuthenticated: boolean) {
+    this.viewListener = null;
+    this.uiController = {
+      showForm: this.showForm.bind(this),
+      selectPlan: this.selectPlan.bind(this),
+      navigate: this.navigate.bind(this),
+      filter: this.filter.bind(this),
+      filterOnlyMine: this.filterOnlyMine.bind(this),
+      applyForJob: this.applyForJob.bind(this),
+      showJobOffer: this.showJobOffer.bind(this),
+      jobOfferUrl: this.jobOfferUrl.bind(this),
+      resumePayment: this.resumePayment.bind(this),
+      markAsFavourite: this.markAsFavourite.bind(this),
+      findJobOffer: this.findJobOfferReactive.bind(this),
+      valuePropositionAccepted: this.valuePropositionAccepted.bind(this),
+    };
+
     this.vueState = reactive<JobBoardProperties>({
-      viewListener: null,
       tagAutocomplete: null,
       jobOffers: [],
       jobOfferFilters: {
@@ -111,20 +128,6 @@ export class VueUi {
       paymentVatIdState: 'valid',
       invoiceCountries: null,
       locationInput,
-      uiController: {
-        showForm: this.showForm.bind(this),
-        selectPlan: this.selectPlan.bind(this),
-        navigate: this.navigate.bind(this),
-        filter: this.filter.bind(this),
-        filterOnlyMine: this.filterOnlyMine.bind(this),
-        applyForJob: this.applyForJob.bind(this),
-        showJobOffer: this.showJobOffer.bind(this),
-        jobOfferUrl: this.jobOfferUrl.bind(this),
-        resumePayment: this.resumePayment.bind(this),
-        markAsFavourite: this.markAsFavourite.bind(this),
-        findJobOffer: this.findJobOfferReactive.bind(this),
-        valuePropositionAccepted: this.valuePropositionAccepted.bind(this),
-      },
       vpVisibleFor: null,
       paymentProcessing: false,
     });
@@ -141,7 +144,7 @@ export class VueUi {
         };
       },
       resumePayment: (jobOfferId: number): void => {
-        this.vueState.viewListener!.resumePayment(jobOfferId);
+        this.viewListener!.resumePayment(jobOfferId);
       },
     }, this.gate);
   }
@@ -155,8 +158,7 @@ export class VueUi {
   }
 
   private selectPlan(plan: PricingPlan): void {
-    const listener: ViewListener = this.vueState.viewListener!;
-    if (listener.assertUserAuthenticated()) {
+    if (this.viewListener!.assertUserAuthenticated()) {
       this.vueState.pricingPlan = plan;
       this.setScreen('form', null);
     }
@@ -180,11 +182,11 @@ export class VueUi {
   }
 
   private applyForJob(jobOfferId: number): void {
-    this.vueState.viewListener!.apply(this.findJobOffer(jobOfferId)!);
+    this.viewListener!.apply(this.findJobOffer(jobOfferId)!);
   }
 
   private markAsFavourite(jobOfferId: number, favourite: boolean): void {
-    this.vueState.viewListener!.markAsFavourite(jobOfferId, favourite);
+    this.viewListener!.markAsFavourite(jobOfferId, favourite);
   }
 
   private showJobOffer(jobOffer: JobOffer): void {
@@ -200,7 +202,7 @@ export class VueUi {
   }
 
   setViewListener(viewListener: ViewListener): void {
-    this.vueState.viewListener = viewListener;
+    this.viewListener = viewListener;
   }
 
   setNavigationListener(navigationListener: NavigationListener): void {
@@ -309,7 +311,7 @@ export class VueUi {
     event: ValuePropositionEvent,
     email?: string,
   ): void {
-    this.vueState.viewListener!.valuePropositionAccepted(this.vueState.vpVisibleFor!, event, email);
+    this.viewListener!.valuePropositionAccepted(this.vueState.vpVisibleFor!, event, email);
   }
 
   mount(element: Element): void {
@@ -319,8 +321,8 @@ export class VueUi {
     const store = useBoardStore();
     app.provide(jobBoardServiceInjectKey, new JobBoardService(
       store,
-      this.vueState.viewListener!,
-      this.vueState.uiController,
+      this.viewListener!,
+      this.uiController,
     ));
     this.screens.useIn(app);
     app.mount(element);

@@ -7,10 +7,9 @@ import {JobOffer} from "../../neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {Country, PaymentStatus, PricingPlan} from "../../neon3/Packages/Feature/JobBoard/Domain/Model";
 import {PaymentSummary} from "../../neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {Toast} from "../view";
-import {Screen, TagAutocomplete, UiController, ViewListener} from "./ui";
+import {Screen, TagAutocomplete} from "./ui";
 
 export interface JobBoardProperties {
-  viewListener: ViewListener|null;
   tagAutocomplete: TagAutocomplete|null;
   jobOffers: JobOffer[];
   jobOfferFilter: JobOfferFilter;
@@ -27,7 +26,6 @@ export interface JobBoardProperties {
   paymentVatIdState: VatIdState;
   invoiceCountries: Country[]|null;
   locationInput: LocationInput|null;
-  uiController: UiController;
   paymentProcessing: boolean;
   vpVisibleFor: JobOffer|null;
 }
