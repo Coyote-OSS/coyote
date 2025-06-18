@@ -1,10 +1,24 @@
 import {JobOffer} from "../Domain/JobOffer";
+import {SubmitJobOffer} from "./Model";
 
 export class JobOfferRepository {
   public jobOffers: JobOffer[] = [];
 
   setJobOffers(jobOffers: JobOffer[]): void {
     this.jobOffers = jobOffers;
+  }
+
+  insertFirst(jobOffer: JobOffer): void {
+    this.jobOffers.unshift(jobOffer);
+  }
+
+  updateJobOfferPublished(jobOfferId: number): void {
+    this.findJobOffer(jobOfferId)!.status = 'published';
+  }
+
+  updateJobOffer(jobOfferId: number, jobOffer: SubmitJobOffer): void {
+    const originalJobOffer = this.findJobOffer(jobOfferId)!;
+    Object.assign(originalJobOffer, jobOffer);
   }
 
   all(): JobOffer[] {

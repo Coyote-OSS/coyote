@@ -1,4 +1,3 @@
-import {JobBoardDeprecated} from "../../../../../jobBoardDeprecated";
 import {ViewModel} from "../../../../Apps/VueApp/Modules/JobBoard/ViewModel";
 import {PaymentProvider} from "../../../Core/Application/PaymentProvider";
 import {BackendApi} from "../../../Core/Backend/BackendApi";
@@ -6,9 +5,12 @@ import {BackendPaymentIntent} from "../../../Core/Backend/backendInput";
 import {JobBoardBackend} from "../../../Core/Backend/JobBoardBackend";
 import {isVatIncluded} from "../../../Core/Domain/vat";
 import {EventMetadata, ValuePropositionEvent} from "../../Vp/Model";
-import {bundleSize} from "../Domain/bundleSize";
+import {bundleSize, remainingJobOffers} from "../Domain/bundleSize";
 import {JobOffer} from "../Domain/JobOffer";
-import {PaymentSummary, PricingPlan} from "../Domain/Model";
+import {PaymentStatus, PaymentSummary, PricingPlan} from "../Domain/Model";
+import {FilterRepository} from "./FilterRepository";
+import {JobOfferFilterService} from "./JobOfferFilterService";
+import {JobOfferRepository} from "./JobOfferRepository";
 import {InitiatePayment, SubmitJobOffer} from "./Model";
 import {PaymentIntentRepository} from "./PaymentIntentRepository";
 import {PaymentService} from "./PaymentService";
@@ -19,11 +21,13 @@ export class JobOfferController {
     private backend: JobBoardBackend,
     private backendApi: BackendApi,
     private viewModel: ViewModel,
-    private board: JobBoardDeprecated,
     private paymentProvider: PaymentProvider,
     private payments: PaymentService,
-    private jobOfferPayments: PaymentIntentRepository,
+    private paymentIntents: PaymentIntentRepository,
     private planBundleRepo: PlanBundleRepository,
+    private jobOffersRepo: JobOfferRepository,
+    private filterService: JobOfferFilterService,
+    private filterRepo: FilterRepository,
   ) {}
 
   createJob(pricingPlan: PricingPlan, submit: SubmitJobOffer): void {
@@ -32,11 +36,12 @@ export class JobOfferController {
         pricingPlan,
         submit,
         (jobOffer: JobOffer, payment: BackendPaymentIntent|null): void => {
-          this.board.jobOfferCreated(jobOffer);
+          this.jobOffersRepo.insertFirst(jobOffer);
+          this.viewModel.notifyJobOffersChanged(this.filterService.filter(this.filterRepo));
           if (pricingPlan === 'free') {
             this.viewModel.notifyJobOfferCreatedFree(jobOffer.id);
           } else {
-            this.jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: payment!});
+            this.paymentIntents.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: payment!});
             this.viewModel.notifyJobOfferCreatedRequirePayment(
               jobOffer.id,
               this.paymentSummary(jobOffer.id));
@@ -49,20 +54,26 @@ export class JobOfferController {
     this.backendApi.markJobOfferAsFavourite(jobOfferId, favourite);
   }
 
+  initJobOffers(jobOffers: JobOffer[]) :void{
+    this.jobOffersRepo.setJobOffers(jobOffers);
+    this.viewModel.notifyJobOffersChanged(this.filterService.filter(this.filterRepo));
+  }
+
   vatDetailsChanged(countryCode: string, vatId: string): void {
     this.viewModel.notifyVatIncludedChanged(isVatIncluded(countryCode, vatId));
   }
 
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
     this.backendApi.updateJobOffer(jobOfferId, jobOffer, (): void => {
-      this.board.jobOfferUpdated(jobOfferId, jobOffer);
+      this.jobOffersRepo.updateJobOffer(jobOfferId, jobOffer);
+      this.viewModel.notifyJobOffersChanged(this.filterService.filter(this.filterRepo));
       this.viewModel.notifyJobOfferEdited(jobOfferId);
     });
   }
 
   payForJob(initiatePayment: InitiatePayment): void {
     this.payments.initiatePayment(
-      this.jobOfferPayments.paymentId(initiatePayment.jobOfferId),
+      this.paymentIntents.paymentId(initiatePayment.jobOfferId),
       initiatePayment.invoiceInfo,
       initiatePayment.paymentMethod);
   }
@@ -71,11 +82,25 @@ export class JobOfferController {
     this.viewModel.initRequirePayment(this.paymentSummary(jobOfferId));
   }
 
+  paymentStatusChanged(paymentId: string, status: PaymentStatus): void {
+    this.viewModel.setPaymentStatus(status);
+    if (status === 'paymentComplete') {
+      this.jobOffersRepo.updateJobOfferPublished(this.paymentIntents.jobOfferId(paymentId));
+      this.viewModel.notifyJobOffersChanged(this.filterService.filter(this.filterRepo));
+      const pricingPlan = this.paymentIntents.pricingPlan(paymentId);
+      if (pricingPlan !== 'premium') {
+        this.planBundleRepo.set(pricingPlan, remainingJobOffers(pricingPlan));
+      }
+      this.viewModel.notifyJobOfferPaid();
+    }
+  }
+
   redeemBundle(jobOfferId: number): void {
     this.backendApi
       .publishJobOfferUsingBundle(jobOfferId, this.backend.userId())
       .then(() => {
-        this.board.jobOfferPaid(jobOfferId);
+        this.jobOffersRepo.updateJobOfferPublished(jobOfferId);
+        this.viewModel.notifyJobOffersChanged(this.filterService.filter(this.filterRepo));
         this.viewModel.notifyPlanBundleUsed();
         this.planBundleRepo.decrease();
       });
@@ -114,7 +139,7 @@ export class JobOfferController {
   }
 
   private paymentSummary(jobOfferId: number): PaymentSummary {
-    const payment = this.jobOfferPayments.jobOfferPayment(jobOfferId);
+    const payment = this.paymentIntents.jobOfferPayment(jobOfferId);
     return {
       bundleSize: bundleSize(payment.paymentPricingPlan),
       basePrice: payment.paymentPriceBase,

@@ -1,6 +1,5 @@
 import {createPinia} from "pinia";
 import {createApp} from "vue";
-import {JobBoardDeprecated} from './jobBoardDeprecated';
 import {useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
 import JobBoard from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobBoard.vue";
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/View/vue";
@@ -23,8 +22,6 @@ import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Applica
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
 import {TagAutocompleteResult} from "./neon3/Packages/Feature/JobBoard/Application/TagAutocomplete";
-import {remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
-import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PlanBundleName} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
@@ -32,20 +29,12 @@ import {Screens} from "./Screens";
 const filterRepo = new FilterRepository();
 const jobOffersRepo = new JobOfferRepository();
 const planBundleRepo = new PlanBundleRepository();
-
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const filterService = new JobOfferFilterService(jobOffersRepo);
-
-const board = new JobBoardDeprecated((jobOffers: JobOffer[]): void => {
-  jobOffersRepo.setJobOffers(jobOffers);
-  viewModel.notifyJobOffersChanged(filterService.filter(filterRepo));
-});
-
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const paymentIntents = new PaymentIntentRepository();
-paymentIntents.initJobOffers(backend.jobOfferPayments());
 
 const factory = new JobBoardServiceFactory(
   locationInput(backend.testMode()),
@@ -70,11 +59,13 @@ const controller = new JobOfferController(
   backend,
   backendApi,
   viewModel,
-  board,
   _paymentProvider,
   payments,
   paymentIntents,
-  planBundleRepo);
+  planBundleRepo,
+  jobOffersRepo,
+  filterService,
+  filterRepo);
 
 const presenter = new JobBoardPresenter(jobOffersRepo);
 
@@ -92,24 +83,17 @@ payments.addEventListener({
     viewModel.notifyPaymentNotification(notification);
   },
   statusChanged(paymentId: string, status: PaymentStatus): void {
-    viewModel.setPaymentStatus(status);
-    if (status === 'paymentComplete') {
-      board.jobOfferPaid(paymentIntents.jobOfferId(paymentId));
-      const pricingPlan = paymentIntents.pricingPlan(paymentId);
-      if (pricingPlan !== 'premium') {
-        planBundleRepo.set(pricingPlan, remainingJobOffers(pricingPlan));
-      }
-      viewModel.notifyJobOfferPaid();
-    }
+    controller.paymentStatusChanged(paymentId, status);
   },
 });
 
 planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
   viewModel.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
 });
-planBundleRepo.init(backend.initialPlanBundle());
-board.init(backend.initialJobOffers());
 
+paymentIntents.initJobOffers(backend.jobOfferPayments());
+planBundleRepo.init(backend.initialPlanBundle());
+controller.initJobOffers(backend.initialJobOffers());
 viewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 viewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 viewModel.setFiltersOptions(presenter.filterOptions());
