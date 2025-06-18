@@ -1,4 +1,4 @@
-import {JobBoardBackend, toJobOffer} from "./backend";
+import {JobBoardBackend} from "./backend";
 import {JobBoard} from './jobBoard';
 import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
@@ -100,9 +100,7 @@ planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: n
   viewModel.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
 });
 planBundleRepo.init(backend.initialPlanBundle());
-
-backend.initialJobOffers()
-  .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
+board.init(backend.initialJobOffers());
 
 viewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 viewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());

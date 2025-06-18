@@ -12,6 +12,11 @@ export class JobBoard {
     this.jobOffers = [];
   }
 
+  init(jobOffers: JobOffer[]): void {
+    this.jobOffers.push(...jobOffers);
+    this.updateView();
+  }
+
   jobOfferCreated(jobOffer: JobOffer): void {
     this.jobOffers.unshift(jobOffer);
     this.updateView();
@@ -23,21 +28,21 @@ export class JobBoard {
     this.updateView();
   }
 
-  private findJobOffer(id: number): JobOffer {
-    const jobOffer = this.jobOffers.find(o => o.id === id);
-    if (jobOffer) {
-      return jobOffer;
-    }
-    throw new Error('No such job offer.');
+  jobOfferPaid(jobOfferId: number): void {
+    this.findJobOffer(jobOfferId).status = 'published';
+    this.updateView();
   }
 
   updateView(): void {
     this.observe(copyArray<JobOffer>(this.jobOffers));
   }
 
-  jobOfferPaid(jobOfferId: number): void {
-    this.findJobOffer(jobOfferId).status = 'published';
-    this.updateView();
+  private findJobOffer(id: number): JobOffer {
+    const jobOffer = this.jobOffers.find(o => o.id === id);
+    if (jobOffer) {
+      return jobOffer;
+    }
+    throw new Error('No such job offer.');
   }
 }
 

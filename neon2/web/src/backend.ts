@@ -1,4 +1,3 @@
-
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendInput, BackendJobOffer, BackendPlanBundle} from "./neon3/Packages/Core/Backend/backendInput";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
@@ -11,8 +10,8 @@ export class JobBoardBackend {
 
   constructor(private backendApi: BackendApi) {}
 
-  initialJobOffers(): BackendJobOffer[] {
-    return this.backendInput.jobOffers;
+  initialJobOffers(): JobOffer[] {
+    return this.backendInput.jobOffers.map(o => toJobOffer(o));
   }
 
   initialPlanBundle(): BackendPlanBundle {
