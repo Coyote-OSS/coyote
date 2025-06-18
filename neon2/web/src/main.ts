@@ -8,6 +8,7 @@ import {PaymentNotification, PaymentProvider} from "./neon3/Packages/Core/Applic
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
+import {JobBoardPresenter} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardPresenter";
 import {JobBoardServiceFactory} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardServiceFactory";
 import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
@@ -66,8 +67,8 @@ const viewListener: ViewListener = new ViewListener(
   _paymentProvider,
   payments,
   jobOfferPayments,
-  planBundleRepo,
-);
+  planBundleRepo);
+const presenter = new JobBoardPresenter(jobOffersRepo);
 
 payments.addEventListener({
   processingStarted(): void {
@@ -105,7 +106,7 @@ backend.initialJobOffers()
 
 viewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 viewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
-viewModel.setFiltersOptions(board.filterOptions());
+viewModel.setFiltersOptions(presenter.filterOptions());
 
 ui.mount(
   document.querySelector('#neonApplication')!,

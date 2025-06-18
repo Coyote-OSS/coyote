@@ -1,4 +1,3 @@
-import {FilterOptions} from "./neon3/Packages/Feature/JobBoard/Application/filter";
 import {SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 
@@ -40,23 +39,6 @@ export class JobBoard {
     this.findJobOffer(jobOfferId).status = 'published';
     this.updateView();
   }
-
-  filterOptions(): FilterOptions {
-    return {
-      locations: [...new Set(this.jobOffers.flatMap(offer => jobOfferCities(offer)))],
-      tags: [...new Set(this.jobOffers.flatMap(offer => jobOfferTagNames(offer)))],
-    };
-  }
-}
-
-export function jobOfferTagNames(jobOffer: JobOffer): string[] {
-  return jobOffer.tags.map(tag => tag.tagName);
-}
-
-export function jobOfferCities(jobOffer: JobOffer): string[] {
-  return jobOffer.locations
-    .map(location => location.city)
-    .filter(city => city !== null);
 }
 
 function copyArray<T>(array: T[]): T[] {

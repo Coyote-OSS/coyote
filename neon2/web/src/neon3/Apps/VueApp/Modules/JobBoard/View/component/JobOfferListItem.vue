@@ -69,11 +69,10 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import {jobOfferTagNames} from "../../../../../../../jobBoard";
+import {JobOffer} from "../../../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {Design} from "../../../../DesignSystem/design";
 import Icon from "../../../../Icon/Icon.vue";
 import {IconName} from "../../../../Icon/icons";
-import {JobOffer} from "../../../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {formatLegalForm, formatWorkMode} from "./format";
 import JobOfferBadge from "./JobOfferBadge.vue";
 import JobOfferFavouriteButton from "./JobOfferFavouriteButton.vue";
@@ -143,5 +142,9 @@ function click(event: MouseEvent): void {
 
 function opensInNewTab(event: MouseEvent): boolean {
   return event.ctrlKey || event.metaKey;
+}
+
+function jobOfferTagNames(jobOffer: JobOffer): string[] {
+  return jobOffer.tags.map(tag => tag.tagName);
 }
 </script>
