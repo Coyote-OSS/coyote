@@ -5,7 +5,10 @@ interface JobBoardObserver {
   (jobOffers: JobOffer[]): void;
 }
 
-export class JobBoard {
+/**
+ * @deprecated
+ */
+export class JobBoardDeprecated {
   private readonly jobOffers: JobOffer[];
 
   constructor(private observe: JobBoardObserver) {

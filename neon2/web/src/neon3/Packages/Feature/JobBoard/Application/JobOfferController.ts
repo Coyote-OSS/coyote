@@ -1,9 +1,9 @@
-import {JobBoardBackend} from "../../../Core/Backend/JobBoardBackend";
-import {JobBoard} from "../../../../../jobBoard";
+import {JobBoardDeprecated} from "../../../../../jobBoardDeprecated";
 import {ViewModel} from "../../../../Apps/VueApp/Modules/JobBoard/ViewModel";
 import {PaymentProvider} from "../../../Core/Application/PaymentProvider";
 import {BackendApi} from "../../../Core/Backend/BackendApi";
 import {BackendPaymentIntent} from "../../../Core/Backend/backendInput";
+import {JobBoardBackend} from "../../../Core/Backend/JobBoardBackend";
 import {isVatIncluded} from "../../../Core/Domain/vat";
 import {EventMetadata, ValuePropositionEvent} from "../../Vp/Model";
 import {bundleSize} from "../Domain/bundleSize";
@@ -19,7 +19,7 @@ export class JobOfferController {
     private backend: JobBoardBackend,
     private backendApi: BackendApi,
     private viewModel: ViewModel,
-    private board: JobBoard,
+    private board: JobBoardDeprecated,
     private paymentProvider: PaymentProvider,
     private payments: PaymentService,
     private jobOfferPayments: PaymentIntentRepository,

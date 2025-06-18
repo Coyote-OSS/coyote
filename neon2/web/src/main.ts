@@ -1,4 +1,9 @@
-import {JobBoard} from './jobBoard';
+import {createPinia} from "pinia";
+import {createApp} from "vue";
+import {JobBoardDeprecated} from './jobBoardDeprecated';
+import {useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
+import JobBoard from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobBoard.vue";
+import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/View/vue";
 import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
@@ -21,7 +26,8 @@ import {TagAutocompleteResult} from "./neon3/Packages/Feature/JobBoard/Applicati
 import {remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PlanBundleName} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
-import {VueUiFactory} from './ui';
+import {Policy} from "./Policy";
+import {Screens} from "./Screens";
 
 const filterRepo = new FilterRepository();
 const jobOffersRepo = new JobOfferRepository();
@@ -31,7 +37,7 @@ const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const filterService = new JobOfferFilterService(jobOffersRepo);
 
-const board = new JobBoard((jobOffers: JobOffer[]): void => {
+const board = new JobBoardDeprecated((jobOffers: JobOffer[]): void => {
   jobOffersRepo.setJobOffers(jobOffers);
   viewModel.notifyJobOffersChanged(filterService.filter(filterRepo));
 });
@@ -53,8 +59,12 @@ const factory = new JobBoardServiceFactory(
     backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
   });
 
-const ui = new VueUiFactory(backend.isAuthenticated(), jobOffersRepo, factory);
-const viewModel = new ViewModel(ui.store, ui.screens);
+const vueApp = createApp(JobBoard);
+const pinia = createPinia();
+vueApp.use(pinia);
+const store = useBoardStore();
+const screens = new Screens(new Policy(backend.isAuthenticated(), jobOffersRepo, store));
+const viewModel = new ViewModel(store, screens);
 
 const controller = new JobOfferController(
   backend,
@@ -104,6 +114,6 @@ viewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 viewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 viewModel.setFiltersOptions(presenter.filterOptions());
 
-ui.mount(
-  document.querySelector('#neonApplication')!,
-  controller);
+vueApp.provide(jobBoardServiceInjectKey, factory.create(screens, store, controller));
+screens.useIn(vueApp);
+vueApp.mount(document.querySelector('#neonApplication')!);
