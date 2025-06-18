@@ -1,5 +1,6 @@
 import {createPinia} from "pinia";
 import {createApp} from "vue";
+import {JobBoardService} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
 import JobBoard from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobBoard.vue";
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/View/vue";
@@ -13,8 +14,6 @@ import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {JobBoardBackend} from "./neon3/Packages/Core/Backend/JobBoardBackend";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
 import {JobBoardPresenter} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardPresenter";
-import {JobBoardServiceFactory} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardServiceFactory";
-import {JobOfferController} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferController";
 import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {VatIdState} from "./neon3/Packages/Feature/JobBoard/Application/Model";
@@ -36,17 +35,9 @@ const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), ba
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const paymentIntents = new PaymentIntentRepository();
 
-const factory = new JobBoardServiceFactory(
-  locationInput(backend.testMode()),
-  locationDisplay(backend.testMode()),
-  new BackendImageApi(backend.csrfToken()),
-  jobOffersRepo,
-  planBundleRepo,
-  filterRepo,
-  filterService,
-  (tagPrompt: string, result: TagAutocompleteResult): void => {
-    backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
-  });
+const tagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult): void => {
+  backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
+};
 
 const vueApp = createApp(JobBoard);
 const pinia = createPinia();
@@ -54,18 +45,6 @@ vueApp.use(pinia);
 const store = useBoardStore();
 const screens = new Screens(new Policy(backend.isAuthenticated(), jobOffersRepo, store));
 const viewModel = new ViewModel(store, screens);
-
-const controller = new JobOfferController(
-  backend,
-  backendApi,
-  viewModel,
-  _paymentProvider,
-  payments,
-  paymentIntents,
-  planBundleRepo,
-  jobOffersRepo,
-  filterService,
-  filterRepo);
 
 const presenter = new JobBoardPresenter(jobOffersRepo);
 
@@ -83,9 +62,27 @@ payments.addEventListener({
     viewModel.notifyPaymentNotification(notification);
   },
   statusChanged(paymentId: string, status: PaymentStatus): void {
-    controller.paymentStatusChanged(paymentId, status);
+    jobBoardService.paymentStatusChanged(paymentId, status);
   },
 });
+
+const jobBoardService = new JobBoardService(
+  viewModel,
+  store,
+  screens,
+  locationInput(backend.testMode()),
+  locationDisplay(backend.testMode()),
+  tagAutocomplete,
+  new BackendImageApi(backend.csrfToken()),
+  backendApi,
+  backend,
+  jobOffersRepo,
+  planBundleRepo,
+  filterRepo,
+  filterService,
+  paymentIntents,
+  payments,
+  _paymentProvider);
 
 planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
   viewModel.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
@@ -93,10 +90,11 @@ planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: n
 
 paymentIntents.initJobOffers(backend.jobOfferPayments());
 planBundleRepo.init(backend.initialPlanBundle());
-controller.initJobOffers(backend.initialJobOffers());
+jobBoardService.initJobOffers(backend.initialJobOffers());
 viewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 viewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 viewModel.setFiltersOptions(presenter.filterOptions());
-vueApp.provide(jobBoardServiceInjectKey, factory.create(screens, store, controller));
+
+vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
 screens.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);
