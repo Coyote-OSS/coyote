@@ -1,18 +1,18 @@
-import {JobBoardBackend, toJobOffer} from "./backend";
-import {JobBoard} from "./jobBoard";
-import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
-import {PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
-import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
-import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
-import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
-import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
-import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
-import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
-import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
-import {bundleSize} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
-import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {PaymentSummary, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
-import {EventMetadata, ValuePropositionEvent} from "./neon3/Packages/Feature/Vp/Model";
+import {JobBoardBackend, toJobOffer} from "../../../../../backend";
+import {JobBoard} from "../../../../../jobBoard";
+import {ViewModel} from "../../../../Apps/VueApp/Modules/JobBoard/ViewModel";
+import {PaymentProvider} from "../../../Core/Application/PaymentProvider";
+import {BackendApi} from "../../../Core/Backend/BackendApi";
+import {BackendJobOffer} from "../../../Core/Backend/backendInput";
+import {isVatIncluded} from "../../../Core/Domain/vat";
+import {EventMetadata, ValuePropositionEvent} from "../../Vp/Model";
+import {bundleSize} from "../Domain/bundleSize";
+import {JobOffer} from "../Domain/JobOffer";
+import {PaymentSummary, PricingPlan} from "../Domain/Model";
+import {InitiatePayment, SubmitJobOffer} from "./Model";
+import {PaymentIntentRepository} from "./PaymentIntentRepository";
+import {PaymentService} from "./PaymentService";
+import {PlanBundleRepository} from "./PlanBundleRepository";
 
 export class JobOfferController {
   constructor(

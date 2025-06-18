@@ -1,4 +1,3 @@
-import {JobOfferController} from "../../../../../JobOfferController";
 import {Screens} from "../../../../../Screens";
 import {JobBoardService} from "../../../../Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore} from "../../../../Apps/VueApp/Modules/JobBoard/store";
@@ -6,6 +5,7 @@ import {LocationDisplay} from "../../../Core/Application/LocationDisplay";
 import {LocationInput} from "../../../Core/Application/LocationInput";
 import {BackendImageApi} from "../../../Core/Backend/BackendImageApi";
 import {FilterRepository} from "./FilterRepository";
+import {JobOfferController} from "./JobOfferController";
 import {JobOfferFilterService} from "./JobOfferFilterService";
 import {JobOfferRepository} from "./JobOfferRepository";
 import {PlanBundleRepository} from "./PlanBundleRepository";

@@ -1,6 +1,6 @@
 import {createPinia} from "pinia";
 import {createApp} from 'vue';
-import {JobOfferController} from "./JobOfferController";
+import {JobOfferController} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferController";
 import {BoardStore, useBoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
 import JobBoard from './neon3/Apps/VueApp/Modules/JobBoard/View/JobBoard.vue';
 import {jobBoardServiceInjectKey} from "./neon3/Apps/VueApp/Modules/JobBoard/View/vue";

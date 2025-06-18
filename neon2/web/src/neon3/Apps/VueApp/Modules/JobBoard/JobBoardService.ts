@@ -1,4 +1,4 @@
-import {JobOfferController} from "../../../../../JobOfferController";
+import {JobOfferController} from "../../../../Packages/Feature/JobBoard/Application/JobOfferController";
 import {Screens} from "../../../../../Screens";
 import {LocationDisplay} from "../../../../Packages/Core/Application/LocationDisplay";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";

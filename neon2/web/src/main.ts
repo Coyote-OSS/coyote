@@ -1,6 +1,6 @@
 import {JobBoardBackend} from "./backend";
 import {JobBoard} from './jobBoard';
-import {JobOfferController} from "./JobOfferController";
+import {JobOfferController} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferController";
 import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
