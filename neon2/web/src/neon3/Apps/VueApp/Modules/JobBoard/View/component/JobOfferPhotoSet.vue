@@ -15,7 +15,8 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {UploadImage} from '../../../../../../../main';
+import {UploadImage} from "../../../../../../Packages/Core/Application/UploadImage";
+
 import {Design} from "../../../../DesignSystem/design";
 
 const props = defineProps<Props>();

@@ -32,10 +32,10 @@
 
 <script setup lang="ts">
 import {computed, inject} from 'vue';
-import {ValuePropositionEvent} from "../../../../../../main";
 import {PaymentNotification} from "../../../../../Packages/Core/Application/PaymentProvider";
 import {PaymentStatus} from "../../../../../Packages/Feature/JobBoard/Domain/Model";
 import {Toast} from "../../../../../Packages/Feature/JobBoard/Presenter/Model";
+import {ValuePropositionEvent} from "../../../../../Packages/Feature/Vp/Model";
 import ValuePropositionModal from "../../../../../Packages/Feature/Vp/ValuePropositionModal.vue";
 import {Design} from "../../../DesignSystem/design";
 import {JobBoardService} from "../JobBoardService";

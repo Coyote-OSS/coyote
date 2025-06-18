@@ -19,7 +19,8 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {UploadImage} from "../../../../main";
+import {UploadImage} from "../../../Packages/Core/Application/UploadImage";
+
 import Icon from "../Icon/Icon.vue";
 
 interface Props {
@@ -27,7 +28,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const imageUrl = defineModel<string|null>();
+const imageUrl = defineModel<string|null>({required: true});
 const uploading = ref<boolean>(false);
 const hasImage = computed(() => !!imageUrl.value);
 

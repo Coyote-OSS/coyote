@@ -7,26 +7,18 @@ import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider"
 import {PaymentNotification, PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
-import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
-import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
 import {JobBoardServiceFactory} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardServiceFactory";
 import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
-import {InitiatePayment, SubmitJobOffer, VatIdState} from "./neon3/Packages/Feature/JobBoard/Application/Model";
+import {VatIdState} from "./neon3/Packages/Feature/JobBoard/Application/Model";
 import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
-import {TagAutocomplete, TagAutocompleteResult} from "./neon3/Packages/Feature/JobBoard/Application/TagAutocomplete";
-import {bundleSize, remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
+import {TagAutocompleteResult} from "./neon3/Packages/Feature/JobBoard/Application/TagAutocomplete";
+import {remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {
-  PaymentStatus,
-  PaymentSummary,
-  PlanBundleName,
-  PricingPlan,
-} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
-import {EventMetadata} from "./neon3/Packages/Feature/Vp/Model";
+import {PaymentStatus, PlanBundleName} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {VueUiFactory} from './ui';
 import {ViewListener} from "./ViewListener";
 
@@ -38,10 +30,6 @@ const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const backendImageApi = new BackendImageApi(backend.csrfToken());
 const filterService = new JobOfferFilterService(jobOffersRepo);
-
-const tagAutocomplete: TagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult): void => {
-  backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
-};
 
 const board = new JobBoard((jobOffers: JobOffer[]): void => {
   jobOffersRepo.setJobOffers(jobOffers);
@@ -62,34 +50,24 @@ const factory = new JobBoardServiceFactory(
   planBundleRepo,
   filterRepo,
   filterService,
-  tagAutocomplete);
+  (tagPrompt: string, result: TagAutocompleteResult): void => {
+    backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
+  });
 
 const ui = new VueUiFactory(backend.isAuthenticated(), jobOffersRepo, factory);
 const presenter = new JobBoardPresenter(ui.store, ui.screens);
 
-function vpEvent(eventName: string, metadata: EventMetadata): Promise<void> {
-  return backendApi.event({eventName, metadata});
-}
-
-function jobOfferApply(jobOffer: JobOffer): void {
-  if (jobOffer.applicationMode === 'external-ats') {
-    window.open(jobOffer.applicationUrl, '_blank');
-  } else {
-    window.location.href = jobOffer.applicationUrl;
-  }
-}
-
-export type ValuePropositionEvent = 'vpAccepted'|'vpDeclined'|'vpSubscribed'|'vpApply';
-
-function paymentSummary(jobOfferId: number): PaymentSummary {
-  const payment = jobOfferPayments.jobOfferPayment(jobOfferId);
-  return {
-    bundleSize: bundleSize(payment.paymentPricingPlan),
-    basePrice: payment.paymentPriceBase,
-    vat: payment.paymentPriceVat,
-    vatIncluded: true,
-  };
-}
+const viewListener: ViewListener = new ViewListener(
+  backend,
+  backendApi,
+  presenter,
+  _locationDisplay,
+  board,
+  _paymentProvider,
+  payments,
+  jobOfferPayments,
+  planBundleRepo,
+);
 
 payments.addEventListener({
   processingStarted(): void {
@@ -133,89 +111,6 @@ presenter.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 presenter.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 presenter.setJobOfferFilters(board.jobOfferFilters());
 
-const viewListener: ViewListener = {
-  createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
-    backendApi.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
-      board.jobOfferCreated(toJobOffer(jobOffer));
-      if (pricingPlan === 'free') {
-        presenter.notifyJobOfferCreatedFree(jobOffer.id);
-      } else {
-        jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: jobOffer.payment!});
-        presenter.notifyJobOfferCreatedRequirePayment(
-          jobOffer.id,
-          paymentSummary(jobOffer.id));
-      }
-    });
-  },
-  markAsFavourite(jobOfferId: number, favourite: boolean): void {
-    presenter.setJobOfferFavourite(jobOfferId, favourite);
-    backendApi.markJobOfferAsFavourite(jobOfferId, favourite);
-  },
-  vatDetailsChanged(countryCode: string, vatId: string): void {
-    presenter.notifyVatIncludedChanged(isVatIncluded(countryCode, vatId));
-  },
-  updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
-    backendApi.updateJobOffer(jobOfferId, jobOffer, (): void => {
-      board.jobOfferUpdated(jobOfferId, jobOffer);
-      presenter.notifyJobOfferEdited(jobOfferId);
-    });
-  },
-  payForJob(initiatePayment: InitiatePayment): void {
-    payments.initiatePayment(
-      jobOfferPayments.paymentId(initiatePayment.jobOfferId),
-      initiatePayment.invoiceInfo,
-      initiatePayment.paymentMethod);
-  },
-  resumePayment(jobOfferId: number): void {
-    presenter.initRequirePayment(paymentSummary(jobOfferId));
-  },
-  redeemBundle(jobOfferId: number): void {
-    backendApi
-      .publishJobOfferUsingBundle(jobOfferId, backend.userId())
-      .then(() => {
-        board.jobOfferPaid(jobOfferId);
-        presenter.notifyPlanBundleUsed();
-        planBundleRepo.decrease();
-      });
-  },
-  managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void {
-    if (action === 'mount') {
-      _paymentProvider.mountCardInput(cssSelector!);
-    } else {
-      _paymentProvider.unmountCardInput();
-    }
-  },
-  mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
-    _locationDisplay.mount(element, latitude, longitude);
-  },
-  selectPlan(plan: PricingPlan): void {
-    if (backend.isAuthenticated()) {
-      presenter.notifyPlanSelected(plan);
-    } else {
-      window.location.href = '/Login';
-    }
-  },
-  apply(jobOffer: JobOffer): void {
-    presenter.showValueProposition(jobOffer);
-  },
-  valuePropositionAccepted(
-    jobOffer: JobOffer,
-    event: ValuePropositionEvent,
-    email?: string,
-  ): void {
-    const result = vpEvent(event, {jobOfferId: jobOffer.id, email});
-    if (event === 'vpDeclined' || event === 'vpApply') {
-      presenter.hideValueProposition();
-      result.finally(() => jobOfferApply(jobOffer));
-    }
-  },
-};
-
 ui.mount(
   document.querySelector('#neonApplication')!,
-  viewListener,
-);
-
-export interface UploadImage {
-  (file: File): Promise<string>;
-}
+  viewListener);

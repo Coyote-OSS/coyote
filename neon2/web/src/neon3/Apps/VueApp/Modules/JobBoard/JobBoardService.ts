@@ -1,4 +1,3 @@
-import {ValuePropositionEvent} from "../../../../../main";
 import {Screens} from "../../../../../Screens";
 import {ViewListener} from "../../../../../ViewListener";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
@@ -16,6 +15,7 @@ import {
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {Screen} from "../../../../Packages/Feature/JobBoard/Presenter/Model";
+import {ValuePropositionEvent} from "../../../../Packages/Feature/Vp/Model";
 import {BoardStore} from "./store";
 
 export class JobBoardService {

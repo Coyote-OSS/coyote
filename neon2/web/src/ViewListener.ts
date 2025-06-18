@@ -1,22 +1,139 @@
-import {ValuePropositionEvent} from "./main";
+import {JobBoardBackend, toJobOffer} from "./backend";
+import {JobBoard} from "./jobBoard";
+import {JobBoardPresenter} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardPresenter";
+import {LocationDisplay} from "./neon3/Packages/Core/Application/LocationDisplay";
+import {PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
+import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
+import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
+import {isVatIncluded} from "./neon3/Packages/Core/Domain/vat";
 import {InitiatePayment, SubmitJobOffer} from "./neon3/Packages/Feature/JobBoard/Application/Model";
+import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
+import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
+import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
+import {bundleSize} from "./neon3/Packages/Feature/JobBoard/Domain/bundleSize";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {PaymentSummary, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {EventMetadata, ValuePropositionEvent} from "./neon3/Packages/Feature/Vp/Model";
 
-export interface ViewListener {
-  createJob(plan: PricingPlan, jobOffer: SubmitJobOffer): void;
-  updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void;
-  payForJob(payment: InitiatePayment): void;
-  resumePayment(jobOfferId: number): void;
-  redeemBundle(jobOfferId: number): void;
-  managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void;
-  mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void;
-  vatDetailsChanged(countryCode: string, vatId: string): void;
-  selectPlan(plan: PricingPlan): void;
-  markAsFavourite(jobOfferId: number, favourite: boolean): void;
-  apply(jobOffer: JobOffer): void;
+export class ViewListener {
+  constructor(
+    private backend: JobBoardBackend,
+    private backendApi: BackendApi,
+    private presenter: JobBoardPresenter,
+    private locationDisplay: LocationDisplay,
+    private board: JobBoard,
+    private paymentProvider: PaymentProvider,
+    private payments: PaymentService,
+    private jobOfferPayments: PaymentIntentRepository,
+    private planBundleRepo: PlanBundleRepository,
+  ) {}
+
+  createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
+    this.backendApi.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
+      this.board.jobOfferCreated(toJobOffer(jobOffer));
+      if (pricingPlan === 'free') {
+        this.presenter.notifyJobOfferCreatedFree(jobOffer.id);
+      } else {
+        this.jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: jobOffer.payment!});
+        this.presenter.notifyJobOfferCreatedRequirePayment(
+          jobOffer.id,
+          this.paymentSummary(jobOffer.id));
+      }
+    });
+  }
+
+  markAsFavourite(jobOfferId: number, favourite: boolean): void {
+    this.presenter.setJobOfferFavourite(jobOfferId, favourite);
+    this.backendApi.markJobOfferAsFavourite(jobOfferId, favourite);
+  }
+
+  vatDetailsChanged(countryCode: string, vatId: string): void {
+    this.presenter.notifyVatIncludedChanged(isVatIncluded(countryCode, vatId));
+  }
+
+  updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
+    this.backendApi.updateJobOffer(jobOfferId, jobOffer, (): void => {
+      this.board.jobOfferUpdated(jobOfferId, jobOffer);
+      this.presenter.notifyJobOfferEdited(jobOfferId);
+    });
+  }
+
+  payForJob(initiatePayment: InitiatePayment): void {
+    this.payments.initiatePayment(
+      this.jobOfferPayments.paymentId(initiatePayment.jobOfferId),
+      initiatePayment.invoiceInfo,
+      initiatePayment.paymentMethod);
+  }
+
+  resumePayment(jobOfferId: number): void {
+    this.presenter.initRequirePayment(this.paymentSummary(jobOfferId));
+  }
+
+  redeemBundle(jobOfferId: number): void {
+    this.backendApi
+      .publishJobOfferUsingBundle(jobOfferId, this.backend.userId())
+      .then(() => {
+        this.board.jobOfferPaid(jobOfferId);
+        this.presenter.notifyPlanBundleUsed();
+        this.planBundleRepo.decrease();
+      });
+  }
+
+  managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void {
+    if (action === 'mount') {
+      this.paymentProvider.mountCardInput(cssSelector!);
+    } else {
+      this.paymentProvider.unmountCardInput();
+    }
+  }
+
+  mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
+    this.locationDisplay.mount(element, latitude, longitude);
+  }
+
+  selectPlan(plan: PricingPlan): void {
+    if (this.backend.isAuthenticated()) {
+      this.presenter.notifyPlanSelected(plan);
+    } else {
+      window.location.href = '/Login';
+    }
+  }
+
+  apply(jobOffer: JobOffer): void {
+    this.presenter.showValueProposition(jobOffer);
+  }
+
   valuePropositionAccepted(
     jobOffer: JobOffer,
     event: ValuePropositionEvent,
-    email?: string): void;
+    email?: string,
+  ): void {
+    const result = this.vpEvent(event, {jobOfferId: jobOffer.id, email});
+    if (event === 'vpDeclined' || event === 'vpApply') {
+      this.presenter.hideValueProposition();
+      result.finally(() => this.jobOfferApply(jobOffer));
+    }
+  }
+
+  private paymentSummary(jobOfferId: number): PaymentSummary {
+    const payment = this.jobOfferPayments.jobOfferPayment(jobOfferId);
+    return {
+      bundleSize: bundleSize(payment.paymentPricingPlan),
+      basePrice: payment.paymentPriceBase,
+      vat: payment.paymentPriceVat,
+      vatIncluded: true,
+    };
+  }
+
+  private jobOfferApply(jobOffer: JobOffer): void {
+    if (jobOffer.applicationMode === 'external-ats') {
+      window.open(jobOffer.applicationUrl, '_blank');
+    } else {
+      window.location.href = jobOffer.applicationUrl;
+    }
+  }
+
+  private vpEvent(eventName: string, metadata: EventMetadata): Promise<void> {
+    return this.backendApi.event({eventName, metadata});
+  }
 }
