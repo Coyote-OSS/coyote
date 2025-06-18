@@ -54,7 +54,7 @@ export class JobOfferController {
     this.backendApi.markJobOfferAsFavourite(jobOfferId, favourite);
   }
 
-  initJobOffers(jobOffers: JobOffer[]) :void{
+  initJobOffers(jobOffers: JobOffer[]): void {
     this.jobOffersRepo.setJobOffers(jobOffers);
     this.viewModel.notifyJobOffersChanged(this.filterService.filter(this.filterRepo));
   }

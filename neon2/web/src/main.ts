@@ -97,7 +97,6 @@ controller.initJobOffers(backend.initialJobOffers());
 viewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 viewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 viewModel.setFiltersOptions(presenter.filterOptions());
-
 vueApp.provide(jobBoardServiceInjectKey, factory.create(screens, store, controller));
 screens.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);
