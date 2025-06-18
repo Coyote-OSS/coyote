@@ -13,10 +13,6 @@ export class JobBoard {
     this.jobOffers = [];
   }
 
-  count(): number {
-    return this.jobOffers.length;
-  }
-
   jobOfferCreated(jobOffer: JobOffer): void {
     this.jobOffers.unshift(jobOffer);
     this.updateView();
@@ -28,7 +24,7 @@ export class JobBoard {
     this.updateView();
   }
 
-  findJobOffer(id: number): JobOffer {
+  private findJobOffer(id: number): JobOffer {
     const jobOffer = this.jobOffers.find(o => o.id === id);
     if (jobOffer) {
       return jobOffer;
@@ -45,7 +41,7 @@ export class JobBoard {
     this.updateView();
   }
 
-  jobOfferFilters(): FilterOptions {
+  filterOptions(): FilterOptions {
     return {
       locations: [...new Set(this.jobOffers.flatMap(offer => jobOfferCities(offer)))],
       tags: [...new Set(this.jobOffers.flatMap(offer => jobOfferTagNames(offer)))],

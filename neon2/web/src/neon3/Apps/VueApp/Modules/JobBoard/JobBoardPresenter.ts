@@ -105,7 +105,7 @@ export class JobBoardPresenter {
     this.store.jobOffers = jobOffers;
   }
 
-  setJobOfferFilters(filters: FilterOptions): void {
+  setFiltersOptions(filters: FilterOptions): void {
     this.store.jobOfferFilters = filters;
   }
 

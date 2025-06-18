@@ -105,7 +105,7 @@ backend.initialJobOffers()
 
 presenter.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 presenter.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
-presenter.setJobOfferFilters(board.jobOfferFilters());
+presenter.setFiltersOptions(board.filterOptions());
 
 ui.mount(
   document.querySelector('#neonApplication')!,
