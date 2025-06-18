@@ -20,9 +20,9 @@ import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/
 import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
+import {Policy} from "./neon3/Packages/Feature/JobBoard/Application/Policy";
 import {PlanBundleListenerAdapter} from "./neon3/Packages/Feature/JobBoard/Infrastructure/PlanBundleListenerAdapter";
 import {TagAutocompleteAdapter} from "./neon3/Packages/Feature/JobBoard/Infrastructure/TagAutocompleteAdapter";
-import {Policy} from "./Policy";
 import {Screens} from "./Screens";
 
 const vueApp = createApp(JobBoard);
@@ -40,7 +40,7 @@ const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), ba
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const paymentIntents = new PaymentIntentRepository();
 const screens = new Screens(new Policy(backend.isAuthenticated(), jobOffersRepo, store));
-const viewModel = new ViewModel(store, screens);
+const viewModel = new ViewModel(store);
 const presenter = new JobBoardPresenter(jobOffersRepo);
 const jobBoardService = new JobBoardService(
   viewModel,

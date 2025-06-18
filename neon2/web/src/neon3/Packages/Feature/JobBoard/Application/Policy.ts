@@ -1,5 +1,5 @@
-import {BoardStore} from "./neon3/Apps/VueApp/Modules/JobBoard/store";
-import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
+import {BoardStore} from "../../../../Apps/VueApp/Modules/JobBoard/store";
+import {JobOfferRepository} from "./JobOfferRepository";
 
 export class Policy {
   constructor(

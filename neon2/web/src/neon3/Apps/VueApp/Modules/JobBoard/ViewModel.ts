@@ -1,4 +1,3 @@
-import {Screens} from "../../../../../Screens";
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
 import {FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {JobBoardListener} from "../../../../Packages/Feature/JobBoard/Application/JobBoardListener";
@@ -14,19 +13,14 @@ import {
 import {BoardStore} from "./store";
 
 export class ViewModel implements JobBoardListener {
-  constructor(
-    private readonly store: BoardStore,
-    private readonly screens: Screens,
-  ) {}
+  constructor(private readonly store: BoardStore) {}
 
   notifyJobOfferEdited(jobOfferId: number): void {
     this.store.toast = 'edited';
-    this.navigateHome();
   }
 
   notifyJobOfferCreatedFree(jobOfferId: number): void {
     this.store.toast = 'created';
-    this.navigateHome();
   }
 
   notifyJobOfferCreatedRequirePayment(
@@ -35,21 +29,14 @@ export class ViewModel implements JobBoardListener {
   ): void {
     this.store.toast = 'created';
     this.store.paymentSummary = summary;
-    this.screens.navigate('payment', jobOfferId);
-  }
-
-  notifyJobOfferPaid(): void {
-    this.navigateHome();
   }
 
   notifyPlanBundleUsed(): void {
     this.store.toast = 'bundle-used';
-    this.navigateHome();
   }
 
   notifyPlanSelected(plan: PricingPlan): void {
     this.store.pricingPlan = plan;
-    this.screens.navigate('form', null);
   }
 
   notifyPaymentProcessingStarted(): void {
@@ -113,10 +100,6 @@ export class ViewModel implements JobBoardListener {
     } else {
       throw new Error('Failed to mark job offer.');
     }
-  }
-
-  private navigateHome(): void {
-    this.screens.navigate('home', null);
   }
 
   notifyJobOffersChanged(jobOffers: JobOffer[]): void {

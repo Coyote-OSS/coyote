@@ -56,7 +56,7 @@ export class JobBoardService {
       if (pricingPlan !== 'premium') {
         this.planBundleRepo.set(pricingPlan, remainingJobOffers(pricingPlan));
       }
-      this.viewModel.notifyJobOfferPaid();
+      this.screens.navigate('home', null);
     }
   }
 
@@ -72,6 +72,7 @@ export class JobBoardService {
         this.jobOffersRepo.updateJobOfferPublished(jobOfferId);
         this.viewModel.notifyJobOffersChanged(this.filterService.filter(this.filterRepo));
         this.viewModel.notifyPlanBundleUsed();
+        this.screens.navigate('home', null);
         this.planBundleRepo.decrease();
       });
   }
@@ -81,6 +82,7 @@ export class JobBoardService {
       this.jobOffersRepo.updateJobOffer(jobOfferId, jobOffer);
       this.viewModel.notifyJobOffersChanged(this.filterService.filter(this.filterRepo));
       this.viewModel.notifyJobOfferEdited(jobOfferId);
+      this.screens.navigate('home', null);
     });
   }
 
@@ -94,11 +96,13 @@ export class JobBoardService {
           this.viewModel.notifyJobOffersChanged(this.filterService.filter(this.filterRepo));
           if (plan === 'free') {
             this.viewModel.notifyJobOfferCreatedFree(jobOffer.id);
+            this.screens.navigate('home', null);
           } else {
             this.paymentIntents.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: payment!});
             this.viewModel.notifyJobOfferCreatedRequirePayment(
               jobOffer.id,
               this.paymentSummary(jobOffer.id));
+            this.screens.navigate('payment', jobOffer.id);
           }
         });
   }
@@ -115,6 +119,7 @@ export class JobBoardService {
   selectPlan(plan: PricingPlan): void {
     if (this.backend.isAuthenticated()) {
       this.viewModel.notifyPlanSelected(plan);
+      this.screens.navigate('form', null);
     } else {
       window.location.href = '/Login';
     }

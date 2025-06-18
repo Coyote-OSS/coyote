@@ -7,7 +7,7 @@ import JobOfferPricing from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferP
 import JobOfferShowScreen from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferShowScreen.vue";
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {Screen} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
-import {Policy} from "./Policy";
+import {Policy} from "./neon3/Packages/Feature/JobBoard/Application/Policy";
 import {Router} from "./Router";
 
 export class Screens {
