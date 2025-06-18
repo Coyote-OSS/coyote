@@ -102,10 +102,6 @@ export class ViewModel implements JobBoardListener {
     this.store.vpVisibleFor = null;
   }
 
-  setJobOffers(jobOffers: JobOffer[]): void {
-    this.store.jobOffers = jobOffers;
-  }
-
   setFiltersOptions(filters: FilterOptions): void {
     this.store.jobOfferFilters = filters;
   }
@@ -124,5 +120,6 @@ export class ViewModel implements JobBoardListener {
   }
 
   notifyJobOffersChanged(jobOffers: JobOffer[]): void {
+    this.store.jobOffers = jobOffers;
   }
 }
