@@ -12,7 +12,7 @@ import {
 } from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
 
-export class JobBoardPresenter {
+export class ViewModel {
   constructor(
     private readonly store: BoardStore,
     private readonly screens: Screens,

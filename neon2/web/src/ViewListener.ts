@@ -1,6 +1,6 @@
 import {JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from "./jobBoard";
-import {JobBoardPresenter} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardPresenter";
+import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
 import {LocationDisplay} from "./neon3/Packages/Core/Application/LocationDisplay";
 import {PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
@@ -19,7 +19,7 @@ export class ViewListener {
   constructor(
     private backend: JobBoardBackend,
     private backendApi: BackendApi,
-    private presenter: JobBoardPresenter,
+    private presenter: ViewModel,
     private locationDisplay: LocationDisplay,
     private board: JobBoard,
     private paymentProvider: PaymentProvider,

@@ -1,6 +1,6 @@
 import {JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from './jobBoard';
-import {JobBoardPresenter} from "./neon3/Apps/VueApp/Modules/JobBoard/JobBoardPresenter";
+import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
 import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider";
@@ -33,7 +33,7 @@ const filterService = new JobOfferFilterService(jobOffersRepo);
 
 const board = new JobBoard((jobOffers: JobOffer[]): void => {
   jobOffersRepo.setJobOffers(jobOffers);
-  presenter.setJobOffers(filterService.filter(filterRepo));
+  viewModel.setJobOffers(filterService.filter(filterRepo));
 });
 
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
@@ -55,12 +55,12 @@ const factory = new JobBoardServiceFactory(
   });
 
 const ui = new VueUiFactory(backend.isAuthenticated(), jobOffersRepo, factory);
-const presenter = new JobBoardPresenter(ui.store, ui.screens);
+const viewModel = new ViewModel(ui.store, ui.screens);
 
 const viewListener: ViewListener = new ViewListener(
   backend,
   backendApi,
-  presenter,
+  viewModel,
   _locationDisplay,
   board,
   _paymentProvider,
@@ -71,41 +71,41 @@ const viewListener: ViewListener = new ViewListener(
 
 payments.addEventListener({
   processingStarted(): void {
-    presenter.notifyPaymentProcessingStarted();
+    viewModel.notifyPaymentProcessingStarted();
   },
   processingFinished(): void {
-    presenter.notifyPaymentProcessingFinished();
+    viewModel.notifyPaymentProcessingFinished();
   },
   paymentInitiationVatIdState(vatId: VatIdState): void {
-    presenter.notifyPaymentVatIdState(vatId);
+    viewModel.notifyPaymentVatIdState(vatId);
   },
   notificationReceived(notification: PaymentNotification): void {
-    presenter.notifyPaymentNotification(notification);
+    viewModel.notifyPaymentNotification(notification);
   },
   statusChanged(paymentId: string, status: PaymentStatus): void {
-    presenter.setPaymentStatus(status);
+    viewModel.setPaymentStatus(status);
     if (status === 'paymentComplete') {
       board.jobOfferPaid(jobOfferPayments.jobOfferId(paymentId));
       const pricingPlan = jobOfferPayments.pricingPlan(paymentId);
       if (pricingPlan !== 'premium') {
         planBundleRepo.set(pricingPlan, remainingJobOffers(pricingPlan));
       }
-      presenter.notifyJobOfferPaid();
+      viewModel.notifyJobOfferPaid();
     }
   },
 });
 
 planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
-  presenter.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
+  viewModel.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
 });
 planBundleRepo.init(backend.initialPlanBundle());
 
 backend.initialJobOffers()
   .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
 
-presenter.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
-presenter.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
-presenter.setFiltersOptions(board.filterOptions());
+viewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
+viewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
+viewModel.setFiltersOptions(board.filterOptions());
 
 ui.mount(
   document.querySelector('#neonApplication')!,
