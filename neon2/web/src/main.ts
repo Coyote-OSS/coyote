@@ -29,12 +29,12 @@ vueApp.use(pinia);
 const store = useBoardStore();
 
 const jobOffersRepo = new JobOfferRepository();
+const paymentIntents = new PaymentIntentRepository();
 const planBundleRepo = new PlanBundleRepository();
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
-const paymentIntents = new PaymentIntentRepository();
 const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, store);
 const screens = new Screens(policy);
 const viewModel = new ViewModel(store);
