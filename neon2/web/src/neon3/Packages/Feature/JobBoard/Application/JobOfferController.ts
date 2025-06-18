@@ -1,9 +1,9 @@
-import {JobBoardBackend, toJobOffer} from "../../../../../backend";
+import {JobBoardBackend} from "../../../Core/Backend/JobBoardBackend";
 import {JobBoard} from "../../../../../jobBoard";
 import {ViewModel} from "../../../../Apps/VueApp/Modules/JobBoard/ViewModel";
 import {PaymentProvider} from "../../../Core/Application/PaymentProvider";
 import {BackendApi} from "../../../Core/Backend/BackendApi";
-import {BackendJobOffer} from "../../../Core/Backend/backendInput";
+import {BackendPaymentIntent} from "../../../Core/Backend/backendInput";
 import {isVatIncluded} from "../../../Core/Domain/vat";
 import {EventMetadata, ValuePropositionEvent} from "../../Vp/Model";
 import {bundleSize} from "../Domain/bundleSize";
@@ -26,18 +26,22 @@ export class JobOfferController {
     private planBundleRepo: PlanBundleRepository,
   ) {}
 
-  createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
-    this.backendApi.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
-      this.board.jobOfferCreated(toJobOffer(jobOffer));
-      if (pricingPlan === 'free') {
-        this.viewModel.notifyJobOfferCreatedFree(jobOffer.id);
-      } else {
-        this.jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: jobOffer.payment!});
-        this.viewModel.notifyJobOfferCreatedRequirePayment(
-          jobOffer.id,
-          this.paymentSummary(jobOffer.id));
-      }
-    });
+  createJob(pricingPlan: PricingPlan, submit: SubmitJobOffer): void {
+    this.backendApi
+      .addJobOffer(
+        pricingPlan,
+        submit,
+        (jobOffer: JobOffer, payment: BackendPaymentIntent|null): void => {
+          this.board.jobOfferCreated(jobOffer);
+          if (pricingPlan === 'free') {
+            this.viewModel.notifyJobOfferCreatedFree(jobOffer.id);
+          } else {
+            this.jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: payment!});
+            this.viewModel.notifyJobOfferCreatedRequirePayment(
+              jobOffer.id,
+              this.paymentSummary(jobOffer.id));
+          }
+        });
   }
 
   markAsFavourite(jobOfferId: number, favourite: boolean): void {

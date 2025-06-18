@@ -1,4 +1,4 @@
-import {JobBoardBackend} from "./backend";
+import {JobBoardBackend} from "./neon3/Packages/Core/Backend/JobBoardBackend";
 import {JobBoard} from './jobBoard';
 import {JobOfferController} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferController";
 import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";

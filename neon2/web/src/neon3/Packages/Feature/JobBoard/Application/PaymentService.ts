@@ -1,4 +1,4 @@
-import {JobBoardBackend} from "../../../../../backend";
+import {JobBoardBackend} from "../../../Core/Backend/JobBoardBackend";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "../../../Core/Application/PaymentProvider";
 import {BackendApi, BackendPreparedPayment} from "../../../Core/Backend/BackendApi";
 import {BackendPaymentStatus} from "../../../Core/Backend/backendInput";

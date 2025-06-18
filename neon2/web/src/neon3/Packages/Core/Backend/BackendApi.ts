@@ -1,21 +1,28 @@
 import {SubmitJobOffer} from "../../Feature/JobBoard/Application/Model";
+import {JobOffer} from "../../Feature/JobBoard/Domain/JobOffer";
 import {InvoiceInformation, PricingPlan, Tag} from "../../Feature/JobBoard/Domain/Model";
 import {Event} from "../../Feature/Vp/Model";
-import {BackendJobOffer, BackendPaymentStatus} from "./backendInput";
+import {BackendJobOffer, BackendPaymentIntent, BackendPaymentStatus} from "./backendInput";
 import {request} from "./http";
+import {toJobOffer} from "./toJobOffer";
 
 export class BackendApi {
   addJobOffer(
     pricingPlan: PricingPlan,
     jobOffer: SubmitJobOffer,
-    created: (jobOffer: BackendJobOffer) => void,
+    created: (
+      jobOffer: JobOffer,
+      payment: BackendPaymentIntent|null,
+    ) => void,
   ): void {
     request('POST', '/neon2/job-offers', {
       jobOfferPlan: pricingPlan,
       ...jobOfferFields(jobOffer),
     })
       .then(response => response.json())
-      .then((jobOffer: BackendJobOffer): void => created(jobOffer));
+      .then((jobOffer: BackendJobOffer): void => {
+        created(toJobOffer(jobOffer), jobOffer.payment);
+      });
   }
 
   updateJobOffer(id: number, jobOffer: SubmitJobOffer, updated: () => void): void {
