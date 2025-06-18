@@ -38,8 +38,10 @@ export class PlanBundleRepository {
   }
 
   private updateListeners(): void {
-    this.listeners.forEach(listener => listener(this.plan!, this.remainingJobOffers!));
+    this.listeners.forEach(listener => listener.notify(this.plan!, this.remainingJobOffers!));
   }
 }
 
-type PlanBundleListener = (plan: PlanBundleName, remainingJobOffers: number) => void;
+export interface PlanBundleListener {
+  notify(plan: PlanBundleName, remainingJobOffers: number): void;
+}

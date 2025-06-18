@@ -36,10 +36,10 @@
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
 import {TagAutocomplete} from "../../../../../../Packages/Feature/JobBoard/Application/TagAutocomplete";
+import {Tag} from "../../../../../../Packages/Feature/JobBoard/Domain/Model";
 
 import {Design} from "../../../../DesignSystem/design";
 import TextInput from "../../../../DesignSystem/TextInput.vue";
-import {Tag} from "../../../../../../Packages/Feature/JobBoard/Domain/Model";
 import {useClickOutside} from "../../../../Vue/clickOutside";
 
 const props = defineProps<Props>();
@@ -60,7 +60,7 @@ const tagPrompt = ref<string>('');
 const autocompletedTags = ref<Tag[]>([]);
 
 function updateAutocomplete(text: string): void {
-  props.autocomplete(text, (tags: Tag[]): void => {
+  props.autocomplete.prompt(text, (tags: Tag[]): void => {
     autocompletedTags.value = tags;
     keyboardCursor.value = 0;
   });

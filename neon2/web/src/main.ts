@@ -20,10 +20,15 @@ import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/
 import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
-import {TagAutocompleteResult} from "./neon3/Packages/Feature/JobBoard/Application/TagAutocomplete";
-import {PlanBundleName} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
+import {PlanBundleListenerAdapter} from "./neon3/Packages/Feature/JobBoard/Infrastructure/PlanBundleListenerAdapter";
+import {TagAutocompleteAdapter} from "./neon3/Packages/Feature/JobBoard/Infrastructure/TagAutocompleteAdapter";
 import {Policy} from "./Policy";
 import {Screens} from "./Screens";
+
+const vueApp = createApp(JobBoard);
+const pinia = createPinia();
+vueApp.use(pinia);
+const store = useBoardStore();
 
 const filterRepo = new FilterRepository();
 const jobOffersRepo = new JobOfferRepository();
@@ -34,26 +39,16 @@ const filterService = new JobOfferFilterService(jobOffersRepo);
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const paymentIntents = new PaymentIntentRepository();
-
-const tagAutocomplete = (tagPrompt: string, result: TagAutocompleteResult): void => {
-  backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));
-};
-
-const vueApp = createApp(JobBoard);
-const pinia = createPinia();
-vueApp.use(pinia);
-const store = useBoardStore();
 const screens = new Screens(new Policy(backend.isAuthenticated(), jobOffersRepo, store));
 const viewModel = new ViewModel(store, screens);
 const presenter = new JobBoardPresenter(jobOffersRepo);
-
 const jobBoardService = new JobBoardService(
   viewModel,
   store,
   screens,
   locationInput(backend.testMode()),
   locationDisplay(backend.testMode()),
-  tagAutocomplete,
+  new TagAutocompleteAdapter(backend),
   new BackendImageApi(backend.csrfToken()),
   backendApi,
   backend,
@@ -66,11 +61,7 @@ const jobBoardService = new JobBoardService(
   _paymentProvider);
 
 payments.addEventListener(new PaymentListenerAdapter(viewModel, jobBoardService));
-
-planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
-  viewModel.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
-});
-
+planBundleRepo.addListener(new PlanBundleListenerAdapter(viewModel));
 paymentIntents.initJobOffers(backend.jobOfferPayments());
 planBundleRepo.init(backend.initialPlanBundle());
 jobBoardService.initJobOffers(backend.initialJobOffers());
