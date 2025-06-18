@@ -18,7 +18,7 @@ export class JobOfferController {
   constructor(
     private backend: JobBoardBackend,
     private backendApi: BackendApi,
-    private presenter: ViewModel,
+    private viewModel: ViewModel,
     private board: JobBoard,
     private paymentProvider: PaymentProvider,
     private payments: PaymentService,
@@ -30,10 +30,10 @@ export class JobOfferController {
     this.backendApi.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
       this.board.jobOfferCreated(toJobOffer(jobOffer));
       if (pricingPlan === 'free') {
-        this.presenter.notifyJobOfferCreatedFree(jobOffer.id);
+        this.viewModel.notifyJobOfferCreatedFree(jobOffer.id);
       } else {
         this.jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: jobOffer.payment!});
-        this.presenter.notifyJobOfferCreatedRequirePayment(
+        this.viewModel.notifyJobOfferCreatedRequirePayment(
           jobOffer.id,
           this.paymentSummary(jobOffer.id));
       }
@@ -41,18 +41,18 @@ export class JobOfferController {
   }
 
   markAsFavourite(jobOfferId: number, favourite: boolean): void {
-    this.presenter.setJobOfferFavourite(jobOfferId, favourite);
+    this.viewModel.setJobOfferFavourite(jobOfferId, favourite);
     this.backendApi.markJobOfferAsFavourite(jobOfferId, favourite);
   }
 
   vatDetailsChanged(countryCode: string, vatId: string): void {
-    this.presenter.notifyVatIncludedChanged(isVatIncluded(countryCode, vatId));
+    this.viewModel.notifyVatIncludedChanged(isVatIncluded(countryCode, vatId));
   }
 
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
     this.backendApi.updateJobOffer(jobOfferId, jobOffer, (): void => {
       this.board.jobOfferUpdated(jobOfferId, jobOffer);
-      this.presenter.notifyJobOfferEdited(jobOfferId);
+      this.viewModel.notifyJobOfferEdited(jobOfferId);
     });
   }
 
@@ -64,7 +64,7 @@ export class JobOfferController {
   }
 
   resumePayment(jobOfferId: number): void {
-    this.presenter.initRequirePayment(this.paymentSummary(jobOfferId));
+    this.viewModel.initRequirePayment(this.paymentSummary(jobOfferId));
   }
 
   redeemBundle(jobOfferId: number): void {
@@ -72,7 +72,7 @@ export class JobOfferController {
       .publishJobOfferUsingBundle(jobOfferId, this.backend.userId())
       .then(() => {
         this.board.jobOfferPaid(jobOfferId);
-        this.presenter.notifyPlanBundleUsed();
+        this.viewModel.notifyPlanBundleUsed();
         this.planBundleRepo.decrease();
       });
   }
@@ -87,14 +87,14 @@ export class JobOfferController {
 
   selectPlan(plan: PricingPlan): void {
     if (this.backend.isAuthenticated()) {
-      this.presenter.notifyPlanSelected(plan);
+      this.viewModel.notifyPlanSelected(plan);
     } else {
       window.location.href = '/Login';
     }
   }
 
   apply(jobOffer: JobOffer): void {
-    this.presenter.showValueProposition(jobOffer);
+    this.viewModel.showValueProposition(jobOffer);
   }
 
   valuePropositionAccepted(
@@ -104,7 +104,7 @@ export class JobOfferController {
   ): void {
     const result = this.vpEvent(event, {jobOfferId: jobOffer.id, email});
     if (event === 'vpDeclined' || event === 'vpApply') {
-      this.presenter.hideValueProposition();
+      this.viewModel.hideValueProposition();
       result.finally(() => this.jobOfferApply(jobOffer));
     }
   }
