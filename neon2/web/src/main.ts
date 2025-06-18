@@ -13,9 +13,7 @@ import {PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
 import {JobBoardBackend} from "./neon3/Packages/Core/Backend/JobBoardBackend";
-import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
 import {JobBoardPresenter} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardPresenter";
-import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
@@ -30,16 +28,15 @@ const pinia = createPinia();
 vueApp.use(pinia);
 const store = useBoardStore();
 
-const filterRepo = new FilterRepository();
 const jobOffersRepo = new JobOfferRepository();
 const planBundleRepo = new PlanBundleRepository();
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
-const filterService = new JobOfferFilterService(jobOffersRepo);
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const paymentIntents = new PaymentIntentRepository();
-const screens = new Screens(new Policy(backend.isAuthenticated(), jobOffersRepo, store));
+const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, store);
+const screens = new Screens(policy);
 const viewModel = new ViewModel(store);
 const presenter = new JobBoardPresenter(jobOffersRepo);
 const jobBoardService = new JobBoardService(
@@ -54,8 +51,6 @@ const jobBoardService = new JobBoardService(
   backend,
   jobOffersRepo,
   planBundleRepo,
-  filterRepo,
-  filterService,
   paymentIntents,
   payments,
   _paymentProvider);

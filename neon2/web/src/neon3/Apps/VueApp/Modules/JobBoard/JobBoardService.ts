@@ -28,6 +28,9 @@ import {BoardStore} from "./store";
 import {ViewModel} from "./ViewModel";
 
 export class JobBoardService {
+  private readonly filterRepo: FilterRepository = new FilterRepository();
+  private readonly filterService: JobOfferFilterService;
+
   constructor(
     private readonly viewModel: ViewModel,
     private readonly store: BoardStore,
@@ -40,12 +43,12 @@ export class JobBoardService {
     private readonly backend: JobBoardBackend,
     private readonly jobOffersRepo: JobOfferRepository,
     private readonly planBundleRepo: PlanBundleRepository,
-    private readonly filterRepo: FilterRepository,
-    private readonly filterService: JobOfferFilterService,
     private readonly paymentIntents: PaymentIntentRepository,
     private readonly payments: PaymentService,
     private readonly paymentProvider: PaymentProvider,
-  ) {}
+  ) {
+    this.filterService = new JobOfferFilterService(jobOffersRepo);
+  }
 
   paymentStatusChanged(paymentId: string, status: PaymentStatus): void {
     this.viewModel.setPaymentStatus(status);
