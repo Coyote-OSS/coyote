@@ -98,11 +98,7 @@ payments.addEventListener({
 planBundleRepo.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
   presenter.notifyPlanBundleChanged(plan, remainingJobOffers, remainingJobOffers > 0);
 });
-
-const bundle = backend.initialPlanBundle();
-if (bundle.hasBundle) {
-  planBundleRepo.set(bundle.planBundleName!, bundle.remainingJobOffers!);
-}
+planBundleRepo.init(backend.initialPlanBundle());
 
 backend.initialJobOffers()
   .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));

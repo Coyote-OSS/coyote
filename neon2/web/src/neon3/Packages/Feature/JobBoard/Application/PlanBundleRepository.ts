@@ -1,3 +1,4 @@
+import {BackendPlanBundle} from "../../../Core/Backend/backendInput";
 import {PlanBundleName} from "../Domain/Model";
 
 export class PlanBundleRepository {
@@ -7,6 +8,12 @@ export class PlanBundleRepository {
 
   addListener(listener: PlanBundleListener): void {
     this.listeners.push(listener);
+  }
+
+  init(bundle: BackendPlanBundle): void {
+    if (bundle.hasBundle) {
+      this.set(bundle.planBundleName!, bundle.remainingJobOffers!);
+    }
   }
 
   set(plan: PlanBundleName, remainingJobOffers: number): void {
