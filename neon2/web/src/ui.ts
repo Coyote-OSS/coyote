@@ -28,7 +28,7 @@ export class VueUiFactory {
 
   mount(element: Element, controller: JobOfferController): void {
     this.app.provide(jobBoardServiceInjectKey,
-      this.factory.create(controller, this.screens, this.store));
+      this.factory.create(this.screens, this.store, controller));
     this.screens.useIn(this.app);
     this.app.mount(element);
   }

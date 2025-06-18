@@ -1,6 +1,4 @@
-import {JobBoardBackend} from "./neon3/Packages/Core/Backend/JobBoardBackend";
 import {JobBoard} from './jobBoard';
-import {JobOfferController} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferController";
 import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
@@ -8,9 +6,11 @@ import {paymentProvider} from "./neon3/Packages/Core/Acceptance/paymentProvider"
 import {PaymentNotification, PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./neon3/Packages/Core/Backend/BackendImageApi";
+import {JobBoardBackend} from "./neon3/Packages/Core/Backend/JobBoardBackend";
 import {FilterRepository} from "./neon3/Packages/Feature/JobBoard/Application/FilterRepository";
 import {JobBoardPresenter} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardPresenter";
 import {JobBoardServiceFactory} from "./neon3/Packages/Feature/JobBoard/Application/JobBoardServiceFactory";
+import {JobOfferController} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferController";
 import {JobOfferFilterService} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/JobOfferRepository";
 import {VatIdState} from "./neon3/Packages/Feature/JobBoard/Application/Model";
@@ -38,8 +38,8 @@ const board = new JobBoard((jobOffers: JobOffer[]): void => {
 
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
-const jobOfferPayments = new PaymentIntentRepository();
-jobOfferPayments.initJobOffers(backend.jobOfferPayments());
+const paymentIntents = new PaymentIntentRepository();
+paymentIntents.initJobOffers(backend.jobOfferPayments());
 
 const factory = new JobBoardServiceFactory(
   locationInput(backend.testMode()),
@@ -63,7 +63,7 @@ const controller = new JobOfferController(
   board,
   _paymentProvider,
   payments,
-  jobOfferPayments,
+  paymentIntents,
   planBundleRepo);
 
 const presenter = new JobBoardPresenter(jobOffersRepo);
@@ -84,8 +84,8 @@ payments.addEventListener({
   statusChanged(paymentId: string, status: PaymentStatus): void {
     viewModel.setPaymentStatus(status);
     if (status === 'paymentComplete') {
-      board.jobOfferPaid(jobOfferPayments.jobOfferId(paymentId));
-      const pricingPlan = jobOfferPayments.pricingPlan(paymentId);
+      board.jobOfferPaid(paymentIntents.jobOfferId(paymentId));
+      const pricingPlan = paymentIntents.pricingPlan(paymentId);
       if (pricingPlan !== 'premium') {
         planBundleRepo.set(pricingPlan, remainingJobOffers(pricingPlan));
       }

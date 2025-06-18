@@ -24,9 +24,9 @@ export class JobBoardServiceFactory {
   ) {}
 
   create(
-    controller: JobOfferController,
     screens: Screens,
     store: BoardStore,
+    controller: JobOfferController,
   ): JobBoardService {
     return new JobBoardService(
       store,

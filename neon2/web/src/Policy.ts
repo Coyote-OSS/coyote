@@ -4,7 +4,7 @@ import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/
 export class Policy {
   constructor(
     private isAuthenticated: boolean,
-    private allJobOffers: JobOfferRepository,
+    private jobOffers: JobOfferRepository,
     private store: BoardStore,
   ) {}
 
@@ -21,6 +21,6 @@ export class Policy {
   }
 
   private canEditJobOffer(jobOfferId: number) {
-    return this.allJobOffers.findJobOffer(jobOfferId)?.canEdit ?? false;
+    return this.jobOffers.findJobOffer(jobOfferId)?.canEdit ?? false;
   }
 }
