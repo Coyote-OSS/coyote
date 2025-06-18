@@ -87,10 +87,7 @@
     </Design.Card>
     <Design.Card space title="Technologie">
       <Design.FieldGroup label="Wymagane technologie">
-        <JobOfferTagSelector
-          placeholder="Np. java, python, kotlin, docker, etc."
-          :autocomplete="(p,r) => service.tagAutocomplete(p,r)"
-          @select="addTag"/>
+        <JobOfferTagSelector placeholder="Np. java, python, kotlin, docker, etc." @select="addTag"/>
         <Design.FieldHelp class="mb-6">
           Podaj tylko technologie programistyczne, np. Python, Kotlin, Docker, JavaScript, AWS, Laravel, React.
         </Design.FieldHelp>

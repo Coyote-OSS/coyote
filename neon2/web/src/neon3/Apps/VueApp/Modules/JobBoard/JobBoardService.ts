@@ -34,7 +34,7 @@ export class JobBoardService {
     private readonly screens: Screens,
     private readonly locationInput: LocationInput,
     private readonly locationDisplay: LocationDisplay,
-    private readonly _tagAutocomplete: TagAutocomplete,
+    private readonly tagAutocomplete: TagAutocomplete,
     private readonly backendImageApi: BackendImageApi,
     private readonly backendApi: BackendApi,
     private readonly backend: JobBoardBackend,
@@ -219,8 +219,8 @@ export class JobBoardService {
     return this.screens.jobOfferUrl(jobOffer);
   }
 
-  tagAutocomplete(tagPrompt: string, result: TagAutocompleteResult): void {
-    this._tagAutocomplete(tagPrompt, result);
+  promptTagAutocomplete(tagPrompt: string, result: TagAutocompleteResult): void {
+    this.tagAutocomplete.prompt(tagPrompt, result);
   }
 
   uploadLogo(file: File): Promise<string> {

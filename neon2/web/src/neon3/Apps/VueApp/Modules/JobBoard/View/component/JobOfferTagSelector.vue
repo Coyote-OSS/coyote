@@ -35,21 +35,21 @@
 
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
-import {TagAutocomplete} from "../../../../../../Packages/Feature/JobBoard/Application/TagAutocomplete";
 import {Tag} from "../../../../../../Packages/Feature/JobBoard/Domain/Model";
-
 import {Design} from "../../../../DesignSystem/design";
 import TextInput from "../../../../DesignSystem/TextInput.vue";
 import {useClickOutside} from "../../../../Vue/clickOutside";
+import {JobBoardService} from "../../JobBoardService";
+import {jobBoardServiceInjectKey} from "../vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Props {
   placeholder: string;
-  autocomplete: TagAutocomplete;
 }
 
+const service = inject<JobBoardService>(jobBoardServiceInjectKey)!;
 const fieldLabelId = inject<string|undefined>('fieldLabelId', undefined);
 
 interface Emit {
@@ -60,7 +60,7 @@ const tagPrompt = ref<string>('');
 const autocompletedTags = ref<Tag[]>([]);
 
 function updateAutocomplete(text: string): void {
-  props.autocomplete.prompt(text, (tags: Tag[]): void => {
+  service.promptTagAutocomplete(text, (tags: Tag[]): void => {
     autocompletedTags.value = tags;
     keyboardCursor.value = 0;
   });
