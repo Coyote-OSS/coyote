@@ -1,5 +1,6 @@
 import {JobBoardBackend} from "./backend";
 import {JobBoard} from './jobBoard';
+import {JobOfferController} from "./JobOfferController";
 import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
 import {locationDisplay} from "./neon3/Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./neon3/Packages/Core/Acceptance/locationInput";
@@ -21,7 +22,6 @@ import {remainingJobOffers} from "./neon3/Packages/Feature/JobBoard/Domain/bundl
 import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PlanBundleName} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {VueUiFactory} from './ui';
-import {ViewListener} from "./ViewListener";
 
 const filterRepo = new FilterRepository();
 const jobOffersRepo = new JobOfferRepository();
@@ -29,24 +29,22 @@ const planBundleRepo = new PlanBundleRepository();
 
 const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
-const backendImageApi = new BackendImageApi(backend.csrfToken());
 const filterService = new JobOfferFilterService(jobOffersRepo);
 
 const board = new JobBoard((jobOffers: JobOffer[]): void => {
   jobOffersRepo.setJobOffers(jobOffers);
-  viewModel.setJobOffers(filterService.filter(filterRepo));
+  viewModel.notifyJobOffersChanged(filterService.filter(filterRepo));
 });
 
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
 const jobOfferPayments = new PaymentIntentRepository();
-const _locationDisplay = locationDisplay(backend.testMode());
-
 jobOfferPayments.initJobOffers(backend.jobOfferPayments());
 
 const factory = new JobBoardServiceFactory(
   locationInput(backend.testMode()),
-  backendImageApi,
+  locationDisplay(backend.testMode()),
+  new BackendImageApi(backend.csrfToken()),
   jobOffersRepo,
   planBundleRepo,
   filterRepo,
@@ -58,16 +56,16 @@ const factory = new JobBoardServiceFactory(
 const ui = new VueUiFactory(backend.isAuthenticated(), jobOffersRepo, factory);
 const viewModel = new ViewModel(ui.store, ui.screens);
 
-const viewListener: ViewListener = new ViewListener(
+const controller = new JobOfferController(
   backend,
   backendApi,
   viewModel,
-  _locationDisplay,
   board,
   _paymentProvider,
   payments,
   jobOfferPayments,
   planBundleRepo);
+
 const presenter = new JobBoardPresenter(jobOffersRepo);
 
 payments.addEventListener({
@@ -108,4 +106,4 @@ viewModel.setFiltersOptions(presenter.filterOptions());
 
 ui.mount(
   document.querySelector('#neonApplication')!,
-  viewListener);
+  controller);

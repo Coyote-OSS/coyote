@@ -1,7 +1,6 @@
 import {JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard} from "./jobBoard";
 import {ViewModel} from "./neon3/Apps/VueApp/Modules/JobBoard/ViewModel";
-import {LocationDisplay} from "./neon3/Packages/Core/Application/LocationDisplay";
 import {PaymentProvider} from "./neon3/Packages/Core/Application/PaymentProvider";
 import {BackendApi} from "./neon3/Packages/Core/Backend/BackendApi";
 import {BackendJobOffer} from "./neon3/Packages/Core/Backend/backendInput";
@@ -15,12 +14,11 @@ import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentSummary, PricingPlan} from "./neon3/Packages/Feature/JobBoard/Domain/Model";
 import {EventMetadata, ValuePropositionEvent} from "./neon3/Packages/Feature/Vp/Model";
 
-export class ViewListener {
+export class JobOfferController {
   constructor(
     private backend: JobBoardBackend,
     private backendApi: BackendApi,
     private presenter: ViewModel,
-    private locationDisplay: LocationDisplay,
     private board: JobBoard,
     private paymentProvider: PaymentProvider,
     private payments: PaymentService,
@@ -85,10 +83,6 @@ export class ViewListener {
     } else {
       this.paymentProvider.unmountCardInput();
     }
-  }
-
-  mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
-    this.locationDisplay.mount(element, latitude, longitude);
   }
 
   selectPlan(plan: PricingPlan): void {

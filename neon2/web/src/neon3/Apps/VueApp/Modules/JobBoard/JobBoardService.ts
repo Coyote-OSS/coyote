@@ -1,5 +1,6 @@
+import {JobOfferController} from "../../../../../JobOfferController";
 import {Screens} from "../../../../../Screens";
-import {ViewListener} from "../../../../../ViewListener";
+import {LocationDisplay} from "../../../../Packages/Core/Application/LocationDisplay";
 import {LocationInput, LocationListener} from "../../../../Packages/Core/Application/LocationInput";
 import {BackendImageApi} from "../../../../Packages/Core/Backend/BackendImageApi";
 import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
@@ -23,7 +24,8 @@ export class JobBoardService {
     private readonly store: BoardStore,
     private readonly screens: Screens,
     private readonly locationInput: LocationInput,
-    private readonly viewListener: ViewListener,
+    private readonly locationDisplay: LocationDisplay,
+    private readonly controller: JobOfferController,
     private readonly _tagAutocomplete: TagAutocomplete,
     private readonly backendImageApi: BackendImageApi,
     private readonly jobOfferRepo: JobOfferRepository,
@@ -33,54 +35,54 @@ export class JobBoardService {
   ) {}
 
   redeemBundle(jobOfferId: number): void {
-    this.viewListener.redeemBundle(jobOfferId);
+    this.controller.redeemBundle(jobOfferId);
   }
 
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
-    this.viewListener.updateJob(jobOfferId, jobOffer);
+    this.controller.updateJob(jobOfferId, jobOffer);
   }
 
   createJob(plan: PricingPlan, jobOffer: SubmitJobOffer): void {
-    this.viewListener.createJob(plan, jobOffer);
-  }
-
-  mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
-    this.viewListener.mountLocationDisplay(element, latitude, longitude);
+    this.controller.createJob(plan, jobOffer);
   }
 
   applyForJob(jobOfferId: number): void {
-    this.viewListener!.apply(this.findJobOffer(jobOfferId)!);
+    this.controller!.apply(this.findJobOffer(jobOfferId)!);
   }
 
   markAsFavourite(jobOfferId: number, favourite: boolean): void {
-    this.viewListener!.markAsFavourite(jobOfferId, favourite);
+    this.controller!.markAsFavourite(jobOfferId, favourite);
   }
 
   selectPlan(plan: PricingPlan): void {
-    this.viewListener.selectPlan(plan);
+    this.controller.selectPlan(plan);
   }
 
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void {
-    this.viewListener.managePaymentMethod(action, cssSelector);
+    this.controller.managePaymentMethod(action, cssSelector);
   }
 
   payForJob(payment: InitiatePayment): void {
-    this.viewListener.payForJob(payment);
+    this.controller.payForJob(payment);
   }
 
   vatDetailsChanged(countryCode: string, vatId: string): void {
-    this.viewListener.vatDetailsChanged(countryCode, vatId);
+    this.controller.vatDetailsChanged(countryCode, vatId);
   }
 
   resumePayment(jobOfferId: number): void {
-    this.viewListener!.resumePayment(jobOfferId);
+    this.controller!.resumePayment(jobOfferId);
   }
 
   valuePropositionAccepted(
     event: ValuePropositionEvent,
     email?: string,
   ): void {
-    this.viewListener!.valuePropositionAccepted(this.store!.vpVisibleFor!, event, email);
+    this.controller!.valuePropositionAccepted(this.store!.vpVisibleFor!, event, email);
+  }
+
+  mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
+    this.locationDisplay.mount(element, latitude, longitude);
   }
 
   showJob(jobOfferId: number): void {

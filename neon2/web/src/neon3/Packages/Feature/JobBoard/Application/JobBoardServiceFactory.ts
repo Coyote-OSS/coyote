@@ -1,7 +1,8 @@
+import {JobOfferController} from "../../../../../JobOfferController";
 import {Screens} from "../../../../../Screens";
-import {ViewListener} from "../../../../../ViewListener";
 import {JobBoardService} from "../../../../Apps/VueApp/Modules/JobBoard/JobBoardService";
 import {BoardStore} from "../../../../Apps/VueApp/Modules/JobBoard/store";
+import {LocationDisplay} from "../../../Core/Application/LocationDisplay";
 import {LocationInput} from "../../../Core/Application/LocationInput";
 import {BackendImageApi} from "../../../Core/Backend/BackendImageApi";
 import {FilterRepository} from "./FilterRepository";
@@ -13,6 +14,7 @@ import {TagAutocomplete} from "./TagAutocomplete";
 export class JobBoardServiceFactory {
   constructor(
     private locationInput: LocationInput,
+    private locationDisplay: LocationDisplay,
     private backendImageApi: BackendImageApi,
     private allJobOffers: JobOfferRepository,
     private planBundle: PlanBundleRepository,
@@ -22,7 +24,7 @@ export class JobBoardServiceFactory {
   ) {}
 
   create(
-    viewListener: ViewListener,
+    controller: JobOfferController,
     screens: Screens,
     store: BoardStore,
   ): JobBoardService {
@@ -30,13 +32,13 @@ export class JobBoardServiceFactory {
       store,
       screens,
       this.locationInput,
-      viewListener,
+      this.locationDisplay,
+      controller,
       this.tagAutocomplete!,
       this.backendImageApi,
       this.allJobOffers,
       this.planBundle,
       this.filterRepo,
-      this.filterService,
-    );
+      this.filterService);
   }
 }

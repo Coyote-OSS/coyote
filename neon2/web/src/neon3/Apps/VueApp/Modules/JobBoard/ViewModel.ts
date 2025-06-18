@@ -1,6 +1,7 @@
 import {Screens} from "../../../../../Screens";
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
 import {FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
+import {JobBoardListener} from "../../../../Packages/Feature/JobBoard/Application/JobBoardListener";
 import {VatIdState} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {
@@ -12,7 +13,7 @@ import {
 } from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {BoardStore} from "./store";
 
-export class ViewModel {
+export class ViewModel implements JobBoardListener {
   constructor(
     private readonly store: BoardStore,
     private readonly screens: Screens,
@@ -120,5 +121,8 @@ export class ViewModel {
 
   private navigateHome(): void {
     this.screens.navigate('home', null);
+  }
+
+  notifyJobOffersChanged(jobOffers: JobOffer[]): void {
   }
 }
