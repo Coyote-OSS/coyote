@@ -41,7 +41,6 @@ const viewModel = new ViewModel(store);
 const presenter = new JobBoardPresenter(jobOffersRepo);
 const jobBoardService = new JobBoardService(
   viewModel,
-  store,
   screens,
   locationInput(backend.testMode()),
   locationDisplay(backend.testMode()),

@@ -50,7 +50,7 @@ function navigateHome(): void {
 }
 
 function vpAccept(event: ValuePropositionEvent, email?: string): void {
-  service.valuePropositionAccepted(event, email);
+  service.valuePropositionAccepted(event, email, store.vpVisibleFor!);
 }
 
 const showHomeLink = computed<boolean>(() => store.screen !== 'home');

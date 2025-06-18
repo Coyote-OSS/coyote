@@ -22,9 +22,8 @@ import {
 import {bundleSize, remainingJobOffers} from "../../../../Packages/Feature/JobBoard/Domain/bundleSize";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PaymentSummary, PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
-import {ScreenName} from "./Model";
 import {EventMetadata, ValuePropositionEvent} from "../../../../Packages/Feature/Vp/Model";
-import {BoardStore} from "./store";
+import {ScreenName} from "./Model";
 import {ViewModel} from "./ViewModel";
 
 export class JobBoardService {
@@ -33,7 +32,6 @@ export class JobBoardService {
 
   constructor(
     private readonly viewModel: ViewModel,
-    private readonly store: BoardStore,
     private readonly screens: Screens,
     private readonly locationInput: LocationInput,
     private readonly locationDisplay: LocationDisplay,
@@ -163,12 +161,13 @@ export class JobBoardService {
 
   valuePropositionAccepted(
     event: ValuePropositionEvent,
-    email?: string,
+    email: string|undefined,
+    jobOffer: JobOffer,
   ): void {
-    const result = this.vpEvent(event, {jobOfferId: this.store!.vpVisibleFor!.id, email});
+    const result = this.vpEvent(event, {jobOfferId: jobOffer.id, email});
     if (event === 'vpDeclined' || event === 'vpApply') {
       this.viewModel.hideValueProposition();
-      result.finally(() => this.jobOfferApply(this.store!.vpVisibleFor!));
+      result.finally(() => this.jobOfferApply(jobOffer!));
     }
   }
 
@@ -202,19 +201,17 @@ export class JobBoardService {
 
   filter(filter: Filter): void {
     this.filterRepo.setFilter(filter);
-    this.store.jobOfferFilter = filter;
-
-    this.store.jobOffers = this.filterService.filter(this.filterRepo);
+    this.viewModel.setJobOffers(this.filterService.filter(this.filterRepo));
+    this.viewModel.setFilter(filter);
   }
 
   filterOnlyMine(onlyMine: boolean): void {
     this.filterRepo.setFilterOnlyMine(onlyMine);
-
-    this.store.jobOffers = this.filterService.filter(this.filterRepo);
+    this.viewModel.setJobOffers(this.filterService.filter(this.filterRepo));
   }
 
   navigate(screen: ScreenName, jobOfferId: number|null): void {
-    this.store.toast = null;
+    this.viewModel.clearToast();
     this.screens.navigate(screen, jobOfferId);
   }
 

@@ -1,5 +1,5 @@
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
-import {FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
+import {Filter, FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {JobBoardListener} from "../../../../Packages/Feature/JobBoard/Application/JobBoardListener";
 import {VatIdState} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
@@ -103,6 +103,18 @@ export class ViewModel implements JobBoardListener {
   }
 
   notifyJobOffersChanged(jobOffers: JobOffer[]): void {
+    this.store.jobOffers = jobOffers;
+  }
+
+  clearToast(): void {
+    this.store.toast = null;
+  }
+
+  setFilter(filter: Filter): void {
+    this.store.jobOfferFilter = filter;
+  }
+
+  setJobOffers(jobOffers: JobOffer[]): void {
     this.store.jobOffers = jobOffers;
   }
 }
