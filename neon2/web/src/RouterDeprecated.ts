@@ -9,7 +9,7 @@ import {
   useRoute,
 } from "vue-router";
 
-export class Router<R extends string> {
+export class RouterDeprecated<R extends string> {
   private readonly router: VueRouter = createRouter({
     history: createWebHistory(),
     routes: [],

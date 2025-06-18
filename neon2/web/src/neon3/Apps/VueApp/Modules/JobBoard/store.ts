@@ -5,7 +5,7 @@ import {Filter, FilterOptions} from "../../../../Packages/Feature/JobBoard/Appli
 import {PlanBundle, VatIdState} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {Country, PaymentStatus, PaymentSummary, PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
-import {Screen, Toast} from "../../../../Packages/Feature/JobBoard/Presenter/Model";
+import {ScreenName, Toast} from "./Model";
 
 export const useBoardStore = defineStore('jobBoard', {
   state(): State {
@@ -41,7 +41,7 @@ export const useBoardStore = defineStore('jobBoard', {
 
 interface State {
   // layout
-  screen: Screen;
+  screen: ScreenName;
   toast: Toast|null;
   paymentNotification: PaymentNotification|null;
   paymentStatus: PaymentStatus|null;

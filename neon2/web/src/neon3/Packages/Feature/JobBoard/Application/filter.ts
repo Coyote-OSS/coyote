@@ -1,5 +1,5 @@
 import {LegalForm, WorkExperience, WorkMode} from "../Domain/Model";
-import {OrderBy} from "../Presenter/orderBy";
+import {OrderBy} from "./orderBy";
 
 export interface Filter {
   searchPhrase: string;

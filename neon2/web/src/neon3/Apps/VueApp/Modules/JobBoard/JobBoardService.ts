@@ -22,7 +22,7 @@ import {
 import {bundleSize, remainingJobOffers} from "../../../../Packages/Feature/JobBoard/Domain/bundleSize";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PaymentSummary, PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
-import {Screen} from "../../../../Packages/Feature/JobBoard/Presenter/Model";
+import {ScreenName} from "./Model";
 import {EventMetadata, ValuePropositionEvent} from "../../../../Packages/Feature/Vp/Model";
 import {BoardStore} from "./store";
 import {ViewModel} from "./ViewModel";
@@ -213,7 +213,7 @@ export class JobBoardService {
     this.store.jobOffers = this.filterService.filter(this.filterRepo);
   }
 
-  navigate(screen: Screen, jobOfferId: number|null): void {
+  navigate(screen: ScreenName, jobOfferId: number|null): void {
     this.store.toast = null;
     this.screens.navigate(screen, jobOfferId);
   }

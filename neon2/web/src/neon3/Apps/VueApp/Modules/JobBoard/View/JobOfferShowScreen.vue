@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import {computed, inject} from "vue";
-import {useRouteId} from "../../../../../../Router";
+import {useRouteId} from "../../../../../../RouterDeprecated";
 import {JobOffer} from "../../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {Design} from "../../../DesignSystem/design";
 import {JobBoardService} from "../JobBoardService";

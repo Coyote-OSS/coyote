@@ -1,20 +1,19 @@
 import {App} from "vue";
+import {ScreenName} from "./neon3/Apps/VueApp/Modules/JobBoard/Model";
 import JobOfferCreate from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferCreate.vue";
 import JobOfferEdit from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferEdit.vue";
 import JobOfferHome from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferHome.vue";
 import JobOfferPaymentScreen from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferPaymentScreen.vue";
 import JobOfferPricing from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferPricing.vue";
 import JobOfferShowScreen from "./neon3/Apps/VueApp/Modules/JobBoard/View/JobOfferShowScreen.vue";
-import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
-import {Screen} from "./neon3/Packages/Feature/JobBoard/Presenter/Model";
 import {Policy} from "./neon3/Packages/Feature/JobBoard/Application/Policy";
-import {Router} from "./Router";
+import {JobOffer} from "./neon3/Packages/Feature/JobBoard/Domain/JobOffer";
+import {RouterDeprecated} from "./RouterDeprecated";
 
 export class Screens {
-  private router: Router<Screen>;
+  private router: RouterDeprecated<ScreenName> = new RouterDeprecated<ScreenName>();
 
   constructor(policy: Policy) {
-    this.router = new Router<Screen>();
     this.router.addRoute(JobOfferHome, 'home', '/Job');
     this.router.addRoute(JobOfferShowScreen, 'show', '/Job/:slug/:id');
     this.router.addRoute(JobOfferPricing, 'pricing', '/Job/pricing');
@@ -34,7 +33,7 @@ export class Screens {
     this.router.addDefaultRoute('home');
   }
 
-  navigate(screen: Screen, jobOfferId: number|null): void {
+  navigate(screen: ScreenName, jobOfferId: number|null): void {
     this.router.navigate(screen, {id: jobOfferId});
   }
 

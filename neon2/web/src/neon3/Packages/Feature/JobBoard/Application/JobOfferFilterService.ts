@@ -1,8 +1,8 @@
 import {JobOffer} from "../Domain/JobOffer";
-import {sortInPlace} from "../Presenter/orderBy";
 import {Filter} from "./filter";
 import {JobOfferRepository} from "./JobOfferRepository";
 import {FilterCriteria} from "./Model";
+import {sortInPlace} from "./orderBy";
 
 export class JobOfferFilterService {
   constructor(private jobOffers: JobOfferRepository) {}

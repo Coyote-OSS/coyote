@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import {inject} from "vue";
-import {useRouteId} from "../../../../../../Router";
+import {useRouteId} from "../../../../../../RouterDeprecated";
 import {Design} from "../../../DesignSystem/design";
 import {JobBoardService} from "../JobBoardService";
 import {BoardStore, useBoardStore} from "../store";

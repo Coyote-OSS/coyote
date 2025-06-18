@@ -34,11 +34,11 @@
 import {computed, inject} from 'vue';
 import {PaymentNotification} from "../../../../../Packages/Core/Application/PaymentProvider";
 import {PaymentStatus} from "../../../../../Packages/Feature/JobBoard/Domain/Model";
-import {Toast} from "../../../../../Packages/Feature/JobBoard/Presenter/Model";
 import {ValuePropositionEvent} from "../../../../../Packages/Feature/Vp/Model";
 import ValuePropositionModal from "../../../../../Packages/Feature/Vp/ValuePropositionModal.vue";
 import {Design} from "../../../DesignSystem/design";
 import {JobBoardService} from "../JobBoardService";
+import {Toast} from "../Model";
 import {useBoardStore} from "../store";
 import {jobBoardServiceInjectKey} from "./vue";
 
