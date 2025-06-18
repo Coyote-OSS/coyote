@@ -14,18 +14,6 @@ export function assertEquals(expected: any, actual: any, errorMessage?: string):
   expect(actual).to.deep.equal(expected, errorMessage);
 }
 
-export function assertNotEquals(expected: any, actual: any): void {
-  expect(actual).to.not.deep.equal(expected);
-}
-
-export function assertContains(expected: any, actual: any): void {
-  expect(actual).to.contain(expected);
-}
-
-export function assertNotContains(expected: any, actual: any): void {
-  expect(actual).to.not.contain(expected);
-}
-
 export function assertThrows(block: Runnable, expectedMessage: string): void {
   expect(block).to.throw(expectedMessage);
 }
