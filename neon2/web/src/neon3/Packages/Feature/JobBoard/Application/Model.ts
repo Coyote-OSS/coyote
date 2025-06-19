@@ -64,3 +64,4 @@ export interface FilterCriteria {
 }
 
 export type VatIdState = 'valid'|'invalid'|'pending';
+export type ScreenName = 'home'|'edit'|'form'|'payment'|'pricing'|'show';

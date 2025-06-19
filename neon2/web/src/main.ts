@@ -18,7 +18,6 @@ import {JobOfferRepository} from "./neon3/Packages/Feature/JobBoard/Application/
 import {PaymentIntentRepository} from "./neon3/Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {PaymentService} from "./neon3/Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundleRepository} from "./neon3/Packages/Feature/JobBoard/Application/PlanBundleRepository";
-import {Policy} from "./neon3/Packages/Feature/JobBoard/Application/Policy";
 import {PlanBundleListenerAdapter} from "./neon3/Packages/Feature/JobBoard/Infrastructure/PlanBundleListenerAdapter";
 import {TagAutocompleteAdapter} from "./neon3/Packages/Feature/JobBoard/Infrastructure/TagAutocompleteAdapter";
 import {Screens} from "./Screens";
@@ -35,8 +34,7 @@ const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
-const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, store);
-const screens = new Screens(policy);
+const screens = new Screens();
 const viewModel = new ViewModel(store);
 const presenter = new JobBoardPresenter(jobOffersRepo);
 const jobBoardService = new JobBoardService(

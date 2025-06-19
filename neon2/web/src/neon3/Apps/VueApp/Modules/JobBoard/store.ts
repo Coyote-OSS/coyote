@@ -2,10 +2,10 @@ import {defineStore} from 'pinia';
 import {emptyJobOfferFilter} from "./View/component/JobOfferFilters";
 import {PaymentNotification} from "../../../../Packages/Core/Application/PaymentProvider";
 import {Filter, FilterOptions} from "../../../../Packages/Feature/JobBoard/Application/filter";
-import {PlanBundle, VatIdState} from "../../../../Packages/Feature/JobBoard/Application/Model";
+import {PlanBundle, ScreenName, VatIdState} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {Country, PaymentStatus, PaymentSummary, PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
-import {ScreenName, Toast} from "./Model";
+import {Toast} from "./Model";
 
 export const useBoardStore = defineStore('jobBoard', {
   state(): State {

@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: './test',
   fullyParallel: true,
   use: {
-    baseURL: 'http://nginx/Job',
+    baseURL: 'http://localhost:8880/Job',
   },
   projects: [
     {name: 'Google Chrome', use: {...devices['Desktop Chrome'], channel: 'chrome'}},

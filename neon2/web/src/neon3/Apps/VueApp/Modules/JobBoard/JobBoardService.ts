@@ -11,7 +11,7 @@ import {Filter} from "../../../../Packages/Feature/JobBoard/Application/filter";
 import {FilterRepository} from "../../../../Packages/Feature/JobBoard/Application/FilterRepository";
 import {JobOfferFilterService} from "../../../../Packages/Feature/JobBoard/Application/JobOfferFilterService";
 import {JobOfferRepository} from "../../../../Packages/Feature/JobBoard/Application/JobOfferRepository";
-import {InitiatePayment, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
+import {InitiatePayment, ScreenName, SubmitJobOffer} from "../../../../Packages/Feature/JobBoard/Application/Model";
 import {PaymentIntentRepository} from "../../../../Packages/Feature/JobBoard/Application/PaymentIntentRepository";
 import {PaymentService} from "../../../../Packages/Feature/JobBoard/Application/PaymentService";
 import {PlanBundleRepository} from "../../../../Packages/Feature/JobBoard/Application/PlanBundleRepository";
@@ -23,7 +23,6 @@ import {bundleSize, remainingJobOffers} from "../../../../Packages/Feature/JobBo
 import {JobOffer} from "../../../../Packages/Feature/JobBoard/Domain/JobOffer";
 import {PaymentStatus, PaymentSummary, PricingPlan} from "../../../../Packages/Feature/JobBoard/Domain/Model";
 import {EventMetadata, ValuePropositionEvent} from "../../../../Packages/Feature/Vp/Model";
-import {ScreenName} from "./Model";
 import {ViewModel} from "./ViewModel";
 
 export class JobBoardService {
