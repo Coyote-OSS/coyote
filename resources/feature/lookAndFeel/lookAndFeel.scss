@@ -7,6 +7,7 @@ body {
   &.look-and-feel-modern {
     @include theme.background(style.$navy-050, style.$neutral-900);
   }
+
   &.look-and-feel-legacy {
     @include theme.background(#fafafa, #252525);
   }
@@ -49,12 +50,12 @@ a:not(.btn) {
 }
 
 $modern-tile-background-light: style.$white;
-$modern-tile-background-dark:  style.$neutral-800;
+$modern-tile-background-dark: style.$neutral-800;
 
 .neon-username-author {
-  padding:       1px 5px;
+  padding: 1px 5px;
   border-radius: 4px;
-  font-size:     0.88em;
+  font-size: 0.88em;
   @include feel.modern {
     @include theme.property(color, $modern-tile-background-light, $modern-tile-background-dark);
     @include theme.property(background-color, style.$green-800, style.$green-050);
@@ -66,7 +67,7 @@ $modern-tile-background-dark:  style.$neutral-800;
 }
 
 .neon-logo {
-  width:  15px;
+  margin-top: -3px;
   height: 20px;
 }
 
@@ -87,7 +88,7 @@ $modern-tile-background-dark:  style.$neutral-800;
   @include feel.legacy {
     @include theme.light {
       background: #f6f6f6;
-      border:     1px solid #ddd;
+      border: 1px solid #ddd;
     }
   }
 }
@@ -121,7 +122,7 @@ $modern-tile-background-dark:  style.$neutral-800;
 }
 
 .neon-rounded-top {
-  border-top-left-radius:  8px;
+  border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
 
@@ -175,8 +176,8 @@ $modern-tile-background-dark:  style.$neutral-800;
 }
 
 @include feel.var(--zebra-background,
-  (light: #f6f7f9, dark: #212425),
-  (light: #f6f6f6, dark: #1e1e1e));
+        (light: #f6f7f9, dark: #212425),
+        (light: #f6f6f6, dark: #1e1e1e));
 
 .neon-zebra__header {
   background: var(--zebra-background);
@@ -198,23 +199,23 @@ $modern-tile-background-dark:  style.$neutral-800;
 
 .neon-tile__timeline-icon {
   @include theme.light {
-    color:      #777777;
+    color: #777777;
     background: #ffffff;
-    border:     1px solid #dddddd;
+    border: 1px solid #dddddd;
   }
   @include theme.dark {
-    color:      #acacac;
+    color: #acacac;
     background: #121212;
-    border:     1px solid #2f2f2f;
+    border: 1px solid #2f2f2f;
   }
 }
 
 .neon-firmlogo-border,
 .neon-avatar-border {
   border-radius: 5px;
-  border-style:  solid;
-  z-index:       2;
-  position:      relative; // Only to create a stacking context for z-index
+  border-style: solid;
+  z-index: 2;
+  position: relative; // Only to create a stacking context for z-index
 }
 
 .neon-firmlogo-border {
@@ -225,9 +226,10 @@ $modern-tile-background-dark:  style.$neutral-800;
 .neon-avatar-border {
   @include theme.property(border-color, white, black);
   border-width: 3px;
+
   .user-avatar, .default-avatar {
     border-radius: 2px;
-    overflow:      hidden;
+    overflow: hidden;
   }
 }
 
@@ -252,7 +254,7 @@ $modern-tile-background-dark:  style.$neutral-800;
 }
 
 .list-style-none {
-  list-style:   none;
+  list-style: none;
   padding-left: 0;
 }
 
@@ -265,32 +267,32 @@ $modern-tile-background-dark:  style.$neutral-800;
     border: none;
 
     @include theme.light {
-      --bs-btn-color:          #{style.$white};
-      --bs-btn-hover-color:    #{style.$white};
-      --bs-btn-active-color:   #{style.$white};
+      --bs-btn-color: #{style.$white};
+      --bs-btn-hover-color: #{style.$white};
+      --bs-btn-active-color: #{style.$white};
       --bs-btn-disabled-color: #{style.$white};
-      --bs-btn-bg:             #{style.$green-500};
-      --bs-btn-hover-bg:       #007e2b;
-      --bs-btn-active-bg:      #006522;
-      --bs-btn-disabled-bg:    #{rgba(style.$green-500, 0.3)};
+      --bs-btn-bg: #{style.$green-500};
+      --bs-btn-hover-bg: #007e2b;
+      --bs-btn-active-bg: #006522;
+      --bs-btn-disabled-bg: #{rgba(style.$green-500, 0.3)};
     }
 
     @include theme.dark {
-      --bs-btn-color:          #{style.$neutral-900};
-      --bs-btn-hover-color:    #{style.$neutral-900};
-      --bs-btn-active-color:   #{style.$neutral-900};
+      --bs-btn-color: #{style.$neutral-900};
+      --bs-btn-hover-color: #{style.$neutral-900};
+      --bs-btn-active-color: #{style.$neutral-900};
       --bs-btn-disabled-color: #{style.$neutral-900};
-      --bs-btn-bg:             #{style.$green-500};
-      --bs-btn-hover-bg:       #00c041;
-      --bs-btn-active-bg:      #00e34d;
-      --bs-btn-disabled-bg:    #{rgba(style.$green-500, 0.3)};
+      --bs-btn-bg: #{style.$green-500};
+      --bs-btn-hover-bg: #00c041;
+      --bs-btn-active-bg: #00e34d;
+      --bs-btn-disabled-bg: #{rgba(style.$green-500, 0.3)};
     }
   }
   @include feel.legacy {
     @include theme.dark {
-      --bs-btn-color:          #1a1a1a;
-      --bs-btn-hover-color:    #1a1a1a;
-      --bs-btn-active-color:   #1a1a1a;
+      --bs-btn-color: #1a1a1a;
+      --bs-btn-hover-color: #1a1a1a;
+      --bs-btn-active-color: #1a1a1a;
       --bs-btn-disabled-color: #1a1a1a;
     }
   }
@@ -298,7 +300,7 @@ $modern-tile-background-dark:  style.$neutral-800;
 
 .btn.btn-follow {
   @include feel.modern {
-    color:  style.$green-500;
+    color: style.$green-500;
     border: 1px solid style.$green-500;
     &.follows,
     &:hover {
@@ -308,7 +310,7 @@ $modern-tile-background-dark:  style.$neutral-800;
   }
 
   @include feel.legacy {
-    color:  #80a41a;
+    color: #80a41a;
     border: 1px solid #80a41a;
     &.follows,
     &:hover {
@@ -322,8 +324,8 @@ $modern-tile-background-dark:  style.$neutral-800;
   @include feel.both {
     @include size.size(xl) {
       background: none;
-      padding:    0 !important; // to override p-4
-      border:     none;
+      padding: 0 !important; // to override p-4
+      border: none;
     }
   }
 }
@@ -341,7 +343,7 @@ $modern-tile-background-dark:  style.$neutral-800;
 }
 
 .neon-divider {
-  border:           0;
+  border: 0;
   border-top-width: 1px;
   border-top-style: solid;
   @include theme.property(border-top-color, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
@@ -355,15 +357,15 @@ $modern-tile-background-dark:  style.$neutral-800;
   border-radius: 8px;
   @include feel.modern {
     @include theme.property(background,
-      gradient(#dcf2e3, $modern-tile-background-light),
-      gradient(style.$green-800, $modern-tile-background-dark)
+            gradient(#dcf2e3, $modern-tile-background-light),
+            gradient(style.$green-800, $modern-tile-background-dark)
     );
   }
   @include feel.legacy {
     $color: color-mix(in srgb, #80a41a, transparent 66%);
     @include theme.property(background,
-      gradient($color, $modern-tile-background-light),
-      gradient($color, $modern-tile-background-dark)
+            gradient($color, $modern-tile-background-light),
+            gradient($color, $modern-tile-background-dark)
     );
   }
 }

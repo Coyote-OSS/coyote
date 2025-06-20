@@ -103,16 +103,16 @@
     {{ form_close() }}
 
     <nav class="navbar navbar-expand-lg {{ __dark_theme ? 'navbar-dark' : 'navbar-light' }} neon-divider-b">
-      <div class="d-flex flex-wrap flex-grow-1">
+      <div class="d-flex flex-wrap flex-lg-nowrap flex-grow-1">
         <a rel="home" class="navbar-brand order-0" href="{{ route('home') }}" title="4programmers.net - Strona główna">
           <img
               class="logo neon-logo"
               alt="4programmers.net"
-              data-src-light="{{ cdn(lookAndFeelModern ? 'img/logo-modern.svg' : 'img/logo-light.svg') }}"
-              data-src-dark="{{ cdn(lookAndFeelModern ? 'img/logo-modern.svg' : 'img/logo-dark.svg') }}"
+              data-src-light="{{ cdn('img/logo-footer-modern-dark.svg') }}"
+              data-src-dark="{{ cdn('img/logo-footer-modern-light.svg') }}"
               src="{{ __dark_theme
-              ? cdn(lookAndFeelModern ? 'img/logo-modern.svg' : 'img/logo-dark.svg')
-              : cdn(lookAndFeelModern ? 'img/logo-modern.svg' : 'img/logo-light.svg') }}"
+              ? cdn('img/logo-footer-modern-dark.svg')
+              : cdn('img/logo-footer-modern-light.svg') }}"
           />
         </a>
 
@@ -152,7 +152,7 @@
 
         {% if not auth_check() %}
           <div class="order-2 d-flex align-items-center me-2">
-            <a class="btn btn-sm btn-primary" href="{{ route('neon.jobOffer.pricing') }}">
+            <a class="btn btn-sm btn-primary" href="{{ route('neon.jobOffer.pricing') }}" style="white-space:nowrap;">
               Dodaj ofertę pracy za darmo!
             </a>
           </div>
@@ -207,18 +207,18 @@
 
               {% if accessToLookAndFeel %}
                 <style>
-                  .option {
-                    opacity: 0.5;
-                    cursor: pointer;
-                  }
+                    .option {
+                        opacity: 0.5;
+                        cursor: pointer;
+                    }
 
-                  .option:hover {
-                    text-decoration: underline;
-                  }
+                    .option:hover {
+                        text-decoration: underline;
+                    }
 
-                  .option-active {
-                    font-weight: bold;
-                  }
+                    .option-active {
+                        font-weight: bold;
+                    }
                 </style>
                 <span class="dropdown-item" title="Przełącz Look&amp;Feel forum" id="lookAndFeelSwitcher"
                       style="cursor:default;">
