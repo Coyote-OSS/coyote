@@ -1,0 +1,143 @@
+@use "../feature/theme/theme" as theme;
+
+.neon-navigation-forum-menu {
+  font-size: 14px !important;
+  font-family: 'Inter Tight', Arial, sans-serif !important;
+
+  ul {
+    padding-left: 0 !important;
+    margin-bottom: 0 !important;
+
+    li {
+      list-style: none !important;
+    }
+  }
+
+  .bg-tile {
+    @include theme.propertyImportant(background-color, white, #121314);
+  }
+
+  .border.border-tile {
+    border-width: 1px;
+    border-style: solid;
+    @include theme.propertyImportant(border-color, white, #121314);
+  }
+
+  .text-green-500 {
+    color: #00a538;
+  }
+
+  .bg-neutral2-050 {
+    @include theme.property(background-color, #f5f7fa, #121314);
+  }
+
+  .text-neutral2-050 {
+    @include theme.property(color, #f5f7fa, #121314);
+  }
+
+  .text-neutral2-500 {
+    @include theme.property(color, #5c6066, #767d84);
+  }
+
+  .text-neutral2-600 {
+    @include theme.property(color, #44474b, #91969c);
+  }
+
+  .text-neutral2-800 {
+    @include theme.property(color, #181a1b, #c7c9cc);
+  }
+
+  .flex {
+    display: flex !important;
+  }
+
+  .font-normal {
+    font-weight: 400 !important;
+  }
+
+  .font-semibold {
+    font-weight: 600 !important;
+  }
+
+  .gap-5 {
+    gap: 20px !important;
+  }
+
+  .gap-x-6 {
+    gap: 0 24px !important;
+  }
+
+  .inline-block {
+    display: inline-block !important;
+  }
+
+  .justify-between {
+    justify-content: space-between !important;
+  }
+
+  .mb-3 {
+    margin-bottom: 12px !important;
+  }
+
+  .ml-1 {
+    margin-left: 4px !important;
+  }
+
+  .mr-1 {
+    margin-right: 4px !important;
+  }
+
+  .mr-2 {
+    margin-right: 8px !important;
+  }
+
+  .mt-1 {
+    margin-top: 4px !important;
+  }
+
+  .mt-6 {
+    margin-top: 24px !important;
+  }
+
+  .p-4 {
+    padding: 16px !important;
+  }
+
+  .px-4.py-3 {
+    padding: 16px 12px !important;
+  }
+
+  .rounded-b-lg {
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+  }
+
+  .rounded-lg {
+    border-radius: 8px !important;
+  }
+
+  .rounded-t-lg {
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+  }
+
+  .space-x-4 > *:not(:last-child) {
+    margin-right: 16px !important;
+  }
+
+  .space-y-3 > *:not(:last-child) {
+    margin-bottom: 12px !important;
+  }
+
+  .text-sm {
+    font-size: 12px !important;
+  }
+
+  .text-xs {
+    font-size: 10px !important;
+  }
+
+  .whitespace-nowrap {
+    white-space: nowrap !important;
+  }
+}

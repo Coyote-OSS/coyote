@@ -23,6 +23,11 @@
   @include dark {#{$property}: $dark}
 }
 
+@mixin propertyImportant($property, $light, $dark) {
+  @include light {#{$property}: $light !important;}
+  @include dark {#{$property}: $dark !important;}
+}
+
 @mixin var($property, $themedProperty) {
   @if (type-of($themedProperty) == 'map') {
     @include property($property, map-get($themedProperty, 'light'), map-get($themedProperty, 'dark'));
