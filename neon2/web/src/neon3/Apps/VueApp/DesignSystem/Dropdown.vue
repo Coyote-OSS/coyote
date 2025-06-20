@@ -5,7 +5,7 @@
     :class="[borderClass, disabledClass]"
     :disabled="props.disabled"
     @click="toggle">
-    <div class="flex" :data-testid="props.testId">
+    <div class="flex items-center" :data-testid="props.testId">
       <Icon :name="props.icon" v-if="props.icon" class="mr-2"/>
       <span class="mr-2 font-medium" v-text="props.title"/>
       <Icon name="dropdownClosed" class="ml-auto"/>

@@ -1,3 +1,6 @@
+import "./internal/fontAwesome.css";
+import "./internal/fontAwesomeIcons.css";
+
 export type IconName = keyof typeof icons;
 
 const iconCheck = 'fa-light fa-check';
