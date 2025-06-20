@@ -117,7 +117,24 @@
         </a>
 
         <div class="collapse navbar-collapse flex-grow-0 order-4 order-lg-1 ms-2" id="mobile-menu">
-          <ul class="navbar-nav">
+          <ul class="navbar-nav d-none d-lg-flex">
+            <li class="nav-item">
+              <a href="/Job" class="nav-link">
+                Praca
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/Forum" class="nav-link" target="_blank">
+                Forum
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/Job/pricing" class="nav-link">
+                Dla pracodawców
+              </a>
+            </li>
+          </ul>
+          <ul class="navbar-nav d-lg-none d-block">
             {% for item in __master_menu.roots() %}
               <li class="{{ item.attr.class }}">
                 <a href="{{ item.url }}" class="nav-link">

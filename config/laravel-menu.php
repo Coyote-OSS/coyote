@@ -21,9 +21,9 @@ return [
     ],
 
     '__master_menu___' => [
+        'Praca'      => ['route' => 'neon.jobOffer.list', 'class' => 'nav-item'],
         'Forum'      => ['route' => 'forum.home', 'class' => 'nav-item dropdown'],
         'Mikroblogi' => ['route' => 'microblog.home', 'class' => 'nav-item'],
-        'Praca'      => ['route' => 'neon.jobOffer.list', 'class' => 'nav-item'],
         'Kompendium' => [
             'url'      => 'Kategorie',
             'class'    => 'nav-item dropdown',
