@@ -5,27 +5,30 @@
       :company-name="store.vpVisibleFor.companyName"
       @accept="vpAccept"/>
     <Design.Layout class="bg-body">
-      <Design.BannerHeading
-        :pricing="store.screen === 'pricing'"
-        :back="showHomeLink"
-        @back="navigateHome"/>
-      <Design.Toast
-        v-if="toastTitle"
-        :title="toastTitle"/>
-      <Design.Toast
-        v-if="planBundleToast"
-        :title="planBundleToast"
-        test-id="planBundle"/>
-      <Design.Toast
-        test-id="paymentNotification"
-        :test-value="store.paymentNotification!"
-        v-if="paymentNotificationTitle"
-        :title="paymentNotificationTitle"/>
-      <Design.Toast
-        test-id="paymentStatus"
-        v-if="paymentStatusTitle"
-        :title="paymentStatusTitle"/>
-      <RouterView/>
+      <Navigation class="mb-3"/>
+      <div class="px-2 max-w-264 mx-auto space-y-3">
+        <Design.BannerHeading
+          :pricing="store.screen === 'pricing'"
+          :back="showHomeLink"
+          @back="navigateHome"/>
+        <Design.Toast
+          v-if="toastTitle"
+          :title="toastTitle"/>
+        <Design.Toast
+          v-if="planBundleToast"
+          :title="planBundleToast"
+          test-id="planBundle"/>
+        <Design.Toast
+          test-id="paymentNotification"
+          :test-value="store.paymentNotification!"
+          v-if="paymentNotificationTitle"
+          :title="paymentNotificationTitle"/>
+        <Design.Toast
+          test-id="paymentStatus"
+          v-if="paymentStatusTitle"
+          :title="paymentStatusTitle"/>
+        <RouterView/>
+      </div>
     </Design.Layout>
   </div>
 </template>
@@ -37,6 +40,7 @@ import {PaymentStatus} from "../../../../../Packages/Feature/JobBoard/Domain/Mod
 import {ValuePropositionEvent} from "../../../../../Packages/Feature/Vp/Model";
 import ValuePropositionModal from "../../../../../Packages/Feature/Vp/ValuePropositionModal.vue";
 import {Design} from "../../../DesignSystem/design";
+import Navigation from "../../Navigation/Navigation.vue";
 import {JobBoardService} from "../JobBoardService";
 import {Toast} from "../Model";
 import {useBoardStore} from "../store";

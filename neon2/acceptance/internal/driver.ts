@@ -431,6 +431,11 @@ export class Driver {
     await this.web.click('Dodaj ogłoszenie od 0zł');
     await this.selectPricingPlan(pricingPlan);
   }
+
+  async findAuthenticationState(): Promise<'loggedIn'|'guest'> {
+    const loggedIn = await this.web.readTestValue('authenticationState') === 'loggedIn';
+    return loggedIn ? 'loggedIn' : 'guest';
+  }
 }
 
 function parseChecked(checked: string|null): boolean {
