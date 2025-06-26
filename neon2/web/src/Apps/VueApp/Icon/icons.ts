@@ -1,3 +1,6 @@
+import "./internal/fontAwesome.css";
+import "./internal/fontAwesomeIcons.css";
+
 export type IconName = keyof typeof icons;
 
 const iconCheck = 'fa-light fa-check';
@@ -8,6 +11,7 @@ const iconRemove = 'fa-light fa-trash';
 const iconAsterisk = 'fa-light fa-asterisk';
 const iconCalendar = 'fa-light fa-calendar';
 const iconArrowLeft = 'fa-light fa-arrow-left';
+const iconSearch = 'fa-regular fa-magnifying-glass';
 
 const jobOfferLocation = 'fa-light fa-location-dot';
 const jobOfferLegalForm = iconSuitcase;
@@ -16,7 +20,7 @@ const jobOfferWorkModeHybrid = 'fa-light fa-globe-wifi';
 const jobOfferWorkModeRemote = 'fa-solid fa-wifi';
 const jobOfferWorkExperience = 'fa-light fa-chart-line';
 
-export const icons = {
+const jobBoardIcons = {
   dropdownClosed: 'fa-light fa-chevron-down',
   dropdownOptionSelected: iconCheck,
   dropdownOptionTagRemove: iconClose,
@@ -38,7 +42,7 @@ export const icons = {
   jobOfferCompanyFundingYear: iconCalendar,
   jobOfferCompanySize: 'fa-light fa-users',
   jobOfferLogoPlaceholder: 'fa-light fa-laptop-code',
-  jobOfferSearch: 'fa-regular fa-magnifying-glass',
+  jobOfferSearch: iconSearch,
   jobOfferWorkExperience,
   jobOfferLegalForm,
   jobOfferFilter: 'fa-light fa-filter',
@@ -60,6 +64,25 @@ export const icons = {
   jobOfferTagRemove: iconClose,
   jobOfferExpiredOn: iconCalendar,
   vpBack: iconArrowLeft,
+};
+
+const iconMessage = 'fa-light fa-message';
+
+const navigationIcons = {
+  navigationCategoryDiscussion: iconMessage,
+  navigationCategoryCommunity: 'fa-light fa-users',
+  navigationCategoryResources: 'fa-light fa-book-open',
+  navigationActiveDiscussions: iconMessage,
+  navigationOnlineUsers: 'fa-light fa-arrow-trend-up',
+  navigationCategoryPromoted: 'fa-solid fa-star',
+  navigationAllCategories: 'fa-solid fa-chevron-right',
+  navigationSearch: iconSearch,
+  navigationUser: 'fa-light fa-user',
+};
+
+export const icons = {
+  ...jobBoardIcons,
+  ...navigationIcons,
 };
 
 export const htmlIconFormatBold = '<i class="fa-solid fa-bold"/>';

@@ -13,7 +13,11 @@ import JobOfferPaymentScreen from "./Apps/VueApp/Modules/JobBoard/View/JobOfferP
 import JobOfferPricing from "./Apps/VueApp/Modules/JobBoard/View/JobOfferPricing.vue";
 import JobOfferShowScreen from "./Apps/VueApp/Modules/JobBoard/View/JobOfferShowScreen.vue";
 import {jobBoardServiceInjectKey} from "./Apps/VueApp/Modules/JobBoard/View/vue";
-import {ViewModel} from "./Apps/VueApp/Modules/JobBoard/ViewModel";
+import {ViewModel as JobBoardViewModel} from "./Apps/VueApp/Modules/JobBoard/ViewModel";
+import {NavigationService} from "./Apps/VueApp/Modules/Navigation/NavigationService";
+import {useNavigationStore} from "./Apps/VueApp/Modules/Navigation/store";
+import {navigationServiceInjectKey} from "./Apps/VueApp/Modules/Navigation/View/vue";
+import {ViewModel as NavigationViewModel} from "./Apps/VueApp/Modules/Navigation/ViewModel";
 import {locationDisplay} from "./Packages/Core/Acceptance/locationDisplay";
 import {locationInput} from "./Packages/Core/Acceptance/locationInput";
 import {paymentProvider} from "./Packages/Core/Acceptance/paymentProvider";
@@ -34,7 +38,8 @@ import {TagAutocompleteAdapter} from "./Packages/Feature/JobBoard/Infrastructure
 const vueApp = createApp(JobBoard);
 const pinia = createPinia();
 vueApp.use(pinia);
-const store = useBoardStore();
+const boardStore = useBoardStore();
+const navigationStore = useNavigationStore();
 
 const jobOffersRepo = new JobOfferRepository();
 const paymentIntents = new PaymentIntentRepository();
@@ -43,7 +48,7 @@ const backendApi = new BackendApi();
 const backend = new JobBoardBackend(backendApi);
 const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
 const payments = new PaymentService(backend, backendApi, _paymentProvider);
-const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, store);
+const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, boardStore);
 
 export const jobBoardUrls: RouteUrlMap<ScreenName> = {
   'home': '/Job',
@@ -63,10 +68,10 @@ export const jobBoardComponents: RouteComponentMap<ScreenName> = {
 };
 
 const vueRouter = new VueRouter<ScreenName>(jobBoardUrls, jobBoardComponents);
-const viewModel = new ViewModel(store);
+const jbViewModel = new JobBoardViewModel(boardStore);
 const presenter = new JobBoardPresenter(jobOffersRepo);
 const jobBoardService = new JobBoardService(
-  viewModel,
+  jbViewModel,
   new JobBoardNavigator(vueRouter, policy),
   locationInput(backend.testMode()),
   locationDisplay(backend.testMode()),
@@ -80,15 +85,19 @@ const jobBoardService = new JobBoardService(
   payments,
   _paymentProvider);
 
-payments.addEventListener(new PaymentListenerAdapter(viewModel, jobBoardService));
-planBundleRepo.addListener(new PlanBundleListenerAdapter(viewModel));
+const nvViewModel = new NavigationViewModel(navigationStore);
+
+payments.addEventListener(new PaymentListenerAdapter(jbViewModel, jobBoardService));
+planBundleRepo.addListener(new PlanBundleListenerAdapter(jbViewModel));
 planBundleRepo.initPlanBundle(backend.initialPlanBundle());
 paymentIntents.initJobOffers(backend.jobOfferPayments());
 jobBoardService.initJobOffers(backend.initialJobOffers());
-viewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
-viewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
-viewModel.setFiltersOptions(presenter.filterOptions());
+jbViewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
+jbViewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
+jbViewModel.setFiltersOptions(presenter.filterOptions());
+nvViewModel.setAuthenticationState(backend.isAuthenticated());
 
 vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
+vueApp.provide(navigationServiceInjectKey, new NavigationService(vueRouter));
 vueRouter.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);
