@@ -1,3 +1,4 @@
+import {BackendNavigationMenu} from "../../../../Packages/Core/Backend/BackendNavigationMenu";
 import {NavigationStore} from "./store";
 
 export class ViewModel {
@@ -5,5 +6,10 @@ export class ViewModel {
 
   setAuthenticationState(loggedIn: boolean): void {
     this.store.isAuthenticated = loggedIn;
+  }
+
+  setNavigationMenu(navigationMenu: BackendNavigationMenu): void {
+    console.log(navigationMenu);
+    this.store.navigationMenu = navigationMenu;
   }
 }

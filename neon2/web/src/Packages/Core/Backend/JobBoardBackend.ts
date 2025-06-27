@@ -1,9 +1,10 @@
-import {BackendApi} from "./BackendApi";
-import {BackendInput, BackendPlanBundle} from "./backendInput";
-import {toJobOffer} from "./toJobOffer";
 import {JobOffer} from "../../Feature/JobBoard/Domain/JobOffer";
 import {Country, Tag} from "../../Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "../../Feature/JobBoard/JobBoard";
+import {BackendApi} from "./BackendApi";
+import {BackendInput, BackendPlanBundle} from "./backendInput";
+import {BackendNavigationMenu} from "./BackendNavigationMenu";
+import {toJobOffer} from "./toJobOffer";
 
 export class JobBoardBackend {
   private backendInput: BackendInput = window.backendInput;
@@ -68,5 +69,9 @@ export class JobBoardBackend {
 
   csrfToken(): string {
     return this.backendInput.csrfToken;
+  }
+
+  navigationMenu(): BackendNavigationMenu {
+    return this.backendInput.navigationMenu;
   }
 }

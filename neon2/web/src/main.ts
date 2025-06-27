@@ -96,6 +96,7 @@ jbViewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 jbViewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 jbViewModel.setFiltersOptions(presenter.filterOptions());
 nvViewModel.setAuthenticationState(backend.isAuthenticated());
+nvViewModel.setNavigationMenu(backend.navigationMenu());
 
 vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
 vueApp.provide(navigationServiceInjectKey, new NavigationService(vueRouter));

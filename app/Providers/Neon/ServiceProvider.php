@@ -3,6 +3,8 @@ namespace Coyote\Providers\Neon;
 
 use Coyote;
 use Coyote\Domain\Settings\UserTheme;
+use Coyote\View\NavigationMenuPresenter;
+use Coyote\View\NavigationMenuService;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\Response;
 use Jenssegers\Agent\Agent;
@@ -103,7 +105,8 @@ class ServiceProvider extends RouteServiceProvider {
             $theme->isThemeDark(),
             $theme->themeMode(),
             request()->route()->parameter('id'),
-            $acceptanceTagNames);
+            $acceptanceTagNames,
+            $this->navigationMenu());
         $view = <<<html
             <html>
             <head>{$jobBoardView->htmlMarkupHead()}</head>
@@ -143,5 +146,13 @@ class ServiceProvider extends RouteServiceProvider {
     private function parseIsoString(string $isoTime): int {
         $dateTime = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $isoTime, new \DateTimeZone('UTC'));
         return $dateTime->getTimestamp();
+    }
+
+    private function navigationMenu(): array {
+        /** @var NavigationMenuPresenter $presenter */
+        $presenter = app(NavigationMenuPresenter::class);
+        /** @var NavigationMenuService $service */
+        $service = app(NavigationMenuService::class);
+        return $presenter->navigationMenu($service->navigationMenu());
     }
 }

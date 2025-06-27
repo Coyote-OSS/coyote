@@ -11,6 +11,14 @@
       <div class="cursor-pointer py-2 px-3 rounded hover:accent" @click="showPricing">
         Dla pracodawców
       </div>
+      <div class="group/navItem">
+        <div class="cursor-pointer py-2 px-3 rounded group-hover/navItem:accent">
+          Forum
+        </div>
+        <div class="relative z-[1]">
+          <ForumMenu/>
+        </div>
+      </div>
       <div class="mr-auto"/>
       <Button primary-outline class="text-base h-10 hover:accent" @click="showPricing">
         Dodaj ofertę pracy
@@ -24,6 +32,7 @@
 import {inject} from "vue";
 import logo from "../../../../../../../public/img/logo.light.svg";
 import Button from "../../DesignSystem/Button.vue";
+import ForumMenu from "./ForumMenu.vue";
 import {NavigationService} from "./NavigationService";
 import {useNavigationStore} from "./store";
 import UserAvatar from "./View/UserAvatar.vue";

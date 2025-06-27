@@ -153,3 +153,7 @@
 .fa-arrow-trend-up:before {
   content: "\e098";
 }
+
+.fa-message-code:before {
+  content: "\e1df";
+}
