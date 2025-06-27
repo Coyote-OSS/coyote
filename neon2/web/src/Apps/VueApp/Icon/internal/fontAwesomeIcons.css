@@ -153,3 +153,27 @@
 .fa-arrow-trend-up:before {
   content: "\e098";
 }
+
+.fa-arrow-right-to-bracket:before {
+  content: "\f090";
+}
+
+.fa-moon:before {
+  content: "\f186";
+}
+
+.fa-sun-bright:before {
+  content: "\e28f";
+}
+
+.fa-envelope:before {
+  content: "\f0e0";
+}
+
+.fa-gear:before {
+  content: "\f013";
+}
+
+.fa-comments-question-check:before {
+  content: "\e14f";
+}
