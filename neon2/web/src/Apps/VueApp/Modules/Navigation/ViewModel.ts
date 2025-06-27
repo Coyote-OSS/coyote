@@ -1,3 +1,4 @@
+import {BackendNavigationUser} from "../../../../Packages/Core/Backend/backendInput";
 import {BackendNavigationMenu} from "../../../../Packages/Core/Backend/BackendNavigationMenu";
 import {NavigationStore} from "./store";
 
@@ -9,7 +10,10 @@ export class ViewModel {
   }
 
   setNavigationMenu(navigationMenu: BackendNavigationMenu): void {
-    console.log(navigationMenu);
     this.store.navigationMenu = navigationMenu;
+  }
+
+  setNavigationUser(navigationUser: BackendNavigationUser|null): void {
+    this.store.navigationUser = navigationUser;
   }
 }

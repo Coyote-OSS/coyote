@@ -1,23 +1,26 @@
 <?php
 namespace Neon2;
 
+use Neon2;
+
 readonly class JobBoardView {
     private Web\ViteManifest $vite;
 
     public function __construct(
-        private \Neon2\Coyote\Integration  $integration,
-        private \Neon2\Invoice\CountryGate $countries,
-        private ?string                    $stripePublishableKey,
-        private ?string                    $googleMapsKey,
-        private bool                       $isTestMode,
-        private ?int                       $userId,
-        private ?string                    $userEmail,
-        private string                     $csrfToken,
-        private bool                       $darkTheme,
-        private string                     $themeMode,
-        private ?int                       $includeExpired,
-        private array                      $acceptanceTagNames,
-        private array                      $navigationMenu,
+        private Neon2\Coyote\Integration  $integration,
+        private Neon2\Invoice\CountryGate $countries,
+        private ?string                   $stripePublishableKey,
+        private ?string                   $googleMapsKey,
+        private bool                      $isTestMode,
+        private ?int                      $userId,
+        private ?string                   $userEmail,
+        private ?Neon2\NavigationUser     $navigationUser,
+        private string                    $csrfToken,
+        private bool                      $darkTheme,
+        private string                    $themeMode,
+        private ?int                      $includeExpired,
+        private array                     $acceptanceTagNames,
+        private array                     $navigationMenu,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
@@ -74,6 +77,7 @@ readonly class JobBoardView {
             'testMode'                 => $this->isTestMode,
             'planBundle'               => $this->integration->planBundle($this->userId),
             'userId'                   => $this->userId,
+            'navigationUser'           => $this->navigationUser,
             'jobOfferApplicationEmail' => $this->userEmail,
             'csrfToken'                => $this->csrfToken,
             'stripePublishableKey'     => $this->stripePublishableKey,

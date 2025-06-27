@@ -1,8 +1,12 @@
 import {Router} from "../../../../Packages/Core/Application/Router";
+import {NavigationBackend} from "../../../../Packages/Core/Backend/NavigationBackend";
 import {ScreenName} from "../JobBoard/Model";
 
 export class NavigationService {
-  constructor(private router: Router<ScreenName>) {}
+  constructor(
+    private router: Router<ScreenName>,
+    private backend: NavigationBackend,
+  ) {}
 
   showJobOffers(): void {
     this.router.navigate('home', {});
@@ -38,6 +42,6 @@ export class NavigationService {
   }
 
   attemptProfile(): void {
-    // implement seeing profile
+    window.location.href = this.backend.navigationUser()!.profileHref;
   }
 }
