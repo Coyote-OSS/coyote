@@ -2,7 +2,7 @@ import {JobOffer} from "../../Feature/JobBoard/Domain/JobOffer";
 import {Country, Tag} from "../../Feature/JobBoard/Domain/Model";
 import {JobOfferPaymentIntent} from "../../Feature/JobBoard/JobBoard";
 import {BackendApi} from "./BackendApi";
-import {BackendInput, BackendPlanBundle} from "./backendInput";
+import {BackendInput, BackendNavigationUser, BackendPlanBundle} from "./backendInput";
 import {BackendNavigationMenu} from "./BackendNavigationMenu";
 import {toJobOffer} from "./toJobOffer";
 
@@ -73,5 +73,9 @@ export class JobBoardBackend {
 
   navigationMenu(): BackendNavigationMenu {
     return this.backendInput.navigationMenu;
+  }
+
+  navigationUser(): BackendNavigationUser|null {
+    return this.backendInput.navigationUser;
   }
 }

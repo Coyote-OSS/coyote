@@ -101,6 +101,7 @@ class ServiceProvider extends RouteServiceProvider {
             $test->isTestMode(),
             auth()->id(),
             auth()->user()?->email,
+            $this->user(),
             app('session')->token(),
             $theme->isThemeDark(),
             $theme->themeMode(),
@@ -154,5 +155,18 @@ class ServiceProvider extends RouteServiceProvider {
         /** @var NavigationMenuService $service */
         $service = app(NavigationMenuService::class);
         return $presenter->navigationMenu($service->navigationMenu());
+    }
+
+    private function user(): ?\Neon2\NavigationUser {
+        if (!auth()->check()) {
+            return null;
+        }
+        /** @var Coyote\User $user */
+        $user = auth()->user();
+        return new \Neon2\NavigationUser(
+            $user->name,
+            \route('profile', [$user->id]),
+            $user->pm_unread,
+            $user->photo->getFilename());
     }
 }

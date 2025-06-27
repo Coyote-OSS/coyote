@@ -1,4 +1,4 @@
-import {Page} from '@playwright/test';
+import {expect, Page} from '@playwright/test';
 
 export class WebDriver {
   constructor(private page: Page) {
@@ -72,6 +72,11 @@ export class WebDriver {
 
   async readTestValue(testId: string): Promise<string|null> {
     return await this.page.getByTestId(testId).getAttribute('data-test-value');
+  }
+
+  async waitForTestValue(testId: string, expectedValue: string): Promise<void> {
+    const locator = this.page.getByTestId(testId);
+    await expect(locator).toHaveAttribute('data-test-value', expectedValue);
   }
 
   async fill(testId: string, value: string): None {

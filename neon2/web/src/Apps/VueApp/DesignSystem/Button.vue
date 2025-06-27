@@ -1,11 +1,12 @@
 <template>
   <button
     @click="click"
-    class="rounded-lg"
+    class="rounded-lg whitespace-nowrap"
     :disabled="props.disabled"
     :class="[variantClass, sizeClass, cursorClass, {'w-full': props.fullWidth}]"
     :data-testid="props.testId">
     <Icon v-if="props.icon" :name="props.icon" :class="{'mr-2': !props.square}"/>
+    <template v-if="props.title">{{props.title}}</template>
     <slot/>
   </button>
 </template>
@@ -20,6 +21,7 @@ const emit = defineEmits(['click']);
 interface Props {
   testId?: string;
   icon?: IconName;
+  title?: string;
   primary?: boolean;
   primaryOutline?: boolean;
   outline?: boolean;

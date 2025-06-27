@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute top-0 right-0 hidden group-hover/navItem:block">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 hidden group-hover/navItem:block">
     <div class="bg-neutral2-100 rounded-lg inline-block font-semibold border border-tile-border shadow-md">
       <div
         class="bg-neutral2-050 text-neutral2-600 text-xs py-3 px-4 space-x-4 rounded-t-lg border-b border-tile-border">
@@ -23,9 +23,7 @@
                   <div>
                     <div class="text-sm whitespace-nowrap">
                       <span class="group-hover/item:text-green2-600 font-medium" v-text="item.title"/>
-                      <span style="color:#ebb305;" class="ml-1 text-xs"
-                            title="Promowana kategoria."
-                            v-if="item.promoted">
+                      <span class="ml-1 text-xs text-[#ebb305]" title="Promowana kategoria." v-if="item.promoted">
                         <Icon name="navigationCategoryPromoted"/>
                       </span>
                       <span class="ml-1 text-xs text-green-500"

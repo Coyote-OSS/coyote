@@ -76,7 +76,14 @@ const navigationIcons = {
   navigationCategoryTrending: 'fa-light fa-chevron-down',
   navigationAllCategories: 'fa-solid fa-chevron-right',
   navigationSearch: iconSearch,
-  navigationUser: 'fa-light fa-user',
+  navigationGuestAvatar: 'fa-light fa-user',
+  navigationProfile: 'fa-light fa-user',
+  navigationAccount: 'fa-light fa-gear',
+  navigationHelp: 'fa-light fa-comments-question-check',
+  navigationNavigate: 'fa-light fa-arrow-right-to-bracket',
+  navigationThemeDark: 'fa-light fa-moon',
+  navigationThemeLight: 'fa-light fa-sun-bright',
+  navigationNoMessages: 'fa-light fa-envelope',
 };
 
 export const icons = {

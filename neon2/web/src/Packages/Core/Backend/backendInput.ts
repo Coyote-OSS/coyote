@@ -20,6 +20,7 @@ export interface BackendInput {
   testMode: boolean;
   planBundle: BackendPlanBundle;
   userId: number|null;
+  navigationUser: BackendNavigationUser|null;
   jobOfferApplicationEmail: string|null;
   csrfToken: string;
   stripePublishableKey: string|null;
@@ -99,3 +100,10 @@ export interface BackendPlanBundle {
 
 export type BackendJobOfferStatus = 'published'|'awaitingPayment'|'expired';
 export type BackendPaymentStatus = 'awaitingPayment'|'paymentComplete'|'paymentFailed';
+
+export interface BackendNavigationUser {
+  username: string;
+  profileHref: string;
+  messagesCount: number;
+  avatarUrl: string;
+}

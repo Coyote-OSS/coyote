@@ -25,6 +25,7 @@ import {PaymentProvider} from "./Packages/Core/Application/PaymentProvider";
 import {BackendApi} from "./Packages/Core/Backend/BackendApi";
 import {BackendImageApi} from "./Packages/Core/Backend/BackendImageApi";
 import {JobBoardBackend} from "./Packages/Core/Backend/JobBoardBackend";
+import {NavigationBackend} from "./Packages/Core/Backend/NavigationBackend";
 import {JobBoardNavigator} from "./Packages/Feature/JobBoard/Application/JobBoardNavigator";
 import {JobBoardPresenter} from "./Packages/Feature/JobBoard/Application/JobBoardPresenter";
 import {JobOfferRepository} from "./Packages/Feature/JobBoard/Application/JobOfferRepository";
@@ -45,11 +46,13 @@ const jobOffersRepo = new JobOfferRepository();
 const paymentIntents = new PaymentIntentRepository();
 const planBundleRepo = new PlanBundleRepository();
 const backendApi = new BackendApi();
-const backend = new JobBoardBackend(backendApi);
-const _paymentProvider: PaymentProvider = paymentProvider(backend.testMode(), backend.stripeKey());
-const payments = new PaymentService(backend, backendApi, _paymentProvider);
-const policy = new Policy(backend.isAuthenticated(), jobOffersRepo, boardStore);
+const jbBackend = new JobBoardBackend(backendApi);
+const navigationBackend = new NavigationBackend();
+const _paymentProvider: PaymentProvider = paymentProvider(jbBackend.testMode(), jbBackend.stripeKey());
+const payments = new PaymentService(jbBackend, backendApi, _paymentProvider);
+const policy = new Policy(jbBackend.isAuthenticated(), jobOffersRepo, boardStore);
 
+const csrfToken = window.backendInput.csrfToken;
 export const jobBoardUrls: RouteUrlMap<ScreenName> = {
   'home': '/Job',
   'show': '/Job/:slug/:id',
@@ -73,12 +76,12 @@ const presenter = new JobBoardPresenter(jobOffersRepo);
 const jobBoardService = new JobBoardService(
   jbViewModel,
   new JobBoardNavigator(vueRouter, policy),
-  locationInput(backend.testMode()),
-  locationDisplay(backend.testMode()),
-  new TagAutocompleteAdapter(backend),
-  new BackendImageApi(backend.csrfToken()),
+  locationInput(jbBackend.testMode()),
+  locationDisplay(jbBackend.testMode()),
+  new TagAutocompleteAdapter(jbBackend),
+  new BackendImageApi(jbBackend.csrfToken()),
   backendApi,
-  backend,
+  jbBackend,
   jobOffersRepo,
   planBundleRepo,
   paymentIntents,
@@ -89,16 +92,17 @@ const nvViewModel = new NavigationViewModel(navigationStore);
 
 payments.addEventListener(new PaymentListenerAdapter(jbViewModel, jobBoardService));
 planBundleRepo.addListener(new PlanBundleListenerAdapter(jbViewModel));
-planBundleRepo.initPlanBundle(backend.initialPlanBundle());
-paymentIntents.initJobOffers(backend.jobOfferPayments());
-jobBoardService.initJobOffers(backend.initialJobOffers());
-jbViewModel.initJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
-jbViewModel.initPaymentInvoiceCountries(backend.paymentInvoiceCountries());
+planBundleRepo.initPlanBundle(jbBackend.initialPlanBundle());
+paymentIntents.initJobOffers(jbBackend.jobOfferPayments());
+jobBoardService.initJobOffers(jbBackend.initialJobOffers());
+jbViewModel.initJobOfferApplicationEmail(jbBackend.jobOfferApplicationEmail());
+jbViewModel.initPaymentInvoiceCountries(jbBackend.paymentInvoiceCountries());
 jbViewModel.setFiltersOptions(presenter.filterOptions());
-nvViewModel.setAuthenticationState(backend.isAuthenticated());
-nvViewModel.setNavigationMenu(backend.navigationMenu());
+nvViewModel.setAuthenticationState(jbBackend.isAuthenticated());
+nvViewModel.setNavigationMenu(jbBackend.navigationMenu());
+nvViewModel.setNavigationUser(jbBackend.navigationUser());
 
 vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
-vueApp.provide(navigationServiceInjectKey, new NavigationService(vueRouter));
+vueApp.provide(navigationServiceInjectKey, new NavigationService(vueRouter, navigationBackend, csrfToken));
 vueRouter.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);

@@ -309,7 +309,7 @@ export class Dsl {
     assertEquals('/Job', await this.driver.currentUrl());
   }
 
-  async logOut(): Promise<void> {
+  async newSessionAsGuest(): Promise<void> {
     await this.driver.reloadApplicationLoggedOut();
   }
 
@@ -317,6 +317,10 @@ export class Dsl {
     assertEquals(
       assertion.expectedState,
       await this.driver.findAuthenticationState());
+  }
+
+  async logout(): Promise<void> {
+    await this.driver.logout();
   }
 }
 

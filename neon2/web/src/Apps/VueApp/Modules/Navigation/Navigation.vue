@@ -23,7 +23,7 @@
       <Button primary-outline class="text-base h-10 hover:accent" @click="showPricing">
         Dodaj ofertę pracy
       </Button>
-      <UserAvatar :authenticated="store.isAuthenticated"/>
+      <UserAvatar :user="store.navigationUser"/>
     </div>
   </nav>
 </template>

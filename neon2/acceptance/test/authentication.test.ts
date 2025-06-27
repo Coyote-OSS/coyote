@@ -8,7 +8,11 @@ describe('User authentication.', () => {
     await dsl.assertUserAuthenticated({expectedState: 'loggedIn'});
   });
   test('User is a guest.', async (dsl: Dsl) => {
-    await dsl.logOut();
+    await dsl.newSessionAsGuest();
+    await dsl.assertUserAuthenticated({expectedState: 'guest'});
+  });
+  test('User can logout.', async (dsl: Dsl) => {
+    await dsl.logout();
     await dsl.assertUserAuthenticated({expectedState: 'guest'});
   });
 });

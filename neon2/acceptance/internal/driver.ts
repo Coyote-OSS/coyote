@@ -436,6 +436,12 @@ export class Driver {
     const loggedIn = await this.web.readTestValue('authenticationState') === 'loggedIn';
     return loggedIn ? 'loggedIn' : 'guest';
   }
+
+  async logout(): Promise<void> {
+    await this.web.clickByTestId('authControl');
+    await this.web.click('Wyloguj');
+    await this.web.waitForTestValue('authenticationState', 'guest')
+  }
 }
 
 function parseChecked(checked: string|null): boolean {
