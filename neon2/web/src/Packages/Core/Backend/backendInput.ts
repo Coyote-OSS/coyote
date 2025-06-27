@@ -7,6 +7,7 @@ import {
   Rate,
   WorkExperience,
 } from "../../Feature/JobBoard/Domain/Model";
+import {BackendNavigationMenu} from "./BackendNavigationMenu";
 
 declare global {
   interface Window {
@@ -26,6 +27,7 @@ export interface BackendInput {
   darkTheme: boolean;
   themeMode: 'dark'|'light'|'system';
   acceptanceTagNames: string[];
+  navigationMenu: BackendNavigationMenu;
 }
 
 export interface BackendJobOffer {

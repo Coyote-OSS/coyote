@@ -66,15 +66,14 @@ const jobBoardIcons = {
   vpBack: iconArrowLeft,
 };
 
-const iconMessage = 'fa-light fa-message';
-
 const navigationIcons = {
-  navigationCategoryDiscussion: iconMessage,
-  navigationCategoryCommunity: 'fa-light fa-users',
+  navigationCategoryDiscussion: 'fa-light fa-suitcase',
+  navigationCategoryDiscussionTechnical: 'fa-light fa-message-code',
   navigationCategoryResources: 'fa-light fa-book-open',
-  navigationActiveDiscussions: iconMessage,
+  navigationActiveDiscussions: 'fa-light fa-message',
   navigationOnlineUsers: 'fa-light fa-arrow-trend-up',
   navigationCategoryPromoted: 'fa-solid fa-star',
+  navigationCategoryTrending: 'fa-light fa-chevron-down',
   navigationAllCategories: 'fa-solid fa-chevron-right',
   navigationSearch: iconSearch,
   navigationUser: 'fa-light fa-user',

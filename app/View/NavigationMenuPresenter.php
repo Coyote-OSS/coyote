@@ -70,8 +70,10 @@ readonly class NavigationMenuPresenter {
 
     private function headerItems(NavigationMenu $menu): array {
         return [
-            ['title' => "$menu->activeDiscussions aktywnych dyskusji dzisiaj", 'icon' => 'navigationActiveDiscussions', 'help' => 'Wątki aktywne w ciągu ostatnich 24 godzin.'],
-            ['title' => "$menu->usersOnline online", 'icon' => 'navigationOnlineUsers', 'online' => true, 'help' => 'Użytkownicy aktywni w ciągu ostatnich 60 sekund.'],
+            ['title' => "$menu->activeDiscussions aktywnych dyskusji dzisiaj", 
+             'icon' => 'navigationActiveDiscussions', 'help' => 'Wątki aktywne w ciągu ostatnich 24 godzin.'],
+            ['title' => "$menu->usersOnline online", 'icon' => 'navigationOnlineUsers', 
+             'online' => true, 'help' => 'Użytkownicy aktywni w ciągu ostatnich 60 sekund.'],
         ];
     }
 
