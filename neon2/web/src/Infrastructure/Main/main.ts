@@ -1,0 +1,116 @@
+import {createPinia} from "pinia";
+import {createApp} from "vue";
+import {JobBoardPresenter} from "../../Application/JobBoard/JobBoardPresenter";
+import {JobOfferRepository} from "../../Application/JobBoard/JobOfferRepository";
+import {PaymentIntentRepository} from "../../Application/JobBoard/PaymentIntentRepository";
+import {PaymentService} from "../../Application/JobBoard/PaymentService";
+import {PaymentProvider} from "../../Application/JobBoard/Port/PaymentProvider";
+import {PlanBundleRepository} from "../../Domain/JobBoard/PlanBundleRepository";
+import {applicationMode} from "../ApplicationMode/applicationMode";
+import {BackendInput} from "../Backend/BackendInput";
+import {BackendInputApplicationInbound} from "../Backend/BackendInputApplicationInbound";
+import {CoyoteApi} from "../Backend/CoyoteApi";
+import {CoyoteImageHosting} from "../Backend/CoyoteImageHosting";
+import {RouteComponentMap, RouteUrlMap, VueRouter} from "../Vue/External/VueRouter";
+import {useBoardStore} from "../Vue/JobBoardView/boardStore";
+import {BoardStorePricingPlanAdapter} from "../Vue/JobBoardView/BoardStorePricingPlanAdapter";
+import {JobBoardNavigator} from "../Vue/JobBoardView/JobBoardNavigator";
+import {JobBoardService} from "../Vue/JobBoardView/JobBoardService";
+import {JobBoardView as JobBoardViewModel} from "../Vue/JobBoardView/JobBoardView";
+import {ScreenName} from "../Vue/JobBoardView/Model";
+import {PaymentListenerAdapter} from "../Vue/JobBoardView/PaymentListenerAdapter";
+import {PlanBundleListenerAdapter} from "../Vue/JobBoardView/PlanBundleListenerAdapter";
+import JobBoard from "../Vue/JobBoardView/View/JobBoard.vue";
+import JobOfferCreate from "../Vue/JobBoardView/View/JobOfferCreate.vue";
+import JobOfferEdit from "../Vue/JobBoardView/View/JobOfferEdit.vue";
+import JobOfferHome from "../Vue/JobBoardView/View/JobOfferHome.vue";
+import JobOfferPaymentScreen from "../Vue/JobBoardView/View/JobOfferPaymentScreen.vue";
+import JobOfferPricing from "../Vue/JobBoardView/View/JobOfferPricing.vue";
+import JobOfferShowScreen from "../Vue/JobBoardView/View/JobOfferShowScreen.vue";
+import {jobBoardServiceInjectKey} from "../Vue/JobBoardView/View/vue";
+import {NavigationService} from "../Vue/NavigationView/NavigationService";
+import {useNavigationStore} from "../Vue/NavigationView/navigationStore";
+import {NavigationView as NavigationViewModel} from "../Vue/NavigationView/NavigationView";
+import {navigationServiceInjectKey} from "../Vue/NavigationView/View/vue";
+
+declare global {
+  interface Window {
+    backendInput: BackendInput;
+  }
+}
+
+const vueApp = createApp(JobBoard);
+const pinia = createPinia();
+vueApp.use(pinia);
+const boardStore = useBoardStore();
+const navigationStore = useNavigationStore();
+
+const jobOffersRepo = new JobOfferRepository();
+const paymentIntents = new PaymentIntentRepository();
+const planBundleRepo = new PlanBundleRepository();
+const coyoteApi = new CoyoteApi();
+const inbound = new BackendInputApplicationInbound(window.backendInput);
+const mode = applicationMode(inbound);
+const paymentProvider: PaymentProvider = mode.paymentProvider();
+const payments = new PaymentService(inbound, coyoteApi, paymentProvider);
+export const jobBoardUrls: RouteUrlMap<ScreenName> = {
+  'home': '/Job',
+  'show': '/Job/:slug/:id',
+  'pricing': '/Job/pricing',
+  'form': '/Job/new',
+  'edit': '/Job/:id/edit',
+  'payment': '/Job/:id/payment',
+};
+export const jobBoardComponents: RouteComponentMap<ScreenName> = {
+  'home': JobOfferHome,
+  'show': JobOfferShowScreen,
+  'pricing': JobOfferPricing,
+  'form': JobOfferCreate,
+  'edit': JobOfferEdit,
+  'payment': JobOfferPaymentScreen,
+};
+
+const vueRouter = new VueRouter<ScreenName>(jobBoardUrls, jobBoardComponents);
+const jbViewModel = new JobBoardViewModel(boardStore);
+const presenter = new JobBoardPresenter(jobOffersRepo);
+const jobBoardService = new JobBoardService(
+  jbViewModel,
+  new JobBoardNavigator(
+    vueRouter,
+    inbound.isAuthenticated(),
+    jobOffersRepo,
+    new BoardStorePricingPlanAdapter(boardStore)),
+  mode.locationInput(),
+  mode.locationDisplay(),
+  mode.tagAutocomplete(),
+  new CoyoteImageHosting(inbound.csrfToken()),
+  coyoteApi,
+  coyoteApi,
+  inbound,
+  jobOffersRepo,
+  planBundleRepo,
+  paymentIntents,
+  payments,
+  paymentProvider);
+
+const nvViewModel = new NavigationViewModel(navigationStore);
+
+payments.addEventListener(new PaymentListenerAdapter(jbViewModel, jobBoardService));
+planBundleRepo.addListener(new PlanBundleListenerAdapter(jbViewModel));
+planBundleRepo.initPlanBundle(inbound.initialPlanBundle());
+paymentIntents.initJobOffers(inbound.jobOfferPayments());
+jobBoardService.initJobOffers(inbound.initialJobOffers());
+jbViewModel.initJobOfferApplicationEmail(inbound.jobOfferApplicationEmail());
+jbViewModel.initPaymentInvoiceCountries(inbound.paymentInvoiceCountries());
+jbViewModel.setFiltersOptions(presenter.filterOptions());
+nvViewModel.setAuthenticationState(inbound.isAuthenticated());
+nvViewModel.setNavigationMenu(window.backendInput.navigationMenu);
+nvViewModel.setNavigationUser(window.backendInput.navigationUser);
+
+vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
+vueApp.provide(navigationServiceInjectKey, new NavigationService(
+  vueRouter,
+  inbound.csrfToken(),
+  window.backendInput.navigationUser));
+vueRouter.useIn(vueApp);
+vueApp.mount(document.querySelector('#neonApplication')!);

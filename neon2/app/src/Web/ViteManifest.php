@@ -9,11 +9,11 @@ readonly class ViteManifest {
     }
 
     public function scriptUrl(): string {
-        return $this->manifest['src/main.ts']['file'];
+        return $this->manifest['src/Infrastructure/Main/main.ts']['file'];
     }
 
     public function styleUrl(): string {
-        return $this->manifest['src/main.ts']['css'][0];
+        return $this->manifest['src/Infrastructure/Main/main.ts']['css'][0];
     }
 
     public function fontAwesomeLightUrl(): string {
