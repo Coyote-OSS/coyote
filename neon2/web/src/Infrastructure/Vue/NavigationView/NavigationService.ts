@@ -54,6 +54,10 @@ export class NavigationService {
   attemptProfile(): void {
     window.location.href = this.user!.profileHref;
   }
+
+  attemptNotifications(): void {
+    window.location.href = '/User/Notifications';
+  }
 }
 
 const headers: HeadersInit = {

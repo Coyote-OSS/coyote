@@ -167,6 +167,7 @@ class ServiceProvider extends RouteServiceProvider {
             $user->name,
             \route('profile', [$user->id]),
             $user->pm_unread,
+            $user->notifications_unread,
             $user->photo->getFilename());
     }
 }

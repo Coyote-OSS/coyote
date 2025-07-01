@@ -17,19 +17,16 @@
       :open-to-left="props.openToLeft">
       <slot/>
     </Drawer>
-    <div v-if="props.blip" v-text="props.blip" :class="[
-      'absolute -top-1 -right-1',
-      'rounded-full size-4 leading-4 text-center text-xs',
-      'bg-primary text-on-primary',
-    ]"/>
+    <Blip :value="props.blip" v-if="props.blip"/>
   </Material>
 </template>
 
 <script setup lang="ts">
 import {computed, watch} from 'vue';
+import {useClickOutside} from "../Helper/clickOutside";
 import Icon from "../Icon/Icon.vue";
 import {IconName} from "../Icon/icons";
-import {useClickOutside} from "../Helper/clickOutside";
+import Blip from "./Blip.vue";
 import {DrawerScroll} from "./Drawer";
 import Drawer from "./Drawer.vue";
 import Material from "./Material.vue";

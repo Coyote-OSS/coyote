@@ -6,6 +6,7 @@ readonly class NavigationUser {
         public string  $username,
         public string  $profileHref,
         public int     $messagesCount,
+        public int     $notificationsCount,
         public ?string $avatarUrl,
     ) {}
 }

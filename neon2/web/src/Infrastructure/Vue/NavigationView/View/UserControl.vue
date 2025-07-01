@@ -7,7 +7,7 @@
       <ControlItem @click="messages">
         Wiadomości
         <span
-          class="size-4.5 rounded-xs accent text-xs flex items-center justify-center"
+          class="size-4.5 rounded-xs bg-red-500 text-white text-xs flex items-center justify-center"
           v-if="props.hasMessage"
           v-text="props.messagesCount"/>
         <Icon monospace name="navigationNoMessages" v-else/>

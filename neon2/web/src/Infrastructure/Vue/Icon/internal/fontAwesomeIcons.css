@@ -181,3 +181,7 @@
 .fa-comments-question-check:before {
   content: "\e14f";
 }
+
+.fa-bell:before {
+  content: "\f0f3";
+}

@@ -22,14 +22,23 @@
       <Button primary-outline class="text-base h-10 hover:accent" @click="showPricing">
         Dodaj ofertę pracy
       </Button>
+      <div class="cursor-pointer relative"
+           @click="showNotifications"
+           v-if="store.isAuthenticated">
+        <Icon name="navigationNotification" class="p-3 text-xl"/>
+        <Blip v-if="notifications > 0" :value="notifications" important/>
+      </div>
       <UserAvatar :user="store.navigationUser"/>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
+import {computed} from "vue";
 import logo from "../../../../../../public/img/logo.light.svg";
+import Blip from "../DesignSystem/Blip.vue";
 import Button from "../DesignSystem/Button.vue";
+import Icon from "../Icon/Icon.vue";
 import ForumMenu from "./ForumMenu.vue";
 import {useNavigationStore} from "./navigationStore";
 import UserAvatar from "./View/UserAvatar.vue";
@@ -45,4 +54,11 @@ function showPricing(): void {
 function showJobOffers(): void {
   service.showJobOffers();
 }
+
+function showNotifications(): void {
+  service.attemptNotifications();
+}
+
+const authenticated = computed(() => !!store.navigationUser);
+const notifications = computed(() => store.navigationUser?.notificationsCount || 0);
 </script>

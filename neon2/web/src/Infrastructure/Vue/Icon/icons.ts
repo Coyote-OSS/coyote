@@ -84,6 +84,7 @@ const navigationIcons = {
   navigationThemeDark: 'fa-light fa-moon',
   navigationThemeLight: 'fa-light fa-sun-bright',
   navigationNoMessages: 'fa-light fa-envelope',
+  navigationNotification: 'fa-light fa-bell',
 };
 
 export const icons = {

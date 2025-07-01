@@ -1,4 +1,5 @@
 import BannerHeading from "./BannerHeading.vue";
+import Blip from "./Blip.vue";
 import Button from "./Button.vue";
 import Card from "./Card.vue";
 import CheckBox from "./CheckBox.vue";
@@ -35,6 +36,7 @@ import "./tailwind.css";
 
 export const Design = {
   BannerHeading,
+  Blip,
   Button,
   Toast,
   Card,
