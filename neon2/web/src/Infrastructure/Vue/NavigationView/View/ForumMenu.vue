@@ -70,8 +70,8 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import Icon from "../Icon/Icon.vue";
-import {useNavigationStore} from "./navigationStore";
+import Icon from "../../Icon/Icon.vue";
+import {useNavigationStore} from "../navigationStore";
 
 const store = useNavigationStore();
 
