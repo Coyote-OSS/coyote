@@ -11,10 +11,10 @@ import {
   PricingPlan,
 } from "../../../Domain/JobBoard/JobBoard";
 import {JobOffer} from "../../../Domain/JobBoard/JobOffer";
-import {BoardStore} from "./boardStore";
+import {BoardStore, useBoardStore} from "./boardStore";
 
 export class JobBoardView implements JobBoardListener, PricingPlanPort {
-  constructor(private readonly store: BoardStore) {}
+  private readonly store: BoardStore = useBoardStore();
 
   notifyJobOfferEdited(jobOfferId: number): void {
     this.store.toast = 'edited';

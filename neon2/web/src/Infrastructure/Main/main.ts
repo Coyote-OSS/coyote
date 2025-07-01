@@ -12,7 +12,6 @@ import {BackendInputApplicationInbound} from "../Backend/BackendInputApplication
 import {CoyoteApi} from "../Backend/CoyoteApi";
 import {CoyoteImageHosting} from "../Backend/CoyoteImageHosting";
 import {RouteComponentMap, RouteUrlMap, VueRouter} from "../Vue/External/VueRouter";
-import {useBoardStore} from "../Vue/JobBoardView/boardStore";
 import {JobBoardNavigator} from "../Vue/JobBoardView/JobBoardNavigator";
 import {JobBoardService} from "../Vue/JobBoardView/JobBoardService";
 import {JobBoardView} from "../Vue/JobBoardView/JobBoardView";
@@ -28,7 +27,6 @@ import JobOfferPricing from "../Vue/JobBoardView/View/JobOfferPricing.vue";
 import JobOfferShowScreen from "../Vue/JobBoardView/View/JobOfferShowScreen.vue";
 import {jobBoardServiceInjectKey} from "../Vue/JobBoardView/View/vue";
 import {NavigationService} from "../Vue/NavigationView/NavigationService";
-import {useNavigationStore} from "../Vue/NavigationView/navigationStore";
 import {NavigationView} from "../Vue/NavigationView/NavigationView";
 import {navigationServiceInjectKey} from "../Vue/NavigationView/View/vue";
 
@@ -41,8 +39,6 @@ declare global {
 const vueApp = createApp(JobBoard);
 const pinia = createPinia();
 vueApp.use(pinia);
-const boardStore = useBoardStore();
-const navigationStore = useNavigationStore();
 
 const jobOffersRepo = new JobOfferRepository();
 const paymentIntents = new PaymentIntentRepository();
@@ -70,7 +66,7 @@ export const jobBoardComponents: RouteComponentMap<ScreenName> = {
 };
 
 const vueRouter = new VueRouter<ScreenName>(jobBoardUrls, jobBoardComponents);
-const jbView = new JobBoardView(boardStore);
+const jbView = new JobBoardView();
 const presenter = new JobBoardPresenter(jobOffersRepo);
 const jobBoardService = new JobBoardService(
   jbView,
