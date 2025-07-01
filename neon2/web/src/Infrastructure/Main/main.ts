@@ -13,7 +13,6 @@ import {CoyoteApi} from "../Backend/CoyoteApi";
 import {CoyoteImageHosting} from "../Backend/CoyoteImageHosting";
 import {RouteComponentMap, RouteUrlMap, VueRouter} from "../Vue/External/VueRouter";
 import {useBoardStore} from "../Vue/JobBoardView/boardStore";
-import {BoardStorePricingPlanAdapter} from "../Vue/JobBoardView/BoardStorePricingPlanAdapter";
 import {JobBoardNavigator} from "../Vue/JobBoardView/JobBoardNavigator";
 import {JobBoardService} from "../Vue/JobBoardView/JobBoardService";
 import {JobBoardView} from "../Vue/JobBoardView/JobBoardView";
@@ -79,7 +78,7 @@ const jobBoardService = new JobBoardService(
     vueRouter,
     inbound.isAuthenticated(),
     jobOffersRepo,
-    new BoardStorePricingPlanAdapter(boardStore)),
+    jbView),
   mode.locationInput(),
   mode.locationDisplay(),
   mode.tagAutocomplete(),

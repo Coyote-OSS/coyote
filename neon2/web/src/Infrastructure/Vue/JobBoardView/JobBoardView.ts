@@ -2,11 +2,18 @@ import {Filter, FilterOptions} from "../../../Application/JobBoard/filter";
 import {JobBoardListener} from "../../../Application/JobBoard/Port/JobBoardListener";
 import {VatIdState} from "../../../Application/JobBoard/Port/PaymentListener";
 import {PaymentNotification} from "../../../Application/JobBoard/Port/PaymentProvider";
-import {Country, PaymentUpdatedStatus, PaymentSummary, PlanBundleName, PricingPlan} from "../../../Domain/JobBoard/JobBoard";
+import {PricingPlanPort} from "../../../Application/JobBoard/Port/PricingPlanPort";
+import {
+  Country,
+  PaymentSummary,
+  PaymentUpdatedStatus,
+  PlanBundleName,
+  PricingPlan,
+} from "../../../Domain/JobBoard/JobBoard";
 import {JobOffer} from "../../../Domain/JobBoard/JobOffer";
 import {BoardStore} from "./boardStore";
 
-export class JobBoardView implements JobBoardListener {
+export class JobBoardView implements JobBoardListener, PricingPlanPort {
   constructor(private readonly store: BoardStore) {}
 
   notifyJobOfferEdited(jobOfferId: number): void {
@@ -110,5 +117,9 @@ export class JobBoardView implements JobBoardListener {
 
   setJobOffers(jobOffers: JobOffer[]): void {
     this.store.jobOffers = jobOffers;
+  }
+
+  pricingPlanSelected(): boolean {
+    return this.store.$state.pricingPlan !== null;
   }
 }
