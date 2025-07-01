@@ -3,14 +3,14 @@
     <div class="bg-neutral2-100 rounded-lg inline-block font-semibold border border-tile-border shadow-md">
       <div
         class="bg-neutral2-050 text-neutral2-600 text-xs py-3 px-4 space-x-4 rounded-t-lg border-b border-tile-border">
-        <span v-for="item in menu.headerItems" :title="item.help">
+        <span v-for="item in forumMenu.headerItems" :title="item.help">
           <Icon :name="item.icon" class="mr-1" :class="{'text-green-500':item.online}"/>
           {{item.title}}
         </span>
       </div>
       <div class="p-4">
         <div class="flex gap-x-6">
-          <div v-for="category in menu.categories">
+          <div v-for="category in forumMenu.categories">
             <span class="text-neutral2-800 whitespace-nowrap">
               <Icon :name="category.icon" class="mr-2"/>
               <a v-if="category.href" :href="category.href" v-text="category.title"/>
@@ -49,17 +49,17 @@
           </div>
         </div>
         <div class="text-green-500 text-sm mt-6">
-          <a :href="menu.allCategoriesHref">
+          <a :href="forumMenu.allCategoriesHref">
             Zobacz wszystkie kategorie
             <Icon name="navigationAllCategories" class="ml-1"/>
           </a>
         </div>
       </div>
       <div
-        v-if="menu.footerItems.length"
+        v-if="forumMenu.footerItems.length"
         class="bg-neutral2-050 text-neutral2-600 text-xs py-3 px-4 space-x-4 rounded-b-lg border-t border-tile-border">
         <a
-          v-for="item in menu.footerItems"
+          v-for="item in forumMenu.footerItems"
           :href="item.href"
           :title="item.help"
           v-text="item.title"/>
@@ -71,9 +71,10 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import Icon from "../../Icon/Icon.vue";
+import {NavigationForumMenu} from "../NavigationForumMenu";
 import {useNavigationStore} from "../navigationStore";
 
 const store = useNavigationStore();
 
-const menu = computed(() => store.$state.navigationMenu!);
+const forumMenu = computed<NavigationForumMenu>(() => store.$state.navigationMenu!);
 </script>

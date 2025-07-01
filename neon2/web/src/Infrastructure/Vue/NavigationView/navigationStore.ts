@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {NavigationUser} from "../../../Domain/Navigation/NavigationUser";
-import {NavigationMenu} from "./NavigationMenu";
+import {NavigationForumMenu} from "./NavigationForumMenu";
 
 export const useNavigationStore = defineStore('navigation', {
   state(): State {
@@ -16,7 +16,7 @@ export const useNavigationStore = defineStore('navigation', {
 
 interface State {
   isAuthenticated: boolean;
-  navigationMenu: NavigationMenu|null;
+  navigationMenu: NavigationForumMenu|null;
   navigationUser: NavigationUser|null;
 }
 

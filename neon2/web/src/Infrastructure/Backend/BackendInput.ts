@@ -1,6 +1,6 @@
 import {PlanBundle} from "../../Domain/JobBoard/PlanBundle";
 import {NavigationUser} from "../../Domain/Navigation/NavigationUser";
-import {NavigationMenu} from "../Vue/NavigationView/NavigationMenu";
+import {NavigationForumMenu} from "../Vue/NavigationView/NavigationForumMenu";
 
 import {BackendJobOffer} from "./BackendJobOffer";
 
@@ -17,5 +17,5 @@ export interface BackendInput {
   darkTheme: boolean;
   themeMode: 'dark'|'light'|'system';
   acceptanceTagNames: string[];
-  navigationMenu: NavigationMenu;
+  navigationMenu: NavigationForumMenu;
 }

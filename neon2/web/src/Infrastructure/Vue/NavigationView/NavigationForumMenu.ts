@@ -1,20 +1,20 @@
 import {IconName} from "../Icon/icons";
 
-export interface NavigationMenu {
-  categories: NavigationCategory[];
+export interface NavigationForumMenu {
+  categories: Category[];
   allCategoriesHref: string;
-  headerItems: NavigationHeaderItem[];
-  footerItems: NavigationFooterItem[];
+  headerItems: HeaderItem[];
+  footerItems: FooterItem[];
 }
 
-interface NavigationCategory {
+interface Category {
   title: string;
   icon: IconName;
   href: string;
-  items: NavigationCategoryItem[];
+  items: CategoryItem[];
 }
 
-interface NavigationCategoryItem {
+interface CategoryItem {
   title: string;
   subtitle: string;
   promoted: boolean;
@@ -26,14 +26,14 @@ interface NavigationCategoryItem {
   };
 }
 
-interface NavigationHeaderItem {
+interface HeaderItem {
   title: string;
   icon: IconName;
   online?: boolean;
   help: string;
 }
 
-interface NavigationFooterItem {
+interface FooterItem {
   title: string;
   href: string;
   help?: string;

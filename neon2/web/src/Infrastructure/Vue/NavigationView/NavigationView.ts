@@ -1,5 +1,5 @@
 import {NavigationUser} from "../../../Domain/Navigation/NavigationUser";
-import {NavigationMenu} from "./NavigationMenu";
+import {NavigationForumMenu} from "./NavigationForumMenu";
 import {NavigationStore, useNavigationStore} from "./navigationStore";
 
 export class NavigationView {
@@ -9,7 +9,7 @@ export class NavigationView {
     this.store.$state.isAuthenticated = loggedIn;
   }
 
-  setNavigationMenu(navigationMenu: NavigationMenu): void {
+  setNavigationMenu(navigationMenu: NavigationForumMenu): void {
     this.store.$state.navigationMenu = navigationMenu;
   }
 
