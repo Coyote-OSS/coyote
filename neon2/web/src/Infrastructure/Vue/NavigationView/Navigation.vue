@@ -25,7 +25,7 @@
       <div class="cursor-pointer relative hover:text-green2-500"
            @click="showNotifications"
            v-if="store.isAuthenticated">
-        <Icon name="navigationNotification" class="p-3 text-xl"/>
+        <Icon name="navigationNotification" class="size-10 text-xl text-center leading-10"/>
         <Blip v-if="notifications > 0" :value="notifications" important/>
       </div>
       <UserAvatar :user="store.navigationUser"/>

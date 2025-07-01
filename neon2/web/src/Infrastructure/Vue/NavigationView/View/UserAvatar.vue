@@ -4,7 +4,8 @@
       class="hidden"
       data-testid="authenticationState"
       :data-test-value="props.user ? 'loggedIn' : 'guest'"/>
-    <div @click="toggleControl" class="cursor-pointer" data-testid="authControl">
+    <div @click="toggleControl" class="cursor-pointer relative" data-testid="authControl">
+      <Blip v-if="hasMessage" :value="props.user!.messagesCount" important/>
       <div class="size-10 rounded user-avatar" v-if="props.user">
         <img :src="props.user.avatarUrl" v-if="props.user.avatarUrl" class="rounded"/>
         <div v-text="props.user.avatarInitials" v-else class="text-center leading-10"/>
@@ -18,8 +19,8 @@
           <UserControl
             v-if="props.user"
             :username="props.user.username"
-            :has-message="props.user.messagesCount > 0"
-            :messages-count="props.user.messagesCount"/>
+            :has-message="hasMessage"
+            :messages-count="props.user!.messagesCount"/>
           <GuestControl v-else/>
         </div>
       </div>
@@ -28,8 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {NavigationUser} from "../../../../Domain/Navigation/NavigationUser";
+import Blip from "../../DesignSystem/Blip.vue";
 import {useClickOutside} from "../../Helper/clickOutside";
 import Icon from "../../Icon/Icon.vue";
 import GuestControl from "./GuestControl.vue";
@@ -60,4 +62,6 @@ watch(controlOpen, (newValue: boolean): void => {
     clickOutside.removeAll();
   }
 });
+
+const hasMessage = computed(() => !!props.user && props.user.messagesCount > 0);
 </script>
