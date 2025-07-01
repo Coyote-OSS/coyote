@@ -1,17 +1,17 @@
 <template>
-  <nav class=" text-neutral2-500 bg-tile text-lg">
+  <nav class=" text-neutral2-600 bg-tile text-lg">
     <div class="h-17.5 p-3 gap-x-4 flex items-center mx-auto max-w-400">
       <a href="/">
         <img :src="logo" alt="4programmers.net" class="w-45"/>
       </a>
-      <div class="cursor-pointer py-2 px-3 rounded hover:accent" @click="showJobOffers">
+      <div class="cursor-pointer py-2 px-3 rounded hover:text-green2-500" @click="showJobOffers">
         Dla kandydatów
       </div>
-      <div class="cursor-pointer py-2 px-3 rounded hover:accent" @click="showPricing">
+      <div class="cursor-pointer py-2 px-3 rounded hover:text-green2-500" @click="showPricing">
         Dla pracodawców
       </div>
       <div class="group/navItem">
-        <div class="cursor-pointer py-2 px-3 rounded group-hover/navItem:accent">
+        <div class="cursor-pointer py-2 px-3 rounded group-hover/navItem:text-green2-500">
           Forum
         </div>
         <div class="relative z-[1]">
@@ -19,10 +19,10 @@
         </div>
       </div>
       <div class="mr-auto"/>
-      <Button primary-outline class="text-base h-10 hover:accent" @click="showPricing">
+      <Button primary-outline class="text-base h-10" @click="showPricing">
         Dodaj ofertę pracy
       </Button>
-      <div class="cursor-pointer relative"
+      <div class="cursor-pointer relative hover:text-green2-500"
            @click="showNotifications"
            v-if="store.isAuthenticated">
         <Icon name="navigationNotification" class="p-3 text-xl"/>
@@ -59,6 +59,5 @@ function showNotifications(): void {
   service.attemptNotifications();
 }
 
-const authenticated = computed(() => !!store.navigationUser);
 const notifications = computed(() => store.navigationUser?.notificationsCount || 0);
 </script>
