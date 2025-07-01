@@ -16,7 +16,7 @@ import {useBoardStore} from "../Vue/JobBoardView/boardStore";
 import {BoardStorePricingPlanAdapter} from "../Vue/JobBoardView/BoardStorePricingPlanAdapter";
 import {JobBoardNavigator} from "../Vue/JobBoardView/JobBoardNavigator";
 import {JobBoardService} from "../Vue/JobBoardView/JobBoardService";
-import {JobBoardView as JobBoardViewModel} from "../Vue/JobBoardView/JobBoardView";
+import {JobBoardView} from "../Vue/JobBoardView/JobBoardView";
 import {ScreenName} from "../Vue/JobBoardView/Model";
 import {PaymentListenerAdapter} from "../Vue/JobBoardView/PaymentListenerAdapter";
 import {PlanBundleListenerAdapter} from "../Vue/JobBoardView/PlanBundleListenerAdapter";
@@ -71,10 +71,10 @@ export const jobBoardComponents: RouteComponentMap<ScreenName> = {
 };
 
 const vueRouter = new VueRouter<ScreenName>(jobBoardUrls, jobBoardComponents);
-const jbViewModel = new JobBoardViewModel(boardStore);
+const jbView = new JobBoardView(boardStore);
 const presenter = new JobBoardPresenter(jobOffersRepo);
 const jobBoardService = new JobBoardService(
-  jbViewModel,
+  jbView,
   new JobBoardNavigator(
     vueRouter,
     inbound.isAuthenticated(),
@@ -92,26 +92,25 @@ const jobBoardService = new JobBoardService(
   paymentIntents,
   payments,
   paymentProvider);
+const nvView = new NavigationView(navigationStore);
 
-const nvViewModel = new NavigationView(navigationStore);
-
-payments.addEventListener(new PaymentListenerAdapter(jbViewModel, jobBoardService));
-planBundleRepo.addListener(new PlanBundleListenerAdapter(jbViewModel));
+payments.addEventListener(new PaymentListenerAdapter(jbView, jobBoardService));
+planBundleRepo.addListener(new PlanBundleListenerAdapter(jbView));
 planBundleRepo.initPlanBundle(inbound.initialPlanBundle());
 paymentIntents.initJobOffers(inbound.jobOfferPayments());
 jobBoardService.initJobOffers(inbound.initialJobOffers());
-jbViewModel.initJobOfferApplicationEmail(inbound.jobOfferApplicationEmail());
-jbViewModel.initPaymentInvoiceCountries(inbound.paymentInvoiceCountries());
-jbViewModel.setFiltersOptions(presenter.filterOptions());
-nvViewModel.setAuthenticationState(inbound.isAuthenticated());
-nvViewModel.setNavigationMenu(window.backendInput.navigationMenu);
-nvViewModel.setNavigationUser(window.backendInput.navigationUser);
+jbView.initJobOfferApplicationEmail(inbound.jobOfferApplicationEmail());
+jbView.initPaymentInvoiceCountries(inbound.paymentInvoiceCountries());
+jbView.setFiltersOptions(presenter.filterOptions());
+nvView.setAuthenticationState(inbound.isAuthenticated());
+nvView.setNavigationMenu(window.backendInput.navigationMenu);
+nvView.setNavigationUser(window.backendInput.navigationUser);
 
 vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
 vueApp.provide(navigationServiceInjectKey, new NavigationService(
   vueRouter,
   inbound.csrfToken(),
-  nvViewModel,
+  nvView,
 ));
 vueRouter.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);
