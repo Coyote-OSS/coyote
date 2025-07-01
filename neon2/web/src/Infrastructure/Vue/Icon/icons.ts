@@ -87,9 +87,14 @@ const navigationIcons = {
   navigationNotification: 'fa-light fa-bell',
 };
 
+const mobileMenuIcons = {
+  mobileMenuClose: iconClose,
+};
+
 export const icons = {
   ...jobBoardIcons,
   ...navigationIcons,
+  ...mobileMenuIcons,
 };
 
 export const htmlIconFormatBold = '<i class="fa-solid fa-bold"/>';
