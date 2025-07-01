@@ -18,6 +18,9 @@
           <ForumMenu/>
         </div>
       </div>
+      <div class="cursor-pointer py-2 px-3 rounded hover:text-green2-500" @click="showBlog">
+        Mikroblogi
+      </div>
       <div class="mr-auto"/>
       <Button primary-outline class="text-base h-10" @click="showPricing">
         Dodaj ofertę pracy
@@ -49,6 +52,10 @@ const store = useNavigationStore();
 
 function showPricing(): void {
   service.showPricing();
+}
+
+function showBlog(): void {
+  service.showBlog();
 }
 
 function showJobOffers(): void {

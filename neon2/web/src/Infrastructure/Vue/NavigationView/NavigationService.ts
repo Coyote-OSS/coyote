@@ -17,6 +17,10 @@ export class NavigationService {
     this.router.navigate('pricing', {});
   }
 
+  showBlog(): void {
+    window.location.href = '/Mikroblogi';
+  }
+
   attemptRegister(): void {
     window.location.href = '/Register';
   }
