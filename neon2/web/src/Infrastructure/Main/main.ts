@@ -30,7 +30,7 @@ import JobOfferShowScreen from "../Vue/JobBoardView/View/JobOfferShowScreen.vue"
 import {jobBoardServiceInjectKey} from "../Vue/JobBoardView/View/vue";
 import {NavigationService} from "../Vue/NavigationView/NavigationService";
 import {useNavigationStore} from "../Vue/NavigationView/navigationStore";
-import {NavigationView as NavigationViewModel} from "../Vue/NavigationView/NavigationView";
+import {NavigationView} from "../Vue/NavigationView/NavigationView";
 import {navigationServiceInjectKey} from "../Vue/NavigationView/View/vue";
 
 declare global {
@@ -93,7 +93,7 @@ const jobBoardService = new JobBoardService(
   payments,
   paymentProvider);
 
-const nvViewModel = new NavigationViewModel(navigationStore);
+const nvViewModel = new NavigationView(navigationStore);
 
 payments.addEventListener(new PaymentListenerAdapter(jbViewModel, jobBoardService));
 planBundleRepo.addListener(new PlanBundleListenerAdapter(jbViewModel));
@@ -111,6 +111,7 @@ vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
 vueApp.provide(navigationServiceInjectKey, new NavigationService(
   vueRouter,
   inbound.csrfToken(),
-  window.backendInput.navigationUser));
+  nvViewModel,
+));
 vueRouter.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);

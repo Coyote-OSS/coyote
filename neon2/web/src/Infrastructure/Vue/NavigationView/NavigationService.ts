@@ -1,13 +1,12 @@
-import {NavigationUser} from "../../../Domain/Navigation/NavigationUser";
 import {ScreenName} from "../JobBoardView/Model";
 import {Router} from "../Router";
-import {useNavigationStore} from "./navigationStore";
+import {NavigationView} from "./NavigationView";
 
 export class NavigationService {
   constructor(
     private router: Router<ScreenName>,
     private csrfToken: string,
-    private user: NavigationUser|null,
+    private view: NavigationView,
   ) {}
 
   showJobOffers(): void {
@@ -27,16 +26,12 @@ export class NavigationService {
   }
 
   attemptLogout(): void {
-    const navigationStore = useNavigationStore();
     fetch('/Logout', {
       method: 'POST',
       headers,
       body: JSON.stringify({'_token': this.csrfToken}),
     })
-      .then(() => {
-        navigationStore.isAuthenticated = false;
-        navigationStore.navigationUser = null;
-      });
+      .then(() => this.view.removeUser());
   }
 
   attemptHelp(): void {
@@ -52,7 +47,7 @@ export class NavigationService {
   }
 
   attemptProfile(): void {
-    window.location.href = this.user!.profileHref;
+    window.location.href = this.view.userProfileHref();
   }
 
   attemptNotifications(): void {
