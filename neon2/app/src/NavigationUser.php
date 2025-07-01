@@ -8,5 +8,6 @@ readonly class NavigationUser {
         public int     $messagesCount,
         public int     $notificationsCount,
         public ?string $avatarUrl,
+        public ?string $avatarInitials,
     ) {}
 }

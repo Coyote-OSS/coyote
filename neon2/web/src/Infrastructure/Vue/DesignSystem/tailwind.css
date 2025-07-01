@@ -119,6 +119,16 @@
   }
 }
 
+@utility user-avatar {
+  color: var(--color-green-800);
+  background: var(--color-green-050);
+
+  @variant dark {
+    color: var(--color-green-500);
+    background: var(--color-green-950);
+  }
+}
+
 @layer components {
   .paragraph-style p {
     @apply mb-4;

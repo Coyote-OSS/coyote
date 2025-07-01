@@ -5,8 +5,9 @@
       data-testid="authenticationState"
       :data-test-value="props.user ? 'loggedIn' : 'guest'"/>
     <div @click="toggleControl" class="cursor-pointer" data-testid="authControl">
-      <div class=" border border-green2-200 rounded bg-green-050" v-if="props.user">
-        <img :src="userAvatar" class="size-10 rounded "/>
+      <div class="size-10 rounded user-avatar" v-if="props.user">
+        <img :src="props.user.avatarUrl" v-if="props.user.avatarUrl" class="rounded"/>
+        <div v-text="props.user.avatarInitials" v-else class="text-center leading-10"/>
       </div>
       <Icon
         v-else
@@ -28,11 +29,9 @@
 
 <script setup lang="ts">
 import {ref, watch} from "vue";
-
 import {NavigationUser} from "../../../../Domain/Navigation/NavigationUser";
-import Icon from "../../Icon/Icon.vue";
 import {useClickOutside} from "../../Helper/clickOutside";
-import userAvatar from "./avatar.png";
+import Icon from "../../Icon/Icon.vue";
 import GuestControl from "./GuestControl.vue";
 import UserControl from "./UserControl.vue";
 

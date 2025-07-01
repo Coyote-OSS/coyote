@@ -3,5 +3,6 @@ export interface NavigationUser {
   profileHref: string;
   messagesCount: number;
   notificationsCount: number;
-  avatarUrl: string;
+  avatarUrl: string|null;
+  avatarInitials: string;
 }

@@ -2,6 +2,7 @@
 namespace Coyote\Providers\Neon;
 
 use Coyote;
+use Coyote\Domain\Initials;
 use Coyote\Domain\Settings\UserTheme;
 use Coyote\View\NavigationMenuPresenter;
 use Coyote\View\NavigationMenuService;
@@ -163,11 +164,27 @@ class ServiceProvider extends RouteServiceProvider {
         }
         /** @var Coyote\User $user */
         $user = auth()->user();
+        [$avatarUrl, $avatarInitials] = $this->avatar($user);
         return new \Neon2\NavigationUser(
             $user->name,
             \route('profile', [$user->id]),
             $user->pm_unread,
             $user->notifications_unread,
-            $user->photo->getFilename());
+            $avatarUrl,
+            $avatarInitials);
+    }
+
+    private function avatar(Coyote\User $user): array {
+        $url = $this->userAvatarUrl($user);
+        if ($url) {
+            return [$url, null];
+        }
+        return [null, new Initials()->of($user->name)];
+    }
+
+    private function userAvatarUrl(Coyote\User $user): string {
+        /** @var Coyote\Services\Media\Factory $factory */
+        $factory = app(Coyote\Services\Media\Factory::class);
+        return $factory->userAvatar($user->photo)->url();
     }
 }
