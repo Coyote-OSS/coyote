@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(:host-context(.dark), :host-context(.dark) *));
-
 :root, :host {
   @variant dark {
     --color-body: #121314;

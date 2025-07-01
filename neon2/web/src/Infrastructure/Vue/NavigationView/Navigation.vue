@@ -2,7 +2,8 @@
   <nav class=" text-neutral2-600 bg-tile text-lg">
     <div class="h-17.5 p-3 gap-x-4 flex items-center mx-auto max-w-400">
       <a href="/">
-        <img :src="logo" alt="4programmers.net" class="w-45"/>
+        <img :src="logoLight" alt="4programmers.net" class="w-45 dark:hidden"/>
+        <img :src="logoDark" alt="4programmers.net" class="w-45 hidden dark:block"/>
       </a>
       <div class="cursor-pointer py-2 px-3 rounded hover:text-green2-500" @click="showJobOffers">
         Dla kandydatów
@@ -35,7 +36,8 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import logo from "../../../../../../public/img/logo.light.svg";
+import logoDark from "../../../../../../public/img/logo.dark.svg";
+import logoLight from "../../../../../../public/img/logo.light.svg";
 import Blip from "../DesignSystem/Blip.vue";
 import Button from "../DesignSystem/Button.vue";
 import Icon from "../Icon/Icon.vue";
