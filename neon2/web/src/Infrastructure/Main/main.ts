@@ -92,7 +92,7 @@ const jobBoardService = new JobBoardService(
   paymentIntents,
   payments,
   paymentProvider);
-const nvView = new NavigationView(navigationStore);
+const nvView = new NavigationView();
 
 payments.addEventListener(new PaymentListenerAdapter(jbView, jobBoardService));
 planBundleRepo.addListener(new PlanBundleListenerAdapter(jbView));

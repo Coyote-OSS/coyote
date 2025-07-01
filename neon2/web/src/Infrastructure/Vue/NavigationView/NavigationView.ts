@@ -1,9 +1,9 @@
 import {NavigationUser} from "../../../Domain/Navigation/NavigationUser";
 import {NavigationMenu} from "./NavigationMenu";
-import {NavigationStore} from "./navigationStore";
+import {NavigationStore, useNavigationStore} from "./navigationStore";
 
 export class NavigationView {
-  constructor(private readonly store: NavigationStore) {}
+  private readonly store: NavigationStore = useNavigationStore();
 
   setAuthenticationState(loggedIn: boolean): void {
     this.store.$state.isAuthenticated = loggedIn;
