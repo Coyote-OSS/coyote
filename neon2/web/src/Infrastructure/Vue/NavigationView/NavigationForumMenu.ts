@@ -10,15 +10,15 @@ export interface NavigationForumMenu {
 interface Category {
   title: string;
   icon: IconName;
-  href: string;
+  href?: string;
   items: CategoryItem[];
 }
 
 interface CategoryItem {
   title: string;
-  subtitle: string;
-  promoted: boolean;
-  trending: boolean;
+  subtitle: string|null;
+  promoted?: boolean;
+  trending?: boolean;
   href: string;
   count: {
     long: string;
