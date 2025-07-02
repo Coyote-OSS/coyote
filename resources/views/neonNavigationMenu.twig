@@ -12,23 +12,23 @@
     </div>
     <div class="p-4">
       <div class="flex gap-x-6">
-        {% for category in navigationMenu.categories %}
+        {% for section in navigationMenu.sections %}
           <div>
             <span class="text-neutral2-800 whitespace-nowrap">
               <span class="mr-2">
-                {{ icon(category.icon) }}
+                {{ icon(section.icon) }}
               </span>
-              {% if category.href is defined %}
-                <a href="{{ category.href }}">
-                  {{ category.title }}
+              {% if section.href is defined %}
+                <a href="{{ section.href }}">
+                  {{ section.title }}
                 </a>
               {% else %}
-                {{ category.title }}
+                {{ section.title }}
               {% endif %}
             </span>
             <hr class="text-neutral2-050 mt-1 mb-1.5">
             <ul>
-              {% for item in category.items %}
+              {% for item in section.items %}
                 {% if item.title %}
                   <li class="text-neutral2-500 text-xs hover-parent">
                     <a class="flex justify-between gap-15 py-1.5" href="{{ item.href }}">

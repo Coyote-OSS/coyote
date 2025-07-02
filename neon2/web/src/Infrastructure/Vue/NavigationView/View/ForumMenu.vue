@@ -10,7 +10,7 @@
       </div>
       <div class="p-4">
         <div class="flex gap-x-6">
-          <div v-for="category in forumMenu.categories">
+          <div v-for="category in forumMenu.sections">
             <span class="text-neutral2-800 whitespace-nowrap">
               <Icon :name="category.icon" class="mr-2"/>
               <a v-if="category.href" :href="category.href" v-text="category.title"/>

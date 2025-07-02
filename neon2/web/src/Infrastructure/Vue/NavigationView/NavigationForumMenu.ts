@@ -1,20 +1,20 @@
 import {IconName} from "../Icon/icons";
 
 export interface NavigationForumMenu {
-  categories: Category[];
+  sections: Section[];
   allCategoriesHref: string;
   headerItems: HeaderItem[];
   footerItems: FooterItem[];
 }
 
-interface Category {
+interface Section {
   title: string;
   icon: IconName;
   href?: string;
-  items: CategoryItem[];
+  items: SectionItem[];
 }
 
-interface CategoryItem {
+interface SectionItem {
   title: string;
   subtitle: string|null;
   promoted?: boolean;

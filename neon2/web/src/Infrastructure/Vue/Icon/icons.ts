@@ -67,9 +67,9 @@ const jobBoardIcons = {
 };
 
 const navigationIcons = {
-  navigationCategoryDiscussion: 'fa-light fa-suitcase',
-  navigationCategoryDiscussionTechnical: 'fa-light fa-message-code',
-  navigationCategoryCommunity: 'fa-light fa-users',
+  navigationSectionDiscussion: 'fa-light fa-suitcase',
+  navigationSectionDiscussionTechnical: 'fa-light fa-message-code',
+  navigationSectionCommunity: 'fa-light fa-users',
   navigationActiveDiscussions: 'fa-light fa-message',
   navigationOnlineUsers: 'fa-light fa-arrow-trend-up',
   navigationCategoryPromoted: 'fa-solid fa-star',

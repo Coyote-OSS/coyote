@@ -550,9 +550,9 @@ readonly class FontAwesomePro {
 
             // navigation
             'navigationAllCategories'                   => 'fa-solid fa-chevron-right',
-            'navigationCategoryDiscussion'              => 'fa-light fa-suitcase',
-            'navigationCategoryDiscussionTechnical'     => 'fa-light fa-message-code',
-            'navigationCategoryCommunity'               => 'fa-light fa-users',
+            'navigationSectionDiscussion'               => 'fa-light fa-suitcase',
+            'navigationSectionDiscussionTechnical'      => 'fa-light fa-message-code',
+            'navigationSectionCommunity'                => 'fa-light fa-users',
             'navigationCategoryResources'               => 'fa-light fa-book-open',
             'navigationActiveDiscussions'               => 'fa-light fa-message',
             'navigationOnlineUsers'                     => 'fa-light fa-arrow-trend-up',

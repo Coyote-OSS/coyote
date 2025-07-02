@@ -8,18 +8,18 @@ use Coyote\Topic;
 readonly class NavigationMenuPresenter {
     public function navigationMenu(NavigationMenu $menu): array {
         return [
-            'categories'        => $this->categories(),
+            'sections'          => $this->sections(),
             'allCategoriesHref' => route('forum.categories'),
             'headerItems'       => $this->headerItems($menu),
             'footerItems'       => $this->footerItems($menu),
         ];
     }
 
-    private function categories(): array {
+    private function sections(): array {
         return [
             [
                 'title' => 'Dyskusje o Pracy',
-                'icon'  => 'navigationCategoryDiscussion',
+                'icon'  => 'navigationSectionDiscussion',
                 'href'  => $this->categoryHref('Kariera'),
                 'items' => [
                     $this->forum('Kariera w IT', 'Jak nie wypaść z rynku?', promoted:true),
@@ -35,7 +35,7 @@ readonly class NavigationMenuPresenter {
             ],
             [
                 'title' => 'Dyskusje Techniczne',
-                'icon'  => 'navigationCategoryDiscussionTechnical',
+                'icon'  => 'navigationSectionDiscussionTechnical',
                 'href'  => route('forum.categories'),
                 'items' => [
                     $this->forum('Hardware i Software'),
@@ -56,7 +56,7 @@ readonly class NavigationMenuPresenter {
             ],
             [
                 'title' => 'Hydepark',
-                'icon'  => 'navigationCategoryCommunity',
+                'icon'  => 'navigationSectionCommunity',
                 'items' => [
                     $this->topic('trochę humoru... :-)', 'Śmieszki z IT', promoted:true),
                     $this->topic('Programistyczne WTF jakie Was spotkały', 'Kod, który boli'),
@@ -70,10 +70,13 @@ readonly class NavigationMenuPresenter {
 
     private function headerItems(NavigationMenu $menu): array {
         return [
-            ['title' => "$menu->activeDiscussions aktywnych dyskusji dzisiaj", 
-             'icon' => 'navigationActiveDiscussions', 'help' => 'Wątki aktywne w ciągu ostatnich 24 godzin.'],
-            ['title' => "$menu->usersOnline online", 'icon' => 'navigationOnlineUsers', 
-             'online' => true, 'help' => 'Użytkownicy aktywni w ciągu ostatnich 60 sekund.'],
+            ['title' => "$menu->activeDiscussions aktywnych dyskusji dzisiaj",
+             'icon'  => 'navigationActiveDiscussions',
+             'help'  => 'Wątki aktywne w ciągu ostatnich 24 godzin.'],
+            ['title'  => "$menu->usersOnline online",
+             'icon'   => 'navigationOnlineUsers',
+             'online' => true,
+             'help'   => 'Użytkownicy aktywni w ciągu ostatnich 60 sekund.'],
         ];
     }
 
