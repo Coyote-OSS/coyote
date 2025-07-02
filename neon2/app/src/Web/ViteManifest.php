@@ -31,4 +31,8 @@ readonly class ViteManifest {
     private function fileContent(string $distPath): string {
         return \file_get_contents(\rTrim($this->viteRootPath, '/') . "/dist/$distPath");
     }
+
+    public function faviconUrl(): string {
+        return 'favicon.svg';
+    }
 }

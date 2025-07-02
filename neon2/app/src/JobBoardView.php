@@ -27,6 +27,7 @@ readonly class JobBoardView {
 
     public function htmlMarkupHead(): string {
         $styleUrl = "/neon2/static/{$this->vite->styleUrl()}";
+        $faviconUrl = "/neon2/static/{$this->vite->faviconUrl()}";
         if ($this->isTestMode) {
             $resources = null;
         } else {
@@ -34,6 +35,7 @@ readonly class JobBoardView {
         }
         return <<<html
             <meta name="viewport" content="width=device-width,initial-scale=1">
+            <link rel="icon" type="image/svg+xml" href="$faviconUrl">
             <link rel="stylesheet" type="text/css" href="$styleUrl">
             $resources
             html;
