@@ -20,7 +20,7 @@ readonly class JobBoardView {
         private string                    $themeMode,
         private ?int                      $includeExpired,
         private array                     $acceptanceTagNames,
-        private array                     $navigationMenu,
+        private array                     $navigationForumMenu,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
@@ -85,7 +85,7 @@ readonly class JobBoardView {
             'darkTheme'                => $this->darkTheme,
             'themeMode'                => $this->themeMode,
             'acceptanceTagNames'       => $this->acceptanceTagNames,
-            'navigationMenu'           => $this->navigationMenu,
+            'navigationForumMenu'      => $this->navigationForumMenu,
         ]);
     }
 

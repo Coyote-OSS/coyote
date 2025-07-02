@@ -76,5 +76,5 @@ import {useNavigationStore} from "../navigationStore";
 
 const store = useNavigationStore();
 
-const forumMenu = computed<NavigationForumMenu>(() => store.$state.navigationMenu!);
+const forumMenu = computed<NavigationForumMenu>(() => store.$state.navigationForumMenu!);
 </script>

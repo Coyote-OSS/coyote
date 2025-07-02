@@ -8,7 +8,7 @@ export const useNavigationStore = defineStore('navigation', {
       // authentication
       isAuthenticated: false,
       // navigation
-      navigationMenu: null,
+      navigationForumMenu: null,
       navigationUser: null,
     };
   },
@@ -16,7 +16,7 @@ export const useNavigationStore = defineStore('navigation', {
 
 interface State {
   isAuthenticated: boolean;
-  navigationMenu: NavigationForumMenu|null;
+  navigationForumMenu: NavigationForumMenu|null;
   navigationUser: NavigationUser|null;
 }
 

@@ -9,8 +9,8 @@ export class NavigationView {
     this.store.$state.isAuthenticated = loggedIn;
   }
 
-  setNavigationMenu(navigationMenu: NavigationForumMenu): void {
-    this.store.$state.navigationMenu = navigationMenu;
+  setNavigationForumMenu(navigationForumMenu: NavigationForumMenu): void {
+    this.store.$state.navigationForumMenu = navigationForumMenu;
   }
 
   setNavigationUser(navigationUser: NavigationUser|null): void {
