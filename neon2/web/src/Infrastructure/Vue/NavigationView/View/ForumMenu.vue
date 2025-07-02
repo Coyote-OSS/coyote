@@ -67,7 +67,7 @@
 import {computed} from "vue";
 import Icon from "../../Icon/Icon.vue";
 import {NavigationForumMenu} from "../NavigationForumMenu";
-import {useNavigationStore} from "../navigationStore";
+import {useNavigationStore} from "./navigationStore";
 
 const store = useNavigationStore();
 

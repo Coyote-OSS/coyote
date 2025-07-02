@@ -1,6 +1,6 @@
 import {NavigationUser} from "../../../Domain/Navigation/NavigationUser";
 import {NavigationForumMenu} from "./NavigationForumMenu";
-import {NavigationStore, useNavigationStore} from "./navigationStore";
+import {NavigationStore, useNavigationStore} from "./View/navigationStore";
 
 export class NavigationView {
   private readonly store: NavigationStore = useNavigationStore();

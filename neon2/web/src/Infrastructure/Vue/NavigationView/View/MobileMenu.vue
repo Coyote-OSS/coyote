@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import {Design} from "../../DesignSystem/design";
-import {useNavigationStore} from "../navigationStore";
+import {useNavigationStore} from "./navigationStore";
 import {useNavigationService} from "./vue";
 
 const service = useNavigationService();

@@ -48,7 +48,7 @@ import Blip from "../../DesignSystem/Blip.vue";
 import Button from "../../DesignSystem/Button.vue";
 import Icon from "../../Icon/Icon.vue";
 import {IconName} from "../../Icon/icons";
-import {useNavigationStore} from "../navigationStore";
+import {useNavigationStore} from "./navigationStore";
 import BrandLogo from "./Component/BrandLogo.vue";
 import ForumMenu from "./ForumMenu.vue";
 import MobileMenu from "./MobileMenu.vue";

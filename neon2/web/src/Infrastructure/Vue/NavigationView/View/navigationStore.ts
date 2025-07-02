@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
-import {NavigationUser} from "../../../Domain/Navigation/NavigationUser";
-import {NavigationForumMenu} from "./NavigationForumMenu";
+import {NavigationUser} from "../../../../Domain/Navigation/NavigationUser";
+import {NavigationForumMenu} from "../NavigationForumMenu";
 
 export const useNavigationStore = defineStore('navigation', {
   state(): State {
