@@ -1,29 +1,25 @@
 <template>
-  <div class="h-screen text-xl p-4 pb-6 flex flex-col">
-    <div class="flex justify-between">
-      <BrandLogo/>
-      <Icon name="mobileMenuClose"/>
-    </div>
-    <div v-for="category in menu">
-      {{category.title}}
-    </div>
-    <div class="mt-auto">
-      <Design.Button primary class="w-full">Zarejestruj się</Design.Button>
-    </div>
-    <div class="mt-3">
-      <Design.Button primary-outline class="w-full">Zaloguj</Design.Button>
+  <div class="absolute top-1 pt-16.5 w-full z-[1] h-dvh">
+    <div class="px-4 py-7 bg-tile text-neutral2-600 flex flex-col border-t border-tile-border h-full">
+      <div :class="navigationLinkStyle" @click="service.showJobOffers(); close();" v-text="'Dla kandydatów'"/>
+      <div :class="navigationLinkStyle" @click="service.showPricing(); close();" v-text="'Dla pracodawców'"/>
+      <div :class="navigationLinkStyle" @click="service.showForum(); close();" v-text="'Forum'"/>
+      <div :class="navigationLinkStyle" @click="service.showBlog(); close();" v-text="'Mikroblogi'"/>
+      <Design.Button primary class="mt-auto w-full" @click="service.showRegister(); close();" title="Zarejestruj się"/>
+      <Design.Button primary-outline class="mt-3 w-full" @click="service.showLogin(); close();" title="Zaloguj"/>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import {Design} from "../../DesignSystem/design";
-import Icon from "../../Icon/Icon.vue";
-import BrandLogo from "./BrandLogo.vue";
+import {useNavigationService} from "./vue";
 
-const menu = [
-  {title: 'Dla kandydatów'},
-  {title: 'Dla pracodawców'},
-  {title: 'Forum'},
-];
+const service = useNavigationService();
+const navigationLinkStyle = 'py-3 text-xl active:text-green2-500';
+const emit = defineEmits(['close']);
+
+function close(): void {
+  emit('close');
+}
 </script>

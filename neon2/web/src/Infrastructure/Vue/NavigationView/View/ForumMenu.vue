@@ -17,43 +17,38 @@
               <span v-else v-text="category.title"/>
             </span>
             <hr class="text-tile-border mt-1 mb-1.5">
-            <ul>
-              <li class="text-neutral2-500 text-xs group/item" v-for="item in category.items">
-                <a class="flex justify-between gap-15 py-1.5" :href="item.href">
-                  <div>
-                    <div class="text-sm whitespace-nowrap">
-                      <span class="group-hover/item:text-green2-600 font-medium" v-text="item.title"/>
-                      <span class="ml-1 text-xs text-[#ebb305]" title="Promowana kategoria." v-if="item.promoted">
-                        <Icon name="navigationCategoryPromoted"/>
-                      </span>
-                      <span class="ml-1 text-xs text-green-500"
-                            title="Kategoria o wzrastającej popularności."
-                            v-if="item.trending">
-                        <Icon name="navigationCategoryTrending"/>
-                      </span>
-                    </div>
-                    <div
-                      class="font-normal whitespace-nowrap text-neutral2-400 group-hover/item:text-neutral2-500"
-                      v-if="item.subtitle"
-                      v-text="item.subtitle"/>
-                  </div>
-                  <span class="font-normal whitespace-nowrap relative" v-if="item.count">
-                    {{item.count.short}}
-                    <span
-                      class="absolute right-0 bg-neutral2-100 overflow-hidden transition-[max-width] max-w-0 group-hover/item:max-w-25"
-                      v-text="item.count.long"/>
+            <a class="flex justify-between gap-15 py-1.5 text-neutral2-500 text-xs group/item" :href="item.href"
+               v-for="item in category.items">
+              <div>
+                <div class="text-sm whitespace-nowrap">
+                  <span class="group-hover/item:text-green2-600 font-medium" v-text="item.title"/>
+                  <span class="ml-1 text-xs text-[#ebb305]" title="Promowana kategoria." v-if="item.promoted">
+                    <Icon name="navigationCategoryPromoted"/>
                   </span>
-                </a>
-              </li>
-            </ul>
+                  <span class="ml-1 text-xs text-green-500"
+                        title="Kategoria o wzrastającej popularności."
+                        v-if="item.trending">
+                    <Icon name="navigationCategoryTrending"/>
+                  </span>
+                </div>
+                <div
+                  class="font-normal whitespace-nowrap text-neutral2-400 group-hover/item:text-neutral2-500"
+                  v-if="item.subtitle"
+                  v-text="item.subtitle"/>
+              </div>
+              <span class="font-normal whitespace-nowrap relative" v-if="item.count">
+                {{item.count.short}}
+                <span
+                  class="absolute right-0 bg-neutral2-100 overflow-hidden transition-[max-width] max-w-0 group-hover/item:max-w-25"
+                  v-text="item.count.long"/>
+              </span>
+            </a>
           </div>
         </div>
-        <div class="text-green-500 text-sm mt-6">
-          <a :href="forumMenu.allCategoriesHref">
-            Zobacz wszystkie kategorie
-            <Icon name="navigationAllCategories" class="ml-1"/>
-          </a>
-        </div>
+        <a class="block text-green-500 text-sm mt-6" :href="forumMenu.allCategoriesHref">
+          Zobacz wszystkie kategorie
+          <Icon name="navigationAllCategories" class="ml-1"/>
+        </a>
       </div>
       <div
         v-if="forumMenu.footerItems.length"

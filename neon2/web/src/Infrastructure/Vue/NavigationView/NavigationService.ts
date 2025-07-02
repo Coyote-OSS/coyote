@@ -17,6 +17,10 @@ export class NavigationService {
     this.router.navigate('pricing', {});
   }
 
+  showForum(): void {
+    window.location.href = '/Forum';
+  }
+
   showBlog(): void {
     window.location.href = '/Mikroblogi';
   }
@@ -36,6 +40,14 @@ export class NavigationService {
       body: JSON.stringify({'_token': this.csrfToken}),
     })
       .then(() => this.view.removeUser());
+  }
+
+  showRegister(): void {
+    window.location.href = '/Register';
+  }
+
+  showLogin(): void {
+    window.location.href = '/Login';
   }
 
   attemptHelp(): void {

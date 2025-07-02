@@ -89,6 +89,7 @@ const navigationIcons = {
 
 const mobileMenuIcons = {
   mobileMenuClose: iconClose,
+  mobileMenuOpen: 'fa-regular fa-bars',
 };
 
 export const icons = {

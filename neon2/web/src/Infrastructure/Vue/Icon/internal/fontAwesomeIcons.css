@@ -185,3 +185,7 @@
 .fa-bell:before {
   content: "\f0f3";
 }
+
+.fa-bars:before {
+  content: "\f0c9";
+}
