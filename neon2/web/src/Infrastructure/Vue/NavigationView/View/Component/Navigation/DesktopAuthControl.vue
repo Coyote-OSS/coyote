@@ -6,22 +6,18 @@
       :data-test-value="props.user ? 'loggedIn' : 'guest'"/>
     <div @click="toggleControl" class="cursor-pointer relative" data-testid="authControl">
       <Blip v-if="hasMessage" :value="props.user!.messagesCount" important/>
-      <div class="size-10 rounded user-avatar" v-if="props.user">
-        <img :src="props.user.avatarUrl" v-if="props.user.avatarUrl" class="rounded"/>
-        <div v-text="props.user.avatarInitials" v-else class="text-center leading-10"/>
-      </div>
-      <Icon
-        v-else
-        name="navigationGuestAvatar"
-        class="cursor-pointer py-3 px-3 rounded hover:accent"/>
+      <UserAvatar :user="props.user"/>
       <div class="relative cursor-default">
         <div class="absolute right-0 top-1" v-if="controlOpen">
-          <UserControl
-            v-if="props.user"
-            :username="props.user.username"
-            :has-message="hasMessage"
-            :messages-count="props.user!.messagesCount"/>
-          <GuestControl v-else/>
+          <Design.Material space class="text-neutral2-500 border border-tile-border shadow-md pb-2">
+            <DesktopMenuListItem
+              v-for="listItem in _authControlItems"
+              :type="listItem.type"
+              :title="listItem.title"
+              :icon="listItem.icon"
+              :messages-count="listItem.messagesCount"
+              @click="listItem.action && service.action(listItem.action)"/>
+          </Design.Material>
         </div>
       </div>
     </div>
@@ -30,12 +26,14 @@
 
 <script setup lang="ts">
 import {computed, ref, watch} from "vue";
-import {NavigationUser} from "../../../../Domain/Navigation/NavigationUser";
-import Blip from "../../DesignSystem/Blip.vue";
-import {useClickOutside} from "../../Helper/clickOutside";
-import Icon from "../../Icon/Icon.vue";
-import GuestControl from "./GuestControl.vue";
-import UserControl from "./UserControl.vue";
+import {NavigationUser} from "../../../../../../Domain/Navigation/NavigationUser";
+import Blip from "../../../../DesignSystem/Blip.vue";
+import {Design} from "../../../../DesignSystem/design";
+import {useClickOutside} from "../../../../Helper/clickOutside";
+import {authControlItems} from "../../Presenter/authControlItems";
+import {useNavigationService} from "../../vue";
+import UserAvatar from "../UserAvatar.vue";
+import DesktopMenuListItem from "./ListItem/DesktopMenuListItem.vue";
 
 const props = defineProps<Props>();
 
@@ -63,5 +61,8 @@ watch(controlOpen, (newValue: boolean): void => {
   }
 });
 
+const service = useNavigationService();
+
 const hasMessage = computed(() => !!props.user && props.user.messagesCount > 0);
+const _authControlItems = computed(() => authControlItems(props.user));
 </script>

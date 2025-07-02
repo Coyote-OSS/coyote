@@ -2,6 +2,11 @@ import {ScreenName} from "../JobBoardView/Model";
 import {Router} from "../Router";
 import {NavigationView} from "./NavigationView";
 
+export type NavigationAction =
+  'jobBoard'|'pricing'|'forum'|'blog'|
+  'register'|'login'|'logout'|'help'|
+  'account'|'profile'|'messages';
+
 export class NavigationService {
   constructor(
     private router: Router<ScreenName>,
@@ -9,7 +14,21 @@ export class NavigationService {
     private view: NavigationView,
   ) {}
 
-  showJobOffers(): void {
+  action(action: NavigationAction): void {
+    if (action === 'jobBoard') this.showJobBoard();
+    if (action === 'pricing') this.showPricing();
+    if (action === 'forum') this.showForum();
+    if (action === 'blog') this.showBlog();
+    if (action === 'register') this.showRegister();
+    if (action === 'login') this.attemptLogin();
+    if (action === 'logout') this.attemptLogout();
+    if (action === 'help') this.attemptHelp();
+    if (action === 'account') this.attemptAccount();
+    if (action === 'profile') this.attemptProfile();
+    if (action === 'messages') this.attemptMessages();
+  }
+
+  showJobBoard(): void {
     this.router.navigate('home', {});
   }
 
@@ -44,10 +63,6 @@ export class NavigationService {
 
   showRegister(): void {
     window.location.href = '/Register';
-  }
-
-  showLogin(): void {
-    window.location.href = '/Login';
   }
 
   attemptHelp(): void {
