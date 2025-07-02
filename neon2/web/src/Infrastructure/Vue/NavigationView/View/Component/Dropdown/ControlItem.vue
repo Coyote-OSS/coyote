@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "../../../Icon/Icon.vue";
-import {IconName} from "../../../Icon/icons";
+import Icon from "../../../../Icon/Icon.vue";
+import {IconName} from "../../../../Icon/icons";
 
 const props = defineProps<Props>();
 

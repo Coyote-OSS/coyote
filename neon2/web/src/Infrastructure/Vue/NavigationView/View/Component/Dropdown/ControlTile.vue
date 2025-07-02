@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import {Design} from "../../../DesignSystem/design";
+import {Design} from "../../../../DesignSystem/design";
 </script>

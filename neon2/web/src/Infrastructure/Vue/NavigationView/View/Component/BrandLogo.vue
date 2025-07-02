@@ -4,6 +4,6 @@
 </template>
 
 <script setup lang="ts">
-import logoDark from "../../../../../../../public/img/logo.dark.svg";
-import logoLight from "../../../../../../../public/img/logo.light.svg";
+import logoDark from "../../../../../../../../public/img/logo.dark.svg";
+import logoLight from "../../../../../../../../public/img/logo.light.svg";
 </script>

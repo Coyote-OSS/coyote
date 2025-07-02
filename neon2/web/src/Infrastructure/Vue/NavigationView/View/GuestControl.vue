@@ -8,8 +8,8 @@
 
 <script setup lang="ts">
 import {Design} from "../../DesignSystem/design";
-import ControlItem from "./Dropdown/ControlItem.vue";
-import ControlTile from "./Dropdown/ControlTile.vue";
+import ControlItem from "./Component/Dropdown/ControlItem.vue";
+import ControlTile from "./Component/Dropdown/ControlTile.vue";
 import {useNavigationService} from "./vue";
 
 const service = useNavigationService();

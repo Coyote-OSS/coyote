@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
 import Icon from "../../Icon/Icon.vue";
-import ControlItem from "./Dropdown/ControlItem.vue";
-import ControlTile from "./Dropdown/ControlTile.vue";
+import ControlItem from "./Component/Dropdown/ControlItem.vue";
+import ControlTile from "./Component/Dropdown/ControlTile.vue";
 import {useNavigationService} from "./vue";
 
 const props = defineProps<Props>();
