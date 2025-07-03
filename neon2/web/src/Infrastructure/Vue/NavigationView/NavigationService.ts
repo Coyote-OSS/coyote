@@ -5,7 +5,8 @@ import {NavigationView} from "./NavigationView";
 export type NavigationAction =
   'jobBoard'|'pricing'|'forum'|'blog'|
   'register'|'login'|'logout'|'help'|
-  'account'|'profile'|'messages';
+  'account'|'profile'|'messages'|
+  'toggleTheme';
 
 export class NavigationService {
   constructor(
@@ -26,6 +27,7 @@ export class NavigationService {
     if (action === 'account') this.attemptAccount();
     if (action === 'profile') this.attemptProfile();
     if (action === 'messages') this.attemptMessages();
+    if (action === 'toggleTheme') this.view.toggleTheme();
   }
 
   showJobBoard(): void {

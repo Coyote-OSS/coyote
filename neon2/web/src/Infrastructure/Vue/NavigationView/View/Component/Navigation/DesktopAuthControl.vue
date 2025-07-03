@@ -9,7 +9,7 @@
       <UserAvatar :user="props.user"/>
       <div class="relative cursor-default">
         <div class="absolute right-0 top-1" v-if="controlOpen">
-          <Design.Material space class="text-neutral2-500 border border-tile-border shadow-md pb-2">
+          <Design.Material space class="text-neutral2-500 border border-tile-border shadow-md py-2">
             <DesktopMenuListItem
               v-for="listItem in _authControlItems"
               :type="listItem.type"
@@ -30,10 +30,13 @@ import {NavigationUser} from "../../../../../../Domain/Navigation/NavigationUser
 import Blip from "../../../../DesignSystem/Blip.vue";
 import {Design} from "../../../../DesignSystem/design";
 import {useClickOutside} from "../../../../Helper/clickOutside";
+import {useNavigationStore} from "../../navigationStore";
 import {authControlItems} from "../../Presenter/authControlItems";
 import {useNavigationService} from "../../vue";
 import UserAvatar from "../UserAvatar.vue";
 import DesktopMenuListItem from "./ListItem/DesktopMenuListItem.vue";
+
+const store = useNavigationStore();
 
 const props = defineProps<Props>();
 
@@ -64,5 +67,8 @@ watch(controlOpen, (newValue: boolean): void => {
 const service = useNavigationService();
 
 const hasMessage = computed(() => !!props.user && props.user.messagesCount > 0);
-const _authControlItems = computed(() => authControlItems(props.user));
+const _authControlItems = computed(() => authControlItems(
+  props.user,
+  store.$state.darkTheme,
+));
 </script>

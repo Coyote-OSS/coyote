@@ -5,6 +5,8 @@ import {NavigationForumMenu} from "../NavigationForumMenu";
 export const useNavigationStore = defineStore('navigation', {
   state(): State {
     return {
+      // theme
+      darkTheme: false,
       // authentication
       isAuthenticated: false,
       // navigation
@@ -15,6 +17,7 @@ export const useNavigationStore = defineStore('navigation', {
 });
 
 interface State {
+  darkTheme: boolean;
   isAuthenticated: boolean;
   navigationForumMenu: NavigationForumMenu|null;
   navigationUser: NavigationUser|null;

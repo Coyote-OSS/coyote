@@ -35,5 +35,8 @@ function action(action: NavigationAction): void {
   emit('close');
 }
 
-const _authControlItems = computed(() => authControlItems(store.$state.navigationUser));
+const _authControlItems = computed(() => authControlItems(
+  store.$state.navigationUser,
+  store.$state.darkTheme,
+));
 </script>

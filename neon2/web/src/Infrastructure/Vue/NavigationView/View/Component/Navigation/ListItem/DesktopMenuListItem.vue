@@ -7,7 +7,7 @@
     </div>
   </template>
   <template v-else-if="props.type === 'buttonPrimary'">
-    <Design.Button primary class="px-10 mb-2" :title="props.title" @click="click"/>
+    <Design.Button primary class="px-10 my-2" :title="props.title" @click="click"/>
   </template>
   <template v-else-if="props.type === 'separatorDesktop'">
     <hr class="text-neutral2-200 my-3"/>

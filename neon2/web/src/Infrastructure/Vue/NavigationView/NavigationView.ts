@@ -25,4 +25,9 @@ export class NavigationView {
     }
     throw new Error('Failed to read user profile href.');
   }
+
+  toggleTheme(): void {
+    this.store.$state.darkTheme = !this.store.$state.darkTheme;
+    window.document.documentElement.classList.toggle('dark', this.store.$state.darkTheme);
+  }
 }

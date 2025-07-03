@@ -10,7 +10,16 @@ export interface AuthControlListItem {
   messagesCount?: number;
 }
 
-export function authControlItems(user: NavigationUser|null): AuthControlListItem[] {
+export function authControlItems(
+  user: NavigationUser|null,
+  darkTheme: boolean,
+): AuthControlListItem[] {
+  const theme: AuthControlListItem = {
+    type: 'link',
+    title: darkTheme ? 'Jasny motyw' : 'Ciemny motyw',
+    icon: darkTheme ? 'navigationThemeLight' : 'navigationThemeDark',
+    action: 'toggleTheme',
+  };
   if (user) {
     return [
       {type: 'separatorMobile'},
@@ -19,12 +28,16 @@ export function authControlItems(user: NavigationUser|null): AuthControlListItem
       {type: 'link', title: 'Wiadomości', icon: 'navigationMessages', action: 'messages', messagesCount: user!.messagesCount},
       {type: 'link', title: 'Moje konto', icon: 'navigationAccount', action: 'account'},
       {type: 'link', title: 'Pomoc', icon: 'navigationHelp', action: 'help'},
+      theme,
       {type: 'separatorDesktop'},
       {type: 'spaceMobile'},
       {type: 'link', title: 'Wyloguj', icon: 'navigationNavigate', action: 'logout'},
     ];
   } else {
     return [
+      {type: 'separatorMobile'},
+      theme,
+      {type: 'separatorDesktop'},
       {type: 'spaceMobile'},
       {type: 'buttonPrimary', title: 'Zarejestruj się', action: 'register'},
       {type: 'buttonSecondary', title: 'Zaloguj', icon: 'navigationNavigate', action: 'login'},
