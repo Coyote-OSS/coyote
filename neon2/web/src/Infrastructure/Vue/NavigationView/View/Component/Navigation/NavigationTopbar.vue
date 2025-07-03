@@ -32,6 +32,7 @@
 <script setup lang="ts">
 import {computed, ref} from "vue";
 import Blip from "../../../../DesignSystem/Blip.vue";
+import {useBlockScroll} from "../../../../Helper/blockScroll";
 import Icon from "../../../../Icon/Icon.vue";
 import {IconName} from "../../../../Icon/icons";
 import {NavigationAction} from "../../../NavigationService";
@@ -45,6 +46,7 @@ import MobileMenu from "./MobileDrawer.vue";
 
 const service = useNavigationService();
 const store = useNavigationStore();
+const blockScroll = useBlockScroll();
 const mobileMenuOpen = ref<boolean>(false);
 
 function toggleMobileMenu(): void {
@@ -55,14 +57,6 @@ function toggleMobileMenu(): void {
 function closeMobileMenu(): void {
   mobileMenuOpen.value = false;
   blockScroll(false);
-}
-
-function blockScroll(blocked: boolean): void {
-  if (blocked) {
-    document.body.classList.add('overflow-y-hidden');
-  } else {
-    document.body.classList.remove('overflow-y-hidden');
-  }
 }
 
 const notifications = computed(() => store.navigationUser?.notificationsCount || 0);
