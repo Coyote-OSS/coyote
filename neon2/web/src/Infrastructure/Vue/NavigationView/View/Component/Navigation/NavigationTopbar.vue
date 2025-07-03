@@ -18,9 +18,7 @@
           <Blip v-if="notifications > 0" :value="notifications" important/>
         </div>
         <DesktopAuthControl class="max-lg:hidden" :user="store.navigationUser"/>
-        <div class="lg:hidden ml-auto mr-4 cursor-pointer">
-          <Icon :name="mobileMenuIcon" @click="toggleMobileMenu" class="text-xl"/>
-        </div>
+        <Icon :name="mobileMenuIcon" @click="toggleMobileMenu" class="text-xl ml-auto mr-4 lg:hidden"/>
       </div>
     </nav>
     <MobileMenu v-if="mobileMenuOpen" @close="closeMobileMenu" class="lg:hidden"/>
