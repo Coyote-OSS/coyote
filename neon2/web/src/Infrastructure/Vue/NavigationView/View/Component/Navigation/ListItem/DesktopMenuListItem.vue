@@ -15,7 +15,10 @@
   <template v-else-if="props.type === 'separatorMobile'"/>
   <template v-else-if="props.type === 'spaceMobile'"/>
   <template v-else-if="props.type === 'username'">
-    <div class="text-neutral2-700 font-semibold min-w-44" v-text="props.title"/>
+    <div class="flex justify-baseline cursor-pointer" @click="click">
+      <div class="text-neutral2-700 font-semibold min-w-44" v-text="props.title"/>
+      <Icon v-if="props.icon" :name="props.icon" monospace/>
+    </div>
   </template>
 </template>
 

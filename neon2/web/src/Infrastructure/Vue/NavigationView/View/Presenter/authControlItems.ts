@@ -14,9 +14,8 @@ export function authControlItems(user: NavigationUser|null): AuthControlListItem
   if (user) {
     return [
       {type: 'separatorMobile'},
-      {type: 'username', title: user.username},
+      {type: 'username', title: user.username, icon: 'navigationProfile', action: 'profile'},
       {type: 'separatorDesktop'},
-      {type: 'link', title: 'Profil', icon: 'navigationProfile', action: 'profile'},
       {type: 'link', title: 'Wiadomości', icon: 'navigationMessages', action: 'messages', messagesCount: user!.messagesCount},
       {type: 'link', title: 'Moje konto', icon: 'navigationAccount', action: 'account'},
       {type: 'link', title: 'Pomoc', icon: 'navigationHelp', action: 'help'},

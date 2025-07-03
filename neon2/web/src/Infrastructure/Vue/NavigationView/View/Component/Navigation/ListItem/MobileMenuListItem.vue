@@ -9,7 +9,7 @@
     </div>
   </template>
   <template v-else-if="props.type === 'username'">
-    <div class="flex justify-between items-center py-3">
+    <div class="flex justify-between items-center py-3" @click="click">
       <div class="text-xl text-neutral2-700 font-semibold" v-text="props.title"/>
       <UserAvatar :user="store.$state.navigationUser"/>
     </div>
