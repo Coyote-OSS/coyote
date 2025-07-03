@@ -5,8 +5,8 @@
       :company-name="store.vpVisibleFor.companyName"
       @accept="vpAccept"/>
     <Design.Layout class="bg-body">
-      <Navigation class="mb-3"/>
-      <div class="px-2 max-w-264 mx-auto space-y-3">
+      <Navigation/>
+      <div class="pt-3 px-2 max-w-264 mx-auto space-y-3">
         <Design.BannerHeading
           :pricing="store.screen === 'pricing'"
           :back="showHomeLink"

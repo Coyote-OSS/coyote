@@ -85,11 +85,13 @@ const navigationIcons = {
   navigationThemeLight: 'fa-light fa-sun-bright',
   navigationMessages: 'fa-light fa-envelope',
   navigationNotification: 'fa-light fa-bell',
+  navigationNavigateIn: 'fa-light fa-chevron-right',
 };
 
 const mobileMenuIcons = {
   mobileMenuClose: iconClose,
   mobileMenuOpen: 'fa-regular fa-bars',
+  mobileMenuBack: 'fa-light fa-chevron-left',
 };
 
 export const icons = {
