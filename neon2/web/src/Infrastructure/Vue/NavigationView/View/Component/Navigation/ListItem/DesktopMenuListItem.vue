@@ -10,7 +10,7 @@
     <Design.Button primary class="px-10 my-2" :title="props.title" @click="click"/>
   </template>
   <template v-else-if="props.type === 'separatorDesktop'">
-    <hr class="text-neutral2-200 my-3"/>
+    <hr class="text-tile-border my-2"/>
   </template>
   <template v-else-if="props.type === 'separatorMobile'"/>
   <template v-else-if="props.type === 'spaceMobile'"/>
