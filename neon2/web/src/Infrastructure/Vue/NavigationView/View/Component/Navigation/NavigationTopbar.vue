@@ -28,7 +28,6 @@
 <script setup lang="ts">
 import {computed, ref} from "vue";
 import Blip from "../../../../DesignSystem/Blip.vue";
-import {useBlockScroll} from "../../../../Helper/blockScroll";
 import Icon from "../../../../Icon/Icon.vue";
 import {IconName} from "../../../../Icon/icons";
 import {NavigationAction} from "../../../NavigationService";
@@ -42,17 +41,20 @@ import MobileDrawer from "./MobileDrawer.vue";
 
 const service = useNavigationService();
 const store = useNavigationStore();
-const blockScroll = useBlockScroll();
 const mobileMenuOpen = ref<boolean>(false);
 
 function toggleMobileMenu(): void {
   mobileMenuOpen.value = !mobileMenuOpen.value;
-  blockScroll(mobileMenuOpen.value);
+  if (mobileMenuOpen.value) {
+    store.mainContentSuspend();
+  } else {
+    store.mainContentRestore();
+  }
 }
 
 function closeMobileMenu(): void {
   mobileMenuOpen.value = false;
-  blockScroll(false);
+  store.mainContentRestore();
 }
 
 const notifications = computed(() => store.navigationUser?.notificationsCount || 0);

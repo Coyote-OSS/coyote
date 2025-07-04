@@ -6,7 +6,7 @@
       @accept="vpAccept"/>
     <Design.Layout class="bg-body">
       <Navigation/>
-      <div class="pt-3 px-2 max-w-264 mx-auto space-y-3">
+      <div class="pt-3 px-2 max-w-264 mx-auto space-y-3" v-if="!navigationStore.$state.navigationMainContentSuspended">
         <Design.BannerHeading
           :pricing="store.screen === 'pricing'"
           :back="showHomeLink"
@@ -40,6 +40,7 @@ import {PaymentUpdatedStatus} from "../../../../Domain/JobBoard/JobBoard";
 import {ValuePropositionEvent} from "../../../../Domain/ValueProp/Model";
 import {Design} from "../../DesignSystem/design";
 import Navigation from "../../NavigationView/View/Component/Navigation/NavigationTopbar.vue";
+import {useNavigationStore} from "../../NavigationView/View/navigationStore";
 import ValuePropositionModal from "../../ValuePropView/ValuePropositionModal.vue";
 import {useBoardStore} from "../boardStore";
 import {Toast} from "../Model";
@@ -47,6 +48,7 @@ import {useJobBoardService} from "./vue";
 
 const store = useBoardStore();
 const service = useJobBoardService();
+const navigationStore = useNavigationStore();
 
 function navigateHome(): void {
   service.navigate('home', null);
