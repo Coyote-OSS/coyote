@@ -12,7 +12,16 @@ export const useNavigationStore = defineStore('navigation', {
       // navigation
       navigationForumMenu: null,
       navigationUser: null,
+      navigationMainContentSuspended: false,
     };
+  },
+  actions: {
+    mainContentSuspend(): void {
+      this.$state.navigationMainContentSuspended = true;
+    },
+    mainContentRestore(): void {
+      this.$state.navigationMainContentSuspended = false;
+    },
   },
 });
 
@@ -21,6 +30,7 @@ interface State {
   isAuthenticated: boolean;
   navigationForumMenu: NavigationForumMenu|null;
   navigationUser: NavigationUser|null;
+  navigationMainContentSuspended: boolean;
 }
 
 export type NavigationStore = ReturnType<typeof useNavigationStore>;
