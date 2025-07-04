@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import Button from "../../../../../DesignSystem/Button.vue";
-import ForumMenu from "../../ForumMenu.vue";
+import ForumMenu from "../../ForumMenuDesktop.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits(['click']);

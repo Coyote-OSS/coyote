@@ -21,7 +21,7 @@
     <Design.Button primary-outline class="my-1.5 w-full" :title="props.title" @click="click"/>
   </template>
   <template v-else-if="props.type === 'separatorMobile'">
-    <hr class="text-tile-border"/>
+    <hr class="text-tile-border my-2"/>
   </template>
   <template v-else-if="props.type === 'separatorDesktop'"/>
   <template v-else-if="props.type === 'spaceMobile'">

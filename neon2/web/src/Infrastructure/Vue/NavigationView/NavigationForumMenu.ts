@@ -7,7 +7,7 @@ export interface NavigationForumMenu {
   footerItems: FooterItem[];
 }
 
-interface Section {
+export interface Section {
   title: string;
   icon: IconName;
   href?: string;

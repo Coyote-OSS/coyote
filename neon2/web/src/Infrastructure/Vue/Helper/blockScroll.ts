@@ -9,15 +9,11 @@ export function useBlockScroll() {
 }
 
 function disableScroll(): void {
+  document.body.classList.add('overscroll-none');
   document.body.classList.add('overflow-y-hidden');
-  document.body.addEventListener('touchmove', preventDefault, {passive: false});
 }
 
 function enableScroll(): void {
+  document.body.classList.remove('overscroll-none');
   document.body.classList.remove('overflow-y-hidden');
-  document.body.removeEventListener('touchmove', preventDefault);
-}
-
-function preventDefault(event: Event): void {
-  event.preventDefault();
 }
