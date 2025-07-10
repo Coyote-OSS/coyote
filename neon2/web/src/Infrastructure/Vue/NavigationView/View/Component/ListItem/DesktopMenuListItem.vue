@@ -23,10 +23,10 @@
 </template>
 
 <script setup lang="ts">
-import {Design} from "../../../../../DesignSystem/design";
-import Icon from "../../../../../Icon/Icon.vue";
-import {IconName} from "../../../../../Icon/icons";
-import MessageCount from "../../MessageCount.vue";
+import {Design} from "../../../../DesignSystem/design";
+import Icon from "../../../../Icon/Icon.vue";
+import {IconName} from "../../../../Icon/icons";
+import MessageCount from "../MessageCount.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits(['click']);

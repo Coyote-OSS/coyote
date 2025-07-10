@@ -27,14 +27,14 @@
 
 <script setup lang="ts">
 import {computed, ref} from "vue";
-import Blip from "../../../../DesignSystem/Blip.vue";
-import Icon from "../../../../Icon/Icon.vue";
-import {IconName} from "../../../../Icon/icons";
-import {NavigationAction} from "../../../NavigationService";
-import {useNavigationStore} from "../../navigationStore";
-import {entryPointItems} from "../../Presenter/entryPointItems";
-import {useNavigationService} from "../../vue";
-import BrandLogo from "../BrandLogo.vue";
+import Blip from "../../../DesignSystem/Blip.vue";
+import Icon from "../../../Icon/Icon.vue";
+import {IconName} from "../../../Icon/icons";
+import {NavigationAction} from "../../NavigationService";
+import {useNavigationStore} from "../navigationStore";
+import {entryPointItems} from "../Presenter/entryPointItems";
+import {useNavigationService} from "../vue";
+import BrandLogo from "./BrandLogo.vue";
 import DesktopAuthControl from "./DesktopAuthControl.vue";
 import NavTopbarListItem from "./ListItem/NavTopbarListItem.vue";
 import MobileDrawer from "./MobileDrawer.vue";

@@ -30,12 +30,12 @@
 </template>
 
 <script setup lang="ts">
-import {Design} from "../../../../../DesignSystem/design";
-import Icon from "../../../../../Icon/Icon.vue";
-import {IconName} from "../../../../../Icon/icons";
-import {useNavigationStore} from "../../../navigationStore";
-import MessageCount from "../../MessageCount.vue";
-import UserAvatar from "../../UserAvatar.vue";
+import {Design} from "../../../../DesignSystem/design";
+import Icon from "../../../../Icon/Icon.vue";
+import {IconName} from "../../../../Icon/icons";
+import {useNavigationStore} from "../../navigationStore";
+import MessageCount from "../MessageCount.vue";
+import UserAvatar from "../UserAvatar.vue";
 
 const store = useNavigationStore();
 const props = defineProps<Props>();

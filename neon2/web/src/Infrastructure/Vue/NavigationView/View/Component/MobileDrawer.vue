@@ -35,13 +35,13 @@
 
 <script setup lang="ts">
 import {computed, ref} from "vue";
-import Icon from "../../../../Icon/Icon.vue";
-import {NavigationAction} from "../../../NavigationService";
-import {useNavigationStore} from "../../navigationStore";
-import {authControlItems} from "../../Presenter/authControlItems";
-import {entryPointItems} from "../../Presenter/entryPointItems";
-import {useNavigationService} from "../../vue";
-import ForumMenuMobile from "../ForumMenuMobile.vue";
+import Icon from "../../../Icon/Icon.vue";
+import {NavigationAction} from "../../NavigationService";
+import {useNavigationStore} from "../navigationStore";
+import {authControlItems} from "../Presenter/authControlItems";
+import {entryPointItems} from "../Presenter/entryPointItems";
+import {useNavigationService} from "../vue";
+import ForumMenuMobile from "./ForumMenuMobile.vue";
 import MobileMenuListItem from "./ListItem/MobileMenuListItem.vue";
 
 const service = useNavigationService();

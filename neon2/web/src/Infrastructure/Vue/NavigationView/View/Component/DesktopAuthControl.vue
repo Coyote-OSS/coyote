@@ -26,14 +26,14 @@
 
 <script setup lang="ts">
 import {computed, ref, watch} from "vue";
-import {NavigationUser} from "../../../../../../Domain/Navigation/NavigationUser";
-import Blip from "../../../../DesignSystem/Blip.vue";
-import {Design} from "../../../../DesignSystem/design";
-import {useClickOutside} from "../../../../Helper/clickOutside";
-import {useNavigationStore} from "../../navigationStore";
-import {authControlItems} from "../../Presenter/authControlItems";
-import {useNavigationService} from "../../vue";
-import UserAvatar from "../UserAvatar.vue";
+import {NavigationUser} from "../../../../../Domain/Navigation/NavigationUser";
+import Blip from "../../../DesignSystem/Blip.vue";
+import {Design} from "../../../DesignSystem/design";
+import {useClickOutside} from "../../../Helper/clickOutside";
+import {useNavigationStore} from "../navigationStore";
+import {authControlItems} from "../Presenter/authControlItems";
+import {useNavigationService} from "../vue";
+import UserAvatar from "./UserAvatar.vue";
 import DesktopMenuListItem from "./ListItem/DesktopMenuListItem.vue";
 
 const store = useNavigationStore();

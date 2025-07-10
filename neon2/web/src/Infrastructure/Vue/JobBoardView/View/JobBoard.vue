@@ -39,7 +39,7 @@ import {PaymentNotification} from "../../../../Application/JobBoard/Port/Payment
 import {PaymentUpdatedStatus} from "../../../../Domain/JobBoard/JobBoard";
 import {ValuePropositionEvent} from "../../../../Domain/ValueProp/Model";
 import {Design} from "../../DesignSystem/design";
-import Navigation from "../../NavigationView/View/Component/Navigation/NavigationTopbar.vue";
+import Navigation from "../../NavigationView/View/Component/NavigationTopbar.vue";
 import {useNavigationStore} from "../../NavigationView/View/navigationStore";
 import ValuePropositionModal from "../../ValuePropView/ValuePropositionModal.vue";
 import {useBoardStore} from "../boardStore";
