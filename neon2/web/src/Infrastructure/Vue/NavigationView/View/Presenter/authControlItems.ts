@@ -21,6 +21,10 @@ export function authControlItems(
     action: 'toggleTheme',
   };
   if (user) {
+    const administrator: AuthControlListItem[] =
+      user.canAccessAdministratorPanel
+        ? [{type: 'link', title: 'Panel administracyjny', icon: 'navigationAdmin', action: 'admin'}]
+        : [];
     return [
       {type: 'separatorMobile'},
       {type: 'username', title: user.username, icon: 'navigationProfile', action: 'profile'},
@@ -28,6 +32,7 @@ export function authControlItems(
       {type: 'link', title: 'Wiadomości', icon: 'navigationMessages', action: 'messages', messagesCount: user!.messagesCount},
       {type: 'link', title: 'Moje konto', icon: 'navigationAccount', action: 'account'},
       {type: 'link', title: 'Pomoc', icon: 'navigationHelp', action: 'help'},
+      ...administrator,
       theme,
       {type: 'separatorDesktop'},
       {type: 'spaceMobile'},

@@ -85,6 +85,7 @@ const navigationIcons = {
   navigationThemeLight: 'fa-light fa-sun-bright',
   navigationMessages: 'fa-light fa-envelope',
   navigationNotification: 'fa-light fa-bell',
+  navigationAdmin: 'fa-light fa-user-tie',
 };
 
 const mobileMenuIcons = {

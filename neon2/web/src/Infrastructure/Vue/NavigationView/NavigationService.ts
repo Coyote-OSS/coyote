@@ -6,7 +6,7 @@ export type NavigationAction =
   'jobBoard'|'pricing'|'forum'|'blog'|
   'register'|'login'|'logout'|'help'|
   'account'|'profile'|'messages'|
-  'toggleTheme';
+  'toggleTheme'|'admin';
 
 export class NavigationService {
   constructor(
@@ -28,6 +28,7 @@ export class NavigationService {
     if (action === 'profile') this.attemptProfile();
     if (action === 'messages') this.attemptMessages();
     if (action === 'toggleTheme') this.view.toggleTheme();
+    if (action === 'admin') this.attemptAdministratorPanel();
   }
 
   showJobBoard(): void {
@@ -73,6 +74,10 @@ export class NavigationService {
 
   attemptMessages(): void {
     window.location.href = '/User/Pm';
+  }
+
+  attemptAdministratorPanel(): void {
+    window.location.href = '/Adm';
   }
 
   attemptAccount(): void {

@@ -171,7 +171,8 @@ class ServiceProvider extends RouteServiceProvider {
             $user->pm_unread,
             $user->notifications_unread,
             $avatarUrl,
-            $avatarInitials);
+            $avatarInitials,
+            $user->can('adm-access'));
     }
 
     private function avatar(Coyote\User $user): array {

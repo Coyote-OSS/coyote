@@ -9,5 +9,6 @@ readonly class NavigationUser {
         public int     $notificationsCount,
         public ?string $avatarUrl,
         public ?string $avatarInitials,
+        public bool    $canAccessAdministratorPanel,
     ) {}
 }

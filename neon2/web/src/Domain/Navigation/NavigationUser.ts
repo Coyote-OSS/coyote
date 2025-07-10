@@ -5,4 +5,5 @@ export interface NavigationUser {
   notificationsCount: number;
   avatarUrl: string|null;
   avatarInitials: string;
+  canAccessAdministratorPanel: boolean;
 }
