@@ -50,7 +50,9 @@ const emit = defineEmits(['close']);
 
 function action(action: NavigationAction): void {
   service.action(action);
-  close();
+  if (action !== 'toggleTheme') {
+    close();
+  }
 }
 
 const _authControlItems = computed(() => authControlItems(
