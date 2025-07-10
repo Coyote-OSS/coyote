@@ -10,6 +10,15 @@ export class NavigationView {
     this.store.$state.navigationUser = navigationUser;
   }
 
+  setDarkTheme(darkTheme: boolean): void {
+    this.store.$state.darkTheme = darkTheme;
+    window.document.documentElement.classList.toggle('dark', darkTheme);
+  }
+
+  isDarkTheme(): boolean {
+    return this.store.$state.darkTheme;
+  }
+
   removeUser(): void {
     this.store.$state.isAuthenticated = false;
     this.store.$state.navigationUser = null;
@@ -24,10 +33,5 @@ export class NavigationView {
       return this.store.$state.navigationUser!.profileHref;
     }
     throw new Error('Failed to read user profile href.');
-  }
-
-  toggleTheme(): void {
-    this.store.$state.darkTheme = !this.store.$state.darkTheme;
-    window.document.documentElement.classList.toggle('dark', this.store.$state.darkTheme);
   }
 }

@@ -109,8 +109,9 @@ class ServiceProvider extends RouteServiceProvider {
             request()->route()->parameter('id'),
             $acceptanceTagNames,
             $this->navigationMenu());
+        $themeClass = $theme->isThemeDark() ? 'dark' : '';
         $view = <<<html
-            <html>
+            <html class="$themeClass">
             <head>{$jobBoardView->htmlMarkupHead()}</head>
             <body class="bg-body">{$jobBoardView->htmlMarkupBody()}</body>
             <html>

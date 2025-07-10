@@ -66,6 +66,11 @@ export class CoyoteApi implements JobBoardApi, NavigationApi {
     return request('POST', '/neon2/job-offers/event', event)
       .then(response => response.json());
   }
+
+  toggleTheme(darkTheme: boolean): void {
+    const colorScheme = darkTheme ? 'dark' : 'light';
+    request('POST', '/User/Settings/Ajax', {colorScheme, lastColorScheme: colorScheme});
+  }
 }
 
 function jobOfferFields(jobOffer: SubmitJobOffer): object {

@@ -1,6 +1,7 @@
 import {ScreenName} from "../JobBoardView/Model";
 import {Router} from "../Router";
 import {NavigationView} from "./NavigationView";
+import {ThemeController} from "./ThemeController";
 
 export type NavigationAction =
   'jobBoard'|'pricing'|'forum'|'blog'|
@@ -13,6 +14,7 @@ export class NavigationService {
     private router: Router<ScreenName>,
     private csrfToken: string,
     private view: NavigationView,
+    private themeController: ThemeController,
   ) {}
 
   action(action: NavigationAction): void {
@@ -20,14 +22,14 @@ export class NavigationService {
     if (action === 'pricing') this.showPricing();
     if (action === 'forum') this.showForum();
     if (action === 'blog') this.showBlog();
-    if (action === 'register') this.showRegister();
+    if (action === 'register') this.attemptRegister();
     if (action === 'login') this.attemptLogin();
     if (action === 'logout') this.attemptLogout();
     if (action === 'help') this.attemptHelp();
     if (action === 'account') this.attemptAccount();
     if (action === 'profile') this.attemptProfile();
     if (action === 'messages') this.attemptMessages();
-    if (action === 'toggleTheme') this.view.toggleTheme();
+    if (action === 'toggleTheme') this.themeController.toggleTheme();
     if (action === 'admin') this.attemptAdministratorPanel();
   }
 
@@ -62,10 +64,6 @@ export class NavigationService {
       body: JSON.stringify({'_token': this.csrfToken}),
     })
       .then(() => this.view.removeUser());
-  }
-
-  showRegister(): void {
-    window.location.href = '/Register';
   }
 
   attemptHelp(): void {

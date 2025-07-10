@@ -28,6 +28,7 @@ import JobOfferShowScreen from "../Vue/JobBoardView/View/JobOfferShowScreen.vue"
 import {jobBoardServiceInjectKey} from "../Vue/JobBoardView/View/vue";
 import {NavigationService} from "../Vue/NavigationView/NavigationService";
 import {NavigationView} from "../Vue/NavigationView/NavigationView";
+import {ThemeController} from "../Vue/NavigationView/ThemeController";
 import {navigationServiceInjectKey} from "../Vue/NavigationView/View/vue";
 
 declare global {
@@ -99,12 +100,14 @@ jbView.initPaymentInvoiceCountries(inbound.paymentInvoiceCountries());
 jbView.setFiltersOptions(presenter.filterOptions());
 nvView.setNavigationForumMenu(window.backendInput.navigationForumMenu);
 nvView.setUser(window.backendInput.navigationUser);
+nvView.setDarkTheme(window.backendInput.darkTheme);
 
 vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
 vueApp.provide(navigationServiceInjectKey, new NavigationService(
   vueRouter,
   inbound.csrfToken(),
   nvView,
+  new ThemeController(nvView, coyoteApi),
 ));
 vueRouter.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);
