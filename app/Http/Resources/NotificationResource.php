@@ -16,10 +16,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property bool $is_clicked
  * @property User $user
  */
-class NotificationResource extends JsonResource
-{
-    public function toArray(Request $request): array
-    {
+class NotificationResource extends JsonResource {
+    public function toArray(Request $request): array {
         $senders = $this->resource->senders->unique('name');
         $user = $senders->first();
 
@@ -27,6 +25,7 @@ class NotificationResource extends JsonResource
             $this->resource->only(['subject', 'excerpt', 'id', 'url']),
             [
                 'is_read'    => $this->is_clicked && $this->read_at,
+                'is_clicked' => $this->is_clicked,
                 'headline'   => $this->getHeadline($user, $senders),
                 'created_at' => $this->resource->created_at->toIso8601String(),
                 'photo'      => $this->getMediaUrl($user ? $user->photo : null),
@@ -39,16 +38,14 @@ class NotificationResource extends JsonResource
             ]);
     }
 
-    private function getMediaUrl(?string $filename): string
-    {
+    private function getMediaUrl(?string $filename): string {
         if ($filename) {
             return app(Factory::class)->make('photo', ['file_name' => $filename])->url();
         }
         return '';
     }
 
-    private function getHeadline(Sender $user, Eloquent\Collection $senders): string
-    {
+    private function getHeadline(Sender $user, Eloquent\Collection $senders): string {
         $count = $senders->count();
         if ($count === 0) {
             return ''; // no senders? return empty notification
@@ -59,8 +56,7 @@ class NotificationResource extends JsonResource
             $this->resource->headline);
     }
 
-    private function sender(int $count, Sender $user, Eloquent\Collection $senders): string
-    {
+    private function sender(int $count, Sender $user, Eloquent\Collection $senders): string {
         if ($count === 2) {
             return $user->name . ' (oraz ' . $senders->last()->name . ')';
         }
@@ -70,8 +66,7 @@ class NotificationResource extends JsonResource
         return $user->name;
     }
 
-    private function initials(string $username): string
-    {
+    private function initials(string $username): string {
         return (new Initials())->of($username);
     }
 }

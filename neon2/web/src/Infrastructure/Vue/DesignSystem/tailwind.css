@@ -103,7 +103,8 @@
   --text-3xl--line-height: calc(2 / 1.5);
   --text-4xl--line-height: calc(2.5 / 2.0);
 
-  --breakpoint-xs: 22rem; /* iPhoneSe */
+  --breakpoint-2xs: 22rem; /* iPhoneSe */
+  --breakpoint-xs: 25rem; /* samsung s20 */
 }
 
 @utility tile-highlight-long {

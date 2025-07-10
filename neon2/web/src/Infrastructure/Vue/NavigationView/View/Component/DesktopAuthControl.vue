@@ -8,7 +8,7 @@
       <Blip v-if="hasMessage" :value="props.user!.messagesCount" important/>
       <UserAvatar :user="props.user"/>
       <div class="relative cursor-default">
-        <div class="absolute right-0 top-1" v-if="controlOpen">
+        <div class="absolute right-0 top-2" v-if="controlOpen">
           <Design.Material space class="text-neutral2-500 border border-tile-border shadow-md py-2">
             <DesktopMenuListItem
               v-for="listItem in _authControlItems"

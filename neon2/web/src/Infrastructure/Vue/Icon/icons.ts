@@ -108,6 +108,7 @@ export const icons = {
   ...navigationIcons,
   ...mobileMenuIcons,
   ...footerIcons,
+  notificationSeeAll: 'fa-light fa-chevron-right',
 };
 
 export const htmlIconFormatBold = '<i class="fa-solid fa-bold"/>';

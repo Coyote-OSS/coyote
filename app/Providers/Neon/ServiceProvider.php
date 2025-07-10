@@ -1,14 +1,19 @@
 <?php
 namespace Coyote\Providers\Neon;
 
+use Carbon\Carbon;
 use Coyote;
 use Coyote\Domain\Initials;
 use Coyote\Domain\Settings\UserTheme;
+use Coyote\Http\Resources\NotificationResource;
+use Coyote\Repositories\Eloquent\NotificationRepository;
 use Coyote\View\NavigationMenuPresenter;
 use Coyote\View\NavigationMenuService;
+use Illuminate\Database\Eloquent;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\Response;
 use Jenssegers\Agent\Agent;
+use Neon2;
 use Neon2\AcceptanceTest;
 use Neon2\Coyote\Integration;
 use Neon2\Invoice\CountryGate;
@@ -61,6 +66,7 @@ class ServiceProvider extends RouteServiceProvider {
                 ->name('neon.jobOffer.list')
                 ->get('/Job/{fallback?}', $this->indexView(...))
                 ->where('fallback', '.*');
+            $this->get('/neon2/user/notifications', $this->getUserNotifications(...));
         });
     }
 
@@ -171,6 +177,7 @@ class ServiceProvider extends RouteServiceProvider {
             \route('profile', [$user->id]),
             $user->pm_unread,
             $user->notifications_unread,
+            $this->notifications(0, 10),
             $avatarUrl,
             $avatarInitials,
             $user->can('adm-access'));
@@ -188,5 +195,52 @@ class ServiceProvider extends RouteServiceProvider {
         /** @var Coyote\Services\Media\Factory $factory */
         $factory = app(Coyote\Services\Media\Factory::class);
         return $factory->userAvatar($user->photo)->url();
+    }
+
+    private function getUserNotifications(): array {
+        return $this->notifications(request()->query->get('offset'), 20);
+    }
+
+    /**
+     * @return Neon2\Notification[]
+     */
+    private function notifications(int $offset, $limit): array {
+        $result = [];
+        foreach ($this->notificationResources($offset, $limit) as $notification) {
+            $result[] = new Neon2\Notification(
+                $notification['headline'],
+                $this->formatDate($notification['created_at']),
+                !$notification['is_clicked'],
+                $notification['subject'],
+                $notification['excerpt'] ?? '',
+                $notification['url'],
+                $notification['photo'] ?: null,
+                $notification['initials'],
+                \route('profile', [$notification['user_id']]),
+            );
+        }
+        return $result;
+    }
+
+    /**
+     * @return array[]
+     */
+    private function notificationResources(int $offset, int $limit): array {
+        return NotificationResource::collection($this->userNotifications($offset, $limit))->toArray(request());
+    }
+
+    /**
+     * @return Coyote\Notification[]|Eloquent\Collection
+     */
+    private function userNotifications(int $offset, int $limit): Eloquent\Collection {
+        /** @var NotificationRepository $notifications */
+        $notifications = app(NotificationRepository::class);
+        /** @var Coyote\User $user */
+        $user = auth()->user();
+        return $notifications->takeForUser($user->id, $limit, $offset);
+    }
+
+    private function formatDate(string $dateIso8601): string {
+        return Carbon::parse($dateIso8601)->format('d F Y H:i');
     }
 }

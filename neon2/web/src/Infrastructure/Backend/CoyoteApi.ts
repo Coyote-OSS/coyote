@@ -5,9 +5,10 @@ import {InvoiceInformation, PricingPlan} from "../../Domain/JobBoard/JobBoard";
 import {JobOffer} from "../../Domain/JobBoard/JobOffer";
 import {PaymentIntent} from "../../Domain/JobBoard/PaymentIntent";
 import {PaymentStatus} from "../../Domain/JobBoard/PaymentStatus";
+import {Notification} from "../../Domain/Navigation/Notification";
 import {Event} from "../../Domain/ValueProp/Model";
 import {BackendJobOffer} from "./BackendJobOffer";
-import {request} from "./http";
+import {request, requestGet} from "./http";
 import {toJobOffer} from "./toJobOffer";
 
 export class CoyoteApi implements JobBoardApi, NavigationApi {
@@ -70,6 +71,12 @@ export class CoyoteApi implements JobBoardApi, NavigationApi {
   toggleTheme(darkTheme: boolean): void {
     const colorScheme = darkTheme ? 'dark' : 'light';
     request('POST', '/User/Settings/Ajax', {colorScheme, lastColorScheme: colorScheme});
+  }
+
+  loadNotifications(offset: number): Promise<Notification[]> {
+    return requestGet('/neon2/user/notifications', {offset: offset.toString()})
+      .then(response => response.json())
+      .then(response => response);
   }
 }
 

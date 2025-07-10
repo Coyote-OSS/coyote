@@ -1,3 +1,4 @@
+import {CoyoteApi} from "../../Backend/CoyoteApi";
 import {ScreenName} from "../JobBoardView/Model";
 import {Router} from "../Router";
 import {NavigationView} from "./NavigationView";
@@ -10,11 +11,14 @@ export type NavigationAction =
   'toggleTheme'|'admin';
 
 export class NavigationService {
+  private notificationsExhausted: boolean = false;
+
   constructor(
     private router: Router<ScreenName>,
     private csrfToken: string,
     private view: NavigationView,
     private themeController: ThemeController,
+    private coyoteApi: CoyoteApi,
   ) {}
 
   action(action: NavigationAction): void {
@@ -86,8 +90,18 @@ export class NavigationService {
     window.location.href = this.view.userProfileHref();
   }
 
-  attemptNotifications(): void {
-    window.location.href = '/User/Notifications';
+  loadMoreNotifications(): void {
+    if (this.notificationsExhausted) return;
+    const notifications: number = this.view.navigationUserNotificationsCount();
+    this.coyoteApi
+      .loadNotifications(notifications)
+      .then(notifications => {
+        if (notifications.length > 0) {
+          this.view.addNotifications(notifications);
+        } else {
+          this.notificationsExhausted = true;
+        }
+      });
   }
 }
 
