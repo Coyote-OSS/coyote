@@ -29,6 +29,7 @@
           :title="paymentStatusTitle"/>
         <RouterView/>
       </div>
+      <Footer/>
     </Design.Layout>
   </div>
 </template>
@@ -39,6 +40,7 @@ import {PaymentNotification} from "../../../../Application/JobBoard/Port/Payment
 import {PaymentUpdatedStatus} from "../../../../Domain/JobBoard/JobBoard";
 import {ValuePropositionEvent} from "../../../../Domain/ValueProp/Model";
 import {Design} from "../../DesignSystem/design";
+import Footer from "../../NavigationView/View/Component/Footer.vue";
 import Navigation from "../../NavigationView/View/Component/NavigationTopbar.vue";
 import {useNavigationStore} from "../../NavigationView/View/navigationStore";
 import ValuePropositionModal from "../../ValuePropView/ValuePropositionModal.vue";

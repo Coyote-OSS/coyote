@@ -1,6 +1,7 @@
 <?php
 namespace Neon2;
 
+use Coyote\View\FooterMenuPresenter;
 use Neon2;
 
 readonly class JobBoardView {
@@ -88,7 +89,14 @@ readonly class JobBoardView {
             'themeMode'                => $this->themeMode,
             'acceptanceTagNames'       => $this->acceptanceTagNames,
             'navigationForumMenu'      => $this->navigationForumMenu,
+            'footerMenu'               => $this->footerMenu(),
         ]);
+    }
+
+    private function footerMenu(): array {
+        /** @var FooterMenuPresenter $presenter */
+        $presenter = app(FooterMenuPresenter::class);
+        return $presenter->footerMenu();
     }
 
     private function encodedJson(array $arr): string {

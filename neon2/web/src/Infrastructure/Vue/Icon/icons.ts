@@ -96,10 +96,17 @@ const mobileMenuIcons = {
   mobileSectionNavigate: 'fa-light fa-chevron-right',
 };
 
+const footerIcons = {
+  contactUsFacebook: 'fa-brands fa-facebook-square',
+  contactUsLinkedIn: 'fa-brands fa-linkedin',
+  contactUsGithub: 'fa-brands fa-github-square',
+};
+
 export const icons = {
   ...jobBoardIcons,
   ...navigationIcons,
   ...mobileMenuIcons,
+  ...footerIcons,
 };
 
 export const htmlIconFormatBold = '<i class="fa-solid fa-bold"/>';

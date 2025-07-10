@@ -1,4 +1,4 @@
-<footer class="{{ __dark_theme ? 'dark' : 'light' }} ">
+<footer class="{{ __dark_theme ? 'dark' : 'light' }}">
   <template shadowrootmode="open">
     <link rel="stylesheet" href="{{ cdn('css/stylesTailwind.css') }}">
     <div class="bg-tile pt-8 mt-6">
@@ -6,8 +6,7 @@
         <div class="lg:flex lg:justify-between">
           <div class="lg:flex lg:flex-col">
             <div class="mb-8 brand-logo"></div>
-            <div class="max-lg:mb-8 max-lg:grid xs:grid-cols-2 md:grid-cols-4 gap-y-4
-                      lg:flex lg:flex-col lg:justify-between lg:flex-grow-1">
+            <div class="max-lg:mb-8 max-lg:grid xs:grid-cols-2 md:grid-cols-4 gap-y-4 lg:flex lg:flex-col lg:justify-between lg:flex-grow-1">
               <div>
                 <p class="text-neutral2-700">
                   Napisz do nas
@@ -30,8 +29,7 @@
               </div>
             </div>
           </div>
-          <div class="grid xs:grid-cols-2 md:grid-cols-4 gap-y-8 
-                    lg:gap-x-6 xl:gap-x-16 2xl:gap-x-28">
+          <div class="grid xs:grid-cols-2 md:grid-cols-4 gap-y-8 lg:gap-x-6 xl:gap-x-16 2xl:gap-x-28">
             {% for section in footerMenu.sections %}
               <div class="space-y-3">
                 <p class="text-neutral2-600 text-lg font-semibold">
@@ -47,7 +45,7 @@
           </div>
         </div>
         <div class="mt-8 pb-4 text-xs text-neutral2-700">
-          Copyright &copy; 2000 - {{ year }} 4programmers, {{ timer() }}
+          Copyright &copy; 2000 - {{ footerMenu.copyrightYear }} 4programmers, {{ footerMenu.executionTime }}
         </div>
       </div>
     </div>

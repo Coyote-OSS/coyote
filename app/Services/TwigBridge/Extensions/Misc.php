@@ -39,7 +39,7 @@ class Misc extends AbstractExtension
 
     public function totalRuntime(): string
     {
-        $timer = $this->clock->executionTime();
+        $timer = $this->clock->executionTimeAsSeconds();
         if ($timer < 1) {
             return (int)substr((string)$timer, 2, 3) . ' ms';
         }

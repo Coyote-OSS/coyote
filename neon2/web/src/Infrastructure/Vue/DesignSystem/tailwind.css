@@ -1,39 +1,37 @@
 @import "tailwindcss";
 @import "../Icon/internal/fontAwesomeIcons.css";
 
-@custom-variant dark (&:where(.dark, .dark *, :host-context(.dark) *));
+@custom-variant dark (&:where(.dark *, :host(.dark) *));
 
-:root, :host {
-  @variant dark {
-    --color-body: #121314;
-    --color-on-primary: #0a0d10;
-    --color-tile-border: #2b2e30;
-    --color-tag: #0a0d10;
-    --color-banner-gradient: #0d5c28;
+:root.dark, :host(.dark) {
+  --color-body: #121314;
+  --color-on-primary: #0a0d10;
+  --color-tile-border: #2b2e30;
+  --color-tag: #0a0d10;
+  --color-banner-gradient: #0d5c28;
 
-    --color-neutral2-025: #0a0a0b;
-    --color-neutral2-050: #121314;
-    --color-neutral2-100: #181a1b;
-    --color-neutral2-200: #2b2e30;
-    --color-neutral2-300: #44474b;
-    --color-neutral2-400: #5c6166;
-    --color-neutral2-500: #767d84;
-    --color-neutral2-600: #91969c;
-    --color-neutral2-700: #acb0b4;
-    --color-neutral2-800: #c7c9cc;
-    --color-neutral2-900: #e4e6e7;
-    --color-neutral2-950: #ffffff;
+  --color-neutral2-025: #0a0a0b;
+  --color-neutral2-050: #121314;
+  --color-neutral2-100: #181a1b;
+  --color-neutral2-200: #2b2e30;
+  --color-neutral2-300: #44474b;
+  --color-neutral2-400: #5c6166;
+  --color-neutral2-500: #767d84;
+  --color-neutral2-600: #91969c;
+  --color-neutral2-700: #acb0b4;
+  --color-neutral2-800: #c7c9cc;
+  --color-neutral2-900: #e4e6e7;
+  --color-neutral2-950: #ffffff;
 
-    --color-green2-100: #001407;
-    --color-green2-200: #012f0d;
-    --color-green2-300: #014718;
-    --color-green2-400: #016a24;
-    --color-green2-500: #00a538;
-    --color-green2-600: #54c173;
-    --color-green2-700: #a8daaa;
-    --color-green2-800: #bdd5c3;
-    --color-green2-900: #e7f7e6;
-  }
+  --color-green2-100: #001407;
+  --color-green2-200: #012f0d;
+  --color-green2-300: #014718;
+  --color-green2-400: #016a24;
+  --color-green2-500: #00a538;
+  --color-green2-600: #54c173;
+  --color-green2-700: #a8daaa;
+  --color-green2-800: #bdd5c3;
+  --color-green2-900: #e7f7e6;
 }
 
 @theme {
@@ -178,4 +176,13 @@
 
 .spin {
   animation: spin 1s infinite linear;
+}
+
+@utility brand-logo {
+  @apply h-7 w-40 bg-contain bg-no-repeat;
+  background-image: url('../images/logoLight.svg');
+
+  @variant dark {
+    background-image: url('../images/logoDark.svg');
+  }
 }

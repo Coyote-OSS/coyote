@@ -2,21 +2,28 @@
   font-family: 'Neon';
   font-style: normal;
   font-weight: 300;
-  src: url('font/fa-light-300.woff2?v4') format('woff2');
+  src: url('font/fa-light-300.woff2') format('woff2');
 }
 
 @font-face {
   font-family: 'Neon';
   font-style: normal;
   font-weight: 400;
-  src: url('font/fa-regular-400.woff2?v4') format('woff2');
+  src: url('font/fa-regular-400.woff2') format('woff2');
 }
 
 @font-face {
   font-family: 'Neon';
   font-style: normal;
   font-weight: 900;
-  src: url('font/fa-solid-900.woff2?v5') format('woff2');
+  src: url('font/fa-solid-900.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Neon Brands';
+  font-style: normal;
+  font-weight: 400;
+  src: url('font/fa-brands-400.woff2') format('woff2');
 }
 
 .fa-fw {
@@ -38,6 +45,10 @@
 
 .fa-light, .fa-regular, .fa-solid {
   font-family: 'Neon';
+}
+
+.fa-brands {
+  font-family: 'Neon Brands';
 }
 
 .fa-solid,

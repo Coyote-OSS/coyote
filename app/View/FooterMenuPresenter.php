@@ -1,13 +1,20 @@
 <?php
 namespace Coyote\View;
 
+use Coyote\Domain\Clock;
+
 readonly class FooterMenuPresenter {
+
+    public function __construct(private Clock $clock) {}
+
     public function footerMenu(): array {
         return [
             'contactUsMail'         => 'info@4programmers.net',
             'contactUsFacebookHref' => 'https://www.facebook.com/4programmers.net',
             'contactUsLinkedInHref' => 'https://www.linkedin.com/company/4programmers',
             'contactUsGithubHref'   => 'https://github.com/Coyote-OSS/coyote',
+            'copyrightYear'         => $this->clock->year(),
+            'executionTime'         => $this->clock->executionTime(),
             'sections'              => [
                 [
                     'title' => '4programmers',
