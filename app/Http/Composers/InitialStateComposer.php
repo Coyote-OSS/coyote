@@ -43,7 +43,7 @@ class InitialStateComposer
         );
     }
 
-    private function websocketUrl(): ?string
+    public function websocketUrl(): ?string
     {
         if (config('services.ws.host') && $this->request->user()) {
             $schema = $this->request->isSecure() ? 'wss' : 'ws';

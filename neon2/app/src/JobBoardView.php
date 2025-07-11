@@ -22,6 +22,8 @@ readonly class JobBoardView {
         private ?int                      $includeExpired,
         private array                     $acceptanceTagNames,
         private array                     $navigationForumMenu,
+        private ?string                   $websocketUrl,
+        private ?string                   $websocketSubscribeCommand,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
@@ -76,20 +78,22 @@ readonly class JobBoardView {
 
     private function backendInput(): string {
         return $this->encodedJson([
-            'jobOffers'                => $this->integration->listJobOffers($this->includeExpired),
-            'testMode'                 => $this->isTestMode,
-            'planBundle'               => $this->integration->planBundle($this->userId),
-            'userId'                   => $this->userId,
-            'navigationUser'           => $this->navigationUser,
-            'jobOfferApplicationEmail' => $this->userEmail,
-            'csrfToken'                => $this->csrfToken,
-            'stripePublishableKey'     => $this->stripePublishableKey,
-            'paymentInvoiceCountries'  => $this->countries->invoiceCountries(),
-            'darkTheme'                => $this->darkTheme,
-            'themeMode'                => $this->themeMode,
-            'acceptanceTagNames'       => $this->acceptanceTagNames,
-            'navigationForumMenu'      => $this->navigationForumMenu,
-            'footerMenu'               => $this->footerMenu(),
+            'jobOffers'                 => $this->integration->listJobOffers($this->includeExpired),
+            'testMode'                  => $this->isTestMode,
+            'planBundle'                => $this->integration->planBundle($this->userId),
+            'userId'                    => $this->userId,
+            'navigationUser'            => $this->navigationUser,
+            'jobOfferApplicationEmail'  => $this->userEmail,
+            'csrfToken'                 => $this->csrfToken,
+            'stripePublishableKey'      => $this->stripePublishableKey,
+            'paymentInvoiceCountries'   => $this->countries->invoiceCountries(),
+            'darkTheme'                 => $this->darkTheme,
+            'themeMode'                 => $this->themeMode,
+            'acceptanceTagNames'        => $this->acceptanceTagNames,
+            'navigationForumMenu'       => $this->navigationForumMenu,
+            'footerMenu'                => $this->footerMenu(),
+            'websocketUrl'              => $this->websocketUrl,
+            'websocketSubscribeCommand' => $this->websocketSubscribeCommand,
         ]);
     }
 

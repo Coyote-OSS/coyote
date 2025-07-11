@@ -63,4 +63,12 @@ export class BackendInputApplicationInbound implements ApplicationInbound {
   acceptanceTagNames(): string[] {
     return this.backendInput.acceptanceTagNames;
   }
+
+  websocketUrl(): string|null {
+    return this.backendInput.websocketUrl;
+  }
+
+  websocketSubscribeCommand(): string|null {
+    return this.backendInput.websocketSubscribeCommand;
+  }
 }

@@ -114,7 +114,9 @@ class ServiceProvider extends RouteServiceProvider {
             $theme->themeMode(),
             request()->route()->parameter('id'),
             $acceptanceTagNames,
-            $this->navigationMenu());
+            $this->navigationMenu(),
+            $this->websocketUrl(),
+            $this->websocketSubscribeCommand());
         $themeClass = $theme->isThemeDark() ? 'dark' : '';
         $view = <<<html
             <html class="$themeClass">
@@ -242,5 +244,18 @@ class ServiceProvider extends RouteServiceProvider {
 
     private function formatDate(string $dateIso8601): string {
         return Carbon::parse($dateIso8601)->format('d F Y H:i');
+    }
+
+    private function websocketUrl(): ?string {
+        /** @var Coyote\Http\Composers\InitialStateComposer $composer */
+        $composer = app(Coyote\Http\Composers\InitialStateComposer::class);
+        return $composer->websocketUrl();
+    }
+
+    private function websocketSubscribeCommand(): ?string {
+        if (auth()->check()) {
+            return 'subscribe:user:' . auth()->id();
+        }
+        return null;
     }
 }

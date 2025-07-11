@@ -20,4 +20,6 @@ export interface BackendInput {
   acceptanceTagNames: string[];
   navigationForumMenu: NavigationForumMenu;
   footerMenu: FooterMenu;
+  websocketUrl: string|null;
+  websocketSubscribeCommand: string|null;
 }

@@ -42,6 +42,7 @@
 </template>
 
 <script setup lang="ts">
+import {onMounted} from "vue";
 import {Notification} from "../../../../../Domain/Navigation/Notification";
 import Icon from "../../../Icon/Icon.vue";
 
@@ -51,6 +52,12 @@ const emit = defineEmits(['markAll', 'loadMore']);
 interface Props {
   notifications: Notification[];
 }
+
+onMounted(() => {
+  if (props.notifications.length === 0) {
+    loadMore();
+  }
+});
 
 function markAllAsViewed(): void {
   emit('markAll');

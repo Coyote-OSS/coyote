@@ -11,6 +11,7 @@ import {BackendInput} from "../Backend/BackendInput";
 import {BackendInputApplicationInbound} from "../Backend/BackendInputApplicationInbound";
 import {CoyoteApi} from "../Backend/CoyoteApi";
 import {CoyoteImageHosting} from "../Backend/CoyoteImageHosting";
+import {CoyoteSocketClient} from "../Backend/CoyoteSocketClient";
 import {RouteComponentMap, RouteUrlMap, VueRouter} from "../Vue/External/VueRouter";
 import {JobBoardNavigator} from "../Vue/JobBoardView/JobBoardNavigator";
 import {JobBoardService} from "../Vue/JobBoardView/JobBoardService";
@@ -30,6 +31,7 @@ import {NavigationService} from "../Vue/NavigationView/NavigationService";
 import {NavigationView} from "../Vue/NavigationView/NavigationView";
 import {ThemeController} from "../Vue/NavigationView/ThemeController";
 import {navigationServiceInjectKey} from "../Vue/NavigationView/View/vue";
+import {NavigationSocketListener} from "../Vue/NavigationSocketListener";
 
 declare global {
   interface Window {
@@ -112,3 +114,9 @@ vueApp.provide(navigationServiceInjectKey, new NavigationService(
 ));
 vueRouter.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);
+
+const websocketUrl = inbound.websocketUrl();
+if (websocketUrl) {
+  const client = new CoyoteSocketClient(websocketUrl, inbound.websocketSubscribeCommand()!, new NavigationSocketListener());
+  client.start();
+}
