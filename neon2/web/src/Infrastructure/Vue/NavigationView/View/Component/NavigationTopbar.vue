@@ -8,11 +8,13 @@
           v-for="item in entryPointItems"
           :type="item.type"
           :title="item.title"
+          :action="item.action"
           :forum-menu="item.forumMenu"
-          @click="action(item.action)"/>
+          :children="item.children"
+          @action="action"/>
         <NavTopbarListItem type="space"/>
         <div class="ml-auto"/>
-        <NavTopbarListItem type="buttonSecondary" class="max-lg:hidden" title="Dodaj ofertę pracy" @click="action('pricing')"/>
+        <NavTopbarListItem type="buttonSecondary" class="max-lg:hidden" title="Dodaj ofertę pracy" action="pricing" @action="action"/>
         <NotificationControl v-if="store.isAuthenticated" :user="store.navigationUser" @mark-all="markAll" @load-more="loadMore"/>
         <DesktopAuthControl class="max-lg:hidden" :user="store.navigationUser"/>
         <Icon monospace :name="mobileMenuIcon" @click="toggleMobileMenu" class="text-xl mr-4 lg:hidden"/>

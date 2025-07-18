@@ -2,7 +2,7 @@ export type NavigationAction =
   'jobBoard'|'pricing'|'forum'|'blog'|
   'register'|'login'|'logout'|'help'|
   'account'|'profile'|'messages'|
-  'toggleTheme'|'admin';
+  'toggleTheme'|'admin'|'employerReviews';
 
 export interface NavigationService {
   action(action: NavigationAction): void;
@@ -21,4 +21,5 @@ export interface NavigationService {
   loadMoreNotifications(): void;
   markAllNotificationsAsViewed(): void;
   mainContentSuspended(suspended: boolean): void;
+  showEmployerReviews(): void;
 }

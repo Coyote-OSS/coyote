@@ -27,6 +27,7 @@ export class CoyoteNavigationService implements NavigationService {
     if (action === 'messages') this.attemptMessages();
     if (action === 'toggleTheme') this.toggleTheme();
     if (action === 'admin') this.attemptAdministratorPanel();
+    if (action === 'employerReviews') this.showEmployerReviews();
   }
 
   showJobBoard(): void {
@@ -67,6 +68,10 @@ export class CoyoteNavigationService implements NavigationService {
 
   attemptAdministratorPanel(): void {
     window.location.href = '/Adm';
+  }
+
+  showEmployerReviews(): void {
+    window.location.href = 'https://4programmers.net/Forum/Opinie_o_pracodawcach';
   }
 
   attemptAccount(): void {

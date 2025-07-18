@@ -30,6 +30,7 @@ export class VueNavigationService implements NavigationService {
     if (action === 'messages') this.attemptMessages();
     if (action === 'toggleTheme') this.themeController.toggleTheme();
     if (action === 'admin') this.attemptAdministratorPanel();
+    if (action === 'employerReviews') this.showEmployerReviews();
   }
 
   showJobBoard(): void {
@@ -106,6 +107,10 @@ export class VueNavigationService implements NavigationService {
 
   mainContentSuspended(suspended: boolean): void {
     this.view.mainContentSuspended(suspended);
+  }
+
+  showEmployerReviews(): void {
+    window.location.href = 'https://4programmers.net/Forum/Opinie_o_pracodawcach';
   }
 }
 
