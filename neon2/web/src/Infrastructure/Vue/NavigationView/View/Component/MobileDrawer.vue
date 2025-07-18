@@ -15,12 +15,19 @@
         v-if="nestedDrawerOpen"
         :forum-menu="store.$state.navigationForumMenu!"/>
       <template v-else>
-        <MobileMenuListItem
-          v-for="item in entryPointItems"
-          :type="item.type"
-          :title="item.title"
-          :icon="item.forumMenu ? 'mobileSectionNavigate' : undefined"
-          @click="item.forumMenu ? nestedOpen() : action(item.action)"/>
+        <template v-for="item in entryPointItems">
+          <MobileMenuListItem
+            :type="item.type"
+            :title="item.title"
+            :icon="item.forumMenu ? 'mobileSectionNavigate' : undefined"
+            @click="item.forumMenu ? nestedOpen() : action(item.action)"/>
+          <MobileMenuListItem
+            v-if="item.children?.length"
+            v-for="child in item.children"
+            type="link"
+            :title="child.title"
+            @click="action(child.action)"/>
+        </template>
         <MobileMenuListItem
           v-for="item in _authControlItems"
           :type="item.type"
