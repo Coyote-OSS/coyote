@@ -15,7 +15,7 @@
         <NavTopbarListItem type="buttonSecondary" class="max-lg:hidden" title="Dodaj ofertę pracy" @click="action('pricing')"/>
         <NotificationControl v-if="store.isAuthenticated" :user="store.navigationUser" @mark-all="markAll" @load-more="loadMore"/>
         <DesktopAuthControl class="max-lg:hidden" :user="store.navigationUser"/>
-        <Icon :name="mobileMenuIcon" @click="toggleMobileMenu" class="text-xl mr-4 lg:hidden"/>
+        <Icon monospace :name="mobileMenuIcon" @click="toggleMobileMenu" class="text-xl mr-4 lg:hidden"/>
       </div>
     </div>
   </div>

@@ -4,10 +4,10 @@
     :class="['absolute top-0', nestedDrawerOpen ? 'z-[3]' : 'z-[1]']">
     <div class="h-17.5 p-3 pl-4 flex items-center shrink-0" v-if="nestedDrawerOpen">
       <span @click="nestedClose" class="text-green2-500 font-medium text-lg">
-        <Icon name="mobileMenuBack" class="mr-2"/>
+        <Icon monospace name="mobileMenuBack" class="mr-2"/>
         Powrót
       </span>
-      <Icon name="mobileMenuClose" @click="close" class="text-xl  ml-auto mr-4"/>
+      <Icon monospace name="mobileMenuClose" @click="close" class="text-xl ml-auto mr-4"/>
     </div>
     <div class="h-17.5 flex-shrink-0" v-else/>
     <div class="pt-3 px-4 pb-7 flex flex-col grow border-t border-tile-border overflow-y-scroll">
