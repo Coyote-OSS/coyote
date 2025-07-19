@@ -16,7 +16,6 @@ readonly class FontAwesomeFree
 
         return [
             // global
-            'breadcrumbRoot'                            => 'fas fa-house',
             'scrollTop'                                 => 'fas fa-arrow-up',
 
             // alert

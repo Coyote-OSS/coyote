@@ -16,7 +16,6 @@ readonly class FontAwesomePro {
 
         return [
             // global
-            'breadcrumbRoot'                            => 'fa-light fa-house',
             'scrollTop'                                 => 'fa-light fa-arrow-up',
 
             // alert
