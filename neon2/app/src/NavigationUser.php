@@ -14,5 +14,6 @@ readonly class NavigationUser {
         public ?string $avatarUrl,
         public ?string $avatarInitials,
         public bool    $canAccessAdministratorPanel,
+        public string  $websocketSubscribeCommand,
     ) {}
 }

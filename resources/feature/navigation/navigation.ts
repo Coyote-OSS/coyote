@@ -1,6 +1,8 @@
 import {createApp} from "../../../neon2/web/node_modules/vue";
 import {NavigationUser} from "../../../neon2/web/src/Domain/Navigation/NavigationUser";
 import {CoyoteApi} from "../../../neon2/web/src/Infrastructure/Backend/CoyoteApi";
+import {CoyoteSocketClient} from "../../../neon2/web/src/Infrastructure/Backend/CoyoteSocketClient";
+import {NavigationSocketListener} from "../../../neon2/web/src/Infrastructure/Vue/NavigationSocketListener";
 import {NavigationForumMenu} from "../../../neon2/web/src/Infrastructure/Vue/NavigationView/NavigationForumMenu";
 import {NavigationView} from "../../../neon2/web/src/Infrastructure/Vue/NavigationView/NavigationView";
 import {ThemeController} from "../../../neon2/web/src/Infrastructure/Vue/NavigationView/ThemeController";
@@ -22,15 +24,12 @@ app.use(pinia);
 
 const store = useNavigationStore();
 const naviView = new NavigationView(store);
-const csrfToken = document
-  .querySelector('meta[name="csrf-token"]')!
-  .getAttribute('content')!;
+const csrfToken = htmlMetaAttribute('csrf-token');
 const coyoteApi = new CoyoteApi(csrfToken);
 store.navigationForumMenu = window.navigationMenu;
 store.navigationUser = window.navigationUser;
 store.isAuthenticated = window.navigationUser !== null;
 store.darkTheme = window.document.body.classList.contains('theme-dark');
-
 app.provide(navigationServiceInjectKey, new CoyoteNavigationService(
   csrfToken,
   naviView,
@@ -38,6 +37,13 @@ app.provide(navigationServiceInjectKey, new CoyoteNavigationService(
   coyoteApi,
 ));
 
+if (window.navigationUser) {
+  const client = new CoyoteSocketClient(
+    htmlMetaAttribute('websocket-url'),
+    window.navigationUser.websocketSubscribeCommand,
+    new NavigationSocketListener());
+  client.start();
+}
 window.addEventListener('load', () => {
   const header = document.querySelector('header');
   if (header) {
@@ -51,6 +57,12 @@ window.addEventListener('load', () => {
     }
   }
 });
+
+function htmlMetaAttribute(metaAttribute: string): string {
+  return document
+    .querySelector('meta[name="' + metaAttribute + '"]')!
+    .getAttribute('content')!;
+}
 
 function attachShadow(host: HTMLElement, template: HTMLTemplateElement): void {
   const shadowRoot = host.attachShadow({mode: 'open'});

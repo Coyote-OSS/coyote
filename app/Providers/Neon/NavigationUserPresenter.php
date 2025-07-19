@@ -24,7 +24,8 @@ readonly class NavigationUserPresenter {
             $this->notifications->notifications(0, 10),
             $avatarUrl,
             $avatarInitials,
-            $user->can('adm-access'));
+            $user->can('adm-access'),
+            'subscribe:user:' . auth()->id());
     }
 
     private function avatar(Coyote\User $user): array {

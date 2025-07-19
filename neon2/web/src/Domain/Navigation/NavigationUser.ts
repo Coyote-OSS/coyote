@@ -9,4 +9,5 @@ export interface NavigationUser {
   avatarUrl: string|null;
   avatarInitials: string;
   canAccessAdministratorPanel: boolean;
+  websocketSubscribeCommand: string;
 }
