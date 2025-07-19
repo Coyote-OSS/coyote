@@ -1,11 +1,8 @@
 <template>
   <div v-if="store.isAuthenticated">
-    <div class="relative hover:text-green2-500 px-2 md:cursor-pointer" @click="toggleNotifications">
-      <Icon name="navigationNotification" class="size-10 text-xl text-center leading-10"/>
-      <Blip
-        v-if="props.user.notificationsCount > 0"
-        :value="props.user.notificationsCount"
-        important/>
+    <div class="flex-shrink-0 flex max-lg:mr-2">
+      <NavigationControlItem icon="navigationNotification" :number="props.user.notificationsCount" @action="toggleNotifications"/>
+      <NavigationControlItem icon="navigationMessages" :number="props.user.messagesCount" @action="showMessages" class="lg:hidden"/>
     </div>
     <div class="md:relative text-base" v-if="notificationsOpen">
       <div class="absolute max-md:right-0 max-md:left-0 -right-6 top-17.5 md:top-2">
@@ -22,10 +19,10 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import {NavigationUser} from "../../../../../Domain/Navigation/NavigationUser";
-import Blip from "../../../DesignSystem/Blip.vue";
 import {useClickOutside} from "../../../Helper/clickOutside";
-import Icon from "../../../Icon/Icon.vue";
 import {useNavigationStore} from "../navigationStore";
+import {useNavigationService} from "../vue";
+import NavigationControlItem from "./NavigationControlItem.vue";
 import NotificationBox from "./NotificationBox.vue";
 
 const props = defineProps<Props>();
@@ -36,10 +33,15 @@ interface Props {
 }
 
 const store = useNavigationStore();
+const service = useNavigationService();
 const notificationsOpen = ref<boolean>(false);
 
 function toggleNotifications(): void {
   notificationsOpen.value = !notificationsOpen.value;
+}
+
+function showMessages(): void {
+  service.action('messages');
 }
 
 function markAll(): void {

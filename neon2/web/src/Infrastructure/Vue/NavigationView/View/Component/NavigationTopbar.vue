@@ -2,7 +2,7 @@
   <div class="relative">
     <MobileDrawer v-if="mobileMenuOpen" @close="closeMobileMenu" class="lg:hidden"/>
     <div class="text-neutral2-600 bg-tile text-lg relative z-[2] lg:shadow">
-      <div class="h-17.5 p-3 pl-4 gap-x-4 flex items-center mx-auto max-w-400">
+      <div class="h-17.5 p-3 pl-4 lg:gap-x-4 flex items-center mx-auto max-w-400">
         <BrandLogo/>
         <NavTopbarListItem
           v-for="item in entryPointItems"

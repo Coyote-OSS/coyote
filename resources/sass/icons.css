@@ -41,3 +41,8 @@
   font-family: 'Font Awesome 6 Brands';
   font-style: normal;
 }
+
+.fa-fw {
+  text-align: center;
+  width: 1.25em;
+}
