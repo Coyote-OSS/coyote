@@ -43,22 +43,12 @@ function adjustHashOffset() {
   window.scrollTo(window.scrollX, window.scrollY - 60);
 }
 
-if (isDesktop()) {
-  window.addEventListener('hashchange', adjustHashOffset);
-  window.addEventListener('load', () => {
-    if (window.location.hash) {
-      adjustHashOffset();
-    }
-  });
+window.addEventListener('hashchange', adjustHashOffset);
+window.addEventListener('load', () => {
+  if (window.location.hash) {
+    adjustHashOffset();
+  }
+});
 
-  window.addEventListener('scroll', handleScroll, {passive: true});
-  window.addEventListener('resize', handleResize, {passive: true});
-}
-
-function isDesktop() {
-  return !isMobile();
-}
-
-function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
+window.addEventListener('scroll', handleScroll, {passive: true});
+window.addEventListener('resize', handleResize, {passive: true});
