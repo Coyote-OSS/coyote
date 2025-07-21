@@ -1,12 +1,15 @@
 <template>
-  <div class="max-lg:hidden">
+  <div class="max-lg:hidden flex-grow-1">
     <input
+      ref="searchInput"
       v-model="searchPhrase"
       class="w-full border border-tile-border rounded-lg p-2 outline-none"
       placeholder="Wyszukaj"
-      @update:model-value="search"/>
+      @update:model-value="search"
+      @focus="suspendEntryPoints(true)"
+      @keyup.esc="cancelSearch"/>
     <div class="relative" v-if="searchItemsVisible">
-      <div class="absolute top-2 left-1/2 -translate-x-1/2 bg-tile p-4 rounded-lg border border-tile-border w-110 space-y-4">
+      <div class="absolute top-2 w-full bg-tile p-4 rounded-lg border border-tile-border w-110 space-y-4">
         <div v-for="(searchItems, type) in searchItemsGroupedByType">
           <div class="text-neutral2-500 text-sm -mb-1" v-text="searchItemTypeTitle(type)"/>
           <div v-for="searchItem in searchItems" class="whitespace-nowrap truncate mt-2">
@@ -32,10 +35,22 @@ const service = useNavigationService();
 const store = useNavigationStore();
 
 const searchPhrase = ref<string>('');
+const searchInput = ref<HTMLInputElement>();
 
 function search(): void {
   service.search(searchPhrase.value);
   searchCloseForced.value = false;
+}
+
+function suspendEntryPoints(suspended: boolean): void {
+  store.navigationEntryPointsSuspended = suspended;
+}
+
+function cancelSearch(): void {
+  suspendEntryPoints(false);
+  store.searchItems = [];
+  searchPhrase.value = '';
+  searchInput.value!.blur();
 }
 
 const searchCloseForced = ref<boolean>(false);

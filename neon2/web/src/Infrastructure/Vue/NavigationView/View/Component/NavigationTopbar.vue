@@ -5,6 +5,7 @@
       <div class="h-17.5 p-3 pl-4 lg:gap-x-4 flex items-center mx-auto max-w-400">
         <BrandLogo/>
         <NavTopbarListItem
+          v-if="!store.navigationEntryPointsSuspended"
           v-for="item in entryPointItems"
           :type="item.type"
           :title="item.title"

@@ -16,6 +16,7 @@ export const useNavigationStore = defineStore('navigation', {
       navigationMainContentSuspended: false,
       // search
       searchItems: [],
+      navigationEntryPointsSuspended: false,
     };
   },
 });
@@ -27,6 +28,7 @@ interface State {
   navigationUser: NavigationUser|null;
   navigationMainContentSuspended: boolean;
   searchItems: SearchItem[];
+  navigationEntryPointsSuspended: boolean;
 }
 
 export type NavigationStore = ReturnType<typeof useNavigationStore>;
