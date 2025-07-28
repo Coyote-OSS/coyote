@@ -1,19 +1,18 @@
-<div class="container-3xl neon-legacy">
-  <ul class="breadcrumb pb-0">
-    <li class="breadcrumb-item neon-breadcrumb">
+<div class="breadcrumb-container">
+  <div class="breadcrumb-list">
+    <span class="breadcrumb-list-item">
       <a href="{{ root_href }}" class="d-none d-sm-inline-block">
         {{ root_name }}
       </a>
       <a href="{{ root_href }}" class="d-inline-block d-sm-none">
         4p
       </a>
-    </li>
-
+    </span>
     {% for breadcrumb in breadcrumbs %}
-      <li class="breadcrumb-item neon-breadcrumb">
+      <span class="breadcrumb-list-item">
         {% if breadcrumb.leaf %}
           {% if breadcrumb.leafWithLink %}
-            <a class="leaf" href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a>
+            <a href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a>
           {% else %}
             <span class="leaf">{{ breadcrumb.name }}</span>
           {% endif %}
@@ -22,9 +21,9 @@
             {{ breadcrumb.name }}
           </a>
         {% endif %}
-      </li>
+      </span>
     {% endfor %}
-  </ul>
+  </div>
 </div>
 
 {{ schema_breadcrumb }}

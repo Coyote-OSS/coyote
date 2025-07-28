@@ -1,68 +1,46 @@
-@use "../../feature/lookAndFeel/feel" as feel;
 @use "../../feature/lookAndFeel/style-guide" as style;
-@import "../helpers/variables";
+@use "../../feature/theme/theme" as theme;
 
-@include feel.modern {
-  .breadcrumb {
-    --bs-breadcrumb-divider-color: #{style.$green-500};
+.breadcrumb-container {
+  display:       none;
+
+  .scrolled-down & {
+    display: block;
   }
-}
 
-@include feel.legacy {
-  .breadcrumb {
-    --bs-breadcrumb-divider-color: #80a41a;
-  }
-}
+  position:      fixed;
+  top:           70px;
+  z-index:       3;
+  margin-left:   -0.75rem;
+  padding-left:  0.75rem;
+  padding-right: 0.75rem;
+  max-width:     100%;
 
-ul.breadcrumb {
-  font-size: 0.95em;
+  .breadcrumb-list {
+    @include theme.property(background, #efefef, #303131);
+    @include theme.property(border, 1px solid #ddd, 1px solid #555);
+    border-top:                 none !important;
+    border-bottom-left-radius:  5px;
+    border-bottom-right-radius: 5px;
+    padding:                    5px 8px;
+    white-space:                nowrap;
+    overflow:                   hidden;
+    text-overflow:              ellipsis;
+    max-width:                  100%;
 
-  .breadcrumb-item {
-    a, span {
-      color: $gray;
-    }
+    .breadcrumb-list-item {
+      &:not(:last-child) {
+        &:after {
+          content:     '/';
+          padding:     0 4px;
+          color:       style.$green-500;
+          font-weight: 600;
+        }
+      }
 
-    + .breadcrumb-item {
-      &::before {
-        content: "»";
+      .leaf {
+        font-weight: bold;
       }
     }
-
-    .leaf {
-      display: none;
-    }
-  }
-
-  &#breadcrumb-fixed,
-  .footer-top &,
-  {
-    .leaf {
-      display: inline;
-    }
-
-    span.leaf {
-      font-weight: bold;
-    }
-  }
-}
-
-#breadcrumb-fixed {
-  position:                   fixed;
-  opacity:                    0.9;
-  box-shadow:                 0 2px 4px rgba(220, 218, 216, 0.75);
-  background:                 $gray-lighter;
-  border-bottom:              1px solid $card-border-color;
-  border-left:                1px solid $card-border-color;
-  border-right:               1px solid $card-border-color;
-  padding:                    5px 8px;
-  top:                        70px;
-  bottom:                     0;
-  z-index:                    2;
-  border-bottom-right-radius: 5px;
-  border-bottom-left-radius:  5px;
-  height:                     30px;
-
-  ul {
-    margin: 0 !important;
   }
 }

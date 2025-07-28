@@ -4,7 +4,6 @@ import 'bootstrap/js/dist/collapse.js';
 import 'bootstrap/js/dist/dropdown.js';
 import 'bootstrap/js/dist/modal.js';
 import 'bootstrap/js/dist/tab.js';
-import './components/breadcrumb.js';
 import './components/navbar-toggle.ts';
 import './components/bannerCount.ts';
 import './components/scrolltop.js';

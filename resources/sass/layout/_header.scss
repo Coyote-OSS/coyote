@@ -301,11 +301,6 @@ body.look-and-feel-modern.padding-top {
   .fixed-top {
     position: absolute;
   }
-
-  /* ukrywamy przyklejona sciezke podstrony, na ktorej sie znajdujemy */
-  body .breadcrumb[id] {
-    display: none;
-  }
 }
 
 .revive img {

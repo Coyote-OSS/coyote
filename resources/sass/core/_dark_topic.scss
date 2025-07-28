@@ -13,12 +13,6 @@ body.theme-dark {
     color: #dedede;
   }
 
-  .breadcrumb {
-    li.breadcrumb-item a {
-      color: #acacac;
-    }
-  }
-
   h1.topic-title {
     color: #acacac;
   }
@@ -203,24 +197,6 @@ body.theme-dark {
         background-color: #282828;
         color:            #acacac;
       }
-    }
-  }
-
-  ul.breadcrumb {
-    li.breadcrumb-item {
-      &:last-child:not(:first-child) a {
-        color: #acacac;
-      }
-
-      span {
-        color: #c8c8c8;
-      }
-    }
-
-    &#breadcrumb-fixed {
-      box-shadow:   none;
-      background:   #333;
-      border-color: #555;
     }
   }
 
