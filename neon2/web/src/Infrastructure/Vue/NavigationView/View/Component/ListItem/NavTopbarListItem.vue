@@ -54,7 +54,7 @@ const emit = defineEmits(['click']);
 const store = useNavigationStore();
 const service = useNavigationService();
 
-const navigationLinkStyle = 'max-lg:hidden cursor-pointer py-2 px-3 rounded';
+const navigationLinkStyle = 'max-lg:hidden cursor-pointer py-2 px-1 xl:px-3 rounded';
 
 interface Emit {
   (event: 'action', action: NavigationAction): void;
