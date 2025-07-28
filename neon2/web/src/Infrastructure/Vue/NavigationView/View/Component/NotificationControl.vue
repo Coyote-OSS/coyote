@@ -1,5 +1,5 @@
 <template>
-  <div v-if="store.isAuthenticated">
+  <div>
     <div class="flex-shrink-0 flex max-lg:mr-2">
       <NavigationControlItem icon="navigationNotification" :number="props.user.notificationsCount" @action="toggleNotifications"/>
       <NavigationControlItem icon="navigationMessages" :number="props.user.messagesCount" @action="showMessages"/>

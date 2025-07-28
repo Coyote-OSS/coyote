@@ -1,6 +1,6 @@
 <template>
   <template v-if="props.type === 'link'">
-    <div class="group/navItem" v-if="props.forumMenu">
+    <div class="group/navItem" v-if="props.forumMenu" :class="$attrs.class">
       <a
         :class="navigationLinkStyle"
         class="group-hover/navItem:text-green2-500"
@@ -9,7 +9,7 @@
         :href="actionHref(props.action)"/>
       <ForumMenu/>
     </div>
-    <div v-else :class="navigationLinkStyle" class="whitespace-nowrap group/navItem">
+    <div v-else :class="[navigationLinkStyle, $attrs.class]" class="whitespace-nowrap group/navItem">
       <a class="block hover:text-green2-500" v-text="props.title" @click.prevent="click" :href="actionHref(props.action)"/>
       <div v-if="includeChildren" class="relative hidden group-hover/navItem:block cursor-default">
         <div :class="[
@@ -30,12 +30,13 @@
   <template v-else-if="props.type === 'buttonSecondary'">
     <Button
       class="text-base h-10 leading-6"
+      :class="$attrs.class"
       primary-outline
       :title="props.title"
       @click="click"/>
   </template>
   <template v-else-if="props.type === 'space'">
-    <div class="mr-auto"/>
+    <div class="mr-auto" :class="$attrs.class"/>
   </template>
 </template>
 

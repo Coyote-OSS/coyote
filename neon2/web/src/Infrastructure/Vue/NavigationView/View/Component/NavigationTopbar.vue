@@ -2,9 +2,10 @@
   <div class="relative">
     <MobileDrawer v-if="mobileMenuOpen" @close="closeMobileMenu" class="lg:hidden"/>
     <div class="text-neutral2-600 bg-tile text-lg relative z-[2] lg:shadow">
-      <div class="h-17.5 p-3 pl-4 lg:gap-x-4 flex items-center mx-auto max-w-400">
-        <BrandLogo/>
+      <div class="h-17.5 p-3 pl-4 sm:gap-x-4 flex items-center mx-auto max-w-400">
+        <BrandLogo :class="hideIfSearch"/>
         <NavTopbarListItem
+          :class="{'max-xl:hidden': store.navigationEntryPointsSuspended}"
           v-for="item in entryPointItems"
           :type="item.type"
           :title="item.title"
@@ -13,12 +14,22 @@
           :children="item.children"
           :children-for-not-authenticated="item.childrenForNotAuthenticated"
           @action="action"/>
-        <div class="ml-auto"/>
-        <SearchField/>
-        <NavTopbarListItem type="buttonSecondary" class="max-lg:hidden" title="Dodaj ofertę pracy" action="pricing" @action="action"/>
-        <NotificationControl v-if="store.isAuthenticated" :user="store.navigationUser!" @mark-all="markAll" @load-more="loadMore"/>
-        <DesktopAuthControl class="max-lg:hidden" :user="store.navigationUser"/>
-        <Icon monospace :name="mobileMenuIcon" @click="toggleMobileMenu" class="text-xl mr-4 lg:hidden"/>
+        <SearchField class="ml-auto"/>
+        <NavTopbarListItem
+          :class="hideIfSearch"
+          type="buttonSecondary"
+          class="max-lg:hidden"
+          title="Dodaj ofertę pracy"
+          action="pricing"
+          @action="action"/>
+        <NotificationControl
+          :class="hideIfSearch"
+          v-if="store.isAuthenticated"
+          :user="store.navigationUser!"
+          @mark-all="markAll"
+          @load-more="loadMore"/>
+        <DesktopAuthControl :class="hideIfSearch" class="max-lg:hidden" :user="store.navigationUser"/>
+        <Icon :class="hideIfSearch" monospace :name="mobileMenuIcon" @click="toggleMobileMenu" class="text-xl mr-4 lg:hidden"/>
       </div>
     </div>
   </div>
@@ -54,6 +65,10 @@ function closeMobileMenu(): void {
 }
 
 const mobileMenuIcon = computed<IconName>(() => mobileMenuOpen.value ? 'mobileMenuClose' : 'mobileMenuOpen');
+
+const hideIfSearch = computed<object>(() => {
+  return {'max-lg:hidden': store.navigationEntryPointsSuspended};
+});
 
 function action(action: NavigationAction): void {
   service.action(action);
