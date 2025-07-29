@@ -21,9 +21,11 @@ export class VueNavigationService implements NavigationService {
   action(action: NavigationAction): void {
     if (action === 'jobBoard') {
       this.router.navigate('home', {});
+      return;
     }
     if (action === 'pricing') {
       this.router.navigate('pricing', {});
+      return;
     }
     const historyModeHref = this.actionHref(action);
     if (historyModeHref) {

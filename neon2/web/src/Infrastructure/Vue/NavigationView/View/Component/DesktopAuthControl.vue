@@ -16,7 +16,8 @@
             :title="listItem.title"
             :icon="listItem.icon"
             :messages-count="listItem.messagesCount"
-            @click="listItem.action && service.action(listItem.action)"/>
+            :action="listItem.action"
+            @action="action => service.action(action)"/>
         </div>
       </div>
     </div>
@@ -63,7 +64,6 @@ watch(controlOpen, (newValue: boolean): void => {
 
 const service = useNavigationService();
 
-const hasMessage = computed(() => !!props.user && props.user.messagesCount > 0);
 const _authControlItems = computed(() => authControlItems(
   props.user,
   store.$state.darkTheme,
