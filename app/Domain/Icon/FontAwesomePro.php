@@ -117,6 +117,7 @@ readonly class FontAwesomePro {
             'userAccount.access'                        => 'fa-light fa-door-open',
             'userAccount.apiTokens'                     => 'fa-light fa-key',
             'userAccount.accountDelete'                 => 'fa-light fa-trash-can',
+            'userAccount.verification'                  => 'fa-light fa-shield-check',
 
             // following user
             'userFollow'                                => 'fa-light fa-bell',

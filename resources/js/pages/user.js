@@ -122,3 +122,46 @@ createVueApp('Tokens', '#js-tokens', {
     },
   },
 });
+
+createVueApp('Verification', '#js-verification', {
+  delimiters: ['${', '}'],
+  data() {
+    return {
+      userVerified: window.userVerified,
+      phoneNumber: '',
+      verificationCode: '',
+      initiateError: null,
+      initiateSuccess: null,
+      verificationError: null,
+    };
+  },
+  methods: {
+    initiateVerification() {
+      this.$data.initiateSuccess = null;
+      this.$data.initiateError = null;
+      axios.post('/User/Verification/Initiate', {phoneNumber: this.$data.phoneNumber})
+        .then(response => {
+          if (response.data.initiateResult === 'initiated') {
+            this.$data.initiateSuccess = 'Wysłaliśmy wiadomość SMS z kodem weryfikacyjnym.';
+            this.$data.initiateError = null;
+          } else if (response.data.initiateResult === 'rejected') {
+            this.$data.initiateSuccess = null;
+            this.$data.initiateError = 'Nie udało się zrealizować weryfikacji. Skontaktuj się z administracją serwisu.';
+          }
+        });
+    },
+    verify() {
+      this.$data.verificationError = null;
+      axios.post('/User/Verification/Verify', {
+        phoneNumber: this.$data.phoneNumber,
+        verificationCode: this.$data.verificationCode,
+      }).then(response => {
+        if (response.data.verificationResult === 'verified') {
+          this.$data.userVerified = true;
+        } else if (response.data.verificationResult === 'notVerified') {
+          this.$data.verificationError = 'Weryfikacja niepomyślna. Upewnij się że wpisujesz poprawny kod bądź skontaktuj się z administracją serwisu.';
+        }
+      });
+    },
+  },
+});

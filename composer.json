@@ -51,7 +51,8 @@
     "sentry/sentry-laravel": "^4.5.1",
     "stripe/stripe-php": "^7.66",
     "symfony/http-client": "^6.2",
-    "symfony/mailgun-mailer": "^6.2"
+    "symfony/mailgun-mailer": "^6.2",
+    "twilio/sdk": "^8.7"
   },
   "require-dev": {
     "fakerphp/faker": "^1.15",

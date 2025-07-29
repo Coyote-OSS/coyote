@@ -7,24 +7,20 @@ use Coyote\Http\Controllers\Controller;
 use Lavary\Menu\Builder;
 use Lavary\Menu\Menu;
 
-abstract class BaseController extends Controller
-{
-    public function __construct()
-    {
+abstract class BaseController extends Controller {
+    public function __construct() {
         parent::__construct();
         $this->breadcrumb->push('Moje konto', route('user.home'));
     }
 
-    protected function view($view = null, $data = [])
-    {
+    protected function view($view = null, $data = []) {
         return parent::view($view, [
             'side_menu' => $this->sideMenu(),
             ...$data,
         ]);
     }
 
-    private function sideMenu(): Builder
-    {
+    private function sideMenu(): Builder {
         /** @var Menu $menu */
         $menu = app(Menu::class);
         return $menu->make('user.settings', function (Builder $builder) {
@@ -46,8 +42,7 @@ abstract class BaseController extends Controller
     /**
      * @return MenuItem[][]
      */
-    public function settingsMenu(User $user): array
-    {
+    public function settingsMenu(User $user): array {
         return [
             [
                 new MenuItem(
@@ -55,12 +50,14 @@ abstract class BaseController extends Controller
                     'user.home',
                     htmlId:'btn-start',
                     icon:'userAccount.userAccount'),
+                new MenuItem('Weryfikacja użytkownika',
+                    'user.verification',
+                    htmlId:'btn-favorites',
+                    icon:'userAccount.verification'),
                 new MenuItem('Twoje umiejętności',
                     'user.skills',
                     htmlId:'btn-skills',
                     icon:'userAccount.skills'),
-            ],
-            [
                 new MenuItem(
                     'Wiadomości prywatne',
                     'user.pm',
@@ -87,8 +84,6 @@ abstract class BaseController extends Controller
                     'user.accepts',
                     htmlId:'btn-accepts',
                     icon:'userAccount.postAccepts'),
-            ],
-            [
                 new MenuItem(
                     'Obserwowane strony',
                     'user.favorites',
@@ -102,8 +97,6 @@ abstract class BaseController extends Controller
                     'user.notifications.settings',
                     htmlId:'btn-favorites',
                     icon:'userAccount.notificationSettings'),
-            ],
-            [
                 new MenuItem('Ustawienia konta',
                     'user.settings',
                     htmlId:'btn-start',
@@ -120,8 +113,6 @@ abstract class BaseController extends Controller
                     'user.tokens',
                     htmlId:'btn-api-tokens',
                     icon:'userAccount.apiTokens'),
-            ],
-            [
                 new MenuItem(
                     'Usuń konto',
                     'user.delete',
@@ -131,8 +122,7 @@ abstract class BaseController extends Controller
         ];
     }
 
-    private function laravelUser(): User
-    {
+    private function laravelUser(): User {
         /** @var \Coyote\User $user */
         $user = auth()->user();
         return new User($user->pm, $user->pm_unread);

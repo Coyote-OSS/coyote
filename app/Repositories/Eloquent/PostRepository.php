@@ -55,6 +55,7 @@ class PostRepository extends Repository implements PostRepositoryInterface
                 'visited_at',
                 'deleted_at',
                 'is_blocked',
+                'is_verified',
                 'allow_smilies',
                 'allow_count',
                 'allow_sig',

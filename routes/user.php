@@ -72,6 +72,10 @@ $this->group(['namespace' => 'User', 'prefix' => 'User', 'middleware' => 'auth',
 
     $this->get('Tokens', ['uses' => 'TokensController@index', 'as' => 'tokens']);
     $this->post('push', ['uses' => 'PushController@store']);
+
+    $this->get('Verification', ['uses' => 'VerificationController@index', 'as' => 'verification']);
+    $this->post('Verification/Initiate', ['uses' => 'VerificationController@initiateVerification']);
+    $this->post('Verification/Verify', ['uses' => 'VerificationController@verify']);
 });
 
 $this->put('User/Privacy', [PrivacyController::class, 'set']);

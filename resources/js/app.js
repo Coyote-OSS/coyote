@@ -26,7 +26,7 @@ import '../feature/navigation/navigation';
 Prism.highlightAll();
 
 new Router()
-  .on(['/User', '/User/Skills', '/User/Relations', '/User/Tokens'], () => require('./pages/user'))
+  .on(['/User', '/User/Skills', '/User/Relations', '/User/Tokens', '/User/Verification'], () => require('./pages/user'))
   .on(['/Register', '/Login'], () => require('./pages/auth'))
   .on(['/User/Pm/Submit', '/User/Pm/Show/*', '/User/Pm'], () => require('./pages/pm'))
   .on(['/Profile/*/Reputation'], () => require('./pages/profile'))

@@ -1,0 +1,72 @@
+{% extends 'user.base' %}
+{% block title %}Weryfikacja użytkownika {{ parent() }}{% endblock %}
+
+{% block content %}
+  <h2>Weryfikacja użytkownika</h2>
+  <div v-cloak id="js-verification" class="card">
+    <div class="card-body">
+      <div v-if="userVerified">
+        Twoje konto jest zweryfikowane.
+      </div>
+      <div v-else>
+        <p>By zachować nieograniczony dostęp do forum, zweryfikuj swoje konto użytkownika.</p>
+        <ol>
+          <li class="mb-4">
+            <p>Wyślemy na Twój numer telefonu kod weryfikacyjny.</p>
+            <p>4programmers.net nie przechowuje Twojego numeru telefonu.</p>
+            <label for="phoneNumber" class="text-muted mb-1">
+              Podaj swoj numer telefonu:
+            </label>
+            <div class="d-flex">
+              <div class="me-2">
+                <div class="input-group">
+                  <span class="input-group-text">+48</span>
+                  <input
+                      type="text"
+                      v-model="phoneNumber"
+                      @keyup.enter="initiateVerification"
+                      placeholder="123 456 789"
+                      class="form-control"
+                      id="phoneNumber"
+                      name="phoneNumber">
+                </div>
+              </div>
+              <button @click="initiateVerification" class="btn btn-primary">Wyślij SMS</button>
+            </div>
+            <div class="mt-2 d-flex" v-if="initiateError">
+              <div class="alert alert-warning" v-text="initiateError"></div>
+            </div>
+            <div class="mt-2 d-flex" v-if="initiateSuccess">
+              <div class="alert alert-success" v-text="initiateSuccess"></div>
+            </div>
+          </li>
+          <li class="mb-4">
+            <p>Podaj otrzymany kod SMS, by zweryfikować swoje konto.</p>
+            <label for="verificationCode" class="text-muted mb-1">
+              Podaj kod SMS:
+            </label>
+            <div class="d-flex">
+              <div class="me-2">
+                <input
+                    type="text"
+                    v-model="verificationCode"
+                    @keyup.enter="verify"
+                    placeholder="XXXXXX"
+                    class="form-control"
+                    id="verificationCode"
+                    name="verificationCode">
+              </div>
+              <button @click="verify" class="btn btn-primary">Weryfikuj</button>
+            </div>
+            <div class="mt-2 d-flex" v-if="verificationError">
+              <div class="alert alert-warning" v-text="verificationError"></div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    var userVerified = {{ userVerified|json_encode|raw }};
+  </script>
+{% endblock %}

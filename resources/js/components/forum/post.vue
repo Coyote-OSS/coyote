@@ -59,9 +59,12 @@
               <h5 class="mb-0 post-author ms-2">
                 <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
                 <span v-else>{{post.user_name}}</span>
+                <i
+                  v-if="post.user.is_verified"
+                  class="fa-solid fa-shield-check ms-2" style="color:#00a538;"
+                  title="Użytkownik zweryfikował swoje konto."/>
               </h5>
             </div>
-
             <div class="col-10 text-truncate small">
               <div class="d-flex">
                 <div>
@@ -389,6 +392,7 @@
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import pl from 'date-fns/locale/pl';
 import {mapActions, mapGetters, mapState} from "vuex";
+import Icon from "../../../../neon2/web/src/Infrastructure/Vue/Icon/Icon.vue";
 
 import declination from '../../libs/declination';
 import {copyToClipboard} from '../../plugins/clipboard';
@@ -418,6 +422,7 @@ export default {
   name: 'post',
   mixins: [mixins],
   components: {
+    Icon,
     'vue-gallery': VueGallery,
     VuePostGuiderail,
     'vue-avatar': VueAvatar,
