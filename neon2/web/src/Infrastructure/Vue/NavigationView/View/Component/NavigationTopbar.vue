@@ -2,7 +2,7 @@
   <div class="relative">
     <MobileDrawer v-if="mobileMenuOpen" @close="closeMobileMenu" class="lg:hidden"/>
     <div class="text-neutral2-600 bg-tile text-lg relative z-[2] lg:shadow">
-      <div class="h-17.5 p-3 pl-4 sm:gap-x-4 flex items-center mx-auto max-w-400">
+      <div class="h-13.5 py-1 pr-3 pl-4 sm:gap-x-4 flex items-center mx-auto max-w-400">
         <BrandLogo :class="hideIfSearch"/>
         <NavTopbarListItem
           :class="{'max-xl:hidden': store.navigationEntryPointsSuspended}"

@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-dvh flex flex-col bg-tile text-neutral2-600 absolute top-0 z-[1]">
-    <div class="h-17.5 flex-shrink-0"/>
+    <div class="h-13.5 flex-shrink-0"/>
     <div class="pt-3 px-4 pb-7 flex flex-col grow border-t border-tile-border overflow-y-scroll">
       <MobileMenuListItem
         v-for="item in entryPointItems"

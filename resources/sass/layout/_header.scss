@@ -3,15 +3,8 @@
 @use "../../feature/lookAndFeel/feel" as feel;
 @use "../../feature/lookAndFeel/style-guide" as style;
 
-$header-height: 82px;
-
-// odstep potrzebny z uwagi na klase .navbar-fixed-top ktora powoduje iz menu jest przyklejone do gornej krawedzi
-body.look-and-feel-legacy.padding-top {
-  padding-top: 56px;
-}
-
 body.look-and-feel-modern.padding-top {
-  padding-top: 82px;
+  padding-top: 66px;
 }
 
 :root {
