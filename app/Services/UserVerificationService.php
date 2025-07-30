@@ -1,6 +1,8 @@
 <?php
 namespace Coyote\Services;
 
+use Coyote\Services\Stream\Activities\Verify as Stream_Verify;
+use Coyote\Services\Stream\Objects\Person;
 use Coyote\Services\Twilio\InitiateResult;
 use Coyote\Services\Twilio\TwilioClient;
 use Coyote\Services\Twilio\VerificationResult;
@@ -24,6 +26,7 @@ readonly class UserVerificationService {
         $result = $this->twilio->verify($phoneNumber, $verificationCode);
         if ($result === VerificationResult::VERIFIED) {
             $this->verifyUser();
+            stream(Stream_Verify::class, new Person(auth()->user()));
         }
         return $result;
     }
