@@ -40,13 +40,13 @@
           Post usunięty
           <vue-timeago :datetime="post.deleted_at"/>
           <template v-if="post.deleter_name">
-            {{ ' ' }}
-            przez {{ post.deleter_name }}.
+            {{' '}}
+            przez {{post.deleter_name}}.
           </template>
           <template v-else>.</template>
           <template v-if="post.delete_reason">
-            {{ ' ' }}
-            Powód: {{ post.delete_reason }}.
+            {{' '}}
+            Powód: {{post.delete_reason}}.
           </template>
         </div>
         <div v-else-if="authorBlocked" class="post-delete card-body text-decoration-none" @click="isCollapsed = !isCollapsed">
@@ -58,7 +58,7 @@
             <div class="col-2">
               <h5 class="mb-0 post-author ms-2">
                 <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
-                <span v-else>{{ post.user_name }}</span>
+                <span v-else>{{post.user_name}}</span>
               </h5>
             </div>
 
@@ -67,7 +67,7 @@
                 <div>
                   <vue-icon v-if="post.is_read" name="postWasRead"/>
                   <i v-else class="not-read" title="Nowy post"/>
-                  {{ ' ' }}
+                  {{' '}}
                   <a :href="post.url" class="small">
                     <vue-timeago :datetime="post.created_at"/>
                   </a>
@@ -93,12 +93,13 @@
             <div class="media-body">
               <span class="mb-0 post-author me-2">
                 <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
-                <span v-else>{{ post.user_name }}</span>
+                <span v-else>{{post.user_name}}</span>
               </span>
               <a :href="post.url" class="text-muted small">
                 <vue-timeago :datetime="post.created_at"/>
               </a>
-              <span class="ms-1" v-if="post.edit_count && is_mode_tree" :title="'edytowany ' + post.edit_count + 'x, ostatnio przez ' + post.editor.name + ', ' + editedTimeAgo">
+              <span class="ms-1" v-if="post.edit_count && is_mode_tree"
+                    :title="'edytowany ' + post.edit_count + 'x, ostatnio przez ' + post.editor.name + ', ' + editedTimeAgo">
                 (edytowany)
               </span>
             </div>
@@ -120,24 +121,24 @@
                   </div>
                 </div>
                 <span v-if="post.user.group_name && !is_mode_tree" class="badge badge-secondary mb-1">
-                  {{ post.user.group_name }}
+                  {{post.user.group_name}}
                 </span>
                 <ul class="post-stats list-unstyled">
                   <li v-if="is_mode_linear">
                     <strong>Rejestracja:</strong>
-                    <small>{{ formatDistanceToNow(post.user.created_at) }}</small>
+                    <small>{{formatDistanceToNow(post.user.created_at)}}</small>
                   </li>
 
                   <li v-if="is_mode_linear">
                     <strong>Ostatnio:</strong>
                     <small>
-                      {{ formatDistanceToNow(post.user.visited_at ? post.user.visited_at : post.user.created_at) }}
+                      {{formatDistanceToNow(post.user.visited_at ? post.user.visited_at : post.user.created_at)}}
                     </small>
                   </li>
 
                   <li v-if="is_mode_linear && post.user.location">
                     <strong>Lokalizacja:</strong>
-                    <small>{{ post.user.location }}</small>
+                    <small>{{post.user.location}}</small>
                   </li>
 
                   <li v-if="is_mode_linear && post.user.allow_count">
@@ -146,7 +147,7 @@
                       <a title="Znajdź posty tego użytkownika"
                          class="neon-post-counter"
                          :href="`/Forum/User/${post.user.id}`"
-                         style="text-decoration: underline">{{ post.user.posts }}</a>
+                         style="text-decoration: underline">{{post.user.posts}}</a>
                     </small>
                   </li>
                 </ul>
@@ -186,10 +187,10 @@
                 <ul v-if="post.assets.length" class="list-unstyled mb-1">
                   <li v-for="asset in post.assets" class="small">
                     <vue-icon name="postAssetDownload"/>
-                    {{ ' ' }}
-                    <a :href="`/assets/${asset.id}/${asset.name}`">{{ asset.name }}</a>
-                    {{ ' ' }}
-                    <small>({{ size(asset.size) }}) - <em>ściągnięć: {{ asset.count }}</em></small>
+                    {{' '}}
+                    <a :href="`/assets/${asset.id}/${asset.name}`">{{asset.name}}</a>
+                    {{' '}}
+                    <small>({{size(asset.size)}}) - <em>ściągnięć: {{asset.count}}</em></small>
                   </li>
                 </ul>
                 <template v-if="signatureVisible">
@@ -200,10 +201,10 @@
               <vue-tags :tags="tags" class="tag-clouds-md mt-2 mb-2"/>
               <div v-if="post.edit_count && is_mode_linear" class="edit-info">
                 <strong>
-                  edytowany {{ post.edit_count }}x, ostatnio:
+                  edytowany {{post.edit_count}}x, ostatnio:
                   <vue-username :user="post.editor"/>
                 </strong>
-                {{ ' ' }}
+                {{' '}}
                 <vue-timeago :datetime="post.updated_at"/>
               </div>
               <div class="post-comments" v-if="is_mode_linear">
@@ -212,9 +213,9 @@
                   <span @click="loadComments(post)" class="cursor-pointer">
                     <vue-icon name="postFoldedCommentsUnfold"/>
                     Zobacz
-                    {{ declination(totalComments, ['pozostały', 'pozostałe', 'pozostałe']) }}
-                    {{ totalComments }}
-                    {{ declination(totalComments, ['komentarz', 'komentarze', 'komentarzy']) }}
+                    {{declination(totalComments, ['pozostały', 'pozostałe', 'pozostałe'])}}
+                    {{totalComments}}
+                    {{declination(totalComments, ['komentarz', 'komentarze', 'komentarzy'])}}
                   </span>
                 </div>
                 <vue-comment
@@ -277,11 +278,12 @@
                   <div class="dropdown-menu dropdown-menu-start">
                     <span v-for="item in shareDropdownItems" class="dropdown-item" @click="item.action">
                       <vue-icon :name="item.iconName"/>
-                      {{ item.title }}
+                      {{item.title}}
                     </span>
                   </div>
                 </div>
-                <span class="post-action" v-if="post.permissions.accept" @click="accept(post)" title="Kliknij, aby ustawić tę odpowiedź jako zaakceptowaną">
+                <span class="post-action" v-if="post.permissions.accept" @click="accept(post)"
+                      title="Kliknij, aby ustawić tę odpowiedź jako zaakceptowaną">
                   <template v-if="post.is_accepted">
                     <vue-icon name="postAcceptAccepted" class="text-primary"/>
                     <span class="d-none d-sm-inline ms-1">Zaakceptuj</span>
@@ -318,7 +320,7 @@
                       <div v-if="item.divider" class="dropdown-divider"/>
                       <a v-else-if="item.link" class="dropdown-item" :href="item.link">
                         <vue-icon :name="item.iconName"/>
-                        {{ item.title }}
+                        {{item.title}}
                       </a>
                       <span
                         v-else
@@ -326,7 +328,7 @@
                         :class="{disabled: item.disabled}"
                         @click="item.action">
                         <vue-icon :name="item.iconName"/>
-                        {{ item.title }}
+                        {{item.title}}
                       </span>
                     </template>
                   </div>
@@ -362,13 +364,13 @@
         <div v-if="hasDeeperChildren">
           <a class="me-2" :href="postSubTreeUrl">
             <vue-icon name="postGuiderailExpanded"/>
-            {{ postAnswersAuthorsSeeMore }}
+            {{postAnswersAuthorsSeeMore}}
           </a>
         </div>
         <div v-if="childrenFolded && hasChildren">
           <a class="me-2" @click="unfoldChildren" href="javascript:">
             <vue-icon name="postGuiderailExpanded"/>
-            {{ postAnswersAuthorsSeeMore }}
+            {{postAnswersAuthorsSeeMore}}
           </a>
         </div>
         <div v-for="author in postAnswersAuthorsDistinct" style="width:38px;">
@@ -692,7 +694,12 @@ export default {
         }
       }
       if (mod.merge && canMerge) {
-        items.push({title: 'Połącz z poprzednim', iconName: 'postMergeWithPrevious', action: this.merge, disabled: post.deleted_at || this.isFirstPost});
+        items.push({
+          title: 'Połącz z poprzednim',
+          iconName: 'postMergeWithPrevious',
+          action: this.merge,
+          disabled: post.deleted_at || this.isFirstPost,
+        });
       }
       return items;
     },

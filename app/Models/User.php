@@ -90,8 +90,7 @@ use Ramsey\Uuid\Uuid;
  * @property TrialSession|null $trialSession
  * @property UserPlanBundle[]|Eloquent\Collection $planBundles
  */
-class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
-{
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract {
     use Authenticatable, Authorizable, CanResetPassword, RoutesNotifications, HasApiTokens, SoftDeletes, ExcludeBlocked, HasPushSubscriptions;
 
     protected $table = 'users';
@@ -134,8 +133,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'deleted_at'          => 'datetime',
     ];
 
-    public static function boot(): void
-    {
+    public static function boot(): void {
         parent::boot();
         static::creating(function (User $model) {
             if (empty($model->guest_id)) {
@@ -154,8 +152,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @return array
      * @deprecated
      */
-    public static function birthYearList(): array
-    {
+    public static function birthYearList(): array {
         $result = [null => '--'];
         for ($i = 1950, $year = date('Y'); $i <= $year; $i++) {
             $result[$i] = $i;
@@ -163,8 +160,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $result;
     }
 
-    public static function dateFormatList(): array
-    {
+    public static function dateFormatList(): array {
         $dateFormats = [
             '%d-%m-%Y %H:%M',
             '%Y-%m-%d %H:%M',
@@ -176,55 +172,45 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return \array_combine($dateFormats, \array_map('\strFTime', $dateFormats));
     }
 
-    public function group(): HasOne
-    {
+    public function group(): HasOne {
         return $this->hasOne(Group::class, 'id', 'group_id');
     }
 
-    public function groups(): BelongsToMany
-    {
+    public function groups(): BelongsToMany {
         return $this->belongsToMany(Group::class, 'group_users');
     }
 
-    public function permissions(): HasManyThrough
-    {
+    public function permissions(): HasManyThrough {
         return $this->hasManyThrough(Group\Permission::class, Group\User::class, 'user_id', 'group_id');
     }
 
-    public function actkey(): HasMany
-    {
+    public function actkey(): HasMany {
         return $this->hasMany(Actkey::class);
     }
 
-    public function guest(): BelongsTo
-    {
+    public function guest(): BelongsTo {
         return $this->belongsTo(Guest::class);
     }
 
-    public function skills(): MorphToMany
-    {
+    public function skills(): MorphToMany {
         return $this->morphToMany(Tag::class, 'resource', 'tag_resources')
             ->withPivot(['priority', 'order'])
             ->orderByPivot('priority', 'desc');
     }
 
-    public function invoices(): HasMany
-    {
+    public function invoices(): HasMany {
         return $this->hasMany(Invoice::class);
     }
 
-    public function notifications(): HasMany
-    {
+    public function notifications(): HasMany {
         return $this->hasMany(Notification::class);
     }
 
-    public function relations(): HasMany
-    {
+    public function relations(): HasMany {
         return $this->hasMany(Relation::class);
     }
 
-    public function followers(): HasManyThrough
-    {
+    public function followers(): HasManyThrough {
         return $this
             ->hasManyThrough(User::class, Relation::class, 'related_user_id', 'id', 'id', 'user_id')
             ->where('user_relations.is_blocked', false);
@@ -234,8 +220,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @param string $objectId
      * @return Model|null|static
      */
-    public function getUnreadNotification($objectId)
-    {
+    public function getUnreadNotification($objectId) {
         return $this
             ->hasOne(Notification::class)
             ->where('object_id', '=', $objectId)
@@ -243,13 +228,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             ->first();
     }
 
-    public function notificationSettings(): HasMany
-    {
+    public function notificationSettings(): HasMany {
         return $this->hasMany(Notification\Setting::class);
     }
 
-    public function getPhotoAttribute($value): File
-    {
+    public function getPhotoAttribute($value): File {
         if (!$value instanceof Photo) {
             $this->attributes['photo'] = Media\Factory::get()->userAvatar($value);
         }
@@ -259,27 +242,23 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * @deprecated
      */
-    public function setIsActiveAttribute($value)
-    {
+    public function setIsActiveAttribute($value) {
         $this->is_online = false;
         $this->setAttribute('deleted_at', !$value ? Carbon::now() : null);
     }
 
-    public function getIsActiveAttribute()
-    {
+    public function getIsActiveAttribute() {
         return $this->deleted_at === null;
     }
 
-    public function canReceiveEmail(): bool
-    {
+    public function canReceiveEmail(): bool {
         return $this->email && !$this->deleted_at && $this->is_confirm && !$this->is_blocked;
     }
 
     /**
      * Get user's permissions (including all user's groups)
      */
-    public function getPermissions(): Support\Collection
-    {
+    public function getPermissions(): Support\Collection {
         return $this
             ->permissions()
             ->join('permissions AS p', 'p.id', '=', 'group_permissions.permission_id')
@@ -293,8 +272,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @param string $ip
      * @return bool
      */
-    public function hasAccessByIp($ip): bool
-    {
+    public function hasAccessByIp($ip): bool {
         if (empty($this->access_ip)) {
             return true;
         }
@@ -320,8 +298,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @param string $token
      * @return void
      */
-    public function sendPasswordResetNotification($token): void
-    {
+    public function sendPasswordResetNotification($token): void {
         $this->notify(new ResetPasswordNotification($token));
     }
 
@@ -330,18 +307,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return string
      */
-    public function receivesBroadcastNotificationsOn(): string
-    {
+    public function receivesBroadcastNotificationsOn(): string {
         return 'user:' . $this->id;
     }
 
-    public function trialSession(): Eloquent\Relations\HasOne
-    {
+    public function trialSession(): Eloquent\Relations\HasOne {
         return $this->hasOne(TrialSession::class);
     }
 
-    public function planBundles(): HasMany
-    {
+    public function planBundles(): HasMany {
         return $this->hasMany(UserPlanBundle::class);
     }
 }

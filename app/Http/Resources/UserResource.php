@@ -13,10 +13,8 @@ use function app;
  * @property string $sig
  * @property bool $allow_sig
  */
-class UserResource extends JsonResource
-{
-    public function toArray(Request $request): array
-    {
+class UserResource extends JsonResource {
+    public function toArray(Request $request): array {
         $parent = $this->resource->only([
             'id', 'name', 'is_online', 'bio', 'location',
             'allow_sig', 'allow_count', 'allow_smilies',
@@ -37,15 +35,13 @@ class UserResource extends JsonResource
         );
     }
 
-    private function parsedSignature(string $userSig): string
-    {
+    private function parsedSignature(string $userSig): string {
         /** @var SigFactory $signature */
         $signature = app(SigFactory::class);
         return $signature->parse($userSig);
     }
 
-    private function isSignatureAllowed(Request $request): bool
-    {
+    private function isSignatureAllowed(Request $request): bool {
         return $this->sig && $this->allow_sig && (!$request->user() || $request->user()->allow_sig);
     }
 }
