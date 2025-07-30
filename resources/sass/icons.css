@@ -2,21 +2,21 @@
   font-family: 'Font Awesome 6 Pro';
   font-style: normal;
   font-weight: 300;
-  src: url('/fonts/font-awesome/fa-light-300.woff2?v7') format('woff2');
+  src: url('/fonts/font-awesome/fa-light-300.woff2?v12') format('woff2');
 }
 
 @font-face {
   font-family: 'Font Awesome 6 Pro';
   font-style: normal;
   font-weight: 400;
-  src: url('/fonts/font-awesome/fa-regular-400.woff2?v7') format('woff2');
+  src: url('/fonts/font-awesome/fa-regular-400.woff2?v12') format('woff2');
 }
 
 @font-face {
   font-family: 'Font Awesome 6 Free';
   font-style: normal;
   font-weight: 900;
-  src: url('/fonts/font-awesome/fa-solid-900.woff2?v7') format('woff2');
+  src: url('/fonts/font-awesome/fa-solid-900.woff2?v12') format('woff2');
 }
 
 .fa-light {
