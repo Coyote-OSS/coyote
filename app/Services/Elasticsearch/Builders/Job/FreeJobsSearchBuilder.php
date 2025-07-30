@@ -14,7 +14,7 @@ class FreeJobsSearchBuilder extends SearchBuilder implements JobSearchBuilder {
     }
 
     public function build(): array {
-        $this->must(new Term('is_ads', false));
+        $this->mustNot(new Term('is_ads', true));
         $this->must(new Term('model', class_basename(Job::class)));
 
         $this->score(new FieldValueFactor('score', 'log', 1));

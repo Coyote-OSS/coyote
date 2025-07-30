@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support;
 use Illuminate\Support\Collection;
 
 class AdController extends Controller {
@@ -25,31 +26,38 @@ class AdController extends Controller {
 
     public function index(Request $request, Predictions $predictions): Response|View {
         $majorTag = $this->randomMajorTag($predictions->getTags());
-        $result = $this->jobRecommendation(
+        $jobs = $this->jobRecommendation(
             $request,
             $request->attributes->get('geocode'),
             $majorTag);
-        if (!$result->total()) {
+        if ($jobs->isEmpty()) {
             return \response(status:404);
         }
-        $source = $result->getSource();
-        /** @var Collection $jobCollection */
-        foreach ($source as $jobCollection) {
-            $this->increaseAdView($jobCollection->get('id'));
+        /** @var Collection $job */
+        foreach ($jobs as $job) {
+            $this->increaseAdView($job->get('id'));
         }
         return view('job.ad', [
-            'jobs'         => $source,
+            'jobs'         => $jobs,
             'selectedTags' => [$majorTag->name],
             'major_tag'    => $majorTag,
         ]);
     }
 
-    private function jobRecommendation(Request $request, ?Location $location, Tag $majorTag): ResultSet {
-        $premiumJobs = $this->search(new PremiumJobsSearchBuilder($request), $location, $majorTag);
-        if ($premiumJobs->total()) {
+    private function jobRecommendation(Request $request, ?Location $location, Tag $majorTag): Support\Collection {
+        $premiumJobs = $this->premiumJobOffers($request, $location, $majorTag);
+        if ($premiumJobs->count() === 4) {
             return $premiumJobs;
         }
-        return $this->search(new FreeJobsSearchBuilder($request), $location, $majorTag);
+        return $premiumJobs->merge($this->freeJobOffers($request, $location, $majorTag))->slice(0, 4);
+    }
+
+    private function premiumJobOffers(Request $request, ?Location $location, Tag $majorTag): Collection {
+        return $this->search(new PremiumJobsSearchBuilder($request), $location, $majorTag)->getSource();
+    }
+
+    private function freeJobOffers(Request $request, ?Location $location, Tag $majorTag): Collection {
+        return $this->search(new FreeJobsSearchBuilder($request), $location, $majorTag)->getSource();
     }
 
     private function search(JobSearchBuilder $builder, ?Location $location, Tag $majorTag): ResultSet {
