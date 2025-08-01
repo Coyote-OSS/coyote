@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const state = {
   user: window["__INITIAL_STATE"]?.user || {},
-  followers: window["__INITIAL_STATE"]?.followers || []
+  followers: window["__INITIAL_STATE"]?.followers || [],
 };
 
 export const guest = !('name' in window['__INITIAL_STATE'].user);
@@ -12,7 +12,7 @@ const getters = {
   dateFormat: state => (defaultFormat = null) => state.user.date_format ?? defaultFormat,
   isBlocked: state => (userId: number) => state.followers.find(follower => follower.user_id === userId && follower.is_blocked),
   follows: state => (userId: number) => state.followers.find(follower => follower.user_id === userId && !follower.is_blocked),
-  followers: state => state.followers.find(follower => !follower.is_blocked)
+  followers: state => state.followers.find(follower => !follower.is_blocked),
 };
 
 const mutations = {
@@ -37,28 +37,24 @@ const actions = {
   block({commit}, relatedUserId: number) {
     return axios.post(`/User/Block/${relatedUserId}`).then(() => commit('ADD_RELATION', {userId: relatedUserId, isBlocked: true}));
   },
-
   unblock({commit}, relatedUserId: number) {
     return axios.post(`/User/Unblock/${relatedUserId}`).then(() => commit('REMOVE_RELATION', {userId: relatedUserId, isBlocked: true}));
   },
-
   follow({commit}, relatedUserId: number) {
     return axios.post(`/User/Follow/${relatedUserId}`).then(() => commit('ADD_RELATION', {userId: relatedUserId, isBlocked: false}));
   },
-
   unfollow({commit}, relatedUserId: number) {
     return axios.post(`/User/Unfollow/${relatedUserId}`).then(() => commit('REMOVE_RELATION', {userId: relatedUserId, isBlocked: false}));
   },
-
   pushSubscription({commit}, pushSubscription) {
     return axios.post('/User/push', pushSubscription);
-  }
-}
+  },
+};
 
 export default {
   namespaced: true,
   state,
   getters,
   mutations,
-  actions
+  actions,
 };

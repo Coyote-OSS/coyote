@@ -37,17 +37,18 @@ export interface User {
   name: string;
   deleted_at?: Date;
   is_blocked: boolean;
-  is_online?: boolean;
+  group_name?: string;
   photo: string;
   posts?: number;
   created_at?: Date;
-  visited_at?: Date;
+  allow_sig?: boolean;
   allow_smilies?: boolean;
   allow_count?: boolean;
-  allow_sig?: boolean;
   location?: string;
+  is_online?: boolean;
+  is_incognito?: boolean;
+  visited_at?: Date;
   sig?: string;
-  group_name?: string;
 }
 
 interface AssetMetadata {
@@ -438,7 +439,7 @@ export interface Notification {
 export interface Emojis {
   categories: Category[],
   subcategories: Subcategory[],
-  emoticons: { [key: string]: Emoji }
+  emoticons: {[key: string]: Emoji}
 }
 
 interface Category {
