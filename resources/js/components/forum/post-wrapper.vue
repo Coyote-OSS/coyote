@@ -1,8 +1,15 @@
 <template>
-  <vue-post :post="post" :tree-item="treeItem" @reply="reply" :tree-topic-post-first="treeTopicPostFirst"/>
+  <vue-post
+    :tree-topic-post-first="treeTopicPostFirst"
+    @reply="reply"
+    :post="post"
+    v-if="!is_incognito(post.user)"
+    :tree-item="treeItem"
+  />
 </template>
 
 <script lang="ts">
+import {mapGetters} from "vuex";
 import {Post} from "../../types/models";
 import VuePost from '../forum/post.vue';
 
@@ -18,6 +25,9 @@ export default {
     reply(post: Post, scrollIntoForm: boolean): void {
       this.$emit('reply', post, scrollIntoForm);
     },
+  },
+  computed: {
+    ...mapGetters('topics', ['is_incognito']),
   },
 };
 </script>

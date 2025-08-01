@@ -2,7 +2,7 @@ import axios from "axios";
 
 import {Microblog, Paginator, Tag, User} from "../../types/models";
 
-type ParentChild = { parent: Microblog, comment: Microblog };
+type ParentChild = {parent: Microblog, comment: Microblog};
 
 const state: Paginator = {
   current_page: 0,
@@ -17,9 +17,8 @@ const state: Paginator = {
 
 const getters = {
   microblogs: (state, getters, rootState) => {
-    let sorted = Object.values(state.data).sort((a, b) => (b as Microblog).id! - (a as Microblog).id!);
+    const sorted = Object.values(state.data).sort((a, b) => (b as Microblog).id! - (a as Microblog).id!);
     const sponsoredIndex = sorted.findIndex(microblog => (microblog as Microblog).is_sponsored);
-
     if (!rootState.user.is_sponsor && sponsoredIndex > -1) {
       const sponsored = sorted[sponsoredIndex];
       const random = (min: number, max: number) => Math.floor(Math.random() * (max - min) + min);
@@ -30,7 +29,6 @@ const getters = {
         sorted.splice(randomIndex, 0, sponsored);
       }
     }
-
     return sorted;
   },
 
@@ -95,13 +93,13 @@ const mutations = {
     microblog.comments_count = Object.keys(comments).length;
   },
 
-  UPDATE_VOTERS(state, {microblog, users, user}: { microblog: Microblog, users: string[], user?: User }) {
+  UPDATE_VOTERS(state, {microblog, users, user}: {microblog: Microblog, users: string[], user?: User}) {
     microblog.voters = users;
     microblog.votes = users.length;
     microblog.is_voted = users.includes(<string>user?.name);
   },
 
-  TOGGLE_TAG(state, {microblog, tag}: { microblog: Microblog, tag: Tag }) {
+  TOGGLE_TAG(state, {microblog, tag}: {microblog: Microblog, tag: Tag}) {
     const index = microblog.tags!.findIndex(item => item.name === tag.name);
 
     index > -1 ? microblog.tags!.splice(index, 1) : microblog.tags!.push(tag);
@@ -171,7 +169,10 @@ const actions = {
   },
 
   loadComments({commit}, microblog: Microblog) {
-    return axios.get(`/Mikroblogi/Comment/Show/${microblog.id}`).then(response => commit('SET_COMMENTS', {microblog, comments: response.data}));
+    return axios.get(`/Mikroblogi/Comment/Show/${microblog.id}`).then(response => commit('SET_COMMENTS', {
+      microblog,
+      comments: response.data,
+    }));
   },
 
   loadVoters({commit, dispatch}, microblog: Microblog) {
@@ -184,7 +185,7 @@ const actions = {
     });
   },
 
-  updateVoters({commit, rootState}, {microblog, users}: { microblog: Microblog, users: string[] }) {
+  updateVoters({commit, rootState}, {microblog, users}: {microblog: Microblog, users: string[]}) {
     commit('UPDATE_VOTERS', {microblog, users, user: rootState.user.user});
   },
 

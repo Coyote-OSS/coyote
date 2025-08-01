@@ -44,22 +44,23 @@ class PostRepository extends Repository implements PostRepositoryInterface
                 ->where('posts.topic_id', $topic->id)
                 ->forPage($page, $perPage))
             ->with(['user' => fn(Relations\BelongsTo $builder) => $builder->select([
-                'users.id',
                 'users.name',
+                'is_online',
                 'users.group_name',
-                'photo',
                 'posts',
                 'sig',
-                'location',
-                'users.created_at',
-                'visited_at',
-                'deleted_at',
-                'is_blocked',
-                'is_verified',
-                'allow_smilies',
                 'allow_count',
+                'users.created_at',
+                'users.id',
+                'visited_at',
+                'photo',
+                'deleted_at',
+                'is_incognito',
+                'is_blocked',
+                'allow_smilies',
+                'is_verified',
                 'allow_sig',
-                'is_online',
+                'location',
             ])])
             ->with([
                 'editor:id,name,is_blocked,deleted_at',
