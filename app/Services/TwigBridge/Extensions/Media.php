@@ -10,18 +10,22 @@ use Coyote\Services\Media\File;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class Media extends AbstractExtension
-{
-    public function getFunctions(): array
-    {
+class Media extends AbstractExtension {
+    public function getFunctions(): array {
         return [
             new TwigFunction('logo', $this->logo(...)),
-            new TwigFunction('user_avatar', $this->userAvatar(...)),
+            new TwigFunction('user_avatar', $this->userAvatarOrNothing(...)),
         ];
     }
 
-    public function userAvatar(?string $photo, string $name): Html
-    {
+    public function userAvatarOrNothing(?string $photo, ?string $name): Html {
+        if ($name === null) {
+            return new StringHtml('');
+        }
+        return $this->userAvatar($photo, $name);
+    }
+
+    public function userAvatar(?string $photo, string $name): Html {
         if ($photo === null || $photo === '') {
             $initials = new Initials()->of($name);
             return new StringHtml(new InitialsSvg($initials)->imageSvg());
@@ -32,13 +36,11 @@ class Media extends AbstractExtension
             'style="width:100%; height:100%; object-fit:cover; object-position:center;">');
     }
 
-    public function logo($filename, $secure = null): string
-    {
+    public function logo($filename, $secure = null): string {
         return $this->getMediaUrl('logo', $filename, 'img/logo-gray.png', $secure);
     }
 
-    private function getMediaUrl($factory, $filename, $placeholder, $secure = null): string
-    {
+    private function getMediaUrl($factory, $filename, $placeholder, $secure = null): string {
         if (!$filename) {
             return cdn($placeholder, $secure);
         }
@@ -54,13 +56,11 @@ class Media extends AbstractExtension
         throw new \Exception('Parameter needs to be either string or MediaInterface object.');
     }
 
-    private function photo(string $filename): string
-    {
+    private function photo(string $filename): string {
         return $this->getMediaFactory()->make('photo', ['file_name' => $filename])->url();
     }
 
-    private function getMediaFactory(): Factory
-    {
+    private function getMediaFactory(): Factory {
         return app(\Coyote\Services\Media\Factory::class);
     }
 }
