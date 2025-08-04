@@ -11,7 +11,7 @@
     </div>
     <div v-else :class="[navigationLinkStyle, $attrs.class]" class="whitespace-nowrap group/navItem">
       <NavigationLink class="block hover:text-green2-500" v-text="props.title" :action="props.action" @action="action"/>
-      <div v-if="includeChildren" class="relative hidden group-hover/navItem:block cursor-default">
+      <div v-if="includeChildren" class="relative hidden group-hover/navItem:block cursor-default text-base">
         <div :class="[
           'absolute left-1/2 -translate-x-1/2 top-2',
           'bg-tile p-2 font-medium space-y-2',
