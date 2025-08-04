@@ -527,7 +527,7 @@ readonly class FontAwesomePro {
             'adminUserReportSent'                       => 'fa-light fa-flag',
             'adminUserSettings'                         => 'fa-light fa-gear',
             'adminUserShowProfile'                      => 'fa-light fa-user',
-            'adminUserStatistics'                       => 'fa-light fa-chart-line',
+            'adminUserStatistics'                       => 'fa-light fa-table-list',
             'adminUserStatisticsAllTime'                => 'fa-light fa-calendar-check',
             'adminUserStatisticsLastDay'                => 'fa-light fa-calendar-day',
             'adminUserStatisticsLastMonth'              => 'fa-light fa-calendar-days',

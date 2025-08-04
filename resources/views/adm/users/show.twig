@@ -6,7 +6,7 @@
 
   <div class="card">
     <div class="card-header">
-      Użytkownik: {{ navigation.mention }}
+      Użytkownik {{ navigation.mention }}
     </div>
 
     <ul class="list-group list-group-flush">
@@ -18,6 +18,10 @@
         <a class="btn btn-secondary" href="{{ navigation.profile }}">
           {{ icon('adminUserShowProfile') }}
           Pokaż profil
+        </a>
+        <a class="btn btn-secondary" href="{{ navigation.settings }}">
+          {{ icon('adminUserAccountSettings') }}
+          Ustawienia konta
         </a>
         <a class="btn btn-secondary" href="{{ navigation.stream }}">
           {{ icon('adminUserFindInLog') }}
@@ -58,7 +62,7 @@
   <div class="card">
     <div class="card-header">
       {{ icon('adminUserStatistics') }}
-      Statystyki użytkownika {{ navigation.mention }}
+      Aktywność w kategoriach użytkownika {{ navigation.mention }}
     </div>
     <div class="card-body">
       <div class="btn-group mb-4">
@@ -155,28 +159,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      {{ icon('adminUserSettings') }}
-      Ustawienia użytkownika {{ navigation.mention }}
-    </div>
-
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">
-        <div>
-          <a class="btn btn-secondary" href="{{ navigation.settings }}">
-            {{ icon('adminUserAccountSettings') }}
-            Ustawienia konta
-          </a>
-          <button class="btn btn-secondary" disabled title="Przekierowanie jeszcze nie jest gotowe">
-            {{ icon('adminUserGroupSettings') }}
-            Dodaj lub usuń z grupy
-          </button>
-        </div>
-      </li>
-    </ul>
   </div>
 
   <a class="btn btn-secondary" href="{{ navigation.users }}">
