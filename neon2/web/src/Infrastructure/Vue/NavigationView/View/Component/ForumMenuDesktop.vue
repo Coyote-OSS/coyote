@@ -1,6 +1,6 @@
 <template>
   <div class="relative z-[1]">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 hidden group-hover/navItem:block">
+    <div class="absolute top-2 left-1/2 -translate-x-1/2 hidden group-hover/navItem:block">
       <div class="bg-neutral2-100 rounded-lg inline-block font-semibold border border-tile-border shadow-md">
         <div
           class="bg-neutral2-050 text-neutral2-600 text-xs py-3 px-4 space-x-4 rounded-t-lg border-b border-tile-border">
