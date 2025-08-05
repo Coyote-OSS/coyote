@@ -4,6 +4,7 @@ namespace Tests\Legacy\IntegrationNew\View\Filter;
 use Coyote\Domain\Administrator\UserMaterial\List\Store\SearchFilter;
 use Coyote\Domain\Administrator\UserMaterial\List\Store\SearchFilterType;
 use Coyote\Domain\View\Filter\SearchFilterFormat;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -106,6 +107,50 @@ class SearchFilterFormatTest extends TestCase {
     #[Test]
     public function nonInteger(): void {
         $this->assertNull($this->parse('author:abc')->authorId);
+    }
+
+    #[Test]
+    public function searchingOpenReport_removesNotReported(): void {
+        $searchFilter = $this->parse("not:reported report:open");
+        $this->assertTrue($searchFilter->reported);
+        $this->assertTrue($searchFilter->reportOpen);
+    }
+
+    #[Test]
+    public function searchingClosedReport_removesNotReported(): void {
+        $searchFilter = $this->parse("not:reported report:closed");
+        $this->assertTrue($searchFilter->reported);
+        $this->assertFalse($searchFilter->reportOpen);
+    }
+
+    #[Test]
+    public function searchingNotReported_removesReportClosed(): void {
+        $searchFilter = $this->parse("report:closed not:reported");
+        $this->assertNull($searchFilter->reportOpen);
+        $this->assertFalse($searchFilter->reported);
+    }
+
+    #[Test]
+    public function searchingReported_doesNotRemoveReportClosed(): void {
+        $searchFilter = $this->parse("report:closed is:reported");
+        $this->assertFalse($searchFilter->reportOpen);
+        $this->assertTrue($searchFilter->reported);
+    }
+
+    #[Test]
+    public function notDeleted_removesDeleted(): void {
+        $this->assertFalse($this->parse('is:deleted not:deleted')->deleted);
+    }
+
+    #[Test]
+    public function deleted_removesNotDeleted(): void {
+        $this->assertTrue($this->parse('not:deleted is:deleted')->deleted);
+    }
+
+    #[Test]
+    #[DoesNotPerformAssertions]
+    public function ignoreInvalidValue(): void {
+        $this->parse('invalid:value');
     }
 
     public function parse(string $format): SearchFilter {

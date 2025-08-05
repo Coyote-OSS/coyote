@@ -8,58 +8,72 @@ readonly class SearchFilterFormat {
     public function __construct(private string $filter) {}
 
     public function toSearchFilter(): SearchFilter {
-        $ar = $this->toArray();
+        $array = ['type' => SearchFilterType::Post,];
+        foreach ($this->filterTokens() as $token) {
+            [$key, $value] = $this->parseToken($token);
+            $array[$key] = $value;
+            if ($key === 'report') {
+                $array['reported'] = true;
+            }
+            if ([$key, $value] === ['reported', false]) {
+                $array['report'] = null;
+            }
+        }
         return new SearchFilter(
-            $ar['type'] ?? SearchFilterType::Post,
-            $ar['deleted'] ?? null,
-            $ar['reported'] ?? null,
-            $ar['open'] ?? null,
-            $ar['author'] ?? null);
+            $array['type'],
+            $array['deleted'] ?? null,
+            $array['reported'] ?? null,
+            $array['report'] ?? null,
+            $array['author'] ?? null);
     }
 
-    private function toArray(): array {
-        $array = [];
-        foreach (\explode(' ', $this->filter) as $format) {
-            $this->integer($array, $format, 'author');
-            $this->boolean($array, $format, 'reported');
-            $this->boolean($array, $format, 'open');
-            $this->boolean($array, $format, 'deleted');
-            $this->choice($array, $format, 'type', [
+    private function parseToken(string $token): ?array {
+        return $this->parseInteger($token, 'author') ??
+            $this->parseBoolean($token, 'reported') ??
+            $this->choice($token, 'report', [
+                'open'   => true,
+                'closed' => false,
+            ]) ??
+            $this->parseBoolean($token, 'deleted') ??
+            $this->choice($token, 'type', [
                 'post'      => SearchFilterType::Post,
                 'comment'   => SearchFilterType::PostComment,
                 'microblog' => SearchFilterType::Blog,
             ]);
-        }
-        return $array;
     }
 
-    private function integer(array &$array, string $format, string $key): void {
+    private function parseInteger(string $format, string $key): ?array {
         $parts = \explode(':', $format);
         if (count($parts) === 1) {
-            return;
+            return null;
         }
         [$k, $value] = $parts;
-        if ($k === $key) {
-            if (\cType_digit($value)) {
-                $array[$key] = (int)$value;
-            }
+        if ($k === $key && \cType_digit($value)) {
+            return [$key, (int)$value];
         }
+        return null;
     }
 
-    private function boolean(array &$array, string $format, string $key): void {
-        if ($format === 'is:' . $key) {
-            $array[$key] = true;
+    private function parseBoolean(string $token, string $key): ?array {
+        if ($token === "is:$key") {
+            return [$key, true];
         }
-        if ($format === 'not:' . $key) {
-            $array[$key] = false;
+        if ($token === "not:$key") {
+            return [$key, false];
         }
+        return null;
     }
 
-    private function choice(array &$array, string $format, string $key, array $values): void {
+    private function choice(string $format, string $key, array $values): ?array {
         foreach ($values as $value => $returnValue) {
             if ($format === "$key:$value") {
-                $array[$key] = $returnValue;
+                return [$key, $returnValue];
             }
         }
+        return null;
+    }
+
+    private function filterTokens(): array {
+        return \explode(' ', $this->filter);
     }
 }
