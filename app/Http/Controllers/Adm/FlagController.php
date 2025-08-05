@@ -17,10 +17,11 @@ class FlagController extends BaseController {
         $this->breadcrumb->push('Dodane treści', route('adm.flag'));
         $paramFilterString = $this->queryOrNull('filter');
         $format = new SearchFilterFormat($paramFilterString ?? '');
+        $filter = $format->toSearchFilter();
         $request = new MaterialRequest(
             \max(1, (int)$this->request->query('page', 1)),
             20,
-            $format->toSearchFilter());
+            $filter);
 
         $materials = new MaterialList(
             $render,
@@ -31,7 +32,7 @@ class FlagController extends BaseController {
         return $this->view('adm.flag.home', [
             'materials'        => $materials,
             'pagination'       => new BootstrapPagination($request->page, $request->pageSize, $materials->total(), ['filter' => $this->queryOrNull('filter')]),
-            'filter'           => $this->queryOrNull('filter'),
+            'filter'           => $filter->toString(),
             'availableFilters' => [
                 'type:post', 'type:comment', 'type:microblog',
                 'is:deleted', 'not:deleted',
