@@ -35,7 +35,7 @@ class FlagController extends BaseController {
             'availableFilters' => [
                 'type:post', 'type:comment', 'type:microblog',
                 'is:deleted', 'not:deleted',
-                'is:reported', 'not:reported', 'is:open', 'not:open',
+                'is:reported', 'not:reported', 'report:open', 'report:closed',
                 'author:{id}',
             ],
         ]);

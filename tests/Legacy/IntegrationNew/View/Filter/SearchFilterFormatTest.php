@@ -64,12 +64,12 @@ class SearchFilterFormatTest extends TestCase {
 
     #[Test]
     public function filterByReportOpen() {
-        $this->assertTrue($this->parse('is:open')->reportOpen);
+        $this->assertTrue($this->parse('report:open')->reportOpen);
     }
 
     #[Test]
     public function filterByReportNotOpen() {
-        $this->assertFalse($this->parse('not:open')->reportOpen);
+        $this->assertFalse($this->parse('report:closed')->reportOpen);
     }
 
     #[Test]
