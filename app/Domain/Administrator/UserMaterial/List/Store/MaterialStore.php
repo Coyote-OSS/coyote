@@ -12,27 +12,28 @@ use Illuminate\Database\Query;
 class MaterialStore {
     public function fetch(MaterialRequest $request): MaterialResult {
         /** @var Eloquent\Builder $query */
-        $query = $this->queryByType($request->type)->withTrashed();
+        $query = $this->queryByType($request->filter->type)->withTrashed();
 
-        $this->whereTrashed($query, $request->deleted);
+        $this->whereTrashed($query, $request->filter->deleted);
 
         $materialTable = $query->getModel()->getTable();
         $flagResourceTable = (new Resource)->getTable();
 
-        if ($request->reported !== null) {
+        if ($request->filter->reported !== null) {
             $query->whereExists(
                 callback:fn(Query\Builder $query) => $query
                     ->from($flagResourceTable)
                     ->whereColumn("$flagResourceTable.resource_id", "$materialTable.id")
-                    ->where("$flagResourceTable.resource_type", $this->resourceClassByType($request->type)),
-                not:!$request->reported);
+                    ->where("$flagResourceTable.resource_type",
+                        $this->resourceClassByType($request->filter->type)),
+                not:!$request->filter->reported);
         }
-        if ($request->authorId !== null) {
-            $query->where('user_id', $request->authorId);
+        if ($request->filter->authorId !== null) {
+            $query->where('user_id', $request->filter->authorId);
         }
-        if ($request->reportOpen !== null) {
+        if ($request->filter->reportOpen !== null) {
             $query->whereRelation('flags', function (Eloquent\Builder $query) use ($request) {
-                $this->whereTrashed($query, !$request->reportOpen);
+                $this->whereTrashed($query, !$request->filter->reportOpen);
             });
         }
         $materials = $query
@@ -46,7 +47,7 @@ class MaterialStore {
             ->get()
             ->map(fn(Post|Microblog|Post\Comment $material) => new Material(
                 $material->id,
-                $request->type,
+                $this->materialType($request->filter->type),
                 $material->created_at,
                 $this->deletedAt($material),
                 $this->parentDeletedAt($material),
@@ -66,24 +67,20 @@ class MaterialStore {
         );
     }
 
-    private function queryByType(string $type): Eloquent\Builder {
-        if ($type === 'comment') {
-            return Post\Comment::query();
-        }
-        if ($type === 'post') {
-            return Post::query();
-        }
-        return Microblog::query();
+    private function queryByType(SearchFilterType $type): Eloquent\Builder {
+        return match ($type) {
+            SearchFilterType::Post        => Post::query(),
+            SearchFilterType::PostComment => Post\Comment::query(),
+            SearchFilterType::Blog        => Microblog::query(),
+        };
     }
 
-    private function resourceClassByType(string $type): string {
-        if ($type === 'comment') {
-            return Post\Comment::class;
-        }
-        if ($type === 'post') {
-            return Post::class;
-        }
-        return Microblog::class;
+    private function resourceClassByType(SearchFilterType $type): string {
+        return match ($type) {
+            SearchFilterType::Post        => Post::class,
+            SearchFilterType::PostComment => Post\Comment::class,
+            SearchFilterType::Blog        => Microblog::class,
+        };
     }
 
     private function deletedAt(Post|Post\Comment|Microblog $material): ?Carbon {
@@ -126,6 +123,7 @@ class MaterialStore {
         if ($material instanceof Post\Comment) {
             return UrlBuilder::postComment($material);
         }
+        return '';
     }
 
     private function microblogHref(Microblog $material): string {
@@ -133,5 +131,13 @@ class MaterialStore {
             return route('microblog.view', [$material->parentId]) . '#comment-' . $material->id;
         }
         return route('microblog.view', [$material->parentId ?? $material->id]);
+    }
+
+    private function materialType(SearchFilterType $type): string {
+        return match ($type) {
+            SearchFilterType::Post        => 'post',
+            SearchFilterType::PostComment => 'comment',
+            SearchFilterType::Blog        => 'microblog',
+        };
     }
 }

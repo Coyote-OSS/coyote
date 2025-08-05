@@ -21,20 +21,16 @@ use Illuminate\Database\Eloquent;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class FlagController extends Controller
-{
-    public function __construct(private UserRepository $user)
-    {
+class FlagController extends Controller {
+    public function __construct(private UserRepository $user) {
         parent::__construct();
     }
 
-    public function index(): Eloquent\Collection
-    {
+    public function index(): Eloquent\Collection {
         return Type::query()->orderBy('order')->get();
     }
 
-    public function save(Request $request): void
-    {
+    public function save(Request $request): void {
         $this->validate($request, [
             'url'      => 'required|string',
             'metadata' => 'required',
@@ -79,8 +75,7 @@ class FlagController extends Controller
         }
     }
 
-    public function delete(Flag $flag): ?Response
-    {
+    public function delete(Flag $flag): ?Response {
         $object = new Stream\Objects\Flag(['id' => $flag->id]);
         if (!$this->isAuthorized($flag)) {
             return response('Unauthorized.', 401);
@@ -94,8 +89,7 @@ class FlagController extends Controller
         return null;
     }
 
-    private function isAuthorized(Flag $flag): bool
-    {
+    private function isAuthorized(Flag $flag): bool {
         /** @var Gate $gate */
         $gate = app(Gate::class);
         if (count($flag->forums)) {
@@ -110,15 +104,13 @@ class FlagController extends Controller
         return false;
     }
 
-    private function attachFlagResources(Flag $flag, array $resources): void
-    {
+    private function attachFlagResources(Flag $flag, array $resources): void {
         foreach ($resources as $name => $id) {
             $this->flagResources($flag, $name)->attach($id);
         }
     }
 
-    private function flagResources(Flag $flag, string $model): Eloquent\Relations\MorphToMany
-    {
+    private function flagResources(Flag $flag, string $model): Eloquent\Relations\MorphToMany {
         if ($model === Post::class) {
             return $flag->posts();
         }
@@ -143,13 +135,11 @@ class FlagController extends Controller
         throw new \Exception('Unexpected reported model.');
     }
 
-    private function resourcePermissions(array $resources): array
-    {
+    private function resourcePermissions(array $resources): array {
         return \array_map($this->resourcePermission(...), \array_keys($resources));
     }
 
-    private function resourcePermission(string $resource): string
-    {
+    private function resourcePermission(string $resource): string {
         $permissions = [
             Post::class                => 'forum-delete',
             Topic::class               => 'forum-delete',

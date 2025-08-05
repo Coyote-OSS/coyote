@@ -8,26 +8,19 @@ use Coyote\Domain\Administrator\UserMaterial\List\Store\MaterialStore;
 use Coyote\Domain\Administrator\UserMaterial\List\View\MarkdownRender;
 use Coyote\Domain\Administrator\UserMaterial\List\View\MaterialList;
 use Coyote\Domain\Administrator\UserMaterial\List\View\Time;
-use Coyote\Domain\View\Filter\Filter;
+use Coyote\Domain\View\Filter\SearchFilterFormat;
 use Coyote\Domain\View\Pagination\BootstrapPagination;
 use Illuminate\View\View;
 
-class FlagController extends BaseController
-{
-    public function index(MaterialStore $store, MarkdownRender $render): View
-    {
+class FlagController extends BaseController {
+    public function index(MaterialStore $store, MarkdownRender $render): View {
         $this->breadcrumb->push('Dodane treści', route('adm.flag'));
         $paramFilterString = $this->queryOrNull('filter');
-        $filterParams = new Filter($paramFilterString ?? '')->toArray();
+        $format = new SearchFilterFormat($paramFilterString ?? '');
         $request = new MaterialRequest(
             \max(1, (int)$this->request->query('page', 1)),
             20,
-            $filterParams['type'] ?? 'post',
-            $filterParams['deleted'] ?? null,
-            $filterParams['reported'] ?? null,
-            $filterParams['author'] ?? null,
-            $filterParams['open'] ?? null,
-        );
+            $format->toSearchFilter());
 
         $materials = new MaterialList(
             $render,
@@ -37,8 +30,8 @@ class FlagController extends BaseController
 
         return $this->view('adm.flag.home', [
             'materials'        => $materials,
-            'pagination'       => new BootstrapPagination($request->page, $request->pageSize, $materials->total(), ['filter' => $paramFilterString]),
-            'filter'           => $paramFilterString,
+            'pagination'       => new BootstrapPagination($request->page, $request->pageSize, $materials->total(), ['filter' => $this->queryOrNull('filter')]),
+            'filter'           => $this->queryOrNull('filter'),
             'availableFilters' => [
                 'type:post', 'type:comment', 'type:microblog',
                 'is:deleted', 'not:deleted',
@@ -48,8 +41,7 @@ class FlagController extends BaseController
         ]);
     }
 
-    private function queryOrNull(string $key): ?string
-    {
+    private function queryOrNull(string $key): ?string {
         if ($this->request->query->has($key)) {
             return $this->request->query->get($key, '');
         }
