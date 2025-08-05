@@ -73,6 +73,7 @@ $this->group(
         $this->get('Users/{user_trashed}', 'UsersController@show')->name('users.show');
         $this->get('Users/Save/{user_trashed}', 'UsersController@edit')->name('users.save');
         $this->post('Users/Save/{user_trashed}', 'UsersController@save');
+        $this->get('Users/Inspect/{user_trashed}', 'UsersController@inspect')->name('users.inspect');
 
         $this->get('Firewall', 'FirewallController@index')->name('firewall');
         $this->get('Firewall/Save/{firewall?}', 'FirewallController@edit')->name('firewall.save');

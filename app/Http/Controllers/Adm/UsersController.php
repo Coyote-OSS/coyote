@@ -7,14 +7,15 @@ use Coyote\Domain\Administrator\User\Store\UserStore;
 use Coyote\Domain\Administrator\User\View\Activity;
 use Coyote\Domain\Administrator\User\View\Navigation;
 use Coyote\Domain\Administrator\View\Date;
+use Coyote\Domain\Administrator\View\Mention;
 use Coyote\Events\UserDeleted;
 use Coyote\Events\UserSaved;
 use Coyote\Http\Forms\User\AdminForm;
 use Coyote\Http\Grids\Adm\UsersGrid;
 use Coyote\Repositories\Criteria\WithTrashed;
 use Coyote\Repositories\Eloquent\UserRepository;
+use Coyote\Services\Adm\UserInspectionService;
 use Coyote\Services\FormBuilder\Form;
-use Coyote\Services\Guest;
 use Coyote\Services\Stream\Activities\Update;
 use Coyote\Services\Stream\Objects\Person;
 use Coyote\User;
@@ -22,16 +23,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class UsersController extends BaseController
-{
-    public function __construct(private UserRepository $user)
-    {
+class UsersController extends BaseController {
+    public function __construct(private UserRepository $user) {
         parent::__construct();
         $this->breadcrumb->push('Użytkownicy', route('adm.users'));
     }
 
-    public function index(): View
-    {
+    public function index(): View {
         $this->user->pushCriteria(new WithTrashed());
         $this->user->applyCriteria();
         $grid = $this->gridBuilder()->createGrid(UsersGrid::class);
@@ -39,8 +37,7 @@ class UsersController extends BaseController
         return $this->view('adm.users.home', ['grid' => $grid]);
     }
 
-    public function show(User $user): View
-    {
+    public function show(User $user): View {
         $this->breadcrumb->push("@$user->name", route('adm.users.show', [$user->id]));
         $daysAgo = $this->daysAgo($this->request);
         $store = new UserStore($user, Carbon::now()->subDays($daysAgo));
@@ -57,8 +54,7 @@ class UsersController extends BaseController
         ]);
     }
 
-    private function daysAgo(Request $request): int
-    {
+    private function daysAgo(Request $request): int {
         $key = $request->query('last') ?? 'default';
         $map = [
             'day'     => 1,
@@ -70,8 +66,7 @@ class UsersController extends BaseController
         return $map[$key] ?? $map['default'];
     }
 
-    public function edit(User $user): View
-    {
+    public function edit(User $user): View {
         $this->breadcrumb->push("@$user->name", route('adm.users.show', [$user->id]));
         $this->breadcrumb->push('Ustawienia konta', route('adm.users.save', [$user->id]));
         return $this->view('adm.users.save', [
@@ -81,15 +76,13 @@ class UsersController extends BaseController
         ]);
     }
 
-    protected function getForm(User $user): Form
-    {
+    protected function getForm(User $user): Form {
         return $this->createForm(AdminForm::class, $user, [
             'url' => route('adm.users.save', [$user->id]),
         ]);
     }
 
-    public function save(User $user): RedirectResponse
-    {
+    public function save(User $user): RedirectResponse {
         $form = $this->getForm($user);
         $form->validate();
 
@@ -110,5 +103,17 @@ class UsersController extends BaseController
         });
 
         return back()->with('success', 'Zmiany zostały zapisane.');
+    }
+
+    public function inspect(User $user, UserInspectionService $service): View {
+        return $this->view('adm.users.inspect', [
+            'navigation' => [
+                'mention' => new Mention($user->id, $user->name),
+                'back'    => route('adm.users.show', [$user->id]),
+            ],
+            'inspection' => [
+                'fingerprints' => $service->findUserFingerprints($user->id),
+            ],
+        ]);
     }
 }

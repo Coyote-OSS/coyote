@@ -3,8 +3,7 @@ namespace Coyote\Domain\Administrator\User\View;
 
 use Coyote\Domain\Administrator\View\Mention;
 
-readonly class Navigation
-{
+readonly class Navigation {
     public string $stream;
     public string $users;
     public string $settings;
@@ -14,9 +13,9 @@ readonly class Navigation
     public string $microblogs;
     public string $receivedFlags;
     public Mention $mention;
+    public string $inspect;
 
-    public function __construct(int $userId, string $username)
-    {
+    public function __construct(int $userId, string $username) {
         $this->stream = route('adm.stream', ['actor_displayName' => $username]);
         $this->users = route('adm.users');
         $this->settings = route('adm.users.save', [$userId]);
@@ -26,5 +25,6 @@ readonly class Navigation
         $this->microblogs = route('adm.flag', ['filter' => "type:microblog author:$userId"]);
         $this->receivedFlags = route('adm.flag', ['filter' => "is:reported author:$userId"]);
         $this->mention = new Mention($userId, $username);
+        $this->inspect = route('adm.users.inspect', [$userId]);
     }
 }
