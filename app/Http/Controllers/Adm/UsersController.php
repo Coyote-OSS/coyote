@@ -14,7 +14,7 @@ use Coyote\Http\Forms\User\AdminForm;
 use Coyote\Http\Grids\Adm\UsersGrid;
 use Coyote\Repositories\Criteria\WithTrashed;
 use Coyote\Repositories\Eloquent\UserRepository;
-use Coyote\Services\Adm\UserInspectionService;
+use Coyote\Services\Adm\UserInspection\UserInspectionService;
 use Coyote\Services\FormBuilder\Form;
 use Coyote\Services\Stream\Activities\Update;
 use Coyote\Services\Stream\Objects\Person;
@@ -106,13 +106,20 @@ class UsersController extends BaseController {
     }
 
     public function inspect(User $user, UserInspectionService $service): View {
+        $usersByFingerprints = request()->query->has('usersByFingerprints');
+        $fingerprints = $service->findUserFingerprints($user->id);
         return $this->view('adm.users.inspect', [
             'navigation' => [
-                'mention' => new Mention($user->id, $user->name),
-                'back'    => route('adm.users.show', [$user->id]),
+                'mention'             => new Mention($user->id, $user->name),
+                'usersByFingerprints' => route('adm.users.inspect', [$user->id]) . '?usersByFingerprints',
+                'back'                => route('adm.users.show', [$user->id]),
             ],
             'inspection' => [
-                'fingerprints' => $service->findUserFingerprints($user->id),
+                'fingerprints'           => $fingerprints,
+                'hasUsersByFingerprints' => $usersByFingerprints,
+                'usersByFingerprints'    => $usersByFingerprints
+                    ? $service->findMultipleUsersByFingerprints($user->id, $fingerprints)
+                    : null,
             ],
         ]);
     }

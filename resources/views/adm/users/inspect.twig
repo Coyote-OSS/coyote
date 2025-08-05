@@ -6,33 +6,63 @@
     <div class="card-header">
       Użytkownik {{ navigation.mention }}
     </div>
-    <div class="card-body">
-      <p>Fingerprinty użytkowników są wyszukane w okresie ostatnich <b>dwóch lat</b>.</p>
-      <div class="card">
-        <div class="card-header">
-          {{ icon('adminUserFindFingerprints') }}
-          Fingerprinty ({{ inspection.fingerprints|length }})
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        {% if inspection.hasUsersByFingerprints %}
+          <div class="card mb-0">
+            <div class="card-header">
+              {{ icon('adminUserUsersByFingerprint') }}
+              Inne konta z fingerprintami
+            </div>
+            <ul class="list-group list-group-flush">
+              {% for usersByFingerprint in inspection.usersByFingerprints %}
+                <li class="list-group-item">
+                  <div class="d-flex">
+                    <code>{{ usersByFingerprint.fingerprint }}</code>
+                    <span class="ms-auto">
+                      {{ usersByFingerprint.userIds|json_encode }}
+                    </span>
+                  </div>
+                </li>
+              {% else %}
+                <li class="list-group-item text-center">
+                  Nie znaleziono innych kont z fingerprintami użytkownika.
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% else %}
+          <a href="{{ navigation.usersByFingerprints }}" class="btn btn-secondary">Rozpoznaj inne konta</a>
+        {% endif %}
+      </li>
+      <li class="list-group-item">
+        <p>Fingerprinty użytkowników są wyszukane w okresie ostatnich <b>dwóch lat</b>.</p>
+        <div class="card mb-0">
+          <div class="card-header">
+            {{ icon('adminUserFindFingerprints') }}
+            Fingerprinty ({{ inspection.fingerprints|length }})
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for fingerprint in inspection.fingerprints %}
+              <li class="list-group-item">
+                <div class="d-flex">
+                  <code>{{ fingerprint.fingerprint }}</code>
+                  <span class="ms-auto">
+                    użył
+                    <b>{{ fingerprint.timesUsed }}</b> raz(y),
+                    ostatnio <b>{{ fingerprint.lastUsed }}</b>
+                  </span>
+                </div>
+              </li>
+            {% else %}
+              <li class="list-group-item text-center">
+                Nie znaleziono fingerprintów użytkownika.
+              </li>
+            {% endfor %}
+          </ul>
         </div>
-        <ul class="list-group list-group-flush">
-          {% for fingerprint in inspection.fingerprints %}
-            <li class="list-group-item">
-              <div class="d-flex">
-                <code>{{ fingerprint.fingerprint }}</code>
-                <span class="ms-auto">
-                  użył
-                  <b>{{ fingerprint.timesUsed }}</b> raz(y),
-                  ostatnio <b>{{ fingerprint.lastUsed }}</b>
-                </span>
-              </div>
-            </li>
-          {% else %}
-            <li class="list-group-item text-center">
-              Nie znaleziono fingerprintów użytkownika.
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
   <a class="btn btn-secondary" href="{{ navigation.back }}">
     Powrót

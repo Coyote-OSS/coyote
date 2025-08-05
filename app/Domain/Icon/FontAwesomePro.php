@@ -533,6 +533,7 @@ readonly class FontAwesomePro {
             'adminUserStatisticsLastMonth'              => 'fa-light fa-calendar-days',
             'adminUserStatisticsLastWeek'               => 'fa-light fa-calendar-week',
             'adminUserStatisticsLastYear'               => 'fa-light fa-calendar',
+            'adminUserUsersByFingerprint'               => 'fa-light fa-users',
 
             // footer
             'footerContactUs'                           => 'fa-light fa-circle-info',

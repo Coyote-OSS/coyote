@@ -1,7 +1,7 @@
 <?php
-namespace Coyote\Services\Adm;
+namespace Coyote\Services\Adm\UserInspection;
 
-readonly class UserInspectionFingerprint {
+readonly class FingerprintUsage {
     public function __construct(
         public string $fingerprint,
         public int    $timesUsed,
