@@ -29,7 +29,7 @@ readonly class UserFingerprintService {
                 DB::raw('count(*) as times_used'),
                 DB::raw('max(DATE(created_at)) as last_used'),
             ])
-            ->where('created_at', '>', now()->subYears(2))
+            ->where('created_at', '>', now()->subMonth())
             ->whereRaw("(actor ->> 'id')::integer = ?", [$userId])
             ->whereNotNull('fingerprint')
             ->groupBy('fingerprint')
