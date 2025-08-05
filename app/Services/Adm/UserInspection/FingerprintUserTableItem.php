@@ -1,10 +1,12 @@
 <?php
 namespace Coyote\Services\Adm\UserInspection;
 
-readonly class FingerprintUsage {
+readonly class FingerprintUserTableItem {
+    /**
+     * @param User[] $users
+     */
     public function __construct(
         public string $fingerprint,
-        public int    $timesUsed,
-        public string $lastUsed,
+        public array  $users,
     ) {}
 }

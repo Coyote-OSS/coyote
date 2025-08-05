@@ -3,6 +3,7 @@ namespace Coyote\Http\Controllers\Adm;
 
 use Boduch\Grid\Source\EloquentSource;
 use Carbon\Carbon;
+use Coyote;
 use Coyote\Domain\Administrator\User\Store\UserStore;
 use Coyote\Domain\Administrator\User\View\Activity;
 use Coyote\Domain\Administrator\User\View\Navigation;
@@ -14,7 +15,10 @@ use Coyote\Http\Forms\User\AdminForm;
 use Coyote\Http\Grids\Adm\UsersGrid;
 use Coyote\Repositories\Criteria\WithTrashed;
 use Coyote\Repositories\Eloquent\UserRepository;
-use Coyote\Services\Adm\UserInspection\UserInspectionService;
+use Coyote\Services\Adm\UserInspection;
+use Coyote\Services\Adm\UserInspection\FingerprintUserIdTableItem;
+use Coyote\Services\Adm\UserInspection\FingerprintUserTableItem;
+use Coyote\Services\Adm\UserInspection\UserFingerprintService;
 use Coyote\Services\FormBuilder\Form;
 use Coyote\Services\Stream\Activities\Update;
 use Coyote\Services\Stream\Objects\Person;
@@ -105,22 +109,45 @@ class UsersController extends BaseController {
         return back()->with('success', 'Zmiany zostały zapisane.');
     }
 
-    public function inspect(User $user, UserInspectionService $service): View {
-        $usersByFingerprints = request()->query->has('usersByFingerprints');
-        $fingerprints = $service->findUserFingerprints($user->id);
+    public function inspect(User $user, UserFingerprintService $service): View {
+        $recognizeOtherUsers = request()->query->has('recognizeOtherUsers');
+        $fingerprints = $service->findFingerprints($user->id);
+        $usersIdByFingerprints = $recognizeOtherUsers
+            ? $service->findUsersIdByFingerprint($fingerprints, $user->id)
+            : [];
+
         return $this->view('adm.users.inspect', [
             'navigation' => [
                 'mention'             => new Mention($user->id, $user->name),
-                'usersByFingerprints' => route('adm.users.inspect', [$user->id]) . '?usersByFingerprints',
+                'usersByFingerprints' => route('adm.users.inspect', [$user->id]) . '?recognizeOtherUsers',
                 'back'                => route('adm.users.show', [$user->id]),
             ],
             'inspection' => [
                 'fingerprints'           => $fingerprints,
-                'hasUsersByFingerprints' => $usersByFingerprints,
-                'usersByFingerprints'    => $usersByFingerprints
-                    ? $service->findMultipleUsersByFingerprints($user->id, $fingerprints)
-                    : null,
+                'hasUsersByFingerprints' => $recognizeOtherUsers,
+                'usersByFingerprints'    => $this->fillUserIdToUserMention($usersIdByFingerprints),
             ],
         ]);
+    }
+
+    /**
+     * @param FingerprintUserIdTableItem[] $userIdTablesItems
+     */
+    private function fillUserIdToUserMention(array $userIdTablesItems): array {
+        return \array_map(
+            $this->toUserTableItem(...),
+            $userIdTablesItems);
+    }
+
+    private function toUserTableItem(FingerprintUserIdTableItem $userIds): FingerprintUserTableItem {
+        $users = [];
+        foreach ($this->findUserNames($userIds->userIds) as $userId => $username) {
+            $users[] = new UserInspection\User($userId, $username);
+        }
+        return new FingerprintUserTableItem($userIds->fingerprint, $users);
+    }
+
+    private function findUserNames(array $userIds): array {
+        return Coyote\User::query()->whereIn('id', $userIds)->pluck('name', 'id')->toArray();
     }
 }

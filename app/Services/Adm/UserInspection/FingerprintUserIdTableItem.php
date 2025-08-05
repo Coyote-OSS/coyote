@@ -1,7 +1,7 @@
 <?php
 namespace Coyote\Services\Adm\UserInspection;
 
-readonly class FingerprintUsers {
+readonly class FingerprintUserIdTableItem {
     /**
      * @param int[] $userIds
      */

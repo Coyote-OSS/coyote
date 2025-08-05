@@ -5,17 +5,17 @@ use Illuminate\Database\Connection;
 use Illuminate\Support;
 use Illuminate\Support\Facades\DB;
 
-readonly class UserInspectionService {
+readonly class UserFingerprintService {
     public function __construct(
         private Connection $connection,
     ) {}
 
     /**
-     * @return FingerprintUsage[]
+     * @return Fingerprint[]
      */
-    public function findUserFingerprints(int $userId): array {
+    public function findFingerprints(int $userId): array {
         return $this->fingerprintRecords($userId)
-            ->map(fn(\stdClass $record) => new FingerprintUsage(
+            ->map(fn(\stdClass $record) => new Fingerprint(
                 $record->fingerprint,
                 $record->times_used,
                 $record->last_used))
@@ -38,28 +38,30 @@ readonly class UserInspectionService {
     }
 
     /**
-     * @param FingerprintUsage[] $fingerprintUsages
+     * @param Fingerprint[] $fingerprints
+     * @return FingerprintUserIdTableItem[]
      */
-    public function findMultipleUsersByFingerprints(int $userId, array $fingerprintUsages): array {
+    public function findUsersIdByFingerprint(array $fingerprints, int $exceptUserId): array {
         return $this->connection
             ->table('streams')
             ->select('streams.fingerprint', DB::raw("json_agg(distinct (actor->>'id')::integer) as users_id"))
-            ->whereIn('streams.fingerprint', $this->fingerprints($fingerprintUsages))
-            ->where(DB::raw("actor->>'id'"), '!=', $userId)
+            ->whereIn('streams.fingerprint', $this->fingerprints($fingerprints))
+            ->where(DB::raw("actor->>'id'"), '!=', $exceptUserId)
             ->groupBy('streams.fingerprint')
             ->get()
-            ->map(fn(\stdClass $record): FingerprintUsers => new FingerprintUsers(
+            ->map(fn(\stdClass $record): FingerprintUserIdTableItem => new FingerprintUserIdTableItem(
                 $record->fingerprint,
                 json_decode($record->users_id)))
             ->toArray();
     }
 
     /**
-     * @param FingerprintUsage[] $fingerprintUsages
+     * @param Fingerprint[] $fingerprint
+     * @return FingerprintUserIdTableItem[]
      */
-    private function fingerprints(array $fingerprintUsages): array {
+    private function fingerprints(array $fingerprint): array {
         return array_map(
-            fn(FingerprintUsage $usage) => $usage->fingerprint,
-            $fingerprintUsages);
+            fn(Fingerprint $usage) => $usage->fingerprint,
+            $fingerprint);
     }
 }
