@@ -7,8 +7,7 @@ use Coyote\Domain\Administrator\View\Html\SubstringHtml;
 use Coyote\Domain\Html;
 use Coyote\Services\Media;
 
-class MaterialItem
-{
+class MaterialItem {
     public Html $preview;
 
     public function __construct(
@@ -20,9 +19,8 @@ class MaterialItem
         public Html        $content,
         public bool        $reported,
         public bool        $reportOpen,
-        public ?string     $adminUrl,
-    )
-    {
+        public ?string     $href,
+    ) {
         $this->preview = new SubstringHtml(new InlineHtml($content), 200);
     }
 }

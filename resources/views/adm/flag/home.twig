@@ -49,7 +49,7 @@
       </div>
       <div class="list-group list-group-flush">
         {% for material in materials.items %}
-          <a href="{{ material.adminUrl }}" class="list-group-item material-list-item {{ material.reportOpen ? 'report-open' : '' }}">
+          <a href="{{ material.href }}" class="list-group-item material-list-item {{ material.reportOpen ? 'report-open' : '' }}">
             <div class="d-flex" style="opacity:{{ material.deletedAt ? '0.4' : '1.0' }};">
               <div>
                 <div class="img-thumbnail me-2" style="width:40px;" title="{{ material.authorUsername }}">

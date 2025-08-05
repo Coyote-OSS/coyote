@@ -3,8 +3,7 @@ namespace Coyote\Domain\Administrator\UserMaterial\List\Store;
 
 use Carbon\Carbon;
 
-readonly class Material
-{
+readonly class Material {
     public function __construct(
         public int     $id,
         public string  $type,
@@ -17,7 +16,6 @@ readonly class Material
         public string  $contentMarkdown,
         public bool    $reported,
         public bool    $reportOpen,
-    )
-    {
-    }
+        public string  $href,
+    ) {}
 }

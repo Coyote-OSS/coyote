@@ -5,13 +5,12 @@ use Carbon\Carbon;
 use Coyote\Microblog;
 use Coyote\Models\Flag\Resource;
 use Coyote\Post;
+use Coyote\Services\UrlBuilder;
 use Illuminate\Database\Eloquent;
 use Illuminate\Database\Query;
 
-class MaterialStore
-{
-    public function fetch(MaterialRequest $request): MaterialResult
-    {
+class MaterialStore {
+    public function fetch(MaterialRequest $request): MaterialResult {
         /** @var Eloquent\Builder $query */
         $query = $this->queryByType($request->type)->withTrashed();
 
@@ -57,6 +56,7 @@ class MaterialStore
                 $material->text,
                 $material->flags()->withTrashed()->exists(),
                 $material->flags()->exists(),
+                $this->href($material),
             ))
             ->toArray();
 
@@ -66,8 +66,7 @@ class MaterialStore
         );
     }
 
-    private function queryByType(string $type): Eloquent\Builder
-    {
+    private function queryByType(string $type): Eloquent\Builder {
         if ($type === 'comment') {
             return Post\Comment::query();
         }
@@ -77,8 +76,7 @@ class MaterialStore
         return Microblog::query();
     }
 
-    private function resourceClassByType(string $type): string
-    {
+    private function resourceClassByType(string $type): string {
         if ($type === 'comment') {
             return Post\Comment::class;
         }
@@ -88,24 +86,21 @@ class MaterialStore
         return Microblog::class;
     }
 
-    private function deletedAt(Post|Post\Comment|Microblog $material): ?Carbon
-    {
+    private function deletedAt(Post|Post\Comment|Microblog $material): ?Carbon {
         if (\is_string($material->deleted_at)) {
             return new Carbon($material->deleted_at, 'Europe/Warsaw');
         }
         return $material->deleted_at;
     }
 
-    private function parentDeletedAt(Post|Post\Comment|Microblog $material): ?Carbon
-    {
+    private function parentDeletedAt(Post|Post\Comment|Microblog $material): ?Carbon {
         if ($material instanceof Post\Comment) {
             return $this->deletedAt($material->post);
         }
         return null;
     }
 
-    private function whereTrashed(Eloquent\Builder $query, ?bool $deleted): void
-    {
+    private function whereTrashed(Eloquent\Builder $query, ?bool $deleted): void {
         if ($deleted === true) {
             $query->onlyTrashed();
         }
@@ -114,11 +109,29 @@ class MaterialStore
         }
     }
 
-    private function microblogParentId(Post|Post\Comment|Microblog $material): ?int
-    {
+    private function microblogParentId(Post|Post\Comment|Microblog $material): ?int {
         if ($material instanceof Microblog) {
             return $material->parent_id;
         }
         return null;
+    }
+
+    private function href(Post|Post\Comment|Microblog $material): string {
+        if ($material instanceof Microblog) {
+            return $this->microblogHref($material);
+        }
+        if ($material instanceof Post) {
+            return UrlBuilder::post($material);
+        }
+        if ($material instanceof Post\Comment) {
+            return UrlBuilder::postComment($material);
+        }
+    }
+
+    private function microblogHref(Microblog $material): string {
+        if ($material->parentId) {
+            return route('microblog.view', [$material->parentId]) . '#comment-' . $material->id;
+        }
+        return route('microblog.view', [$material->parentId ?? $material->id]);
     }
 }
