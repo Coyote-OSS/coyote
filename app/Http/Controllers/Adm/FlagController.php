@@ -15,8 +15,7 @@ use Illuminate\View\View;
 class FlagController extends BaseController {
     public function index(MaterialStore $store, MarkdownRender $render): View {
         $this->breadcrumb->push('Dodane treści', route('adm.flag'));
-        $paramFilterString = $this->queryOrNull('filter');
-        $format = new SearchFilterFormat($paramFilterString ?? '');
+        $format = new SearchFilterFormat($this->newSearchPhrase());
         $filter = $format->toSearchFilter();
         $request = new MaterialRequest(
             \max(1, (int)$this->request->query('page', 1)),
@@ -31,8 +30,9 @@ class FlagController extends BaseController {
 
         return $this->view('adm.flag.home', [
             'materials'        => $materials,
-            'pagination'       => new BootstrapPagination($request->page, $request->pageSize, $materials->total(), ['filter' => $this->queryOrNull('filter')]),
-            'filter'           => $filter->toString(),
+            'pagination'       => new BootstrapPagination($request->page, $request->pageSize, $materials->total(), ['filter' => request()->query('filter', '')]),
+            'searchFilter'     => $filter->toString(),
+            'usedFilters'      => explode(' ', $filter->toString()),
             'availableFilters' => [
                 'type:post', 'type:comment', 'type:microblog',
                 'is:deleted', 'not:deleted',
@@ -42,10 +42,18 @@ class FlagController extends BaseController {
         ]);
     }
 
-    private function queryOrNull(string $key): ?string {
-        if ($this->request->query->has($key)) {
-            return $this->request->query->get($key, '');
+    private function newSearchPhrase(): string {
+        $filter = request()->query('filter', '');
+        if (request()->query->has('remove')) {
+            $remove = request()->query('remove');
+            $result = \str_replace($remove, '', $filter);
+            if ($remove === 'is:reported') {
+                $result = \str_replace('report:closed', '', $result);
+                $result = \str_replace('report:open', '', $result);
+            }
+            return $result;
         }
-        return null;
+        $add = request()->query('add', '');
+        return \trim("$filter $add");
     }
 }

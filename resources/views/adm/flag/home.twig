@@ -8,7 +8,7 @@
         <span class="input-group-text">
           {{ icon( 'adminMaterialSearch') }}
         </span>
-        <input name="filter" class="form-control" value="{{ filter }}">
+        <input name="filter" class="form-control" value="{{ searchFilter }}">
       </div>
       <div class="ms-2">
         <button class="btn btn-secondary">
@@ -16,14 +16,22 @@
         </button>
       </div>
     </form>
-
+    <div class="mb-2">
+      Użyte filtry:
+      {% for filter in usedFilters %}
+        <a href="?filter={{ searchFilter }}&remove={{ filter }}">
+          <code>{{ filter }}</code>{% if loop.last == false %},{% endif %}
+        </a>
+      {% endfor %}
+    </div>
     <div class="mb-2">
       Dostępne filtry:
       {% for filter in availableFilters %}
-        <code>{{ filter }}</code>{% if loop.last == false %},{% endif %}
+        <a href="?filter={{ searchFilter }}&add={{ filter }}">
+          <code>{{ filter }}</code>{% if loop.last == false %},{% endif %}
+        </a>
       {% endfor %}
     </div>
-
     <style>
       a.material-list-item {
         color: inherit;
