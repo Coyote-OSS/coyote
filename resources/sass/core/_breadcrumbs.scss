@@ -17,12 +17,17 @@
   max-width:     100%;
 
   .breadcrumb-list {
-    @include theme.property(background, #efefef, #303131);
-    @include theme.property(border, 1px solid #ddd, 1px solid #555);
+    font-size:                  14px;
+    font-weight:                500;
+    @include theme.property(color, #5c6066, #767d84);
+    @include theme.property(background, #f5f7fa, #121314);
+    @include theme.property(border,
+            1px solid #eaecf1,
+            1px solid #0a0a0b);
     border-top:                 none !important;
-    border-bottom-left-radius:  5px;
-    border-bottom-right-radius: 5px;
-    padding:                    5px 8px;
+    border-bottom-left-radius:  8px;
+    border-bottom-right-radius: 8px;
+    padding:                    4px 8px;
     white-space:                nowrap;
     overflow:                   hidden;
     text-overflow:              ellipsis;
