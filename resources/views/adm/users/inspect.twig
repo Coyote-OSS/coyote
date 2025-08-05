@@ -20,7 +20,9 @@
                   <div class="d-flex">
                     <code>{{ usersByFingerprint.fingerprint }}</code>
                     <span class="ms-auto">
-                      {{ usersByFingerprint.users|json_encode }}
+                      {% for user in usersByFingerprint.users %}
+                        {{ user }}
+                      {% endfor %}
                     </span>
                   </div>
                 </li>
