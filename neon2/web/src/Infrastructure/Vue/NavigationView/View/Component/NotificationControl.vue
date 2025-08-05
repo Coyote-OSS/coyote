@@ -5,7 +5,7 @@
       <NavigationControlItem icon="navigationMessages" :number="props.user.messagesCount" @action="showMessages"/>
     </div>
     <div class="md:relative text-base" v-if="notificationsOpen">
-      <div class="absolute max-md:right-0 max-md:left-0 -right-6 top-17.5 md:top-2">
+      <div class="absolute max-md:right-0 max-md:left-0 -right-6 top-13.5 md:top-2">
         <NotificationBox
           :notifications="props.user.notifications"
           class="md:w-132"
