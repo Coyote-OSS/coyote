@@ -58,6 +58,47 @@
       </li>
     </ul>
   </div>
+  <div class="card">
+    <div class="card-header">
+      {{ icon('adminUserSettings') }}
+      Treści dodane przez użytkownika {{ navigation.mention }}
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Rozpoczętych wątków: <b>{{ userContent.topics }}</b>
+      </li>
+      <li class="list-group-item">
+        Napisanych postów: <b>{{ userContent.posts }}</b>
+      </li>
+      <li class="list-group-item">
+        Napisanych komentarzy pod postami: <b>{{ userContent.postComments }}</b>
+      </li>
+      <li class="list-group-item">
+        Napisanych mikroblogów: <b>{{ userContent.blogs }}</b>
+      </li>
+      <li class="list-group-item">
+        Napisanych komentarzy pod mikroblogami: <b>{{ userContent.blogComments }}</b>
+      </li>
+      <li class="list-group-item">
+        Oddanych głosow na posty: <b>{{ userContent.postVotes }}</b>
+      </li>
+      <li class="list-group-item">
+        Oddanych głosow na mikroblogi: <b>{{ userContent.microblogVotes }}</b>
+      </li>
+      <li class="list-group-item">
+        Dodanych raportów: <b>{{ userContent.flags }}</b>
+      </li>
+      <li class="list-group-item">
+        Wysłanych wiadomości: <b>{{ userContent.privateMessages }}</b>
+      </li>
+      <li class="list-group-item">
+        Utworzonych ofert pracy: <b>{{ userContent.jobOffers }}</b>
+      </li>
+      <li class="list-group-item">
+        Zdobyta reputacja: <b>{{ userContent.reputation }}</b>
+      </li>
+    </ul>
+  </div>
 
   <div class="card">
     <div class="card-header">

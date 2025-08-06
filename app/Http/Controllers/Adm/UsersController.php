@@ -14,6 +14,7 @@ use Coyote\Http\Forms\User\AdminForm;
 use Coyote\Http\Grids\Adm\UsersGrid;
 use Coyote\Repositories\Criteria\WithTrashed;
 use Coyote\Repositories\Eloquent\UserRepository;
+use Coyote\Services\Adm\UserContentService;
 use Coyote\Services\Adm\UserInspection\UserInspectionService;
 use Coyote\Services\FormBuilder\Form;
 use Coyote\Services\Stream\Activities\Update;
@@ -38,7 +39,7 @@ class UsersController extends BaseController {
         return $this->view('adm.users.home', ['grid' => $grid]);
     }
 
-    public function show(User $user): View {
+    public function show(User $user, UserContentService $service): View {
         $this->breadcrumb->push("@$user->name", route('adm.users.show', [$user->id]));
         $daysAgo = $this->daysAgo($this->request);
         $store = new UserStore($user, Carbon::now()->subDays($daysAgo));
@@ -50,8 +51,8 @@ class UsersController extends BaseController {
                 $store->postsCategoriesStatisticLikes(),
                 $store->deleteReasons(),
                 $store->reportReasons(),
-                $store->postStats(),
-            ),
+                $store->postStats()),
+            'userContent'    => $service->userContent($user),
         ]);
     }
 
