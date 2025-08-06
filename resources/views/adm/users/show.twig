@@ -68,16 +68,16 @@
         Rozpoczętych wątków: <b>{{ userContent.topics }}</b>
       </li>
       <li class="list-group-item">
-        Napisanych postów: <b>{{ userContent.posts }}</b>
+        Napisanych postów: <b>{{ userContent.posts }}</b> / <b>{{ userContent.postsDeleted }}</b>
       </li>
       <li class="list-group-item">
-        Napisanych komentarzy pod postami: <b>{{ userContent.postComments }}</b>
+        Napisanych komentarzy pod postami: <b>{{ userContent.postComments }}</b> / <b>{{ userContent.postCommentsDeleted }}</b>
       </li>
       <li class="list-group-item">
-        Napisanych mikroblogów: <b>{{ userContent.blogs }}</b>
+        Napisanych mikroblogów: <b>{{ userContent.blogs }}</b> / <b>{{ userContent.blogsDeleted }}</b>
       </li>
       <li class="list-group-item">
-        Napisanych komentarzy pod mikroblogami: <b>{{ userContent.blogComments }}</b>
+        Napisanych komentarzy pod mikroblogami: <b>{{ userContent.blogComments }}</b> / <b>{{ userContent.blogCommentsDeleted }}</b>
       </li>
       <li class="list-group-item">
         Oddanych głosow na posty: <b>{{ userContent.postVotes }}</b>
@@ -86,7 +86,7 @@
         Oddanych głosow na mikroblogi: <b>{{ userContent.microblogVotes }}</b>
       </li>
       <li class="list-group-item">
-        Dodanych raportów: <b>{{ userContent.flags }}</b>
+        Dodanych raportów: <b>{{ userContent.flags }}</b> / <b>{{ userContent.flagsTotal }}</b>
       </li>
       <li class="list-group-item">
         Wysłanych wiadomości: <b>{{ userContent.privateMessages }}</b>

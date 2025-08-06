@@ -2,7 +2,6 @@
 
 namespace Tests\Legacy\IntegrationOld\Services;
 
-use Coyote\Fingerprint;
 use Coyote\Firewall;
 use Coyote\Repositories\Contracts\FirewallRepositoryInterface;
 use Coyote\Services\Rules;

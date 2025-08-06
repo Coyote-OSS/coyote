@@ -14,5 +14,10 @@ readonly class UserContent {
         public int $privateMessages,
         public int $jobOffers,
         public int $reputation,
+        public int $postsDeleted,
+        public int $postCommentsDeleted,
+        public int $blogsDeleted,
+        public int $blogCommentsDeleted,
+        public int $flagsTotal,
     ) {}
 }
