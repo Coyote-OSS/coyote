@@ -19,7 +19,7 @@ class FlagController extends BaseController {
         $filter = $format->toSearchFilter();
         $request = new MaterialRequest(
             \max(1, (int)$this->request->query('page', 1)),
-            20,
+            50,
             $filter);
 
         $materials = new MaterialList(
