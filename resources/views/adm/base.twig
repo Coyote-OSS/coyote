@@ -23,7 +23,6 @@
       {{ menu.asUl({class: 'list-unstyled navbar-nav'})|raw }}
     </aside>
     <main class="flex-grow-1 mt-4" style="min-width:0;">
-      {{ breadcrumbLegacyComponent }}
       {% if session_has('success') %}
         <div class="alert alert-success">
           {{ icon('alertSuccess') }}
