@@ -74,6 +74,16 @@
                   <a :href="post.url" class="small">
                     <vue-timeago :datetime="post.created_at"/>
                   </a>
+                  <template v-if="is_mode_linear">
+                    {{' '}}
+                    <a v-if="post.clientIp" :href="post.clientIpAdminHref" class="text-muted small">
+                      {{post.clientIp}}
+                    </a>
+                    {{' '}}
+                    <a v-if="post.browsingDevice" :href="post.browsingDeviceAdminHref" :title="post.userAgent" class="text-muted">
+                      {{formatBrowsingDevice}}
+                    </a>
+                  </template>
                 </div>
               </div>
             </div>
@@ -88,8 +98,7 @@
                   :photo="post.user.photo"
                   :is-online="post.user.is_online"
                   :initials="post.user.initials"
-                  class="i-35"
-                />
+                  class="i-35"/>
               </div>
             </div>
 
@@ -100,6 +109,9 @@
               </span>
               <a :href="post.url" class="text-muted small">
                 <vue-timeago :datetime="post.created_at"/>
+              </a>
+              <a v-if="post.clientIp" :href="post.clientIpAdminHref" class="text-muted small">
+                ({{post.clientIp}})
               </a>
               <span class="ms-1" v-if="post.edit_count && is_mode_tree"
                     :title="'edytowany ' + post.edit_count + 'x, ostatnio przez ' + post.editor.name + ', ' + editedTimeAgo">
@@ -504,9 +516,6 @@ export default {
         store.commit('posts/unfoldChildren', this.$props.post);
       }
     },
-    closePostReview(): void {
-      this.post.has_review = false;
-    },
     ...mapActions('posts', ['vote', 'accept', 'subscribe', 'unsubscribe', 'loadComments', 'loadVoters']),
     formatDistanceToNow(date) {
       return formatDistanceToNow(new Date(date), {locale: pl});
@@ -584,6 +593,10 @@ export default {
     ...mapGetters('user', ['isAuthorized']),
     ...mapGetters('posts', ['posts', 'isLinearized']),
     ...mapGetters('topics', ['topic', 'is_mode_tree', 'is_mode_linear']),
+    formatBrowsingDevice(): string {
+      const device = this.$props.post.browsingDevice;
+      return device.browser + '/' + device.platform + '/' + device.type;
+    },
     postTreeTargetId(): number {
       return store.getters['posts/treeTopicPostTargetId'](this.$props.post.id);
     },

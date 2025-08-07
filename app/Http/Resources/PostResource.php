@@ -11,9 +11,9 @@ use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Jenssegers\Agent\Agent;
 
-class PostResource extends JsonResource
-{
+class PostResource extends JsonResource {
     private readonly Gate $gate;
     private readonly Post $post;
 
@@ -21,31 +21,26 @@ class PostResource extends JsonResource
     private bool $obscureDeletedPosts = false;
     private ?int $selectedPostId = null;
 
-    public function __construct(Post $resource)
-    {
+    public function __construct(Post $resource) {
         parent::__construct($resource);
         $this->gate = app(Gate::class);
         $this->post = $resource;
     }
 
-    public function setTracker(Tracker $tracker): self
-    {
+    public function setTracker(Tracker $tracker): self {
         $this->tracker = $tracker;
         return $this;
     }
 
-    public function obscureDeletedPosts(): void
-    {
+    public function obscureDeletedPosts(): void {
         $this->obscureDeletedPosts = true;
     }
 
-    public function setSelectedPostId(int $postId): void
-    {
+    public function setSelectedPostId(int $postId): void {
         $this->selectedPostId = $postId;
     }
 
-    public function toArray(Request $request): array
-    {
+    public function toArray(Request $request): array {
         if ($this->obscureDeletedPosts) {
             if ($this->post->deleted_at) {
                 return $this->postResourceToArrayObscured();
@@ -55,8 +50,7 @@ class PostResource extends JsonResource
         return $this->postResourceToArray();
     }
 
-    private function postResourceToArray(): array
-    {
+    private function postResourceToArray(): array {
         return [
             ...$this->post->only([
                 'id', 'user_name', 'score', 'text', 'edit_count', 'is_voted', 'is_accepted', 'is_subscribed', 'user_id', 'deleter_name', 'delete_reason',
@@ -103,19 +97,24 @@ class PostResource extends JsonResource
             'childrenFolded'       => false,
             'type'                 => 'regular',
             'highlighted'          => $this->selectedPostId === $this->post->id,
+            $this->mergeWhen($this->gate->allows('adm-access'), [
+                'clientIp'                => $this->post->ip,
+                'clientIpAdminHref'       => $this->clientIpAdminHref(),
+                'userAgent'               => $this->post->browser,
+                'browsingDevice'          => $this->browsingDevice(),
+                'browsingDeviceAdminHref' => $this->browsingDeviceAdminHref(),
+            ]),
         ];
     }
 
-    private function applyCommentsRelations(): void
-    {
+    private function applyCommentsRelations(): void {
         foreach ($this->post->comments as $comment) {
             $comment->setRelation('forum', $this->post->forum);
             $comment->setRelation('post', $this->post);
         }
     }
 
-    private function postResourceToArrayObscured(): array
-    {
+    private function postResourceToArrayObscured(): array {
         return [
             ...$this->post->only(['id', 'deleter_name', 'delete_reason']),
             'type'                 => 'obscured',
@@ -138,11 +137,27 @@ class PostResource extends JsonResource
         ];
     }
 
-    private function postFoldedComments(): Eloquent\Collection
-    {
+    private function postFoldedComments(): Eloquent\Collection {
         if ($this->selectedPostId == $this->post->id) {
             return $this->post->comments;
         }
         return $this->post->comments->slice(-5);
+    }
+
+    private function browsingDevice(): array {
+        $agent = new Agent(userAgent:$this->post->browser);
+        return [
+            'browser'  => $agent->browser(),
+            'platform' => $agent->platform(),
+            'type'     => $agent->deviceType(),
+        ];
+    }
+
+    private function clientIpAdminHref(): string {
+        return route('adm.stream') . '?' . http_build_query(['ip' => $this->post->ip]);
+    }
+
+    private function browsingDeviceAdminHref(): string {
+        return route('adm.stream') . '?' . http_build_query(['browser' => $this->post->browser]);
     }
 }
