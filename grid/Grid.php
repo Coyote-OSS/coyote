@@ -7,6 +7,7 @@ use Boduch\Grid\Components\RowAction;
 use Boduch\Grid\Source\SourceInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Str;
 
 class Grid
 {
@@ -437,7 +438,7 @@ class Grid
         $options = $this->setupColumnOptions($name, $options);
 
         if (empty($options['title'])) {
-            $options['title'] = title_case(str_replace('_', ' ', $name));
+            $options['title'] = Str::title(str_replace('_', ' ', $name));
         }
 
         return new Column($options);

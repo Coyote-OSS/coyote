@@ -1,9 +1,10 @@
 <?php
 
 use Coyote\Services\Helper\DateDifference;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
-function docker_secret(string $name): Closure
-{
+function docker_secret(string $name): Closure {
     return function () use ($name) {
         $path = '/run/secrets/' . $name;
 
@@ -17,8 +18,7 @@ function docker_secret(string $name): Closure
  * @param string $value
  * @return string
  */
-function plain($value)
-{
+function plain($value) {
     return html_entity_decode(strip_tags($value));
 }
 
@@ -27,13 +27,11 @@ function plain($value)
  * @param int $limit
  * @return string
  */
-function excerpt($value, $limit = 84)
-{
+function excerpt($value, $limit = 84) {
     return str_limit(reduced_whitespace(plain($value)), $limit);
 }
 
-function reduced_whitespace(string $string): string
-{
+function reduced_whitespace(string $string): string {
     return \trim(\preg_replace('/\s+/', ' ', $string));
 }
 
@@ -44,8 +42,7 @@ function reduced_whitespace(string $string): string
  * @param int $limit Limit slow kluczowych
  * @return array
  */
-function keywords($text, $limit = 10)
-{
+function keywords($text, $limit = 10) {
     $text = pattern('[^a-zA-Z0-9 -]')->prune(mb_strtolower(plain($text), 'UTF-8'));
 
     $keywords = [];
@@ -72,8 +69,7 @@ function keywords($text, $limit = 10)
  * @param \Coyote\Services\Stream\Objects\ObjectInterface|null $object
  * @param \Coyote\Services\Stream\Objects\ObjectInterface|null $target
  */
-function stream($activity, $object = null, $target = null)
-{
+function stream($activity, $object = null, $target = null) {
     $manager = app(\Coyote\Services\Stream\Manager::class);
 
     return $manager->save($activity, $object, $target);
@@ -87,8 +83,7 @@ function stream($activity, $object = null, $target = null)
  * @return string
  * @throws \Exception
  */
-function cdn($path, $secure = null)
-{
+function cdn($path, $secure = null) {
     $path = trim($path, '/');
     $pathinfo = pathinfo($path);
 
@@ -107,8 +102,7 @@ function cdn($path, $secure = null)
  *
  * @throws \Exception
  */
-function manifest($path)
-{
+function manifest($path) {
     static $manifest;
 
     if (!$manifest) {
@@ -134,8 +128,7 @@ function manifest($path)
  * @param bool $diffForHumans
  * @return string
  */
-function format_date($dateTime, $diffForHumans = true)
-{
+function format_date($dateTime, $diffForHumans = true) {
     $format = auth()->check() ? auth()->user()->date_format : '%Y-%m-%d %H:%M';
 
     $diff = new DateDifference($format, $diffForHumans);
@@ -146,8 +139,7 @@ function format_date($dateTime, $diffForHumans = true)
  * @param $dateTime
  * @return \Carbon\Carbon
  */
-function carbon($dateTime)
-{
+function carbon($dateTime) {
     if (is_null($dateTime)) {
         $dateTime = new \Carbon\Carbon();
     } else if (!$dateTime instanceof \Carbon\Carbon) {
@@ -155,4 +147,80 @@ function carbon($dateTime)
     }
 
     return $dateTime;
+}
+
+function array_except($array, $keys) {
+    return Arr::except($array, $keys);
+}
+
+function array_first($array, ?callable $callback = null, $default = null) {
+    return Arr::first($array, $callback, $default);
+}
+
+function array_get($array, $key, $default = null) {
+    return Arr::get($array, $key, $default);
+}
+
+function array_has($array, $keys) {
+    return Arr::has($array, $keys);
+}
+
+function array_last($array, ?callable $callback = null, $default = null) {
+    return Arr::last($array, $callback, $default);
+}
+
+function array_only($array, $keys) {
+    return Arr::only($array, $keys);
+}
+
+function array_pluck($array, $value, $key = null) {
+    return Arr::pluck($array, $value, $key);
+}
+
+function array_prepend($array, $value, $key = null) {
+    return Arr::prepend(...func_get_args());
+}
+
+function array_pull(&$array, $key, $default = null) {
+    return Arr::pull($array, $key, $default);
+}
+
+function array_set(&$array, $key, $value) {
+    return Arr::set($array, $key, $value);
+}
+
+function array_sort($array, $callback = null) {
+    return Arr::sort($array, $callback);
+}
+
+function array_where($array, callable $callback) {
+    return Arr::where($array, $callback);
+}
+
+function camel_case($value) {
+    return Str::camel($value);
+}
+
+function snake_case($value, $delimiter = '_') {
+    return Str::snake($value, $delimiter);
+}
+
+function str_limit($value, $limit = 100, $end = '...') {
+    return Str::limit($value, $limit, $end);
+}
+
+function str_plural($value, $count = 2) {
+    return Str::plural($value, $count);
+}
+
+function str_random($length = 16) {
+    return Str::random($length);
+}
+
+function str_singular($value) {
+    return Str::singular($value);
+}
+
+function str_slug($title, $separator = '-', $language = 'en') {
+    return Str::slug($title, $separator, $language);
 }

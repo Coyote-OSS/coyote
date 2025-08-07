@@ -34,7 +34,6 @@
     "jenssegers/agent": "^2.3",
     "laravel-notification-channels/webpush": "^8.0.0",
     "laravel/framework": "^11.34",
-    "laravel/helpers": "^1.2",
     "laravel/legacy-factories": "^1.1",
     "laravel/passport": "^v12.2.0",
     "laravel/socialite": "^5.0",

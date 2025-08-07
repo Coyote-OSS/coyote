@@ -3,6 +3,7 @@ namespace Database\Seeders;
 
 use Coyote\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 class UserAvatarsSeeder extends Seeder
 {
@@ -33,6 +34,6 @@ class UserAvatarsSeeder extends Seeder
 
     private function newUserAvatar(): string
     {
-        return \array_random($this->userAvatars);
+        return Arr::random($this->userAvatars, null);
     }
 }

@@ -61,7 +61,7 @@ class SeoServiceProvider extends ServiceProvider {
     }
 
     private function canonicalPath(string $path): ?string {
-        if (\starts_with($path, '/Praca/Technologia')) {
+        if (\str_starts_with($path, '/Praca/Technologia')) {
             return '/Praca';
         }
         if ($path === '/Praca') {

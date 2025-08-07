@@ -1,6 +1,8 @@
 <?php
 namespace Tests\Legacy\IntegrationNew\BaseFixture\Dsl\Model;
 
+use Illuminate\Support\Str;
+
 readonly class DslTopic
 {
     public ?int $id;
@@ -21,7 +23,7 @@ readonly class DslTopic
     {
         $urlPath = \parse_url($url, \PHP_URL_PATH);
         $urlPathTopicPart = $this->removePrefix($urlPath, '/Forum/Newbie/');
-        return \str_before($urlPathTopicPart, '-');
+        return Str::before($urlPathTopicPart, '-');
     }
 
     private function removePrefix(string $path, string $needle): string
