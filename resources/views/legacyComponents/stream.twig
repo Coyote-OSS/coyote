@@ -32,15 +32,23 @@
         <li class="list-inline-item">
           {{ icon('topicLogUserFingerprint') }}
           <a title="Kliknij, aby wyszukać" class="bubble text-muted" href="{{ route('adm.stream', {fingerprint: activity.fingerprint}) }}">
-            {{ activity.fingerprint[0:2] }} ... {{ activity.fingerprint[-2:2] }}
+            {{ activity.fingerprint[0:3] }} ... {{ activity.fingerprint[-3:3] }}
           </a>
         </li>
       {% endif %}
     </ul>
     {% if activity.excerpt %}
-      <div class="card card-body bg-light p-2 mt-2 mb-2">
-        {{ activity.excerpt }}
-      </div>
+      {% if activity.excerptHref %}
+        <a href="{{ activity.excerptHref }}">
+          <div class="card card-body bg-light p-2 mt-2 mb-2">
+            {{ activity.excerpt }}
+          </div>
+        </a>
+      {% else %}
+        <div class="card card-body bg-light p-2 mt-2 mb-2">
+          {{ activity.excerpt }}
+        </div>
+      {% endif %}
     {% endif %}
   </div>
 </div>

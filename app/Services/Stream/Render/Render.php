@@ -4,8 +4,7 @@ namespace Coyote\Services\Stream\Render;
 use Coyote\Stream as Model;
 use Jenssegers\Agent\Agent;
 
-abstract class Render
-{
+abstract class Render {
     /**
      * @var Model|array
      */
@@ -14,16 +13,14 @@ abstract class Render
     /**
      * @param Model|array $stream
      */
-    public function __construct($stream)
-    {
+    public function __construct($stream) {
         $this->stream = $stream;
     }
 
     /**
      * @return Model
      */
-    public function render()
-    {
+    public function render() {
         $agent = new Agent();
         $agent->setUserAgent($this->stream['browser']);
 
@@ -39,6 +36,7 @@ abstract class Render
 
         $this->stream['headline'] = $translator->get($id, $parameters);
         $this->stream['excerpt'] = $this->excerpt();
+        $this->stream['excerptHref'] = $this->excerptHref();
         $this->stream['agent'] = $agent;
 
         return $this->stream;
@@ -48,8 +46,7 @@ abstract class Render
      * @param string $message
      * @return array
      */
-    protected function bindParameters($message)
-    {
+    protected function bindParameters($message) {
         $parameters = [];
         $offset = 0;
 
@@ -73,8 +70,7 @@ abstract class Render
     /**
      * @return string
      */
-    protected function actor()
-    {
+    protected function actor() {
         return link_to(
             array_get($this->stream, 'actor.url'),
             array_get($this->stream, 'actor.displayName'),
@@ -85,24 +81,25 @@ abstract class Render
     /**
      * @return mixed
      */
-    protected function excerpt()
-    {
+    protected function excerpt() {
         return array_get($this->stream, 'object.displayName');
+    }
+
+    protected function excerptHref(): ?string {
+        return array_get($this->stream, 'object.url');
     }
 
     /**
      * @return mixed
      */
-    protected function verb()
-    {
+    protected function verb() {
         return trans('stream.verbs.' . $this->stream['verb']);
     }
 
     /**
      * @return string
      */
-    protected function object()
-    {
+    protected function object() {
         return link_to(
             array_get($this->stream, 'object.url'),
             (string)trans('stream.nouns.' . array_get($this->stream, 'object.objectType')),
@@ -112,8 +109,7 @@ abstract class Render
     /**
      * @return string
      */
-    protected function target()
-    {
+    protected function target() {
         return link_to(
             array_get($this->stream, 'target.url'),
             str_limit(array_get($this->stream, 'target.displayName'), 64),
@@ -124,8 +120,7 @@ abstract class Render
     /**
      * @return string
      */
-    protected function objectName()
-    {
+    protected function objectName() {
         return link_to(
             array_get($this->stream, 'object.url'),
             array_get($this->stream, 'object.displayName'),
