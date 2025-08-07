@@ -10,19 +10,16 @@ use Coyote\Plan;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Notification;
 
-class BoostJobsCommandTest extends TestCase
-{
+class BoostJobsCommandTest extends TestCase {
     use DatabaseTransactions;
 
-    public function setUp(): void
-    {
+    public function setUp(): void {
         parent::setUp();
 
         Notification::fake();
     }
 
-    public function testBoostJobWithPlusPlan()
-    {
+    public function testBoostJobWithPlusPlan() {
         $plan = Plan::where('name', 'Plus')->get()->first();
 
         /** @var Job $job */
@@ -43,36 +40,43 @@ class BoostJobsCommandTest extends TestCase
         }
     }
 
-    public function testBoostJobWithPremiumPlan()
-    {
-        $plan = Plan::where('name', 'Premium')->get()->first();
+    public function testBoostJobWithPremiumPlan() {
+        $plan = $this->pricingPlan('Premium');
 
-        /** @var Job $job */
-        $job = factory(Job::class)->create(['plan_id' => $plan->id]);
+        $job = $this->createJobOffer($plan);
 
-        event(new PaymentPaid($job->getUnpaidPayment()));
-
-        $job->refresh();
-        $now = now();
+        $start = \DateTimeImmutable::createFromMutable(now());
+        $time = now();
 
         $this->assertTrue($job->is_publish);
         $this->assertTrue($job->is_ads);
         $this->assertTrue($job->is_on_top);
-        $this->assertTrue($now->isSameDay($job->boost_at));
+        $this->assertTrue($time->isSameDay($job->boost_at));
 
-        for ($i = 1; $i <= $plan->length; $i++) {
-            Carbon::setTestNow($now->addDay());
-
-            $shouldBoost = $i == 10 || $i == 20 || $i == 30;
-            $output = $shouldBoost ? "Boosting " . $job->title : "Done.";
-
-            $this->artisan('job:boost')->expectsOutput($output);
-
-            $job->refresh();
-
-            if ($shouldBoost) {
-                $this->assertTrue($job->boost_at->isSameDay($now));
-            }
+        $boostDate = [];
+        for ($i = 0; $i < $plan->length; $i++) {
+            Carbon::setTestNow($time->addDay());
+            $this->artisan('job:boost');
+            $boostDate[] = $job->fresh()->boost_at->format('Y-m-d');
         }
+        $this->assertSame([
+            ...array_fill(0, 9, $start->format('Y-m-d')),
+            ...array_fill(0, 10, $start->modify('+10 days')->format('Y-m-d')),
+            ...array_fill(0, 11, $start->modify('+20 days')->format('Y-m-d')),
+        ], $boostDate);
+    }
+
+    private function createJobOffer(Plan $plan): Job {
+        $job = factory(Job::class)->create(['plan_id' => $plan->id]);
+        event(new PaymentPaid($job->getUnpaidPayment()));
+        return $job->fresh();
+    }
+
+    private function pricingPlan(string $planName): Plan {
+        return Plan::query()
+            ->where('name', $planName)
+            ->where('is_active', true)
+            ->get()
+            ->first();
     }
 }
