@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1901e0b6b0f685548c47e33e7b1be42",
+    "content-hash": "8d7c6852714324000b6a3030667f148e",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -3593,16 +3593,16 @@
         },
         {
             "name": "lavary/laravel-menu",
-            "version": "v1.8.3",
+            "version": "v1.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lavary/laravel-menu.git",
-                "reference": "4f14cb9b11cfcd9839d1d87c806632c84a94d3be"
+                "reference": "5255e715912b50127b296da7410bd97468bf5e40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lavary/laravel-menu/zipball/4f14cb9b11cfcd9839d1d87c806632c84a94d3be",
-                "reference": "4f14cb9b11cfcd9839d1d87c806632c84a94d3be",
+                "url": "https://api.github.com/repos/lavary/laravel-menu/zipball/5255e715912b50127b296da7410bd97468bf5e40",
+                "reference": "5255e715912b50127b296da7410bd97468bf5e40",
                 "shasum": ""
             },
             "require": {
@@ -3643,9 +3643,9 @@
             ],
             "support": {
                 "issues": "https://github.com/lavary/laravel-menu/issues",
-                "source": "https://github.com/lavary/laravel-menu/tree/v1.8.3"
+                "source": "https://github.com/lavary/laravel-menu/tree/v1.8.4"
             },
-            "time": "2021-02-22T16:41:26+00:00"
+            "time": "2022-02-14T19:30:22+00:00"
         },
         {
             "name": "lcobucci/clock",

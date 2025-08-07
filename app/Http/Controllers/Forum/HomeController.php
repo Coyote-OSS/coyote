@@ -28,8 +28,7 @@ use Lavary\Menu\Builder;
 use Lavary\Menu\Item;
 use Lavary\Menu\Menu;
 
-class HomeController extends BaseController
-{
+class HomeController extends BaseController {
     private ?Builder $tabs;
 
     public function __construct(
@@ -37,8 +36,7 @@ class HomeController extends BaseController
         TopicRepository $topic,
         PostRepository  $post,
         TagRepository   $tag,
-    )
-    {
+    ) {
         parent::__construct($forum, $topic, $post, $tag);
         /** @var Menu $app */
         $app = app(Menu::class);
@@ -76,8 +74,7 @@ class HomeController extends BaseController
      * @param array $data
      * @return View
      */
-    protected function view($view = null, $data = [])
-    {
+    protected function view($view = null, $data = []) {
         [, $suffix] = explode('.', $this->request->route()->getName());
 
         $currentTab = $suffix == 'home' ? $this->getSetting('forum.tab', 'categories') : $suffix;
@@ -107,15 +104,13 @@ class HomeController extends BaseController
     /**
      * @return View
      */
-    public function index()
-    {
+    public function index() {
         $tab = $this->getSetting('forum.tab', 'categories');
 
         return $this->{$tab}();
     }
 
-    public function categories(): View
-    {
+    public function categories(): View {
         $this->pushForumCriteria();
         $forums = $this
             ->forum
@@ -129,14 +124,12 @@ class HomeController extends BaseController
         ]);
     }
 
-    public function all(): View
-    {
+    public function all(): View {
         $this->topic->pushCriteria(new SkipLockedCategories());
         return $this->loadAndRender();
     }
 
-    public function mine(): View
-    {
+    public function mine(): View {
         if ($this->userId) {
             $this->topic->pushCriteria(new OnlyMine($this->userId, false));
         }
@@ -148,8 +141,7 @@ class HomeController extends BaseController
      * @param int $userId
      * @return View
      */
-    public function user(int $userId)
-    {
+    public function user(int $userId) {
         $this->topic->pushCriteria(new OnlyMine($userId, true));
         $topics = $this->load();
 
@@ -169,20 +161,19 @@ class HomeController extends BaseController
     /**
      * @return View
      */
-    public function subscribes()
-    {
+    public function subscribes() {
         $this->topic->pushCriteria(new Subscribes($this->userId));
 
         return $this->loadAndRender();
     }
 
-    public function tag(string $name): View
-    {
+    public function tag(string $name): View {
         $item = $this
             ->tabs
             ->add('Wątki z: ' . $name, [
                 'route' => [
-                    'forum.tag', urlencode($this->request->route('tag')),
+                    'forum.tag',
+                    \urlEncode($this->request->route('tag_name')),
                 ],
                 'class' => 'nav-item',
             ]);
@@ -198,18 +189,15 @@ class HomeController extends BaseController
     /**
      * @return View
      */
-    public function interesting()
-    {
+    public function interesting() {
         $this->topic->pushCriteria(new WithTags(json_decode($this->getSetting('forum.tags', '[]'))));
-
         return $this->loadAndRender();
     }
 
     /**
      * Mark ALL categories as READ
      */
-    public function mark()
-    {
+    public function mark() {
         $forums = $this->forum->all(['id']);
 
         /** @var \Coyote\Forum $forum */
@@ -222,8 +210,7 @@ class HomeController extends BaseController
     /**
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    private function load()
-    {
+    private function load() {
         $this->topic->pushCriteria(new OnlyThoseWithAccess($this->auth));
 
         // if someone wants to find all user's topics, we can't hide those from our hidden categories.
@@ -247,8 +234,7 @@ class HomeController extends BaseController
      * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator $paginate
      * @return View
      */
-    private function render($paginate, RenderParams $renderParams = null)
-    {
+    private function render($paginate, RenderParams $renderParams = null) {
         $guest = new Guest($this->guestId);
 
         $topics = (new TopicCollection($paginate))
@@ -274,8 +260,7 @@ class HomeController extends BaseController
     /**
      * @return View
      */
-    private function loadAndRender(RenderParams $renderParams = null)
-    {
+    private function loadAndRender(RenderParams $renderParams = null) {
         return $this->render($this->load(), $renderParams);
     }
 }

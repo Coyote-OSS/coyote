@@ -38,7 +38,7 @@
     "laravel/passport": "^v12.2.0",
     "laravel/socialite": "^5.0",
     "laravel/ui": "^v4.4.0",
-    "lavary/laravel-menu": "v1.8.3",
+    "lavary/laravel-menu": "^v1.8.4",
     "league/commonmark": "^2.6",
     "league/flysystem-aws-s3-v3": "^3.0",
     "mpdf/mpdf": "dev-development",
