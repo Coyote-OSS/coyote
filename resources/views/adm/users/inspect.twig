@@ -18,7 +18,9 @@
               {% for usersByFingerprint in inspection.usersByFingerprints %}
                 <li class="list-group-item">
                   <div class="d-flex">
-                    <code>{{ usersByFingerprint.fingerprint }}</code>
+                    <a href="{{ usersByFingerprint.fingerprintHref }}">
+                      <code>{{ usersByFingerprint.fingerprint }}</code>
+                    </a>
                     <span class="ms-auto">
                       {% for user in usersByFingerprint.users %}
                         {{ user }}
@@ -48,7 +50,9 @@
             {% for fingerprint in inspection.fingerprints %}
               <li class="list-group-item">
                 <div class="d-flex">
-                  <code>{{ fingerprint.fingerprint }}</code>
+                  <a href="{{ fingerprint.fingerprintHref }}">
+                    <code>{{ fingerprint.fingerprint }}</code>
+                  </a>
                   <span class="ms-auto">
                     użył
                     <b>{{ fingerprint.timesUsed }}</b> raz(y),
