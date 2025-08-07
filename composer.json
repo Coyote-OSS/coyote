@@ -1,6 +1,6 @@
 {
   "type": "project",
-  "name": "adam-boduch/coyote",
+  "name": "coyote-oss/coyote",
   "description": "4programmers.net",
   "homepage": "http://4programmers.net",
   "license": "MIT",
@@ -71,7 +71,6 @@
       "Boduch\\Grid\\": "grid/",
       "Coyote\\": "app/",
       "Database\\Seeders\\": "database/seeders/",
-      "Neon\\": "neon/src/",
       "Neon2\\": "neon2/app/src/"
     },
     "files": [
