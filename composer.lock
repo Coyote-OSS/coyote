@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad67d209b91ac01303490972b69fd2c4",
+    "content-hash": "f1901e0b6b0f685548c47e33e7b1be42",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -11926,55 +11926,6 @@
                 }
             ],
             "time": "2025-07-31T07:10:28+00:00"
-        },
-        {
-            "name": "rawr/phpunit-data-provider",
-            "version": "3.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/t-regx/phpunit-data-provider.git",
-                "reference": "a8bbc37340cee2976265ec06fe1694f499233f67"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/t-regx/phpunit-data-provider/zipball/a8bbc37340cee2976265ec06fe1694f499233f67",
-                "reference": "a8bbc37340cee2976265ec06fe1694f499233f67",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.5.4 || ^8.0 || ^7.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "TRegx\\PhpUnit\\DataProviders\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Wilkowski",
-                    "homepage": "https://t-regx.com/"
-                }
-            ],
-            "description": "Lightweight builder for PhpUnit data providers",
-            "support": {
-                "issues": "https://github.com/t-regx/phpunit-data-provider/issues",
-                "source": "https://github.com/t-regx/phpunit-data-provider/tree/3.3.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/danon",
-                    "type": "github"
-                }
-            ],
-            "time": "2025-01-15T11:18:37+00:00"
         },
         {
             "name": "sebastian/cli-parser",

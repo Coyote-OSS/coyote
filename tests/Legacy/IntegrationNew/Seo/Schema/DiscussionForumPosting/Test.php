@@ -6,39 +6,28 @@ use PHPUnit\Framework\TestCase;
 use Tests\Legacy\IntegrationNew\BaseFixture;
 use Tests\Legacy\IntegrationNew\BaseFixture\Constraint\ArrayStructure;
 use Tests\Legacy\IntegrationNew\Seo;
-use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @see https://developers.google.com/search/docs/appearance/structured-data/discussion-forum
  */
-class Test extends TestCase
-{
+class Test extends TestCase {
     use Seo\Schema\DiscussionForumPosting\Fixture\Schema,
         Seo\Schema\DiscussionForumPosting\Fixture\SystemDatabase,
         BaseFixture\Server\RelativeUri;
 
-    /**
-     * @test
-     * @dataProvider fields
-     */
-    public function canonical(string $field)
-    {
+    #[\PHPUnit\Framework\Attributes\Test]
+    #[\PHPUnit\Framework\Attributes\TestWith(['@id', 'url'])]
+    public function canonical(string $field) {
         [$schema, $topicId] = $this->schemaTopicInForum('Banana topic', 'apple-forum');
         $this->assertThat(
             $schema[$field],
             $this->relativeUri("/Forum/apple-forum/$topicId-banana_topic"));
     }
 
-    public static function fields(): DataProvider
-    {
-        return DataProvider::list('@id', 'url');
-    }
-
     /**
      * @test
      */
-    public function headline()
-    {
+    public function headline() {
         $schema = $this->schemaTopicTitle('Banana topic');
         $this->assertSame('Banana topic', $schema['headline']);
     }
@@ -46,8 +35,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function contentMarkdown()
-    {
+    public function contentMarkdown() {
         $schema = $this->schemaTopicContent('Lorem *ipsum*.');
         $this->assertSame('Lorem ipsum.', $schema['text']);
     }
@@ -55,8 +43,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function contentWhiteSpace()
-    {
+    public function contentWhiteSpace() {
         $schema = $this->schemaTopicContent("Lorem\n\n\nipsum");
         $this->assertSame('Lorem ipsum', $schema['text']);
     }
@@ -64,8 +51,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function contentHtml()
-    {
+    public function contentHtml() {
         $schema = $this->schemaTopicContent('Lorem <b>ipsum</b> &copy;.');
         $this->assertSame('Lorem ipsum ©.', $schema['text']);
     }
@@ -73,8 +59,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function contentHtmlEntity()
-    {
+    public function contentHtmlEntity() {
         $schema = $this->schemaTopicContent('&lt;Lorem&gt;');
         $this->assertSame('<Lorem>', $schema['text']);
     }
@@ -82,8 +67,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function statistics()
-    {
+    public function statistics() {
         $schema = $this->schemaForumStatistic(replies:7, likes:5, views:13);
         $this->assertThat(
             $schema['interactionStatistic'],
@@ -94,8 +78,7 @@ class Test extends TestCase
             ));
     }
 
-    private function interaction(string $type, int $count): Constraint
-    {
+    private function interaction(string $type, int $count): Constraint {
         return $this->containsEqual([
             '@type'                => 'InteractionCounter',
             'interactionType'      => "https://schema.org/$type",
@@ -106,8 +89,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function contentLong()
-    {
+    public function contentLong() {
         $text = \str_repeat('Lorem ipsum', 10);
         $schema = $this->schemaTopicContent($text);
         $this->assertSame($text, $schema['text']);
@@ -116,8 +98,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function authorUser()
-    {
+    public function authorUser() {
         $schema = $this->postingSchema($this->newTopicAuthorUsername('mark'));
         $this->assertThat(
             $schema['author'],
@@ -130,8 +111,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function authorLegacyGuest()
-    {
+    public function authorLegacyGuest() {
         $schema = $this->postingSchema($this->newTopicAuthorLegacyGuest('john'));
         $this->assertThat(
             $schema['author'],
@@ -141,8 +121,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function authorUserUrl()
-    {
+    public function authorUserUrl() {
         $user = $this->newUser();
         $schema = $this->postingSchema($this->newTopicAuthorUser($user));
         $this->assertThat(
@@ -153,8 +132,7 @@ class Test extends TestCase
     /**
      * @test
      */
-    public function datePublished()
-    {
+    public function datePublished() {
         $this->systemDatabaseTimezone('America/Los_Angeles');
         $schema = $this->schemaTopicCreatedAt('2016-01-23 11:53:20', timezone:'Europe/Stockholm');
         $this->assertThat($schema['datePublished'],

@@ -57,8 +57,7 @@
     "fakerphp/faker": "^1.15",
     "laravel/dusk": "^v8.2.0",
     "mockery/mockery": "^1.4",
-    "phpunit/phpunit": "^11.5.28",
-    "rawr/phpunit-data-provider": "^3.3"
+    "phpunit/phpunit": "^11.5.28"
   },
   "autoload": {
     "classmap": [
