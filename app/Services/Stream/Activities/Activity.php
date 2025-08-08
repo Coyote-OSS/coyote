@@ -4,9 +4,8 @@ namespace Coyote\Services\Stream\Activities;
 use Coyote\Services\Stream\Objects\ObjectInterface;
 use Coyote\Services\ToArray;
 
-abstract class Activity implements ObjectInterface
-{
-    use ToArray{
+abstract class Activity implements ObjectInterface {
+    use ToArray {
         toArray as parentToArray;
     }
 
@@ -45,8 +44,7 @@ abstract class Activity implements ObjectInterface
      * @param ObjectInterface|null $object
      * @param ObjectInterface|null $target
      */
-    public function __construct(ObjectInterface $actor, ObjectInterface $object = null, ObjectInterface $target = null)
-    {
+    public function __construct(ObjectInterface $actor, ObjectInterface $object = null, ObjectInterface $target = null) {
         $this->actor = $actor;
         $this->object = $object;
         $this->target = $target;
@@ -63,8 +61,7 @@ abstract class Activity implements ObjectInterface
      * @param ObjectInterface $object
      * @return $this
      */
-    public function setObject(ObjectInterface $object)
-    {
+    public function setObject(ObjectInterface $object) {
         $this->object = $object;
 
         return $this;
@@ -74,8 +71,7 @@ abstract class Activity implements ObjectInterface
      * @param ObjectInterface $target
      * @return $this
      */
-    public function setTarget(ObjectInterface $target)
-    {
+    public function setTarget(ObjectInterface $target) {
         $this->target = $target;
 
         return $this;
@@ -84,8 +80,7 @@ abstract class Activity implements ObjectInterface
     /**
      * @return array
      */
-    public function toArray()
-    {
+    public function toArray() {
         $array = $this->parentToArray();
 
         foreach (['actor', 'object', 'target'] as $field) {
@@ -95,5 +90,11 @@ abstract class Activity implements ObjectInterface
         }
 
         return $array;
+    }
+
+    public function setActorField(string $fieldName, string $value): void {
+        if ($this->actor) {
+            $this->actor->$fieldName = $value;
+        }
     }
 }
