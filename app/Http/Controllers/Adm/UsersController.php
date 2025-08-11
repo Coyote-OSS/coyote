@@ -14,6 +14,7 @@ use Coyote\Http\Forms\User\AdminForm;
 use Coyote\Http\Grids\Adm\UsersGrid;
 use Coyote\Repositories\Criteria\WithTrashed;
 use Coyote\Repositories\Eloquent\UserRepository;
+use Coyote\Services\Adm\UserContentDeleteService;
 use Coyote\Services\Adm\UserContentService;
 use Coyote\Services\Adm\UserInspection\UserInspectionService;
 use Coyote\Services\FormBuilder\Form;
@@ -44,16 +45,40 @@ class UsersController extends BaseController {
         $daysAgo = $this->daysAgo($this->request);
         $store = new UserStore($user, Carbon::now()->subDays($daysAgo));
         return $this->view('adm.users.show', [
-            'accountCreated' => new Date($user->created_at, Carbon::now()),
-            'navigation'     => new Navigation($user->id, $user->name),
-            'activity'       => new Activity(
+            'accountCreated'    => new Date($user->created_at, Carbon::now()),
+            'navigation'        => new Navigation($user->id, $user->name),
+            'activity'          => new Activity(
                 $store->postsCategoriesStatistic(),
                 $store->postsCategoriesStatisticLikes(),
                 $store->deleteReasons(),
                 $store->reportReasons(),
                 $store->postStats()),
-            'userContent'    => $service->userContent($user),
+            'userContent'       => $service->userContent($user),
+            'userContentAction' => [
+                'url'       => route('adm.users.contentDelete', [$user]),
+                'canDelete' => $this->canDeleteContent($user),
+            ],
         ]);
+    }
+
+    public function contentDelete(User $user, Request $request, UserContentDeleteService $service) {
+        $canDeleteContent = $this->canDeleteContent($user);
+        if (!$canDeleteContent) {
+            return response()->json(['error' => 'Account too old to remove content.']);
+        }
+        match ($request->get('contentDelete')) {
+            'deletePosts'        => $service->deletePosts($user),
+            'deletePostComments' => $service->deletePostComments($user),
+            'deleteBlogs'        => $service->deleteBlogs($user),
+            'deleteBlogComments' => $service->deleteBlogComments($user),
+            'deletePostVotes'    => $service->deletePostVotes($user),
+            'deleteBlogVotes'    => $service->deleteBlogVotes($user),
+            'deleteFlags'        => $service->deleteFlags($user),
+            'deleteMessages'     => $service->deleteMessages($user),
+            'deleteJobOffers'    => $service->deleteJobOffers($user),
+        };
+        return response()->redirectTo(
+            route('adm.users.show', [$user]));
     }
 
     private function daysAgo(Request $request): int {
@@ -124,5 +149,9 @@ class UsersController extends BaseController {
                     $usersIdByFingerprints),
             ],
         ]);
+    }
+
+    private function canDeleteContent(User $user): bool {
+        return $user->created_at->diffInDays(now()) < 31;
     }
 }

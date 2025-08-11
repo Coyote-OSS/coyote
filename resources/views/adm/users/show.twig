@@ -67,8 +67,11 @@
       <li class="list-group-item">
         Rozpoczętych wątków: <b>{{ userContent.topics }}</b>
       </li>
-      <li class="list-group-item">
-        Napisanych postów: <b>{{ userContent.posts }}</b> / <b>{{ userContent.postsDeleted }}</b>
+      <li class="list-group-item d-flex justify-content-between">
+        <span>
+          Napisanych postów: <b>{{ userContent.posts }}</b> / <b>{{ userContent.postsDeleted }}</b>
+        </span>
+        <span class="text-muted">W tym posty rozpoczynające wątki.</span>
       </li>
       <li class="list-group-item">
         Napisanych komentarzy pod postami: <b>{{ userContent.postComments }}</b> / <b>{{ userContent.postCommentsDeleted }}</b>
@@ -96,6 +99,26 @@
       </li>
       <li class="list-group-item">
         Zdobyta reputacja: <b>{{ userContent.reputation }}</b>
+      </li>
+      <li class="list-group-item">
+        {% if userContentAction.canDelete %}
+          <form action="{{ userContentAction.url }}" method="POST" class="d-flex flex-wrap gap-2">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deletePosts">Usuń posty</button>
+            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deletePostComments">Usuń komentarze</button>
+            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteBlogs">Usuń mikroblogi</button>
+            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteBlogComments">Usuń komentarze
+              mikroblogów</button>
+            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deletePostVotes">Usuń głosy na posty</button>
+            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteBlogVotes">Usuń głosy na mikroblogi</button>
+            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteFlags">Usuń raporty</button>
+            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteJobOffers">Usuń oferty pracy</button>
+          </form>
+        {% else %}
+          <div class="text-center">
+            <span class="text-muted">Konto jest chronione przed masowym usunięciem treści.</span>
+          </div>
+        {% endif %}
       </li>
     </ul>
   </div>
