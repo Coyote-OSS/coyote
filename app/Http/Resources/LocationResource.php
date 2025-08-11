@@ -12,26 +12,26 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $label
  * @property Country $country
  */
-class LocationResource extends JsonResource
-{
+class LocationResource extends JsonResource {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
-    public function toArray($request)
-    {
+    public function toArray($request) {
         return [
-            'url'           => route('job.city', [$this->city]),
+            'url'           => $this->city
+                ? route('job.city', [$this->city])
+                : null,
             'city'          => $this->city,
             'street'        => $this->street,
             'street_number' => $this->street_number,
             'label'         => $this->label,
 
-            'country'       => $this->when($this->resource->relationLoaded('country'), function () {
+            'country' => $this->when($this->resource->relationLoaded('country'), function () {
                 return $this->country->name;
-            })
+            }),
         ];
     }
 }
