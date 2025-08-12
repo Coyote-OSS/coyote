@@ -13,14 +13,12 @@ import {LocationInput, LocationListener} from "../../../Application/JobBoard/Por
 import {PaymentProvider} from "../../../Application/JobBoard/Port/PaymentProvider";
 import {SubmitJobOffer} from "../../../Application/JobBoard/Port/SubmitJobOffer";
 import {TagAutocomplete} from "../../../Application/JobBoard/Port/TagAutocomplete";
-import {NavigationApi} from "../../../Application/Navigation/Port/NavigationApi";
 import {bundleSize, remainingJobOffers} from "../../../Domain/JobBoard/bundleSize";
 import {isVatIncluded} from "../../../Domain/JobBoard/isVatIncluded";
 import {PaymentSummary, PaymentUpdatedStatus, PricingPlan, Tag} from "../../../Domain/JobBoard/JobBoard";
 import {JobOffer} from "../../../Domain/JobBoard/JobOffer";
 import {PaymentIntent} from "../../../Domain/JobBoard/PaymentIntent";
 import {PlanBundleRepository} from "../../../Domain/JobBoard/PlanBundleRepository";
-import {EventMetadata, ValuePropositionEvent} from "../../../Domain/ValueProp/Model";
 import {JobBoardNavigator} from "./JobBoardNavigator";
 import {JobBoardView} from "./JobBoardView";
 import {ScreenName} from "./Model";
@@ -37,7 +35,6 @@ export class JobBoardService {
     private readonly tagAutocomplete: TagAutocomplete,
     private readonly imageHosting: ImageHosting,
     private readonly jobBoardApi: JobBoardApi,
-    private readonly navigationApi: NavigationApi,
     private readonly inbound: ApplicationInbound,
     private readonly jobOffersRepo: JobOfferRepository,
     private readonly planBundleRepo: PlanBundleRepository,
@@ -109,7 +106,15 @@ export class JobBoardService {
   }
 
   applyForJob(jobOfferId: number): void {
-    this.view.showValueProposition(this.jobOffersRepo.findJobOffer(jobOfferId)!);
+    this.jobOfferApply(this.jobOffersRepo.findJobOffer(jobOfferId)!);
+  }
+
+  private jobOfferApply(jobOffer: JobOffer): void {
+    if (jobOffer.applicationMode === 'external-ats') {
+      window.open(jobOffer.applicationUrl, '_blank');
+    } else {
+      window.location.href = jobOffer.applicationUrl;
+    }
   }
 
   markAsFavourite(jobOfferId: number, favourite: boolean): void {
@@ -157,30 +162,6 @@ export class JobBoardService {
       vat: payment.paymentPriceVat,
       vatIncluded: true,
     };
-  }
-
-  valuePropositionAccepted(
-    event: ValuePropositionEvent,
-    email: string|undefined,
-    jobOffer: JobOffer,
-  ): void {
-    const result = this.vpEvent(event, {jobOfferId: jobOffer.id, email});
-    if (event === 'vpDeclined' || event === 'vpApply') {
-      this.view.hideValueProposition();
-      result.finally(() => this.jobOfferApply(jobOffer!));
-    }
-  }
-
-  private jobOfferApply(jobOffer: JobOffer): void {
-    if (jobOffer.applicationMode === 'external-ats') {
-      window.open(jobOffer.applicationUrl, '_blank');
-    } else {
-      window.location.href = jobOffer.applicationUrl;
-    }
-  }
-
-  vpEvent(eventName: string, metadata: EventMetadata): Promise<void> {
-    return this.navigationApi.event({eventName, metadata});
   }
 
   mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {

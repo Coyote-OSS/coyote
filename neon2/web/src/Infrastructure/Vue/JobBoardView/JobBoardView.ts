@@ -82,14 +82,6 @@ export class JobBoardView implements JobBoardListener, PricingPlanPort {
     this.store.pricingPlan = bundleName;
   }
 
-  showValueProposition(jobOffer: JobOffer): void {
-    this.store.vpVisibleFor = jobOffer;
-  }
-
-  hideValueProposition(): void {
-    this.store.vpVisibleFor = null;
-  }
-
   setFiltersOptions(filters: FilterOptions): void {
     this.store.jobOfferFilters = filters;
   }

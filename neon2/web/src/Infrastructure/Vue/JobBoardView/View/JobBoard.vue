@@ -1,9 +1,5 @@
 <template>
   <div class="relative">
-    <ValuePropositionModal
-      v-if="store.vpVisibleFor"
-      :company-name="store.vpVisibleFor.companyName"
-      @accept="vpAccept"/>
     <Design.Layout class="bg-body">
       <NavigationTopbar/>
       <template v-if="!navigationStore.$state.navigationMainContentSuspended">
@@ -40,12 +36,10 @@
 import {computed} from 'vue';
 import {PaymentNotification} from "../../../../Application/JobBoard/Port/PaymentProvider";
 import {PaymentUpdatedStatus} from "../../../../Domain/JobBoard/JobBoard";
-import {ValuePropositionEvent} from "../../../../Domain/ValueProp/Model";
 import {Design} from "../../DesignSystem/design";
 import Footer from "../../NavigationView/View/Component/Footer.vue";
 import NavigationTopbar from "../../NavigationView/View/Component/NavigationTopbar.vue";
 import {useNavigationStore} from "../../NavigationView/View/navigationStore";
-import ValuePropositionModal from "../../ValuePropView/ValuePropositionModal.vue";
 import {useBoardStore} from "../boardStore";
 import {Toast} from "../Model";
 import {useJobBoardService} from "./vue";
@@ -56,10 +50,6 @@ const navigationStore = useNavigationStore();
 
 function navigateHome(): void {
   service.navigate('home', null);
-}
-
-function vpAccept(event: ValuePropositionEvent, email?: string): void {
-  service.valuePropositionAccepted(event, email, store.vpVisibleFor!);
 }
 
 const showHomeLink = computed<boolean>(() => store.screen !== 'home');

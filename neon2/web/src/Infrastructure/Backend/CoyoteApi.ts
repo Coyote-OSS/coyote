@@ -1,6 +1,5 @@
 import {JobBoardApi, PreparePaymentResponse} from "../../Application/JobBoard/Port/JobBoardApi";
 import {SubmitJobOffer} from "../../Application/JobBoard/Port/SubmitJobOffer";
-import {NavigationApi} from "../../Application/Navigation/Port/NavigationApi";
 import {InvoiceInformation, PricingPlan} from "../../Domain/JobBoard/JobBoard";
 import {JobOffer} from "../../Domain/JobBoard/JobOffer";
 import {PaymentIntent} from "../../Domain/JobBoard/PaymentIntent";
@@ -11,7 +10,7 @@ import {BackendJobOffer} from "./BackendJobOffer";
 import {request, requestGet, requestNoBody} from "./http";
 import {toJobOffer} from "./toJobOffer";
 
-export class CoyoteApi implements JobBoardApi, NavigationApi {
+export class CoyoteApi implements JobBoardApi {
   constructor(private readonly csrfToken: string) {}
 
   addJobOffer(

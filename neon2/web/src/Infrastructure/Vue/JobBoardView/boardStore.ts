@@ -16,7 +16,6 @@ export const useBoardStore = defineStore('jobBoard', {
       screen: 'home',
       paymentNotification: null,
       paymentStatus: null,
-      vpVisibleFor: null,
 
       // search
       jobOffers: [],
@@ -46,7 +45,6 @@ interface State {
   toast: Toast|null;
   paymentNotification: PaymentNotification|null;
   paymentStatus: PaymentUpdatedStatus|null;
-  vpVisibleFor: JobOffer|null;
 
   // search
   jobOffers: JobOffer[];

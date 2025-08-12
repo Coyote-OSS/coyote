@@ -17,7 +17,6 @@ use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferLocation;
 use Neon2\Request\JobOfferSubmit;
-use Neon2\ValueProposition;
 
 class RouteServiceProvider extends ServiceProvider {
     public function boot(): void {
@@ -70,12 +69,6 @@ class RouteServiceProvider extends ServiceProvider {
                     auth()->id(),
                     request()->get('jobOfferId'),
                     request()->get('favourite'));
-                return response()->json(status:201);
-            });
-            Facades\Route::post('/neon2/job-offers/event', function (ValueProposition $value) {
-                $value->event(
-                    request()->get('eventName'),
-                    request()->get('metadata'));
                 return response()->json(status:201);
             });
             Facades\Route::get('/neon2/status', function (Integration $integration) {

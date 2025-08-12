@@ -85,7 +85,6 @@ const jobBoardService = new JobBoardService(
   mode.tagAutocomplete(),
   new CoyoteImageHosting(inbound.csrfToken()),
   coyoteApi,
-  coyoteApi,
   inbound,
   jobOffersRepo,
   planBundleRepo,

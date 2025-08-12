@@ -63,7 +63,6 @@ const jobBoardIcons = {
   jobOfferApplyExternally: 'fa-light fa-arrow-up-right-from-square',
   jobOfferTagRemove: iconClose,
   jobOfferExpiredOn: iconCalendar,
-  vpBack: iconArrowLeft,
 };
 
 const navigationIcons = {
