@@ -11,8 +11,12 @@
 
     <ul class="list-group list-group-flush">
       <li class="list-group-item d-flex justify-content-between">
-        <span><b>Utworzenie konta</b>: {{ accountCreated.ago }}</span>
-        <span class="text-muted">{{ accountCreated.format }}</span>
+        <span><b>Utworzenie konta</b>: {{ userDetails.accountCreated.ago }}</span>
+        <span class="text-muted">{{ userDetails.accountCreated.format }}</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between">
+        <span><b>Ostatnie logowanie</b>: {{ userDetails.lastVisit.ago }}</span>
+        <span class="text-muted">{{ userDetails.lastVisit.format }}</span>
       </li>
       <li class="list-group-item">
         <a class="btn btn-secondary" href="{{ navigation.profile }}">
@@ -34,7 +38,7 @@
       </li>
 
       <li class="list-group-item">
-        <p class="mb-2">Treści użytkownika:</p>
+        <p class="mb-2">Znajd treści użytkownika:</p>
         <a class="btn btn-secondary" href="{{ navigation.posts }}">
           {{ icon('adminUserPosts') }}
           Napisane posty
@@ -51,10 +55,6 @@
           {{ icon('adminUserReportReceived') }}
           Otrzymane raporty
         </a>
-        <button class="btn btn-secondary" disabled title="Przekierowanie jeszcze nie jest gotowe">
-          {{ icon('adminUserReportSent') }}
-          Wysłane raporty
-        </button>
       </li>
     </ul>
   </div>

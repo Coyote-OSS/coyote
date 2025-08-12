@@ -45,6 +45,10 @@ class UsersController extends BaseController {
         $daysAgo = $this->daysAgo($this->request);
         $store = new UserStore($user, Carbon::now()->subDays($daysAgo));
         return $this->view('adm.users.show', [
+            'userDetails'       => [
+                'accountCreated' => new Date($user->created_at, Carbon::now()),
+                'lastVisit'      => new Date($user->visited_at, Carbon::now()),
+            ],
             'accountCreated'    => new Date($user->created_at, Carbon::now()),
             'navigation'        => new Navigation($user->id, $user->name),
             'activity'          => new Activity(
