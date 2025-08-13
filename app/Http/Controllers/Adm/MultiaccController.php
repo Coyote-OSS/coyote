@@ -7,6 +7,7 @@ use Coyote\Http\Grids\Adm\MultiaccGrid;
 use Coyote\Models\Multiacc;
 use Coyote\Services\Adm\MultiaccService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -32,7 +33,8 @@ class MultiaccController extends BaseController {
 
     public function joinForm(): View {
         return $this->view('adm.multiacc.join', [
-            'postUrl' => route('adm.multiacc.join.save'),
+            'postUrl'  => route('adm.multiacc.join.save'),
+            'backHref' => route('adm.multiacc.home'),
         ]);
     }
 
@@ -64,7 +66,7 @@ class MultiaccController extends BaseController {
         ]);
 
         return $this->view('adm.multiacc.show', [
-            'multiacc'     => [
+            'multiacc'        => [
                 'id'        => $multiacc->id,
                 'createdAt' => $multiacc->created_at,
                 'users'     => $multiacc->multiaccUsers
@@ -82,8 +84,9 @@ class MultiaccController extends BaseController {
                     ])
                     ->toArray(),
             ],
-            'noteFormHref' => route('adm.multiacc.noteForm', [$multiacc]),
-            'homeHref'     => route('adm.multiacc.home'),
+            'noteFormHref'    => route('adm.multiacc.noteForm', [$multiacc]),
+            'backHref'        => route('adm.multiacc.home'),
+            'includeUserHref' => route('adm.multiacc.includeUser.form', [$multiacc]),
         ]);
     }
 
@@ -112,5 +115,33 @@ class MultiaccController extends BaseController {
                 ->redirectToRoute('adm.multiacc.show', [$multiacc]);
         }
         return back()->with('warning', 'Nie ma kartoteki z kontem użytkownika: "' . $username . '".');
+    }
+
+    public function includeUserForm(Multiacc $multiacc): View {
+        return $this->view('adm.multiacc.include', [
+            'multiacc' => [
+                'id'        => $multiacc->id,
+                'createdAt' => $multiacc->created_at,
+            ],
+            'backHref' => route('adm.multiacc.show', [$multiacc]),
+            'postUrl'  => route('adm.multiacc.includeUser.save', [$multiacc]),
+        ]);
+    }
+
+    public function includeUserSave(Multiacc $multiacc, MultiaccService $service): RedirectResponse|JsonResponse {
+        $validator = validator(request()->all(),
+            ['username' => ['required', 'exists:users,name']],
+            [
+                'username.required' => 'Podaj nazwę użytkownika.',
+                'username.exists'   => 'Podane konto użytkownika nie istnieje, podaj dokładną nazwę użytkownika.',
+            ]);
+        if ($validator->fails()) {
+            return back()
+                ->withInput(request()->except('_token'))
+                ->withErrors($validator);
+        }
+        $service->include($multiacc, request()->get('username'));
+        return response()->redirectToRoute('adm.multiacc.show', [$multiacc])
+            ->with('success', 'Konto zostało dodane do kartoteki jako rozpoznane multikonto.');
     }
 }

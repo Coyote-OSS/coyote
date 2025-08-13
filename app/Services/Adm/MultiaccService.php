@@ -61,4 +61,11 @@ readonly class MultiaccService {
                 ->where('name', $username))
             ->first();
     }
+
+    public function include(Multiacc $multiacc, string $username): void {
+        $this->attachUsersWithPayload(
+            $multiacc,
+            $this->findUserIds([$username]),
+            ['moderator_id' => auth()->id()]);
+    }
 }

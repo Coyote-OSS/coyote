@@ -6,8 +6,8 @@
 {% block container %}
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      Kartoteka #{{ multiacc.id }}
-      <a href="{{ homeHref }}" class="btn btn-sm btn-secondary">Wróć</a>
+      <span>Kartoteka <b>#{{ multiacc.id }}</b></span>
+      <a href="{{ backHref }}" class="btn btn-sm btn-secondary">Wróć</a>
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item">
@@ -26,8 +26,9 @@
       { 'key': 'moderator', 'label': 'Przez moderatora' }]) }}
   </div>
   <div class="card">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-between align-items-center">
       Rozpoznane multikonta
+      <a href="{{ includeUserHref }}" class="btn btn-sm btn-secondary">Dodaj</a>
     </div>
     {{ components.table('Ta kartoteka na razie nie dotyczy żadnego konta użytkownika.', multiacc.users, [
       { 'key': 'user', 'label': 'Konto' },

@@ -4,8 +4,9 @@
 {% import "adm.multiacc.components.twig" as components %}
 
 {% block cardHeader %}
-  <div class="card-header">
+  <div class="card-header d-flex justify-content-between align-items-center">
     Rozpoznanie multikonta
+    <a class="btn btn-sm btn-secondary" href="{{ backHref }}">Wróć</a>
   </div>
 {% endblock %}
 
@@ -15,9 +16,10 @@
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     {{ components.formField('Nazwa użytkownika #1','Nazwa pierwszego konta', 'username[]', 'username.0') }}
     {{ components.formField('Nazwa użytkownika #2','Nazwa drugiego konta', 'username[]', 'username.1') }}
-    <div id="hint-title" class="alert alert-info">
-      <p>Potwierdzam, że <b>jestem całkowicie pewny/a</b>, że te dwa konta użytkownika należą do jednej osoby.</p>
+    <div class="alert alert-info">
+      <p>Potwierdzam, że jestem całkowicie pewny/a, że te <b>dwa konta użytkownika należą do jednej osoby</b>.</p>
     </div>
+    <a class="btn btn-secondary" href="{{ backHref }}">Anuluj</a>
     <button type="submit" class="btn btn-primary">
       Potwierdź
     </button>
