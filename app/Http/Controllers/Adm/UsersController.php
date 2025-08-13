@@ -51,6 +51,7 @@ class UsersController extends BaseController {
                 'isBanned'       => $user->is_blocked,
                 'isIncognito'    => $user->is_incognito,
                 'isDeleted'      => !$user->is_active,
+                'multiacc'       => $this->userDetailMultiacc($user),
             ],
             'accountCreated'    => new Date($user->created_at, Carbon::now()),
             'navigation'        => new Navigation($user->id, $user->name),
@@ -160,5 +161,16 @@ class UsersController extends BaseController {
 
     private function canDeleteContent(User $user): bool {
         return $user->created_at->diffInDays(now()) < 31;
+    }
+
+    private function userDetailMultiacc(User $user): ?array {
+        $multiacc = $user->multiaccs->first();
+        if ($multiacc) {
+            return [
+                'href' => route('adm.multiacc.show', [$multiacc]),
+                'id'   => $multiacc->id,
+            ];
+        }
+        return null;
     }
 }

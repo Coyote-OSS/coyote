@@ -28,6 +28,16 @@
         <b>Użytkownik usunięty</b>: {{ userDetails.isDeleted ? 'Usunięty' : 'Nie usunięty' }}
       </li>
       <li class="list-group-item">
+        <b>Kartoteka</b>:
+        {% if userDetails.multiacc is not empty %}
+          <a href="{{ userDetails.multiacc.href }}" class="text-decoration-underline">
+            Kartoteka #{{ userDetails.multiacc.id }}
+          </a>
+        {% else %}
+          Nie ma
+        {% endif %}
+      </li>
+      <li class="list-group-item">
         <a class="btn btn-secondary" href="{{ navigation.profile }}">
           {{ icon('adminUserShowProfile') }}
           Pokaż profil

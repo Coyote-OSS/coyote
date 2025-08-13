@@ -3,6 +3,7 @@ namespace Coyote;
 
 use Carbon\Carbon;
 use Coyote\Feature\Trial\TrialSession;
+use Coyote\Models\Multiacc;
 use Coyote\Models\Scopes\ExcludeBlocked;
 use Coyote\Models\UserPlanBundle;
 use Coyote\Notifications\ResetPasswordNotification;
@@ -90,6 +91,7 @@ use Ramsey\Uuid\Uuid;
  * @property Guest|null $guest
  * @property TrialSession|null $trialSession
  * @property UserPlanBundle[]|Eloquent\Collection $planBundles
+ * @property Multiacc[]|Eloquent\Collection $multiaccs
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract {
     use Authenticatable, Authorizable, CanResetPassword, RoutesNotifications, HasApiTokens, SoftDeletes, ExcludeBlocked, HasPushSubscriptions;
@@ -318,5 +320,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function planBundles(): HasMany {
         return $this->hasMany(UserPlanBundle::class);
+    }
+
+    public function multiaccs(): BelongsToMany {
+        return $this
+            ->belongsToMany(Multiacc::class, 'multiacc_users')
+            ->withTimestamps();
     }
 }
