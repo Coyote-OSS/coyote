@@ -51,6 +51,7 @@ class UsersController extends BaseController {
                 'isBanned'       => $user->is_blocked,
                 'isIncognito'    => $user->is_incognito,
                 'isDeleted'      => !$user->is_active,
+                'mailVerified'   => $user->is_confirm,
                 'multiacc'       => $this->userDetailMultiacc($user),
             ],
             'accountCreated'    => new Date($user->created_at, Carbon::now()),

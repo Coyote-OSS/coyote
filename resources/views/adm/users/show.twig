@@ -10,32 +10,39 @@
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span><b>Utworzenie konta</b>: {{ userDetails.accountCreated.ago }}</span>
+        <span>Utworzenie konta: {{ userDetails.accountCreated.ago }}</span>
         <small class="text-muted">{{ userDetails.accountCreated.format }}</small>
       </li>
       <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span><b>Ostatnie logowanie</b>: {{ userDetails.lastVisit.ago }}</span>
+        <span>Ostatnie logowanie: {{ userDetails.lastVisit.ago }}</span>
         <small class="text-muted">{{ userDetails.lastVisit.format }}</small>
       </li>
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span><b>Aktualnie zbanowany</b>: {{ userDetails.isBanned ? 'Zbanowany' : 'Nie zbanowany' }}</span>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <span>Standardowy Ban: <b>{{ userDetails.isBanned ? 'Zbanowany' : 'Brak' }}</b></span>
+          <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
+        </div>
         <small class="text-muted">Dotyczy banów na użytkownika (nie IP ani fingerprint)</small>
       </li>
-      <li class="list-group-item">
-        <b>Aktualnie ma shadow-bana</b>: {{ userDetails.isIncognito ? 'Zbanowany' : 'Nie zbanowany' }}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>Shadow-ban: <b>{{ userDetails.isIncognito ? 'Zbanowany' : 'Brak' }}</b></span>
+        <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
       </li>
       <li class="list-group-item">
-        <b>Użytkownik usunięty</b>: {{ userDetails.isDeleted ? 'Usunięty' : 'Nie usunięty' }}
+        Stan konta: <b>{{ userDetails.isDeleted ? 'Konto usunięte' : 'Konto istniejące' }}</b>
       </li>
       <li class="list-group-item">
-        <b>Kartoteka</b>:
+        Kartoteka:
         {% if userDetails.multiacc is not empty %}
           <a href="{{ userDetails.multiacc.href }}" class="text-decoration-underline">
-            Kartoteka #{{ userDetails.multiacc.id }}
+            <b>Kartoteka #{{ userDetails.multiacc.id }}</b>
           </a>
         {% else %}
           Nie ma
         {% endif %}
+      </li>
+      <li class="list-group-item">
+        <span>Adres e-mail: <b>{{ mailVerified ? 'Zweryfikowany' : 'Nie potwierdzony' }}</b></span>
       </li>
       <li class="list-group-item">
         <a class="btn btn-secondary" href="{{ navigation.profile }}">
