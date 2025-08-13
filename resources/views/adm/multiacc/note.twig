@@ -1,0 +1,30 @@
+{% extends 'adm.base' %}
+{% block title %}Kartoteka {{ parent() }}{% endblock %}
+
+{% import "adm.multiacc.components.twig" as components %}
+
+{% block cardHeader %}
+  <div class="card-header d-flex justify-content-between align-items-center">
+    Notatka do kartoteki #{{ multiacc.id }}
+    <a class="btn btn-sm btn-secondary" href="{{ backHref }}">Wróć</a>
+  </div>
+{% endblock %}
+
+{% block card %}
+  <p>Chcesz zostawić informacje na przyszłość dla innych moderatorów.</p>
+  <form method="POST" action="{{ postUrl }}">
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label style="width:100%;">
+        <b>Treść notatki</b>
+        <textarea
+            class="form-control"
+            placeholder="Pozostaw dla innych moderatorów szczegóły które udało Ci się ustalić."
+            name="note"
+            style="max-height:200px; min-height:50px;"
+        ></textarea>
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Zapisz</button>
+  </form>
+{% endblock %}

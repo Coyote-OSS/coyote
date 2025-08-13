@@ -1,0 +1,48 @@
+{% macro formField(label, placeholder, formName, sessionErrorFieldName) %}
+  <div class="form-group">
+    <label>
+      <b>{{ label }}</b>
+      <input
+          type="text" class="form-control {{ session_get('errors').has(sessionErrorFieldName) ? 'is-invalid' }}"
+          placeholder="{{ placeholder }}"
+          name="{{ formName }}"
+          value="{{ app.request.old(sessionErrorFieldName) }}">
+      {% for error in session_get('errors').get(sessionErrorFieldName) %}
+        <span class="invalid-feedback">{{ error }}</span>
+      {% endfor %}
+    </label>
+  </div>
+{% endmacro %}
+
+{% macro table(emptyText, items, fields) %}
+  {% if items is not empty %}
+    <table class="table table-striped mb-0">
+      <thead>
+        <tr>
+          {% for field in fields %}
+            <th style="white-space:nowrap;">{{ field.label }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            {% for field in fields %}
+              {% if field.wrap %}
+                <td>{{ attribute(item, field.key) }}</td>
+              {% else %}
+                <td style="white-space:nowrap;">{{ attribute(item, field.key) }}</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="list-group list-group-flush">
+      <div class="list-group-item text-center text-muted">
+        {{ emptyText }}
+      </div>
+    </div>
+  {% endif %}
+{% endmacro %}

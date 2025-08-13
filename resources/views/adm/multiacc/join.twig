@@ -1,0 +1,25 @@
+{% extends 'adm.base' %}
+{% block title %}Kartoteka {{ parent() }}{% endblock %}
+
+{% import "adm.multiacc.components.twig" as components %}
+
+{% block cardHeader %}
+  <div class="card-header">
+    Rozpoznanie multikonta
+  </div>
+{% endblock %}
+
+{% block card %}
+  <p>Udało Ci się rozpoznać, że dwa konta użytkownika należą do jednej osoby.</p>
+  <form method="POST" action="{{ postUrl }}">
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    {{ components.formField('Nazwa użytkownika #1','Nazwa pierwszego konta', 'username[]', 'username.0') }}
+    {{ components.formField('Nazwa użytkownika #2','Nazwa drugiego konta', 'username[]', 'username.1') }}
+    <div id="hint-title" class="alert alert-info">
+      <p>Potwierdzam, że <b>jestem całkowicie pewny/a</b>, że te dwa konta użytkownika należą do jednej osoby.</p>
+    </div>
+    <button type="submit" class="btn btn-primary">
+      Potwierdź
+    </button>
+  </form>
+{% endblock %}
