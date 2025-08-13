@@ -150,5 +150,6 @@ $this->group(
         $this->get('Multiacc/{multiacc}/Show','MultiaccController@show')->name('multiacc.show');
         $this->get('Multiacc/{multiacc}/Note','MultiaccController@noteForm')->name('multiacc.noteForm');
         $this->post('Multiacc/{multiacc}/Note','MultiaccController@noteSave')->name('multiacc.noteSave');
+        $this->post('Multiacc/Find','MultiaccController@findByUsername')->name('multiacc.findByUsername');
     },
 );

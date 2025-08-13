@@ -29,6 +29,12 @@
           {{ session_get('success') }}
         </div>
       {% endif %}
+      {% if session_has('warning') %}
+        <div class="alert alert-warning">
+          {{ icon('alertDanger') }}
+          {{ session_get('warning') }}
+        </div>
+      {% endif %}
       <article>
         {% block container %}
           <div class="card">

@@ -16,9 +16,10 @@ class MultiaccController extends BaseController {
             ->createGrid(MultiaccGrid::class)
             ->setSource(new EloquentSource(Multiacc::query()));
         return $this->view('adm.multiacc.home', [
-            'grid'       => $grid,
-            'joinHref'   => route('adm.multiacc.join.form'),
-            'createHref' => route('adm.multiacc.create'),
+            'grid'               => $grid,
+            'joinHref'           => route('adm.multiacc.join.form'),
+            'createHref'         => route('adm.multiacc.create'),
+            'findByUsernameHref' => route('adm.multiacc.findByUsername'),
         ]);
     }
 
@@ -50,7 +51,8 @@ class MultiaccController extends BaseController {
                 ->withErrors($validator);
         }
         $service->join(request()->get('username'));
-        return response()->redirectToRoute('adm.multiacc.home')
+        return response()
+            ->redirectToRoute('adm.multiacc.home')
             ->with('success', 'Wpis do kartoteki został dodany.');
     }
 
@@ -97,5 +99,18 @@ class MultiaccController extends BaseController {
         $service->addNote($multiacc, request()->get('note'));
         return response()->redirectToRoute('adm.multiacc.show', [$multiacc])
             ->with('success', 'Notatka moderatorska została dodana.');
+    }
+
+    public function findByUsername(MultiaccService $service): RedirectResponse {
+        $username = request()->get('username') ?? '';
+        if ($username === '') {
+            return response()->redirectToRoute('adm.multiacc.home');
+        }
+        $multiacc = $service->findByUsername($username);
+        if ($multiacc) {
+            return response()
+                ->redirectToRoute('adm.multiacc.show', [$multiacc]);
+        }
+        return back()->with('warning', 'Nie ma kartoteki z kontem użytkownika: "' . $username . '".');
     }
 }

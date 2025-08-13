@@ -1,23 +1,34 @@
 {% extends 'adm.base' %}
 {% block title %}Kartoteka {{ parent() }}{% endblock %}
 
-{% block cardHeader %}
-  <div class="card-header d-flex justify-content-between align-items-center">
-    Kartoteka
-    <div>
+{% block container %}
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span class="me-auto">Kartoteka</span>
       <form method="POST" action="{{ createHref }}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <button type="submit" class="btn btn-sm btn-primary">Dodaj nową</button>
       </form>
+      <a class="ms-2 btn btn-sm btn-secondary" href="{{ joinHref }}">
+        Rozpoznaj multikonto
+      </a>
     </div>
-  </div>
-{% endblock %}
-
-{% block card %}
-  {{ grid(grid) }}
-  <div class="d-flex justify-content-end">
-    <a class="btn btn-sm btn-secondary" href="{{ joinHref }}">
-      Dodaj multikonto
-    </a>
+    <div class="card-body">
+      <form method="POST" action="{{ findByUsernameHref }}">
+        <div class="d-flex align-items-start" style="gap:12px;">
+          <div class="flex-grow-1">
+            <div class="input-group">
+              <input type="text" class="form-control" name="username" placeholder="Wyszukaj użytkownika e.g. spidey, hyperion46">
+              <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <button class="btn btn-secondary" type="submit">Znajdź</button>
+            </div>
+            <small class="form-text text-muted">
+              Podaj dokładną nazwę użytkownika.
+            </small>
+          </div>
+        </div>
+      </form>
+    </div>
+    {{ grid(grid) }}
   </div>
 {% endblock %}

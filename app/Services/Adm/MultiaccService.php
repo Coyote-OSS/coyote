@@ -4,6 +4,7 @@ namespace Coyote\Services\Adm;
 use Coyote\Models\Multiacc;
 use Coyote\User;
 use Illuminate\Database\Connection;
+use Illuminate\Database\Eloquent;
 
 readonly class MultiaccService {
     public function __construct(private Connection $connection) {}
@@ -52,5 +53,12 @@ readonly class MultiaccService {
             'moderator_id' => auth()->id(),
             'content'      => $content,
         ]);
+    }
+
+    public function findByUsername(string $username): ?Multiacc {
+        return Multiacc::query()
+            ->whereHas('users', fn(Eloquent\Builder $builder) => $builder
+                ->where('name', $username))
+            ->first();
     }
 }
