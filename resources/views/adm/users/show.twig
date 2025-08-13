@@ -8,15 +8,24 @@
     <div class="card-header">
       Użytkownik {{ navigation.mention }}
     </div>
-
     <ul class="list-group list-group-flush">
-      <li class="list-group-item d-flex justify-content-between">
+      <li class="list-group-item d-flex justify-content-between align-items-center">
         <span><b>Utworzenie konta</b>: {{ userDetails.accountCreated.ago }}</span>
-        <span class="text-muted">{{ userDetails.accountCreated.format }}</span>
+        <small class="text-muted">{{ userDetails.accountCreated.format }}</small>
       </li>
-      <li class="list-group-item d-flex justify-content-between">
+      <li class="list-group-item d-flex justify-content-between align-items-center">
         <span><b>Ostatnie logowanie</b>: {{ userDetails.lastVisit.ago }}</span>
-        <span class="text-muted">{{ userDetails.lastVisit.format }}</span>
+        <small class="text-muted">{{ userDetails.lastVisit.format }}</small>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span><b>Aktualnie zbanowany</b>: {{ userDetails.isBanned ? 'Zbanowany' : 'Nie zbanowany' }}</span>
+        <small class="text-muted">Dotyczy banów na użytkownika (nie IP ani fingerprint)</small>
+      </li>
+      <li class="list-group-item">
+        <b>Aktualnie ma shadow-bana</b>: {{ userDetails.isIncognito ? 'Zbanowany' : 'Nie zbanowany' }}
+      </li>
+      <li class="list-group-item">
+        <b>Użytkownik usunięty</b>: {{ userDetails.isDeleted ? 'Usunięty' : 'Nie usunięty' }}
       </li>
       <li class="list-group-item">
         <a class="btn btn-secondary" href="{{ navigation.profile }}">

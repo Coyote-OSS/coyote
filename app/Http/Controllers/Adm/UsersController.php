@@ -48,6 +48,9 @@ class UsersController extends BaseController {
             'userDetails'       => [
                 'accountCreated' => new Date($user->created_at, Carbon::now()),
                 'lastVisit'      => new Date($user->visited_at, Carbon::now()),
+                'isBanned'       => $user->is_blocked,
+                'isIncognito'    => $user->is_incognito,
+                'isDeleted'      => !$user->is_active,
             ],
             'accountCreated'    => new Date($user->created_at, Carbon::now()),
             'navigation'        => new Navigation($user->id, $user->name),
