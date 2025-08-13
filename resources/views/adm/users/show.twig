@@ -35,9 +35,9 @@
       <div class="card">
         <div class="card-header">Wiarygodność konta {{ navigation.mention }}</div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Adres e-mail:</span>
             <span>
-              Adres e-mail:
               {% if not userDetails.mailVerified %}
                 {{ icon('alertDanger') }}
                 <b>Niepotwierdzony</b>
@@ -46,16 +46,18 @@
               {% endif %}
             </span>
           </li>
-          <li class="list-group-item">
-            Kartoteka:
-            {% if userDetails.multiacc is not empty %}
-              <a href="{{ userDetails.multiacc.href }}">
-                {{ icon('alertDanger') }}
-                <b>Kartoteka #{{ userDetails.multiacc.id }}</b>
-              </a>
-            {% else %}
-              Nie ma
-            {% endif %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Kartoteka:</span>
+            <span>
+              {% if userDetails.multiacc is not empty %}
+                <a href="{{ userDetails.multiacc.href }}">
+                  {{ icon('alertDanger') }}
+                  <b>Kartoteka #{{ userDetails.multiacc.id }}</b>
+                </a>
+              {% else %}
+                Brak
+              {% endif %}
+            </span>
           </li>
           <li class="list-group-item">
             <a class="btn btn-sm btn-secondary" href="{{ navigation.stream }}">
@@ -78,24 +80,28 @@
       <div class="card">
         <div class="card-header">Blokada konta {{ navigation.mention }}</div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            Aktywność konta:
-            {% if userDetails.isDeleted %}
-              {{ icon('alertDanger') }}
-              <b>Konto usunięte</b>
-            {% else %}
-              Konto istniejące
-            {% endif %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Aktywność konta:</span>
+            <span>
+              {% if userDetails.isDeleted %}
+                {{ icon('alertDanger') }}
+                <b>Konto usunięte</b>
+              {% else %}
+                Konto istniejące
+              {% endif %}
+            </span>
           </li>
           <li class="list-group-item">
-            <div>
-              Standardowy Ban:
-              {% if userDetails.isBanned %}
-                {{ icon('alertDanger') }}
-                <b>Zbanowany</b>
-              {% else %}
-                Brak
-              {% endif %}
+            <div class="d-flex justify-content-between">
+              <span>Standardowy Ban:</span>
+              <span>
+                {% if userDetails.isBanned %}
+                  {{ icon('alertDanger') }}
+                  <b>Zbanowany</b>
+                {% else %}
+                  Brak
+                {% endif %}
+              </span>
             </div>
             <div>
               <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
@@ -103,14 +109,16 @@
             <small class="text-muted">Nie dotyczy banów na IP ani fingerprint.</small>
           </li>
           <li class="list-group-item">
-            <div>
-              Shadow-ban:
-              {% if userDetails.isIncognito %}
-                {{ icon('alertDanger') }}
-                <b>Zbanowany</b>
-              {% else %}
-                Brak
-              {% endif %}
+            <div class="d-flex justify-content-between">
+              <span>Shadow-ban:</span>
+              <span>
+                {% if userDetails.isIncognito %}
+                  {{ icon('alertDanger') }}
+                  <b>Zbanowany</b>
+                {% else %}
+                  Brak
+                {% endif %}
+              </span>
             </div>
             <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
           </li>
