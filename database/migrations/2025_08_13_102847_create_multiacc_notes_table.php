@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('multiacc_notes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('content');
+            $table->text('content');
             $table->foreignId('multiacc_id');
             $table->foreignIdFor(User::class, 'moderator_id');
         });

@@ -21,6 +21,9 @@ readonly class FontAwesomePro {
             // alert
             'alertDanger'                               => 'fa-light fa-triangle-exclamation',
             'alertSuccess'                              => $faTick,
+            'navigateBack'                              => 'fa-light fa-arrow-left',
+            'genericAdd'                                => 'fa-light fa-plus',
+            'genericSearch'                             => 'fa-light fa-magnifying-glass',
 
             // registration
             'loginGoogle'                               => 'fa-brands fa-google',
@@ -526,7 +529,7 @@ readonly class FontAwesomePro {
             'adminUserReportReceived'                   => 'fa-light fa-flag',
             'adminUserReportSent'                       => 'fa-light fa-flag',
             'adminUserSettings'                         => 'fa-light fa-gear',
-            'adminUserShowProfile'                      => 'fa-light fa-user',
+            'adminUserShowProfile'                      => 'fa-light fa-arrow-right',
             'adminUserStatistics'                       => 'fa-light fa-table-list',
             'adminUserStatisticsAllTime'                => 'fa-light fa-calendar-check',
             'adminUserStatisticsLastDay'                => 'fa-light fa-calendar-day',
@@ -562,6 +565,10 @@ readonly class FontAwesomePro {
             'navigationCategoryTrending'                => 'fa-light fa-arrow-trend-up',
             'navigationDropdown'                        => 'fa-light fa-chevron-down',
             'navigationNavigate'                        => 'fa-light fa-arrow-right',
+
+            // multiacc
+            'multiaccJoin'                              => 'fa-light fa-users',
+            'multiaccUsers'                             => 'fa-light fa-users',
         ];
     }
 }

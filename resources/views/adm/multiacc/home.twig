@@ -7,9 +7,13 @@
       <span class="me-auto">Kartoteka</span>
       <form method="POST" action="{{ createHref }}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <button type="submit" class="btn btn-sm btn-primary">Dodaj nową</button>
+        <button type="submit" class="btn btn-sm btn-primary">
+          {{ icon('genericAdd') }}
+          Stwórz
+        </button>
       </form>
       <a class="ms-2 btn btn-sm btn-secondary" href="{{ joinHref }}">
+        {{ icon('multiaccJoin') }}
         Rozpoznaj multikonto
       </a>
     </div>
@@ -18,9 +22,12 @@
         <div class="d-flex align-items-start" style="gap:12px;">
           <div class="flex-grow-1">
             <div class="input-group">
-              <input type="text" class="form-control" name="username" placeholder="Wyszukaj użytkownika e.g. spidey, hyperion46">
+              <input type="text" class="form-control" name="username" placeholder="Wyszukaj kartotekę użytkownika e.g. spidey, hyperion46">
               <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <button class="btn btn-secondary" type="submit">Znajdź</button>
+              <button class="btn btn-secondary" type="submit">
+                {{ icon('genericSearch') }}
+                Znajdź
+              </button>
             </div>
             <small class="form-text text-muted">
               Podaj dokładną nazwę użytkownika.

@@ -7,7 +7,9 @@
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <span>Kartoteka <b>#{{ multiacc.id }}</b></span>
-      <a href="{{ backHref }}" class="btn btn-sm btn-secondary">Wróć</a>
+      <a href="{{ backHref }}" class="btn btn-sm btn-secondary">
+        {{ icon('navigateBack') }}
+        Wróć</a>
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item">
@@ -18,7 +20,10 @@
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       Notatki moderatorskie
-      <a href="{{ noteFormHref }}" class="btn btn-sm btn-primary">Dodaj</a>
+      <a href="{{ noteFormHref }}" class="btn btn-sm btn-primary">
+        {{ icon('genericAdd') }}
+        Dodaj
+      </a>
     </div>
     {{ components.table('Nie ma notatek moderatoskich w tej kartotece.', multiacc.notes, [
       { 'key': 'content', 'label': 'Treść notatki', 'wrap': true },
@@ -27,8 +32,14 @@
   </div>
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      Rozpoznane multikonta
-      <a href="{{ includeUserHref }}" class="btn btn-sm btn-secondary">Dodaj</a>
+      <span>
+        {{ icon('multiaccUsers') }}
+        Konta użytkownika
+      </span>
+      <a href="{{ includeUserHref }}" class="btn btn-sm btn-secondary">
+        {{ icon('genericAdd') }}
+        Dodaj konto
+      </a>
     </div>
     {{ components.table('Ta kartoteka na razie nie dotyczy żadnego konta użytkownika.', multiacc.users, [
       { 'key': 'user', 'label': 'Konto' },

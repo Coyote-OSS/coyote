@@ -6,7 +6,10 @@
 {% block cardHeader %}
   <div class="card-header d-flex justify-content-between align-items-center">
     Rozpoznanie multikonta
-    <a class="btn btn-sm btn-secondary" href="{{ backHref }}">Wróć</a>
+    <a class="btn btn-sm btn-secondary" href="{{ backHref }}">
+      {{ icon('navigateBack') }}
+      Wróć
+    </a>
   </div>
 {% endblock %}
 

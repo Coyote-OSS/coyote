@@ -5,8 +5,18 @@
   {{ activity.chartLibrarySource }}
 
   <div class="card">
-    <div class="card-header">
-      Użytkownik {{ navigation.mention }}
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span>Konto {{ navigation.mention }}</span>
+      <div>
+        <a class="btn btn-sm btn-secondary" href="{{ navigation.settings }}">
+          {{ icon('adminUserAccountSettings') }}
+          Ustawienia konta
+        </a>
+        <a class="btn btn-sm btn-secondary" href="{{ navigation.profile }}">
+          Przejdź do profilu
+          {{ icon('adminUserShowProfile') }}
+        </a>
+      </div>
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -17,57 +27,98 @@
         <span>Ostatnie logowanie: {{ userDetails.lastVisit.ago }}</span>
         <small class="text-muted">{{ userDetails.lastVisit.format }}</small>
       </li>
-      <li class="list-group-item">
-        <div class="d-flex justify-content-between align-items-center">
-          <span>Standardowy Ban: <b>{{ userDetails.isBanned ? 'Zbanowany' : 'Brak' }}</b></span>
-          <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
-        </div>
-        <small class="text-muted">Dotyczy banów na użytkownika (nie IP ani fingerprint)</small>
-      </li>
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span>Shadow-ban: <b>{{ userDetails.isIncognito ? 'Zbanowany' : 'Brak' }}</b></span>
-        <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
-      </li>
-      <li class="list-group-item">
-        Stan konta: <b>{{ userDetails.isDeleted ? 'Konto usunięte' : 'Konto istniejące' }}</b>
-      </li>
-      <li class="list-group-item">
-        Kartoteka:
-        {% if userDetails.multiacc is not empty %}
-          <a href="{{ userDetails.multiacc.href }}" class="text-decoration-underline">
-            <b>Kartoteka #{{ userDetails.multiacc.id }}</b>
-          </a>
-        {% else %}
-          Nie ma
-        {% endif %}
-      </li>
-      <li class="list-group-item">
-        <span>Adres e-mail: <b>{{ mailVerified ? 'Zweryfikowany' : 'Nie potwierdzony' }}</b></span>
-      </li>
-      <li class="list-group-item">
-        <a class="btn btn-secondary" href="{{ navigation.profile }}">
-          {{ icon('adminUserShowProfile') }}
-          Pokaż profil
-        </a>
-        <a class="btn btn-secondary" href="{{ navigation.settings }}">
-          {{ icon('adminUserAccountSettings') }}
-          Ustawienia konta
-        </a>
-        <a class="btn btn-secondary" href="{{ navigation.stream }}">
-          {{ icon('adminUserFindInLog') }}
-          Znajdź w dzienniku zdarzeń
-        </a>
-        <a class="btn btn-secondary" href="{{ navigation.inspect }}">
-          {{ icon('adminUserFindFingerprints') }}
-          Znajdź fingerprinty
-        </a>
-        <a class="btn btn-secondary" href="{{ navigation.receivedFlags }}">
-          {{ icon('adminUserReportReceived') }}
-          Otrzymane raporty
-        </a>
-      </li>
     </ul>
   </div>
+
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">Wiarygodność konta {{ navigation.mention }}</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <span>
+              Adres e-mail:
+              {% if not userDetails.mailVerified %}
+                {{ icon('alertDanger') }}
+                <b>Niepotwierdzony</b>
+              {% else %}
+                Zweryfikowany
+              {% endif %}
+            </span>
+          </li>
+          <li class="list-group-item">
+            Kartoteka:
+            {% if userDetails.multiacc is not empty %}
+              <a href="{{ userDetails.multiacc.href }}">
+                {{ icon('alertDanger') }}
+                <b>Kartoteka #{{ userDetails.multiacc.id }}</b>
+              </a>
+            {% else %}
+              Nie ma
+            {% endif %}
+          </li>
+          <li class="list-group-item">
+            <a class="btn btn-sm btn-secondary" href="{{ navigation.stream }}">
+              {{ icon('adminUserFindInLog') }}
+              Znajdź w dzienniku zdarzeń
+            </a>
+            <a class="btn btn-sm btn-secondary" href="{{ navigation.inspect }}">
+              {{ icon('adminUserFindFingerprints') }}
+              Znajdź fingerprinty
+            </a>
+            <a class="btn btn-sm btn-secondary" href="{{ navigation.receivedFlags }}">
+              {{ icon('adminUserReportReceived') }}
+              Otrzymane raporty
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">Blokada konta {{ navigation.mention }}</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            Aktywność konta:
+            {% if userDetails.isDeleted %}
+              {{ icon('alertDanger') }}
+              <b>Konto usunięte</b>
+            {% else %}
+              Konto istniejące
+            {% endif %}
+          </li>
+          <li class="list-group-item">
+            <div>
+              Standardowy Ban:
+              {% if userDetails.isBanned %}
+                {{ icon('alertDanger') }}
+                <b>Zbanowany</b>
+              {% else %}
+                Brak
+              {% endif %}
+            </div>
+            <div>
+              <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
+            </div>
+            <small class="text-muted">Nie dotyczy banów na IP ani fingerprint.</small>
+          </li>
+          <li class="list-group-item">
+            <div>
+              Shadow-ban:
+              {% if userDetails.isIncognito %}
+                {{ icon('alertDanger') }}
+                <b>Zbanowany</b>
+              {% else %}
+                Brak
+              {% endif %}
+            </div>
+            <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="card-header">
       {{ icon('adminUserSettings') }}
@@ -132,15 +183,16 @@
         {% if userContentAction.canDelete %}
           <form action="{{ userContentAction.url }}" method="POST" class="d-flex flex-wrap gap-2">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deletePosts">Usuń posty</button>
-            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deletePostComments">Usuń komentarze</button>
-            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteBlogs">Usuń mikroblogi</button>
-            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteBlogComments">Usuń komentarze
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deletePosts">Usuń posty</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deletePostComments">Usuń komentarze</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteBlogs">Usuń mikroblogi</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteBlogComments">Usuń komentarze
               mikroblogów</button>
-            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deletePostVotes">Usuń głosy na posty</button>
-            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteBlogVotes">Usuń głosy na mikroblogi</button>
-            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteFlags">Usuń raporty</button>
-            <button class="btn btn-secondary" type="submit" name="contentDelete" value="deleteJobOffers">Usuń oferty pracy</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deletePostVotes">Usuń głosy na posty</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteBlogVotes">Usuń głosy na
+              mikroblogi</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteFlags">Usuń raporty</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteJobOffers">Usuń oferty pracy</button>
           </form>
         {% else %}
           <div class="text-center">
