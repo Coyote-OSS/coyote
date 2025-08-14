@@ -22,15 +22,14 @@ use Coyote\Services\Stream\Objects\Post as Stream_Post;
 use Coyote\Services\Stream\Objects\Topic as Stream_Topic;
 use Coyote\Services\UrlBuilder;
 use Coyote\Topic;
+use Coyote\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
-class SubmitController extends BaseController
-{
-    public function index(Forum $forum): View
-    {
+class SubmitController extends BaseController {
+    public function index(Forum $forum): View {
         $this->breadcrumb->push('Nowy wątek', route('forum.topic.submit', [$forum->slug]));
         return Controller::view('forum.submit', [
             'forum'                => $forum,
@@ -42,13 +41,16 @@ class SubmitController extends BaseController
         ]);
     }
 
-    private function stickyNavbar(Forum $forum): bool
-    {
+    private function stickyNavbar(Forum $forum): bool {
         return $this->userId && $this->auth->can('sticky', $forum);
     }
 
-    public function save(PostRequest $request, Forum $forum, ?Topic $topic, Post $post): JsonResponse
-    {
+    public function save(PostRequest $request, Forum $forum, ?Topic $topic, Post $post): JsonResponse {
+        /** @var User $user */
+        $user = auth()->user();
+        if (!$user->is_confirm) {
+            abort(403, 'Potwierdź adres e-mail, by dodać post lub wątek.');
+        }
         if (!$topic->exists) {
             $topic = $this->topic->makeModel();
             $topic->forum()->associate($forum);
@@ -157,8 +159,7 @@ class SubmitController extends BaseController
      * @param int $pollId
      * @return \Coyote\Poll|null
      */
-    private function savePoll(Request $request, $pollId)
-    {
+    private function savePoll(Request $request, $pollId) {
         $items = array_filter($request->input('poll.items.*.text', []));
 
         if ($items || !$pollId) {
@@ -178,8 +179,7 @@ class SubmitController extends BaseController
     /**
      * @return PollRepositoryInterface
      */
-    private function getPollRepository()
-    {
+    private function getPollRepository() {
         return app(PollRepositoryInterface::class);
     }
 
@@ -189,8 +189,7 @@ class SubmitController extends BaseController
      * @return string
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function subject($topic, SubjectRequest $request)
-    {
+    public function subject($topic, SubjectRequest $request) {
         $this->authorize('update', $topic->forum);
 
         $topic->fill(['title' => $request->input('title')]);
@@ -236,8 +235,7 @@ class SubmitController extends BaseController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function preview(Request $request)
-    {
+    public function preview(Request $request) {
         $parser = app('parser.post');
         $parser->cache->setEnable(false);
 

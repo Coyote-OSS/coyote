@@ -22,7 +22,7 @@
           <perfect-scrollbar tag="ul" class="position-relative" style="height: 100px">
             <li v-for="topic in similar">
               <a :href="topic.url">
-                <strong>{{ topic.title }}</strong>
+                <strong>{{topic.title}}</strong>
                 <small>
                   <vue-timeago :datetime="topic.last_post_created_at"/>
                 </small>
@@ -45,6 +45,14 @@
       </div>
     </div>
 
+    <div v-if="confirmPrompt && !confirmedMail" class="alert alert-warning">
+      <template v-if="showTitleInput">
+        Potwierdź adres e-mail, by rozpocząć wątek.
+      </template>
+      <template v-else>
+        Potwierdź adres e-mail, by odpowiedzieć w wątku.
+      </template>
+    </div>
     <div class="form-group">
       <label class="col-form-label" v-if="is_mode_linear">
         Treść <em>*</em>
@@ -156,8 +164,9 @@
         <button v-if="post.id" @click="cancel" title="Anuluj (Esc)" class="btn btn-sm btn-danger ms-2">
           Anuluj
         </button>
-        {{ ' ' }}
-        <vue-button :processing="isProcessing" :disabled="post.text.trim().length === 0" title="Kliknij, aby zapisać (Ctrl+Enter)" class="btn btn-primary btn-sm neon-primary-button" @click="save">
+        {{' '}}
+        <vue-button :processing="isProcessing" :disabled="post.text.trim().length === 0" title="Kliknij, aby zapisać (Ctrl+Enter)"
+                    class="btn btn-primary btn-sm neon-primary-button" @click="save">
           <template v-if="post.id">Zapisz</template>
           <template v-else>Dodaj post</template>
         </vue-button>
@@ -215,6 +224,7 @@ export default {
       similar: [],
       emojis: window.emojis,
       originalText: this.post.text,
+      confirmPrompt: false,
     };
   },
   watch: {
@@ -250,7 +260,7 @@ export default {
       this.errors = {};
 
       await this.lastPage();
-
+      this.$data.confirmPrompt = true;
       store.dispatch('posts/savePostTreeAnswer',
         [this.post, this.$props.treeAnswerPostId])
         .then(result => {
@@ -313,6 +323,7 @@ export default {
   computed: {
     ...mapGetters('topics', ['topic', 'is_mode_tree', 'is_mode_linear']),
     ...mapState('poll', ['poll']),
+    ...mapGetters('user', ['confirmedMail']),
     ...mapGetters('posts', ['totalPages', 'currentPage']),
     isFirstPost() {
       return !this.topic || this.topic.first_post_id === this.post.id;

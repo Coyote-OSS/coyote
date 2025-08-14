@@ -8,28 +8,24 @@ use Coyote\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class InitialStateComposer
-{
+class InitialStateComposer {
     private string $jwtToken;
 
     public function __construct(
         private Request     $request,
         private UserDefined $userDefined,
-        JwtToken            $jwtToken)
-    {
+        JwtToken            $jwtToken) {
         if ($request->user()) {
             $this->jwtToken = $jwtToken->token($request->user());
         }
     }
 
-    public function compose(View $view): void
-    {
+    public function compose(View $view): void {
         $view->with('__INITIAL_STATE', \json_encode($this->initialState()));
         $view->with('__WS_URL', $this->websocketUrl());
     }
 
-    private function initialState(): array
-    {
+    private function initialState(): array {
         return \array_merge(
             $this->request->attributes->all(),
             [
@@ -43,8 +39,7 @@ class InitialStateComposer
         );
     }
 
-    public function websocketUrl(): ?string
-    {
+    public function websocketUrl(): ?string {
         if (config('services.ws.host') && $this->request->user()) {
             $schema = $this->request->isSecure() ? 'wss' : 'ws';
             $host = config('services.ws.host');
@@ -59,8 +54,7 @@ class InitialStateComposer
         return null;
     }
 
-    private function registerUserModel(): array
-    {
+    private function registerUserModel(): array {
         if (empty($this->request->user())) {
             return [];
         }
@@ -79,12 +73,12 @@ class InitialStateComposer
                 'is_sponsor'           => $user->is_sponsor,
                 'postCommentStyle'     => $user->guest->settings['postCommentStyle'] ?? 'legacy',
                 'initials'             => (new Initials)->of($user->name),
+                'confirmedMail'        => $user->is_confirm,
             ],
         ];
     }
 
-    private function registerFollowers(): array
-    {
+    private function registerFollowers(): array {
         /** @var User $user */
         $user = $this->request->user();
         if (empty($user)) {
@@ -95,8 +89,7 @@ class InitialStateComposer
         ];
     }
 
-    private function mapFormat(string $format): string
-    {
+    private function mapFormat(string $format): string {
         $values = [
             'dd-MM-yyyy HH:mm',
             'yyyy-MM-dd HH:mm',
