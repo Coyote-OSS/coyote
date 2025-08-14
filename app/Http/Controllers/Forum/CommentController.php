@@ -20,17 +20,15 @@ use Coyote\Services\Stream\Activities\Update as Stream_Update;
 use Coyote\Services\Stream\Objects\Comment as Stream_Comment;
 use Coyote\Services\Stream\Objects\Topic as Stream_Topic;
 use Coyote\Stream;
+use Coyote\User;
 
-class CommentController extends Controller
-{
-    /**
-     * @param PostCommentRequest $request
-     * @param Post\Comment $comment
-     * @return PostCommentResource
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function save(PostCommentRequest $request, Post\Comment $comment)
-    {
+class CommentController extends Controller {
+    public function save(PostCommentRequest $request, Post\Comment $comment): PostCommentResource {
+        /** @var User $user */
+        $user = auth()->user();
+        if (!$user->is_confirm) {
+            abort(403, 'Potwierdź adres e-mail, by dodać komentarz.');
+        }
         if (!$comment->exists) {
             $comment->user()->associate($this->auth);
             $comment->post_id = $request->input('post_id');
@@ -61,16 +59,19 @@ class CommentController extends Controller
         broadcast(new CommentSaved($comment))->toOthers();
 
         PostCommentResource::withoutWrapping();
-
-        return (new PostCommentResource($comment))->additional(['is_subscribed' => $comment->post->subscribers()->forUser($this->userId)->exists()]);
+        return new PostCommentResource($comment)->additional([
+            'is_subscribed' => $comment->post
+                ->subscribers()
+                ->forUser($this->userId)
+                ->exists(),
+        ]);
     }
 
     /**
      * @param Post\Comment $comment
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function delete(Post\Comment $comment)
-    {
+    public function delete(Post\Comment $comment) {
         abort_if(!$comment->post, 404);
 
         $this->authorize('delete', [$comment, $comment->post->forum]);
@@ -89,8 +90,7 @@ class CommentController extends Controller
      * @return mixed
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function getAll(Post $post)
-    {
+    public function getAll(Post $post) {
         $this->authorize('access', [$post->forum]);
 
         PostCommentResource::withoutWrapping();
@@ -104,8 +104,7 @@ class CommentController extends Controller
         return PostCommentResource::collection($post->comments)->keyBy('id');
     }
 
-    public function show(Post\Comment $comment): PostCommentResource
-    {
+    public function show(Post\Comment $comment): PostCommentResource {
         // post can be already removed.
         abort_if($comment->post === null, 404);
 
@@ -117,8 +116,7 @@ class CommentController extends Controller
         return new PostCommentResource($comment);
     }
 
-    public function migrate(Post\Comment $comment, TopicRepositoryInterface $repository)
-    {
+    public function migrate(Post\Comment $comment, TopicRepositoryInterface $repository) {
         $topic = $comment->post->topic;
 
         // Maybe user does not have an access to this category?
@@ -172,8 +170,7 @@ class CommentController extends Controller
         return $postResource->resolve($this->request);
     }
 
-    private function target(Post\Comment $comment): array
-    {
+    private function target(Post\Comment $comment): array {
         $target = (new Stream_Topic())->map($comment->post->topic);
 
         // it is IMPORTANT to parse text first, and then put information to activity stream.
