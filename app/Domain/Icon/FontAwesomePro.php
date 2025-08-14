@@ -12,6 +12,7 @@ readonly class FontAwesomePro {
         $genericLoading = $faSpinner;
         $genericClose = $faCross;
         $genericDropdown = 'fa-solid fa-ellipsis';
+        $genericDelete = 'fa-light fa-trash-can';
         $genericDropdownVertical = 'fa-solid fa-ellipsis-vertical';
 
         return [
@@ -493,6 +494,7 @@ readonly class FontAwesomePro {
             'adminCrossMark'                            => $faCross,
             'adminMaterialPost'                         => 'fa-light fa-arrow-right',
             'adminMaterialPostDropdown'                 => $genericDropdown,
+            'adminMassDelete'                           => $genericDelete,
 
             // admin material
             'adminMaterialPostBack'                     => 'fa-light fa-arrow-left',

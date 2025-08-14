@@ -129,92 +129,8 @@
 
   <div class="card">
     <div class="card-header">
-      {{ icon('adminUserSettings') }}
-      Treści dodane przez użytkownika {{ navigation.mention }}
-    </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">
-        Rozpoczętych wątków: <b>{{ userContent.topics }}</b>
-      </li>
-      <li class="list-group-item">
-        <div class="d-flex justify-content-between">
-          <span>
-            Napisanych postów: <b>{{ userContent.posts }}</b> / <b>{{ userContent.postsDeleted }}</b>
-          </span>
-          <a href="{{ navigation.posts }}">
-            {{ icon('adminUserPosts') }}
-            Pokaż
-          </a>
-        </div>
-        <small class="text-muted">W tym postów rozpoczynających wątki.</small>
-      </li>
-      <li class="list-group-item d-flex justify-content-between">
-        <span>
-          Napisanych komentarzy pod postami: <b>{{ userContent.postComments }}</b> / <b>{{ userContent.postCommentsDeleted }}</b>
-        </span>
-        <a href="{{ navigation.comments }}">
-          {{ icon('adminUserPostComments') }}
-          Pokaż
-        </a>
-      </li>
-      <li class="list-group-item d-flex justify-content-between">
-        <span>Napisanych mikroblogów: <b>{{ userContent.blogs }}</b> / <b>{{ userContent.blogsDeleted }}</b></span>
-        <span>
-          <a href="{{ navigation.microblogs }}">
-            {{ icon('adminUserMicroblogs') }}
-            Pokaż
-          </a>
-        </span>
-      </li>
-      <li class="list-group-item">
-        Napisanych komentarzy pod mikroblogami: <b>{{ userContent.blogComments }}</b> / <b>{{ userContent.blogCommentsDeleted }}</b>
-      </li>
-      <li class="list-group-item">
-        Oddanych głosow na posty: <b>{{ userContent.postVotes }}</b>
-      </li>
-      <li class="list-group-item">
-        Oddanych głosow na mikroblogi: <b>{{ userContent.microblogVotes }}</b>
-      </li>
-      <li class="list-group-item">
-        Dodanych raportów: <b>{{ userContent.flags }}</b> / <b>{{ userContent.flagsTotal }}</b>
-      </li>
-      <li class="list-group-item">
-        Wysłanych wiadomości: <b>{{ userContent.privateMessages }}</b>
-      </li>
-      <li class="list-group-item">
-        Utworzonych ofert pracy: <b>{{ userContent.jobOffers }}</b>
-      </li>
-      <li class="list-group-item">
-        Zdobyta reputacja: <b>{{ userContent.reputation }}</b>
-      </li>
-      <li class="list-group-item">
-        {% if userContentAction.canDelete %}
-          <form action="{{ userContentAction.url }}" method="POST" class="d-flex flex-wrap gap-2">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deletePosts">Usuń posty</button>
-            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deletePostComments">Usuń komentarze</button>
-            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteBlogs">Usuń mikroblogi</button>
-            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteBlogComments">Usuń komentarze
-              mikroblogów</button>
-            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deletePostVotes">Usuń głosy na posty</button>
-            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteBlogVotes">Usuń głosy na
-              mikroblogi</button>
-            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteFlags">Usuń raporty</button>
-            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteJobOffers">Usuń oferty pracy</button>
-          </form>
-        {% else %}
-          <div class="text-center">
-            <span class="text-muted">Konto jest chronione przed masowym usunięciem treści.</span>
-          </div>
-        {% endif %}
-      </li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
       {{ icon('adminUserStatistics') }}
-      Aktywność w kategoriach użytkownika {{ navigation.mention }}
+      Aktywność użytkownika {{ navigation.mention }}
     </div>
     <div class="card-body">
       <div class="btn-group mb-4">
@@ -313,7 +229,100 @@
     </div>
   </div>
 
-  <a class="btn btn-secondary" href="{{ navigation.users }}">
-    Powrót
-  </a>
+  <div class="card">
+    <div class="card-header">
+      {{ icon('adminMassDelete') }}
+      Masowe usuwanie treści {{ navigation.mention }}
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Rozpoczętych wątków: <b>{{ userContent.topics }}</b>
+      </li>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between">
+          <span>
+            Napisanych postów: <b title="Postów na forum (wyłączając usunięte)">{{ userContent.posts }}</b>
+            /
+            <b title="Usuniętych postów">{{ userContent.postsDeleted }}</b>
+          </span>
+          <a href="{{ navigation.posts }}">
+            {{ icon('adminUserPosts') }}
+            Pokaż
+          </a>
+        </div>
+        <small class="text-muted">W tym postów rozpoczynających wątki.</small>
+      </li>
+      <li class="list-group-item d-flex justify-content-between">
+        <span>
+          Napisanych komentarzy pod postami:
+          <b title="Komentarzy na forum (wyłączając usunięte)">{{ userContent.postComments }}</b>
+          /
+          <b title="Usuniętych komentarzy">{{ userContent.postCommentsDeleted }}</b>
+        </span>
+        <a href="{{ navigation.comments }}">
+          {{ icon('adminUserPostComments') }}
+          Pokaż
+        </a>
+      </li>
+      <li class="list-group-item d-flex justify-content-between">
+        <span>
+          Napisanych mikroblogów:
+          <b title="Mikroblogów użytkownika (wyłączając usunięte)">{{ userContent.blogs }}</b>
+          /
+          <b title="Usuniętych mikroblogów">{{ userContent.blogsDeleted }}</b>
+        </span>
+        <span>
+          <a href="{{ navigation.microblogs }}">
+            {{ icon('adminUserMicroblogs') }}
+            Pokaż
+          </a>
+        </span>
+      </li>
+      <li class="list-group-item">
+        Napisanych komentarzy pod mikroblogami:
+        <b title="Komentarzy pod mikroblogami (wyłączając usunięte)">{{ userContent.blogComments }}</b> 
+        / 
+        <b title="Usuniętych komentarzy pod mikroblogami">{{ userContent.blogCommentsDeleted }}</b>
+      </li>
+      <li class="list-group-item">
+        Oddanych głosow na posty: <b>{{ userContent.postVotes }}</b>
+      </li>
+      <li class="list-group-item">
+        Oddanych głosow na mikroblogi: <b>{{ userContent.microblogVotes }}</b>
+      </li>
+      <li class="list-group-item">
+        Dodanych raportów: <b>{{ userContent.flags }}</b> / <b>{{ userContent.flagsTotal }}</b>
+      </li>
+      <li class="list-group-item">
+        Wysłanych wiadomości: <b>{{ userContent.privateMessages }}</b>
+      </li>
+      <li class="list-group-item">
+        Utworzonych ofert pracy: <b>{{ userContent.jobOffers }}</b>
+      </li>
+      <li class="list-group-item">
+        Zdobyta reputacja: <b>{{ userContent.reputation }}</b>
+      </li>
+      <li class="list-group-item">
+        {% if userContentAction.canDelete %}
+          <form action="{{ userContentAction.url }}" method="POST" class="d-flex flex-wrap gap-2">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deletePosts">Usuń posty</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deletePostComments">Usuń komentarze</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteBlogs">Usuń mikroblogi</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteBlogComments">Usuń komentarze
+              mikroblogów</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deletePostVotes">Usuń głosy na posty</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteBlogVotes">Usuń głosy na
+              mikroblogi</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteFlags">Usuń raporty</button>
+            <button class="btn btn-sm btn-secondary" type="submit" name="contentDelete" value="deleteJobOffers">Usuń oferty pracy</button>
+          </form>
+        {% else %}
+          <div class="text-center">
+            <span class="text-muted">Konto jest chronione przed masowym usunięciem treści.</span>
+          </div>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
 {% endblock %}
