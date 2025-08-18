@@ -43,7 +43,6 @@
     "league/flysystem-aws-s3-v3": "^3.0",
     "mpdf/mpdf": "dev-development",
     "paylane/client": "^1.1",
-    "predis/predis": "^3.2",
     "rawr/t-regx": "^0.17.1",
     "rcrowe/twigbridge": "^0.14.3",
     "rdx/laravelcollective-html": "^v6.4.1",
