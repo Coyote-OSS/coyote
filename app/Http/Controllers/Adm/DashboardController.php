@@ -11,12 +11,11 @@ use Coyote\Domain\Registration\UserRegistrations;
 use Coyote\Domain\StringHtml;
 use Coyote\Domain\View\Chart;
 use Illuminate\Foundation\Application;
+use Illuminate\Redis\RedisManager;
 use Illuminate\View\View;
 
-class DashboardController extends BaseController
-{
-    public function index(UserRegistrations $userRegistrations, PostsCreated $postCreated, JobScreated $jobsCreated): View
-    {
+class DashboardController extends BaseController {
+    public function index(UserRegistrations $userRegistrations, PostsCreated $postCreated, JobScreated $jobsCreated): View {
         return $this->view('adm.dashboard', [
             'checklist' => [
                 $this->directoryWritable('storage/', \storage_path()),
@@ -24,6 +23,10 @@ class DashboardController extends BaseController
                 [
                     'label' => 'Redis włączony',
                     'value' => \config('cache.default'),
+                ],
+                [
+                    'label' => new StringHtml('Ilość połączeń Redis - <code>' . $this->redisConnections() . '</code>'),
+                    'value' => true,
                 ],
                 [
                     'label' => new StringHtml('PHP - <code>' . \PHP_VERSION . '</code>'),
@@ -51,8 +54,7 @@ class DashboardController extends BaseController
         ]);
     }
 
-    private function historyChartHtml(ChartSource $source, Period $period): StringHtml
-    {
+    private function historyChartHtml(ChartSource $source, Period $period): StringHtml {
         return new StringHtml($this->view('adm.registrations-chart', [
             'chart'              => $this->registrationsChart($source, $period),
             'chartLibrarySource' => Chart::librarySourceHtml(),
@@ -60,8 +62,7 @@ class DashboardController extends BaseController
         ]));
     }
 
-    private function registrationsChart(ChartSource $source, Period $period): Chart
-    {
+    private function registrationsChart(ChartSource $source, Period $period): Chart {
         $range = new HistoryRange($this->dateNow(), $period, 30);
         return $this->chart(
             "$period->name.{$source->id()}",
@@ -69,13 +70,11 @@ class DashboardController extends BaseController
         );
     }
 
-    private function dateNow(): string
-    {
+    private function dateNow(): string {
         return Carbon::now()->toDateString();
     }
 
-    private function chart(string $chartId, array $registeredUsers): Chart
-    {
+    private function chart(string $chartId, array $registeredUsers): Chart {
         return new Chart(
             \array_keys($registeredUsers),
             \array_values($registeredUsers),
@@ -84,12 +83,18 @@ class DashboardController extends BaseController
         );
     }
 
-    public function directoryWritable(string $basePath, string $path): array
-    {
+    public function directoryWritable(string $basePath, string $path): array {
         $permission = \decOct(\filePerms($path) & 0777);
         return [
             'label' => new StringHtml("Katalog <code>$basePath</code> ma prawa do zapisu - <code>$permission</code>"),
             'value' => \is_writeable(\storage_path()),
         ];
+    }
+
+    private function redisConnections(): ?int {
+        /** @var RedisManager $redis */
+        $redis = app('redis');
+        $clientsInfo = $redis->command('info', ['clients']);
+        return $clientsInfo['connected_clients'] ?? null;
     }
 }
