@@ -18,7 +18,9 @@ use Coyote\Services\Adm\UserContentDeleteService;
 use Coyote\Services\Adm\UserContentService;
 use Coyote\Services\Adm\UserInspection\UserInspectionService;
 use Coyote\Services\FormBuilder\Form;
+use Coyote\Services\Stream\Activities;
 use Coyote\Services\Stream\Activities\Update;
+use Coyote\Services\Stream\Objects\MassDelete;
 use Coyote\Services\Stream\Objects\Person;
 use Coyote\User;
 use Coyote\View\FingerprintUserMentionTableItem;
@@ -75,7 +77,8 @@ class UsersController extends BaseController {
         if (!$canDeleteContent) {
             return response()->json(['error' => 'Account too old to remove content.']);
         }
-        match ($request->get('contentDelete')) {
+        $contentType = $request->get('contentDelete');
+        match ($contentType) {
             'deletePosts'        => $service->deletePosts($user),
             'deletePostComments' => $service->deletePostComments($user),
             'deleteBlogs'        => $service->deleteBlogs($user),
@@ -86,6 +89,9 @@ class UsersController extends BaseController {
             'deleteMessages'     => $service->deleteMessages($user),
             'deleteJobOffers'    => $service->deleteJobOffers($user),
         };
+        stream(Activities\MassDelete::class,
+            new MassDelete($user, $contentType));
+
         return response()->redirectTo(
             route('adm.users.show', [$user]));
     }
