@@ -48,3 +48,6 @@ install-passport:
 
 install-push:
 	docker compose exec -T -u nginx php php artisan webpush:vapid
+
+redis-close-idle:
+	docker compose exec redis redis-cli CONFIG SET timeout 60
