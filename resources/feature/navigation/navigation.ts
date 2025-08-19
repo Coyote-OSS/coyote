@@ -46,19 +46,29 @@ if (window.navigationUser) {
     new NavigationSocketListener());
   client.start();
 }
-window.addEventListener('load', () => {
-  const header = document.querySelector('header');
-  if (header) {
-    if (header.shadowRoot) {
-      app.mount(header.shadowRoot.querySelector('#vue-navigation')!);
-    } else {
-      if (shadowDomSupported()) {
-        attachShadow(header, header.getElementsByTagName('template')[0]);
-        app.mount(header.shadowRoot.querySelector('#vue-navigation')!);
-      }
+
+mountVueNavigation();
+window.addEventListener('load', () => mountVueNavigation());
+
+function mountVueNavigation(): void {
+  findHeaderShadowRoot(shadowRoot => {
+    const appRoot = shadowRoot.querySelector('#vue-navigation');
+    if (appRoot && appRoot.childNodes.length === 0) {
+      app.mount(appRoot);
     }
+  });
+}
+
+function findHeaderShadowRoot(runnable: (root: ShadowRoot) => void): void {
+  const header = document.querySelector('header');
+  if (!header) return;
+  if (header.shadowRoot) {
+    runnable(header.shadowRoot);
+  } else if (shadowDomSupported()) {
+    attachShadow(header, header.getElementsByTagName('template')[0]);
+    runnable(header.shadowRoot!);
   }
-});
+}
 
 function htmlMetaAttribute(metaAttribute: string): string {
   return document
