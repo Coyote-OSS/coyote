@@ -13,7 +13,7 @@ class UserJobOffers implements UserContentItem {
         return null;
     }
 
-    public function massDelete(User $user): void {
-        $user->hasMany(Job::class)->delete();
+    public function massDelete(User $user): int {
+        return $user->hasMany(Job::class)->delete();
     }
 }

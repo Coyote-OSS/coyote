@@ -14,8 +14,8 @@ class UserBlogs implements UserContentItem {
         return $this->blogs($user)->onlyTrashed()->count();
     }
 
-    public function massDelete(User $user): void {
-        $this->blogs($user)->delete();
+    public function massDelete(User $user): int {
+        return $this->blogs($user)->delete();
     }
 
     private function blogs(User $user): HasMany {

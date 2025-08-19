@@ -3,40 +3,51 @@ namespace Coyote\Services\Adm\UserContent;
 
 use Coyote\Domain\Administrator\UserContent\UserContent;
 use Coyote\Post;
+use Coyote\Services\Adm\UserContent\UserContentItem\UserContentItem;
 use Coyote\Topic;
 use Coyote\User;
 
 readonly class UserContentFactory {
-    public function __construct(private UserContentItemFactory $factory) {}
+    private UserContentItem $posts;
+    private UserContentItem $postComments;
+    private UserContentItem $blogs;
+    private UserContentItem $blogComments;
+    private UserContentItem $postVotes;
+    private UserContentItem $blogVotes;
+    private UserContentItem $flags;
+    private UserContentItem $messages;
+    private UserContentItem $jobOffers;
+
+    public function __construct(private UserContentItemFactory $factory) {
+        $this->posts = $this->factory->create(UserContentItemType::POSTS);
+        $this->postComments = $this->factory->create(UserContentItemType::POST_COMMENTS);
+        $this->blogs = $this->factory->create(UserContentItemType::BLOGS);
+        $this->blogComments = $this->factory->create(UserContentItemType::BLOG_COMMENTS);
+        $this->postVotes = $this->factory->create(UserContentItemType::POST_VOTES);
+        $this->blogVotes = $this->factory->create(UserContentItemType::BLOG_VOTES);
+        $this->flags = $this->factory->create(UserContentItemType::FLAGS);
+        $this->messages = $this->factory->create(UserContentItemType::MESSAGES);
+        $this->jobOffers = $this->factory->create(UserContentItemType::JOB_OFFERS);
+    }
 
     public function create(User $user): UserContent {
-        $posts = $this->factory->create('deletePosts');
-        $postComments = $this->factory->create('deletePostComments');
-        $postVotes = $this->factory->create('deletePostVotes');
-        $blogs = $this->factory->create('deleteBlogs');
-        $blogComments = $this->factory->create('deleteBlogComments');
-        $blogVotes = $this->factory->create('deleteBlogVotes');
-        $flags = $this->factory->create('deleteFlags');
-        $messages = $this->factory->create('deleteMessages');
-        $jobOffers = $this->factory->create('deleteJobOffers');
-
         return new UserContent(
             $this->topicsCount($user),
-            $posts->count($user),
-            $postComments->count($user),
-            $postVotes->count($user),
-            $blogs->count($user),
-            $blogComments->count($user),
-            $blogVotes->count($user),
-            $flags->count($user),
-            $messages->count($user),
-            $jobOffers->count($user),
+            $this->posts->count($user),
+            $this->postComments->count($user),
+            $this->postVotes->count($user),
+            $this->blogs->count($user),
+            $this->blogComments->count($user),
+            $this->blogVotes->count($user),
+            $this->flags->count($user),
+            $this->messages->count($user),
+            $this->jobOffers->count($user),
             $user->reputation,
-            $posts->deletedCount($user),
-            $postComments->deletedCount($user),
-            $blogs->deletedCount($user),
-            $blogComments->deletedCount($user),
-            $flags->deletedCount($user));
+            $this->posts->deletedCount($user),
+            $this->postComments->deletedCount($user),
+            $this->blogs->deletedCount($user),
+            $this->blogComments->deletedCount($user),
+            $this->flags->deletedCount($user));
     }
 
     private function topicsCount(User $user): int {

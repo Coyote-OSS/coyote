@@ -13,7 +13,7 @@ class UserPostVotes implements UserContentItem {
         return null;
     }
 
-    public function massDelete(User $user): void {
-        $user->hasMany(Post\Vote::class)->delete();
+    public function massDelete(User $user): int {
+        return $user->hasMany(Post\Vote::class)->delete();
     }
 }

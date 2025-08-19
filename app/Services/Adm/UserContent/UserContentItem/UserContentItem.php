@@ -8,5 +8,5 @@ interface UserContentItem {
 
     public function deletedCount(User $user): ?int;
 
-    public function massDelete(User $user): void;
+    public function massDelete(User $user): int;
 }

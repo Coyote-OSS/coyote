@@ -16,7 +16,7 @@ class UserMessages implements UserContentItem {
         return null;
     }
 
-    public function massDelete(User $user): void {
+    public function massDelete(User $user): int {
         throw new \Exception('Not implemented');
     }
 }

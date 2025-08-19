@@ -14,8 +14,9 @@ use Coyote\Http\Forms\User\AdminForm;
 use Coyote\Http\Grids\Adm\UsersGrid;
 use Coyote\Repositories\Criteria\WithTrashed;
 use Coyote\Repositories\Eloquent\UserRepository;
-use Coyote\Services\Adm\UserContent\UserContentItemFactory;
 use Coyote\Services\Adm\UserContent\UserContentFactory;
+use Coyote\Services\Adm\UserContent\UserContentItemFactory;
+use Coyote\Services\Adm\UserContent\UserContentItemType;
 use Coyote\Services\Adm\UserInspection\UserInspectionService;
 use Coyote\Services\FormBuilder\Form;
 use Coyote\Services\Stream\Activities;
@@ -84,13 +85,10 @@ class UsersController extends BaseController {
         if (!$canDeleteContent) {
             return response()->json(['error' => 'Account too old to remove content.']);
         }
-        $contentType = $request->get('contentDelete');
-        $contentItem = $factory->create($contentType);
-        $itemsCount = $contentItem->count($user);
-        $contentItem->massDelete($user);
+        $type = UserContentItemType::from($request->get('contentDelete'));
+        $deletedItems = $factory->create($type)->massDelete($user);
         stream(Activities\MassDelete::class,
-            new MassDelete($user, $contentType, $itemsCount));
-
+            new MassDelete($user, $type, $deletedItems));
         return response()->redirectTo(
             route('adm.users.show', [$user]));
     }

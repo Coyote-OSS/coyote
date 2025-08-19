@@ -13,8 +13,8 @@ class UserPosts implements UserContentItem {
         return $user->hasMany(Post::class)->onlyTrashed()->count();
     }
 
-    public function massDelete(User $user): void {
-        $user->hasMany(Post::class)
+    public function massDelete(User $user): int {
+        return $user->hasMany(Post::class)
             ->join('topics', 'topics.id', '=', 'posts.topic_id')
             ->whereColumn('posts.id', '!=', 'topics.first_post_id')
             ->delete();

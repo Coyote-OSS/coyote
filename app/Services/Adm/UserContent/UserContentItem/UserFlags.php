@@ -14,8 +14,8 @@ class UserFlags implements UserContentItem {
         return $this->flags($user)->withTrashed()->count();
     }
 
-    public function massDelete(User $user): void {
-        $this->flags($user)->delete();
+    public function massDelete(User $user): int {
+        return $this->flags($user)->delete();
     }
 
     private function flags(User $user): HasMany {

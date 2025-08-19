@@ -13,17 +13,17 @@ use Coyote\Services\Adm\UserContent\UserContentItem\UserPosts;
 use Coyote\Services\Adm\UserContent\UserContentItem\UserPostVotes;
 
 class UserContentItemFactory {
-    public function create(string $contentType): UserContentItem {
-        return match ($contentType) {
-            'deletePosts'        => new UserPosts(),
-            'deletePostComments' => new UserPostComments(),
-            'deleteBlogs'        => new UserBlogs(),
-            'deleteBlogComments' => new UserBlogComments(),
-            'deletePostVotes'    => new UserPostVotes(),
-            'deleteBlogVotes'    => new UserBlogVotes(),
-            'deleteFlags'        => new UserFlags(),
-            'deleteMessages'     => new UserMessages(),
-            'deleteJobOffers'    => new UserJobOffers(),
+    public function create(UserContentItemType $type): UserContentItem {
+        return match ($type) {
+            UserContentItemType::POSTS         => new UserPosts(),
+            UserContentItemType::POST_COMMENTS => new UserPostComments(),
+            UserContentItemType::BLOGS         => new UserBlogs(),
+            UserContentItemType::BLOG_COMMENTS => new UserBlogComments(),
+            UserContentItemType::POST_VOTES    => new UserPostVotes(),
+            UserContentItemType::BLOG_VOTES    => new UserBlogVotes(),
+            UserContentItemType::FLAGS         => new UserFlags(),
+            UserContentItemType::MESSAGES      => new UserMessages(),
+            UserContentItemType::JOB_OFFERS    => new UserJobOffers(),
         };
     }
 }

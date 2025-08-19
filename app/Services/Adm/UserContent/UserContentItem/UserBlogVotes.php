@@ -15,7 +15,7 @@ class UserBlogVotes implements UserContentItem {
         return null;
     }
 
-    public function massDelete(User $user): void {
-        $user->hasMany(Microblog\Vote::class)->delete();
+    public function massDelete(User $user): int {
+        return $user->hasMany(Microblog\Vote::class)->delete();
     }
 }

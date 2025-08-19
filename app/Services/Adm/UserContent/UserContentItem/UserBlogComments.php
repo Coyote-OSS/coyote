@@ -14,8 +14,8 @@ class UserBlogComments implements UserContentItem {
         return $this->blogComments($user)->onlyTrashed()->count();
     }
 
-    public function massDelete(User $user): void {
-        $this->blogComments($user)->delete();
+    public function massDelete(User $user): int {
+        return $this->blogComments($user)->delete();
     }
 
     private function blogComments(User $user): HasMany {

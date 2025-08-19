@@ -13,7 +13,7 @@ class UserPostComments implements UserContentItem {
         return $user->hasMany(Post\Comment::class)->onlyTrashed()->count();
     }
 
-    public function massDelete(User $user): void {
-        $user->hasMany(Post\Comment::class)->delete();
+    public function massDelete(User $user): int {
+        return $user->hasMany(Post\Comment::class)->delete();
     }
 }
