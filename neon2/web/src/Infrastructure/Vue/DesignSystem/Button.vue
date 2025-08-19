@@ -47,7 +47,7 @@ const variantClass = computed(() => {
     return 'bg-primary text-on-primary border border-transparent';
   }
   if (props.primaryOutline) {
-    return 'text-primary border border-primary hover:bg-green2-100';
+    return 'text-primary border border-primary hover:bg-green2-100 transition-colors duration-200';
   }
   if (props.outline) {
     return 'text-neutral2-800 border border-neutral2-200';

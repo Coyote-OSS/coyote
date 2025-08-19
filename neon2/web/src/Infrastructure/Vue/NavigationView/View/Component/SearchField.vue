@@ -25,7 +25,7 @@
   <Icon
     v-if="!store.navigationEntryPointsSuspended"
     name="navigationSearch"
-    class="px-1 mr-1 cursor-pointer xl:hidden"
+    class="size-10 rounded leading-10 text-center mr-1 cursor-pointer xl:hidden hover:accent"
     :class="[$attrs.class]"
     @click.stop="searchStart"/>
 </template>

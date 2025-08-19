@@ -1,6 +1,6 @@
 <template>
   <div v-text="props.value" :class="[
-    'absolute -top-1 -right-1',
+    'absolute -top-1 -right-1 z-[1]',
     'rounded size-5 leading-5 text-center text-xs',
     colors,
   ]"/>

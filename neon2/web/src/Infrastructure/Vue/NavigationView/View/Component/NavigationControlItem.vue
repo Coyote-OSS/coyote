@@ -1,5 +1,5 @@
 <template>
-  <div class="relative hover:text-green2-500 px-1 md:cursor-pointer" @click="action">
+  <div class="relative hover:accent rounded md:cursor-pointer" @click="action">
     <Icon :name="props.icon" class="size-10 text-xl text-center leading-10"/>
     <Blip v-if="props.number > 0" :value="props.number" important/>
   </div>

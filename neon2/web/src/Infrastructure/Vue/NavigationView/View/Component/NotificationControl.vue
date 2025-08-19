@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex-shrink-0 flex max-lg:mr-2">
+    <div class="flex-shrink-0 flex max-lg:mr-2 gap-2">
       <NavigationControlItem icon="navigationNotification" :number="props.user.notificationsCount" @action="toggleNotifications"/>
       <NavigationControlItem icon="navigationMessages" :number="props.user.messagesCount" @action="showMessages"/>
     </div>
