@@ -4,17 +4,17 @@
 {% block container %}
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span class="me-auto">Kartoteka</span>
+      <span class="me-auto">Kartoteka delikwentów</span>
       <form method="POST" action="{{ createHref }}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <button type="submit" class="btn btn-sm btn-primary">
+        <button type="submit" class="btn btn-sm btn-secondary" title="Utwórz karotekę delikwenta, bez podania żadnego konta użytkownika.">
           {{ icon('genericAdd') }}
-          Stwórz
+          Stwórz pustą
         </button>
       </form>
-      <a class="ms-2 btn btn-sm btn-secondary" href="{{ joinHref }}">
-        {{ icon('multiaccJoin') }}
-        Rozpoznaj multikonto
+      <a class="ms-2 btn btn-sm btn-primary" href="{{ joinHref }}">
+        {{ icon('genericAdd') }}
+        Stwórz nową dla...
       </a>
     </div>
     <div class="card-body">
@@ -22,7 +22,7 @@
         <div class="d-flex align-items-start" style="gap:12px;">
           <div class="flex-grow-1">
             <div class="input-group">
-              <input type="text" class="form-control" name="username" placeholder="Wyszukaj kartotekę użytkownika e.g. spidey, hyperion46">
+              <input type="text" class="form-control" name="username" placeholder="Wyszukaj delikwenta po jednym z jego kont (e.g. spidey, QuickDrag, hyperion46)">
               <input type="hidden" name="_token" value="{{ csrf_token() }}">
               <button class="btn btn-secondary" type="submit">
                 {{ icon('genericSearch') }}

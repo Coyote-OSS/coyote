@@ -1,12 +1,12 @@
 {% extends 'adm.base' %}
-{% block title %}Kartoteka {{ parent() }}{% endblock %}
+{% block title %}Delikwent {{ parent() }}{% endblock %}
 
 {% import 'adm.multiacc.components.twig' as components %}
 
 {% block container %}
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span>Kartoteka <b>#{{ multiacc.id }}</b></span>
+      <span>Kartoteka delikwenta <b>#{{ multiacc.id }}</b></span>
       <a href="{{ backHref }}" class="btn btn-sm btn-secondary">
         {{ icon('navigateBack') }}
         Wróć</a>
@@ -22,10 +22,10 @@
       Notatki moderatorskie
       <a href="{{ noteFormHref }}" class="btn btn-sm btn-primary">
         {{ icon('genericAdd') }}
-        Dodaj
+        Dodaj notatkę
       </a>
     </div>
-    {{ components.table('Nie ma notatek moderatoskich w tej kartotece.', multiacc.notes, [
+    {{ components.table('Nie ma notatek moderatoskich dla tego delikwenta.', multiacc.notes, [
       { 'key': 'content', 'label': 'Treść notatki', 'wrap': true },
       { 'key': 'createdAt', 'label': 'Dodano' },
       { 'key': 'moderator', 'label': 'Przez moderatora' }]) }}
@@ -38,10 +38,10 @@
       </span>
       <a href="{{ includeUserHref }}" class="btn btn-sm btn-secondary">
         {{ icon('genericAdd') }}
-        Dodaj konto
+        Przyłącz konto
       </a>
     </div>
-    {{ components.table('Ta kartoteka na razie nie dotyczy żadnego konta użytkownika.', multiacc.users, [
+    {{ components.table('Ta kartoteka delikwenta na razie nie dotyczy żadnego konta użytkownika.', multiacc.users, [
       { 'key': 'user', 'label': 'Konto' },
       { 'key': 'createdAt', 'label': 'Rozpoznano' },
       { 'key': 'moderator', 'label': 'Przez moderatora' }]) }}

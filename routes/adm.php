@@ -144,9 +144,9 @@ $this->group(
         $this->post('Tags/Delete/{tag?}', 'TagsController@delete')->name('tags.delete');
         
         $this->get('Multiacc','MultiaccController@index')->name('multiacc.home');
-        $this->post('Multiacc','MultiaccController@create')->name('multiacc.create');
-        $this->get('Multiacc/Join','MultiaccController@joinForm')->name('multiacc.join.form');
-        $this->post('Multiacc/Join','MultiaccController@joinSave')->name('multiacc.join.save');
+        $this->post('Multiacc','MultiaccController@createEmpty')->name('multiacc.create');
+        $this->get('Multiacc/Join','MultiaccController@form')->name('multiacc.join.form');
+        $this->post('Multiacc/Join','MultiaccController@create')->name('multiacc.join.save');
         $this->get('Multiacc/{multiacc}/Show','MultiaccController@show')->name('multiacc.show');
         $this->get('Multiacc/{multiacc}/Note','MultiaccController@noteForm')->name('multiacc.noteForm');
         $this->post('Multiacc/{multiacc}/Note','MultiaccController@noteSave')->name('multiacc.noteSave');

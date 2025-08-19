@@ -569,7 +569,6 @@ readonly class FontAwesomePro {
             'navigationNavigate'                        => 'fa-light fa-arrow-right',
 
             // multiacc
-            'multiaccJoin'                              => 'fa-light fa-users',
             'multiaccUsers'                             => 'fa-light fa-users',
         ];
     }

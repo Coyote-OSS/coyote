@@ -24,21 +24,21 @@ class MultiaccController extends BaseController {
         ]);
     }
 
-    public function create(MultiaccService $service): RedirectResponse {
+    public function createEmpty(MultiaccService $service): RedirectResponse {
         $multiacc = $service->create();
         return response()
             ->redirectToRoute('adm.multiacc.show', [$multiacc])
-            ->with('success', 'Wpis do kartoteki został dodany.');
+            ->with('success', 'Pusty wpis do kartoteki został dodany. Możesz uzupełnić konta użytkownika delikwenta lub dodać notatki moderatorskie później.');
     }
 
-    public function joinForm(): View {
-        return $this->view('adm.multiacc.join', [
+    public function form(): View {
+        return $this->view('adm.multiacc.form', [
             'postUrl'  => route('adm.multiacc.join.save'),
             'backHref' => route('adm.multiacc.home'),
         ]);
     }
 
-    public function joinSave(MultiaccService $service): RedirectResponse {
+    public function create(MultiaccService $service): RedirectResponse {
         $validator = validator(request()->all(), [
             'username'   => ['required', 'array'],
             'username.*' => ['required', 'exists:users,name', 'distinct'],
@@ -91,7 +91,7 @@ class MultiaccController extends BaseController {
     }
 
     public function noteForm(Multiacc $multiacc): View {
-        return $this->view('adm.multiacc.note', [
+        return $this->view('adm.multiacc.noteForm', [
             'postHref' => route('adm.multiacc.noteSave', [$multiacc]),
             'backHref' => route('adm.multiacc.show', [$multiacc]),
             'multiacc' => ['id' => $multiacc->id,],
