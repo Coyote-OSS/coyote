@@ -75,6 +75,7 @@
       {{ form_row(form.password) }}
       {{ form_row(form.password_confirmation) }}
       {{ form_row(form.email) }}
+      {{ form_hidden('refererUrl', refererUrl) }}
       {{ form_row(form.email_confirmation) }}
       <div style="max-height:56px; overflow-y:auto;" class="mb-3 neon-contains-a-color-link">
         {{ form_row(form.terms) }}
