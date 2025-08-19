@@ -6,7 +6,7 @@
   <Icon
     v-else
     name="navigationGuestAvatar"
-    class="cursor-pointer py-3 px-3 rounded hover:accent"/>
+    class="cursor-pointer size-10 leading-10 text-center rounded hover:accent"/>
 </template>
 
 <script setup lang="ts">
