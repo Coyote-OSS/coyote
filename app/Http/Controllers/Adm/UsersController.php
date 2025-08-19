@@ -14,8 +14,8 @@ use Coyote\Http\Forms\User\AdminForm;
 use Coyote\Http\Grids\Adm\UsersGrid;
 use Coyote\Repositories\Criteria\WithTrashed;
 use Coyote\Repositories\Eloquent\UserRepository;
-use Coyote\Services\Adm\UserContentDeleteService;
-use Coyote\Services\Adm\UserContentService;
+use Coyote\Services\Adm\UserContent\UserContentItemFactory;
+use Coyote\Services\Adm\UserContent\UserContentFactory;
 use Coyote\Services\Adm\UserInspection\UserInspectionService;
 use Coyote\Services\FormBuilder\Form;
 use Coyote\Services\Stream\Activities;
@@ -42,14 +42,17 @@ class UsersController extends BaseController {
         return $this->view('adm.users.home', ['grid' => $grid]);
     }
 
-    public function show(User $user, UserContentService $service): View {
+    public function show(User $user, UserContentFactory $service): View {
         $this->breadcrumb->push("@$user->name", route('adm.users.show', [$user->id]));
         $daysAgo = $this->daysAgo($this->request);
         $store = new UserStore($user, Carbon::now()->subDays($daysAgo));
         return $this->view('adm.users.show', [
             'userDetails'       => [
                 'accountCreated' => new Date($user->created_at, Carbon::now()),
-                'lastVisit'      => new Date($user->visited_at, Carbon::now()),
+                'lastVisit'      =>
+                    $user->visited_at
+                        ? new Date($user->visited_at, Carbon::now())
+                        : null,
                 'isBanned'       => $user->is_blocked,
                 'isIncognito'    => $user->is_incognito,
                 'isDeleted'      => !$user->is_active,
@@ -64,7 +67,7 @@ class UsersController extends BaseController {
                 $store->deleteReasons(),
                 $store->reportReasons(),
                 $store->postStats()),
-            'userContent'       => $service->userContent($user),
+            'userContent'       => $service->create($user),
             'userContentAction' => [
                 'url'       => route('adm.users.contentDelete', [$user]),
                 'canDelete' => $this->canDeleteContent($user),
@@ -72,25 +75,21 @@ class UsersController extends BaseController {
         ]);
     }
 
-    public function contentDelete(User $user, Request $request, UserContentDeleteService $service) {
+    public function contentDelete(
+        User                   $user,
+        Request                $request,
+        UserContentItemFactory $factory,
+    ) {
         $canDeleteContent = $this->canDeleteContent($user);
         if (!$canDeleteContent) {
             return response()->json(['error' => 'Account too old to remove content.']);
         }
         $contentType = $request->get('contentDelete');
-        match ($contentType) {
-            'deletePosts'        => $service->deletePosts($user),
-            'deletePostComments' => $service->deletePostComments($user),
-            'deleteBlogs'        => $service->deleteBlogs($user),
-            'deleteBlogComments' => $service->deleteBlogComments($user),
-            'deletePostVotes'    => $service->deletePostVotes($user),
-            'deleteBlogVotes'    => $service->deleteBlogVotes($user),
-            'deleteFlags'        => $service->deleteFlags($user),
-            'deleteMessages'     => $service->deleteMessages($user),
-            'deleteJobOffers'    => $service->deleteJobOffers($user),
-        };
+        $contentItem = $factory->create($contentType);
+        $itemsCount = $contentItem->count($user);
+        $contentItem->massDelete($user);
         stream(Activities\MassDelete::class,
-            new MassDelete($user, $contentType));
+            new MassDelete($user, $contentType, $itemsCount));
 
         return response()->redirectTo(
             route('adm.users.show', [$user]));

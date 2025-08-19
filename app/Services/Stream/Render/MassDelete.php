@@ -3,11 +3,12 @@ namespace Coyote\Services\Stream\Render;
 
 class MassDelete extends Render {
     public function user(): string {
-        return array_get($this->stream, 'object.displayName');
+        return array_get($this->stream, 'object.username');
     }
 
-    protected function excerpt() {
-        return '';
+    protected function excerpt(): string {
+        $arrayGet = array_get($this->stream, 'object.itemsCount');
+        return "usunięto $arrayGet elementów typu: " . $this->contentType();
     }
 
     public function contentType(): string {
