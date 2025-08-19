@@ -26,7 +26,7 @@ import NavigationControlItem from "./NavigationControlItem.vue";
 import NotificationBox from "./NotificationBox.vue";
 
 const props = defineProps<Props>();
-const emit = defineEmits(['markAll', 'loadMore']);
+const emit = defineEmits(['viewAll', 'markAll', 'loadMore']);
 
 interface Props {
   user: NavigationUser;
@@ -38,6 +38,7 @@ const notificationsOpen = ref<boolean>(false);
 
 function toggleNotifications(): void {
   notificationsOpen.value = !notificationsOpen.value;
+  emit('viewAll');
 }
 
 function showMessages(): void {

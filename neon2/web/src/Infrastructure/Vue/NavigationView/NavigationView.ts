@@ -45,6 +45,10 @@ export class NavigationView {
     this.navigationUser().notifications.push(...notifications);
   }
 
+  viewNotifications(): void {
+    this.navigationUser().notificationsCount = 0;
+  }
+
   markAllNotificationsAsViewed(): void {
     this.navigationUser().notifications.forEach(notification => {
       notification.notificationHighlighted = false;

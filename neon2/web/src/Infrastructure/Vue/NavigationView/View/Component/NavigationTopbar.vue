@@ -27,6 +27,7 @@
           v-if="store.isAuthenticated"
           :user="store.navigationUser!"
           @mark-all="markAll"
+          @view-all="viewAll"
           @load-more="loadMore"/>
         <DesktopAuthControl :class="hideIfSearch" class="max-lg:hidden" :user="store.navigationUser"/>
         <Icon :class="hideIfSearch" monospace :name="mobileMenuIcon" @click="toggleMobileMenu" class="text-xl mr-4 lg:hidden"/>
@@ -72,6 +73,10 @@ const hideIfSearch = computed<object>(() => {
 
 function action(action: NavigationAction): void {
   service.action(action);
+}
+
+function viewAll(): void {
+  service.viewNotifications();
 }
 
 function markAll(): void {

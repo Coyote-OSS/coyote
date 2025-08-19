@@ -79,6 +79,10 @@ export class CoyoteApi implements JobBoardApi {
       .then(response => response.json());
   }
 
+  async viewAllNotifications(): Promise<void> {
+    await requestNoBody('GET', '/User/Notifications/Ajax', this.csrfToken);
+  }
+
   async markAllNotificationsAsViewed(): Promise<void> {
     await requestNoBody('POST', '/User/Notifications/Mark', this.csrfToken);
   }

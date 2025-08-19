@@ -76,6 +76,11 @@ export class CoyoteNavigationService implements NavigationService {
     window.document.querySelector('body > footer')?.classList?.toggle('dark', dark);
   }
 
+  viewNotifications(): void {
+    this.coyoteApi.markAllNotificationsAsViewed()
+      .then(() => this.view.viewNotifications());
+  }
+
   markAllNotificationsAsViewed(): void {
     this.coyoteApi.markAllNotificationsAsViewed()
       .then(() => this.view.markAllNotificationsAsViewed());

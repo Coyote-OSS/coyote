@@ -77,6 +77,11 @@ export class VueNavigationService implements NavigationService {
       });
   }
 
+  viewNotifications(): void {
+    this.coyoteApi.viewAllNotifications()
+      .then(() => this.view.viewNotifications());
+  }
+
   markAllNotificationsAsViewed(): void {
     this.coyoteApi.markAllNotificationsAsViewed()
       .then(() => this.view.markAllNotificationsAsViewed());
