@@ -121,18 +121,15 @@ EOF;
     private function addJobAds(): void
     {
         $content = <<<EOF
-<div id="hire-me" style="min-height: 471px"></div> 
+<div id="hire-me"></div> 
 <script>
     var xhr= new XMLHttpRequest();
     xhr.open('GET', '/Praca/recommendations', true);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    
     xhr.onreadystatechange= function() {
         if (this.readyState !== 4) return;
         if (this.status !== 200) return;
-        
         const block = document.getElementById('hire-me');
-        
         block.innerHTML = this.responseText;
         block.style.removeProperty('min-height');
     };
