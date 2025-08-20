@@ -8,8 +8,8 @@
     <span>Kategoria: <a href="{{ post.forum.href }}">{{ post.forum.label }}</a></span>
   </p>
 
-  <div class="card card-post neon-post mb-3">
-    <div class="card-header neon-post-header">
+  <div class="card card-post mb-3">
+    <div class="card-header">
       <div class="row">
         <div class="col-2">{{ post.author.mention }}</div>
         <div class="col-10"><small>{{ post.createdAt.ago }}</small></div>
@@ -32,7 +32,7 @@
         </style>
       </div>
     </div>
-    <div class="card-footer neon-post-footer">
+    <div class="card-footer">
       <div class="row">
         <div class="col-2"></div>
         <div class="col-10 text-end text-muted">

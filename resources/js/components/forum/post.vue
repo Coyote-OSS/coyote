@@ -26,7 +26,7 @@
       </div>
       <div
         :id="anchor"
-        class="neon-tile neon-rounded card-post neon-post flex-grow-1 mb-0"
+        class="neon-tile neon-rounded card-post flex-grow-1 mb-0"
         :style="{minWidth:0}"
         :class="{'is-deleted': hidden, 'not-read': !post.is_read, 'highlight-flash': highlight, 'post-deleted-collapsed': isCollapsed}">
         <div v-if="post.deleted_at"
@@ -160,7 +160,6 @@
                     <strong>Postów:</strong>
                     <small>
                       <a title="Znajdź posty tego użytkownika"
-                         class="neon-post-counter"
                          :href="`/Forum/User/${post.user.id}`"
                          style="text-decoration: underline">{{post.user.posts}}</a>
                     </small>
