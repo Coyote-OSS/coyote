@@ -100,7 +100,6 @@ export class CoyoteNavigationService implements NavigationService {
   }
 
   search(searchPhrase: string): void {
-    this.view.setSearchItems([]);
     this.searchPrompt.prompt(searchPhrase)
       .then(items => this.view.setSearchItems(items));
   }
