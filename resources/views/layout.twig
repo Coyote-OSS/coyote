@@ -58,7 +58,6 @@
   {% import 'legacyComponents.forms' as forms %}
   {% import 'legacyComponents.widgets' as widgets %}
   {{ schema_organization }}
-  {% include 'legacyComponents.gdpr' %}
 
 {% block header %}
   {{ form_open({url: route('logout'), name: 'logout-form'}) }}
@@ -124,6 +123,7 @@
   </main>
 
 {% block footer %}
+  {% include 'legacyComponents.gdpr' %}
   {% include 'footer' %}
   <div class="container-3xl">
     <span class="scroll-top neon-scroll-top" id="scroll-to-top" title="Powrót na górę">
