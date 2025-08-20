@@ -79,7 +79,7 @@ createVueApp('Followers', '#js-followers', {
     user(userId) {
       return this.users.find(user => user.id === userId);
     },
-    ...mapActions('user', ['unfollow']),
+    ...mapActions('user', ['unfollow', 'unblock']),
   },
   computed: {
     ...mapState('user', ['followers']),

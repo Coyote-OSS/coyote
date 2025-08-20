@@ -3,25 +3,30 @@
 
 {% block content %}
   <h2>Zablokowani oraz obserwowani użytkownicy</h2>
-
   <div v-cloak id="js-followers" class="card">
     <div class="card-body">
       <div class="list-group list-group-flush">
         <div v-for="follower in followers" :key="follower.user_id" class="list-group-item ps-0 pe-0">
           <div class="media">
-            <vue-avatar v-bind="user(follower.user_id)" :is-online="user(follower.user_id).is_online" class="i-35 d-block img-thumbnail me-3"></vue-avatar>
-
+            <vue-avatar
+                v-bind="user(follower.user_id)"
+                :is-online="user(follower.user_id).is_online"
+                class="i-35 d-block img-thumbnail me-3"
+            ></vue-avatar>
             <div class="media-body">
-              <button v-if="isBlocked(follower.user_id)" @click="unfollow(follower.user_id)" class="btn btn-sm btn-secondary float-end mt-1">Odblokuj</button>
-              <vue-follow-button v-else :user-id="follower.user_id" class="btn-sm float-end mt-1 btm-sm">Przestań obserwować</vue-follow-button>
-
-              <h5 class="mb-0"><vue-username :user="user(follower.user_id)"></vue-username></h5>
-
+              <button v-if="isBlocked(follower.user_id)" @click="unblock(follower.user_id)" class="btn btn-sm btn-secondary float-end mt-1">
+                Odblokuj
+              </button>
+              <vue-follow-button v-else :user-id="follower.user_id" class="btn-sm float-end mt-1 btm-sm">
+                Przestań obserwować
+              </vue-follow-button>
+              <h5 class="mb-0">
+                <vue-username :user="user(follower.user_id)"></vue-username>
+              </h5>
               <small class="text-muted">${ isBlocked(follower.user_id) ? 'Zablokowany' : 'Obserwowany' }</small>
             </div>
           </div>
         </div>
-
         <div v-if="!followers.length" class="card">
           <div class="card-body text-center">
             Brak zablokowanych lub obserwowanych użytkowników.
@@ -30,7 +35,6 @@
       </div>
     </div>
   </div>
-
   <script>
     var users = {{ users|json_encode|raw }};
   </script>

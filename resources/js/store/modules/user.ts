@@ -26,7 +26,12 @@ const mutations = {
   },
 
   REMOVE_RELATION(state, {userId, isBlocked}) {
-    state.followers.splice(state.followers.findIndex(follower => follower.user_id === userId && follower.is_blocked === isBlocked), 1);
+    const index = state.followers
+      .findIndex(follower => follower.user_id === userId && follower.is_blocked === isBlocked);
+    if (index === -1) {
+      throw new Error('Failed to remove relation of userId: ' + userId);
+    }
+    state.followers.splice(index, 1);
   },
 
   changePostStyle(state, style): void {
@@ -45,7 +50,8 @@ const actions = {
     return axios.post(`/User/Follow/${relatedUserId}`).then(() => commit('ADD_RELATION', {userId: relatedUserId, isBlocked: false}));
   },
   unfollow({commit}, relatedUserId: number) {
-    return axios.post(`/User/Unfollow/${relatedUserId}`).then(() => commit('REMOVE_RELATION', {userId: relatedUserId, isBlocked: false}));
+    return axios.post(`/User/Unfollow/${relatedUserId}`)
+      .then(() => commit('REMOVE_RELATION', {userId: relatedUserId, isBlocked: false}));
   },
   pushSubscription({commit}, pushSubscription) {
     return axios.post('/User/push', pushSubscription);
