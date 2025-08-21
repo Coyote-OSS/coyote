@@ -38,8 +38,7 @@
     <meta name="websocket-url" content="{{ __WS_URL }}">
   {% endif %}
 
-  <link rel="apple-touch-icon" href="{{ asset('img/apple-touch.png') }}">
-  <link rel="shortcut icon" href="{{ asset('img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}" type="image/png">
 
   <link rel="stylesheet preload prefetch"
         href="//fonts.googleapis.com/css?family=Open+Sans:400,300&subset=latin,latin-ext&display=swap" as="style"
@@ -66,7 +65,7 @@
   <script>var navigationMenu = {{ navigationMenu|json_encode|raw }};</script>
   <script>var navigationUser = {{ navigationUser|json_encode|raw }};</script>
 
-  <header class="{{__dark_theme ? 'dark'}}">
+  <header class="{{ __dark_theme ? 'dark' }}">
     <template shadowrootmode="open">
       <link rel="stylesheet" href="{{ cdn('css/stylesTailwind.css') }}">
       <div id="vue-navigation" style="position:fixed; top:0; width:100%; z-index:5; height:54px;" class="bg-tile"></div>
