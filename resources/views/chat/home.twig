@@ -1,0 +1,21 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+  {{ parent() }}
+  <script src="{{ cdn('js/chat.js') }}"></script>
+{% endblock %}
+
+{% block container %}
+  <script>
+    var websocketSubscribeCommand = {{ websocketSubscribeCommand|json_encode|raw }};
+  </script>
+  <div id="js-chat">
+    <div v-for="message in messages">
+      ${ message }
+    </div>
+    <input type="text" v-model="messageText">
+    <button class="btn btn-secondary" @click="send">
+      Wyślij
+    </button>
+  </div>
+{% endblock %}

@@ -6,7 +6,6 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {VueLoaderPlugin} = require('vue-loader');
 
 module.exports = {
-  devtool: 'source-map', // slower but better
   module: {
     rules: [
       {
@@ -31,10 +30,10 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: '[name].[hash].[ext]'
-            }
-          }
-        ]
+              name: '[name].[hash].[ext]',
+            },
+          },
+        ],
       },
       {
         test: /\.vue$/,
@@ -135,6 +134,7 @@ module.exports = {
     app: './js/app.js',
     legacy: './js/legacy.js',
     forum: './js/pages/forum.ts',
+    chat: './js2/chat/chat.ts',
     wiki: './js/pages/wiki.js',
     job: './js/pages/job.js',
   },

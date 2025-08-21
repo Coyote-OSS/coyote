@@ -118,6 +118,7 @@ class RouteServiceProvider extends \Illuminate\Foundation\Support\Providers\Rout
             'middleware' => 'web',
         ], function () {
             require base_path('routes/auth.php');
+            require base_path('routes/chat.php');
             require base_path('routes/misc.php');
             require base_path('routes/forum.php');
             require base_path('routes/job.php');
