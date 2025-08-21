@@ -158,6 +158,7 @@ class TopicController extends BaseController {
                 'forum'                   => $forum,
                 'paginationCurrentPage'   => $paginate->currentPage(),
                 'paginationPerPage'       => $paginate->perPage(),
+                'paginationManyPages'     => $paginate->lastPage() > 1,
                 'reasons'                 => $reasons,
                 'model'                   => $topic, // we need eloquent model in twig to show information about locked/moved topic
                 'topic'                   => $topicResource->toResponse($request)->getData(true),

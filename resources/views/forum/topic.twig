@@ -35,6 +35,11 @@
 
   <main class="mainbar pt-0">
     <div id="js-skeleton">
+      <div class="mb-3">
+        {% if paginationManyPages %}
+          <div style="height:31px;"></div>
+        {% endif %}
+      </div>
       {% for post in posts.data %}
         <div class="card card-post">
           <div class="d-none d-lg-block px-2 py-1 backport-post-header">
