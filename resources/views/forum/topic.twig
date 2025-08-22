@@ -19,7 +19,10 @@
 
   {% if model.locked_at and model.locker.id %}
     <p class="alert alert-warning mt-2 mb-2">
-      Wątek zablokowany {{ model.locked_at|format_date }} przez <a class="alert-warning" href="{{ route('profile', [model.locker.id]) }}">{{ model.locker.name }}</a>.
+      Wątek zablokowany {{ model.locked_at|format_date }} przez
+      <a class="alert-warning" href="{{ route('profile', [model.locker.id]) }}">
+        {{ model.locker.name }}
+      </a>.
     </p>
   {% endif %}
 
@@ -42,14 +45,18 @@
       </div>
       {% for post in posts.data %}
         <div class="card card-post">
-          <div class="d-none d-lg-block px-2 py-1 backport-post-header">
-            <div class="row">
+          <div class="d-none d-lg-block p-2 backport-post-header">
+            <div class="row" style="font-size:12px;">
               <div class="col-2">
-                <div style="height: 20px"></div>
+                <h5 class="mb-0 post-author ms-2">
+                  <a class="username {{ true ? 'neon-color-link' : 'neon-username-author' }}">
+                    {{ post.user.name }}
+                  </a>
+                </h5>
               </div>
-
-              <div class="col-10 text-truncate small">
-                <div style="height: 20px; width: 30%"></div>
+              <div class="col-10 text-truncate">
+                {{ icon('postWasRead') }}
+                <time>{{ post.created_at }}</time>
               </div>
             </div>
           </div>
@@ -67,10 +74,63 @@
 
             <div class="row">
               <div class="d-none d-lg-block col-lg-2">
-                <div style="width: 75px; height: 75px"></div>
+                <div class="d-flex">
+                  <div class="neon-avatar-border">
+                    <div class="position-relative i-70">
+                      {% if post.user.photo %}
+                        <img src="{{ post.user.photo }}"
+                             alt="{{ post.user.name }}"
+                             class="d-block user-avatar"
+                             loading="lazy"
+                             style="width:100%;height:100%;object-fit:cover;object-position:center;">
+                      {% else %}
+                        <div class="user-avatar default-avatar">
+                          <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+                            <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" fill="currentColor">
+                              {{ post.user.initials }}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      {% if post.user.is_online %}
+                        <div class="is-online"></div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                {#                {% if post.user.groupname %} #}
+                {#                <span v-if="post.user.group_name" class="badge badge-secondary mb-1"> #}
+                {#                  {{post.user.group_name}} #}
+                {#                </span> #}
+                {#                {% endif %} #}
+                <ul class="post-stats list-unstyled">
+                  <li>
+                    <strong>Rejestracja:</strong>
+                    <small>{{ formatDistanceToNow(post.user.created_at) }}</small>
+                  </li>
 
-                <ul class="post-stats list-unstyled" style="height: 66px">
-
+                  <li>
+                    <strong>Ostatnio:</strong>
+                    <small>
+                      {{ formatDistanceToNow(post.user.visited_at ? post.user.visited_at : post.user.created_at) }}
+                    </small>
+                  </li>
+                  {% if post.user.location %}
+                    <li>
+                      <strong>Lokalizacja:</strong>
+                      <small>{{ post.user.location }}</small>
+                    </li>
+                  {% endif %}
+                  {% if post.user.allow_count %}
+                    <li>
+                      <strong>Postów:</strong>
+                      <small>
+                        <a title="Znajdź posty tego użytkownika"
+                           :href="`/Forum/User/${post.user.id}`"
+                           style="text-decoration: underline">{{ post.user.posts }}</a>
+                      </small>
+                    </li>
+                  {% endif %}
                 </ul>
               </div>
 
@@ -87,23 +147,20 @@
           <div class="px-2 py-1 backport-post-footer">
             <div class="row">
               <div class="d-none d-lg-block col-lg-2"></div>
-
               <div class="col-12 d-flex col-lg-10">
                 <div>
-                  <button class="btn btn-sm">
-                    {{ icon('postSubscribe') }}
-                    <span class="d-none d-sm-inline">Obserwuj</span>
-                  </button>
-
-                  <button class="btn btn-sm">
-                    {{ icon('postShare') }}
-                    <span class="d-none d-sm-inline">Udostępnij</span>
-                  </button>
-
-                  <button class="btn btn-sm">
-                    {{ icon('postComment') }}
-                    <span class="d-none d-sm-inline">Komentuj</span>
-                  </button>
+                  <div class="dropdown d-inline-block">
+                    <span class="post-action" data-bs-toggle="dropdown">
+                      {{ icon('postShare') }}
+                      <span class="d-none d-sm-inline ms-1">Udostępnij</span>
+                    </span>
+                  </div>
+                  {% if (not post.is_locked) or post.permissions.write %}
+                    <span class="post-action">
+                      {{ icon('postComment') }}
+                      <span class="d-none d-sm-inline ms-1">Komentuj</span>
+                    </span>
+                  {% endif %}
                 </div>
                 <div class="ms-auto">
                 </div>
@@ -351,7 +408,8 @@
               </select>
             </p>
             <p>
-              <vue-select name="reason_id" :options="reasons" v-model="reasonId" class="form-control-sm" placeholder="-- wybierz --"></vue-select>
+              <vue-select name="reason_id" :options="reasons" v-model="reasonId" class="form-control-sm"
+                          placeholder="-- wybierz --"></vue-select>
             </p>
           </vue-modal>
         {% endif %}

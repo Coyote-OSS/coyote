@@ -7,25 +7,21 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class Misc extends AbstractExtension
-{
-    public function __construct(private Clock $clock)
-    {
-    }
+class Misc extends AbstractExtension {
+    public function __construct(private Clock $clock) {}
 
-    public function getFunctions(): array
-    {
+    public function getFunctions(): array {
         return [
             new TwigFunction('timer', [$this, 'totalRuntime']),
             new TwigFunction('github', [$this, 'githubAccountName']),
             new TwigFunction('declination', [Declination::class, 'format']),
             new TwigFunction('sortable', [$this, 'sortable'], ['is_safe' => ['html']]),
             new TwigFunction('is_url', [$this, 'isUrl'], ['is_safe' => ['html']]),
+            new TwigFunction('formatDistanceToNow', $this->formatDistanceToNow(...)),
         ];
     }
 
-    public function getFilters(): array
-    {
+    public function getFilters(): array {
         return [
             new TwigFilter('encrypt', function ($data) {
                 return app('encrypter')->encrypt($data);
@@ -37,8 +33,7 @@ class Misc extends AbstractExtension
         ];
     }
 
-    public function totalRuntime(): string
-    {
+    public function totalRuntime(): string {
         $timer = $this->clock->executionTimeAsSeconds();
         if ($timer < 1) {
             return (int)substr((string)$timer, 2, 3) . ' ms';
@@ -50,8 +45,7 @@ class Misc extends AbstractExtension
      * @param string $url
      * @return string
      */
-    public function githubAccountName($url)
-    {
+    public function githubAccountName($url) {
         if (!$url) {
             return '';
         }
@@ -62,8 +56,7 @@ class Misc extends AbstractExtension
         return trim($path, '/');
     }
 
-    public function sortable(): string
-    {
+    public function sortable(): string {
         $args = func_get_args();
 
         $column = array_shift($args);
@@ -89,8 +82,11 @@ class Misc extends AbstractExtension
      * @param string $url
      * @return bool
      */
-    public function isUrl($url)
-    {
+    public function isUrl($url) {
         return filter_var($url, FILTER_VALIDATE_URL);
+    }
+
+    public function formatDistanceToNow(?string $date): string {
+        return 'dni';
     }
 }

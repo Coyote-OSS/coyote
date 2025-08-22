@@ -20,8 +20,7 @@
             :photo="post.user.photo"
             :initials="post.user.initials"
             :is-online="post.user.is_online"
-            style="width:40px; z-index:1;"
-          />
+            style="width:40px; z-index:1;"/>
         </div>
       </div>
       <div
@@ -67,16 +66,16 @@
             </div>
             <div class="col-10 text-truncate small">
               <div class="d-flex">
-                <div>
+                <div style="font-size:12px;">
                   <vue-icon v-if="post.is_read" name="postWasRead"/>
                   <i v-else class="not-read" title="Nowy post"/>
                   {{' '}}
-                  <a :href="post.url" class="small">
+                  <a :href="post.url">
                     <vue-timeago :datetime="post.created_at"/>
                   </a>
                   <template v-if="is_mode_linear">
                     {{' '}}
-                    <a v-if="post.clientIp" :href="post.clientIpAdminHref" class="text-muted small">
+                    <a v-if="post.clientIp" :href="post.clientIpAdminHref" class="text-muted">
                       {{post.clientIp}}
                     </a>
                     {{' '}}
@@ -131,8 +130,7 @@
                       :photo="post.user.photo"
                       :initials="post.user.initials"
                       :is-online="post.user.is_online"
-                      class="i-70"
-                    />
+                      class="i-70"/>
                   </div>
                 </div>
                 <span v-if="post.user.group_name && !is_mode_tree" class="badge badge-secondary mb-1">

@@ -45,7 +45,7 @@ function topicOrderToTreeOrdering(topicOrder: TreeTopicOrder): TreeOrderBy {
 const getters = {
   posts(state): Post[] {
     const posts: Post[] = Object.values(state.data);
-    posts.sort((a, b) => a.created_at > b.created_at ? 1 : -1); // this mutates state! Ugh!
+    posts.sort((a, b) => a.id > b.id ? 1 : -1); // this mutates state! Ugh!
     return posts;
   },
   linearTopicPosts(state, getters): Post[] {
