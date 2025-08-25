@@ -7,7 +7,7 @@
 <title>{{$title}} - 4programmers.net</title>
 <link href="//fonts.googleapis.com/css?family=Inter:500,700" rel="stylesheet" type="text/css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="shortcut icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="shortcut icon" href="img/favicon.png?v2" type="image/png">
 <style>
     body {
         font-family: 'Inter', Arial, sans-serif;
