@@ -4,6 +4,7 @@ namespace Coyote\Http\Resources;
 use Coyote\Domain\Initials;
 use Coyote\Services\Media\File;
 use Coyote\Services\Parser\Factories\SigFactory;
+use Coyote\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use function app;
@@ -15,7 +16,9 @@ use function app;
  */
 class UserResource extends JsonResource {
     public function toArray(Request $request): array {
-        $parent = $this->resource->only([
+        /** @var User $user */
+        $user = $this->resource;
+        $parent = $user->only([
             'id', 'name', 'is_online', 'bio', 'location',
             'allow_sig', 'allow_count', 'allow_smilies',
             'posts', 'location',
@@ -24,12 +27,13 @@ class UserResource extends JsonResource {
         return \array_merge(
             \array_filter($parent, fn($value) => $value !== null),
             [
-                'initials'    => (new Initials)->of($this->name),
-                'is_verified' => $this->resource->is_verified,
-                'is_incognito' => $this->resource->is_incognito,
-                'is_blocked'  => $this->resource->is_blocked,
-                'deleted_at'  => $this->resource->deleted_at,
-                'photo'       => (string)$this->photo->url() ?: null,
+                'initials'     => (new Initials)->of($this->name),
+                'is_verified'  => $user->is_verified,
+                'is_deleted'   => $user->deleted_at !== null,
+                'is_incognito' => $user->is_incognito,
+                'is_blocked'   => $user->is_blocked,
+                'deleted_at'   => $user->deleted_at,
+                'photo'        => (string)$this->photo->url() ?: null,
             ],
             $this->isSignatureAllowed($request)
                 ? ['sig' => $this->parsedSignature($this->sig)]

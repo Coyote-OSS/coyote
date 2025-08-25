@@ -1,7 +1,4 @@
-import {mapGetters, mapState} from 'vuex';
-
-import VueComment from '../../components/comments/comment.vue';
-import VueCommentForm from "../../components/comments/form.vue";
+import {mapGetters} from 'vuex';
 import VueFlag from '../../components/flags/flag.vue';
 import VueMap from '../../components/google-maps/map.vue';
 import VueMarker from '../../components/google-maps/marker.vue';
@@ -48,26 +45,5 @@ createVueApp('Sidemenu', '#js-sidemenu', {
   computed: {
     ...mapGetters('jobs', ['isSubscribed']),
     ...mapGetters('user', ['isAuthorized']),
-  },
-});
-
-createVueApp('Comments', '#js-comments', {
-  delimiters: ['${', '}'],
-  mixins: [mixins],
-  components: {
-    'vue-comment': VueComment,
-    'vue-comment-form': VueCommentForm,
-  },
-  store,
-  created() {
-    store.commit('comments/INIT', Array.isArray(window.comments) ? {} : window.comments);
-  },
-  computed: {
-    ...mapState('comments', ['comments']),
-    ...mapGetters('user', ['isAuthorized']),
-
-    commentsCount() {
-      return Object.keys(store.state.comments.comments).length;
-    },
   },
 });

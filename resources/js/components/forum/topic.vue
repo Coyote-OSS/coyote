@@ -109,7 +109,7 @@
 
       <div class="col-xl-2 col-lg-2 col-md-12">
         <div class="media m-md-0">
-          <a v-profile="this.topic.last_post.user ? this.topic.last_post.user.id : null">
+          <a v-profile2="this.topic.last_post.user">
             <div class="neon-avatar-border me-2 d-none d-md-inline-block">
               <vue-avatar v-bind="topic.last_post.user" class="i-35"/>
             </div>

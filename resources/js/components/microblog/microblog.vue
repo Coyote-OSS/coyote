@@ -7,7 +7,7 @@
       </div>
       <div class="d-flex">
         <div class="d-none d-sm-block me-2">
-          <a v-profile="microblog.user.id">
+          <a v-profile2="microblog.user">
             <div class="neon-avatar-border">
               <vue-avatar v-bind="microblog.user" :is-online="microblog.user.is_online" class="i-45"/>
             </div>
@@ -157,14 +157,13 @@
 
             <form v-if="isAuthorized" method="POST">
               <div class="media">
-                <a v-profile="user.id">
+                <a v-profile2="user">
                   <div class="neon-avatar-border i-35">
                     <vue-avatar
                       :photo="user.photo"
                       :name="user.name"
                       :initials="user.initials"
-                      class="d-block"
-                    />
+                      class="d-block"/>
                   </div>
                 </a>
                 <div class="media-body position-relative ms-1">

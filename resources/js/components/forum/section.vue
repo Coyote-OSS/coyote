@@ -89,7 +89,7 @@
 
             <div v-if="!category.is_redirected" class="col-12 col-lg-5 position-relative">
               <div v-if="category.post" class="media">
-                <a v-profile="category.post.user ? category.post.user.id : null">
+                <a v-profile2="category.post.user">
                   <div class="neon-avatar-border d-none d-sm-block me-2">
                     <vue-avatar v-bind="category.post.user" class="i-38"/>
                   </div>

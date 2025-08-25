@@ -3,14 +3,16 @@ import {notify} from '../../toast';
 
 export default {
   directives: {
-    profile: {
+    profile2: {
       beforeMount(el, binding) {
         if (!binding.value) {
           return;
         }
-
-        el.href = `/Profile/${binding.value}`;
-        el.dataset.userId = binding.value;
+        const user = binding.value;
+        if (!user.is_deleted) {
+          el.href = `/Profile/${binding.value.id}`;
+          el.dataset.userId = binding.value.id;
+        }
       },
     },
   },

@@ -1,7 +1,7 @@
 <template>
   <div :id="anchor" :class="{'highlight-flash': highlight, 'not-read': comment.is_read === false, 'border border-danger': comment.deleted_at}" class="media">
     <div class="me-2">
-      <a v-profile="comment.user.id">
+      <a v-profile2="comment.user">
         <div class="neon-avatar-border">
           <vue-avatar v-bind="comment.user" :is-online="comment.user.is_online" class="i-35"/>
         </div>
@@ -16,9 +16,7 @@
         class="w-100 me-1"
         editing
         @cancel="edit(comment)"
-        @save="edit(comment)"
-      />
-
+        @save="edit(comment)"/>
       <div v-if="!comment.is_editing" class="w-100">
         <vue-username :user="comment.user"/>
         <vue-flag v-for="flag in flags" :key="flag.id" :flag="flag"/>

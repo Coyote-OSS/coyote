@@ -1,6 +1,6 @@
 <template>
   <div :class="{'sequential': message.sequential, 'unread': ! isRead}" class="media">
-    <a v-if="!message.sequential" v-profile="message.user.id" class="me-2 d-none d-sm-block flex-shrink-0">
+    <a v-if="!message.sequential" v-profile2="message.user" class="me-2 d-none d-sm-block flex-shrink-0">
       <div class="neon-avatar-border">
         <vue-avatar
           :photo="message.user.photo"
@@ -9,26 +9,23 @@
           class="i-45"/>
       </div>
     </a>
-
     <div class="media-body">
       <template v-if="!message.sequential">
         <small class="float-end text-muted">
           <vue-timeago :datetime="message.created_at"/>
         </small>
-
         <h3>
           <vue-username v-if="clickableText" :user="message.user" :href="'/User/Pm/Show/' + message.id"></vue-username>
           <vue-username v-else :user="message.user"></vue-username>
         </h3>
       </template>
-
       <a @click="deleteMessage" class="btn-delete float-end text-danger" href="javascript:" title="Usuń">
         <vue-icon name="privateMessageDelete"/>
       </a>
-
-      <a v-if="clickableText" :href="'/User/Pm/Show/' + message.id" class="excerpt">{{ message.excerpt ? message.excerpt : '(kliknij, aby przeczytać)' }}</a>
+      <a v-if="clickableText" :href="'/User/Pm/Show/' + message.id" class="excerpt">
+        {{message.excerpt ? message.excerpt : '(kliknij, aby przeczytać)'}}
+      </a>
       <div v-else class="pm-text neon-contains-a-color-link" v-html="message.text"/>
-
       <small v-if="last && message.folder === SENTBOX && message.read_at" class="text-muted">
         <vue-icon name="privateMessageReadAt"/>
         Przeczytano,

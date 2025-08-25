@@ -1,15 +1,19 @@
 <template>
   <component
     :is="tagName"
-    v-profile="user.id"
+    :href="`/Profile/${user.id}`"
+    :data-user-id="user.id"
     class="username"
     :class="owner ? 'neon-username-author': 'neon-color-link'"
-    :style="{textDecoration: this.user.is_blocked ? 'line-through' : ''}"
+    :style="{
+      textDecoration: this.user.is_blocked ? 'line-through' : '',
+      marginRight: this.user.is_deleted ? '3px': '0', 
+    }"
     v-text="user.name"/>
 </template>
 
 <script lang="ts">
-import {default as mixins} from './mixins/user.js';
+import mixins from './mixins/user.js';
 
 export default {
   name: 'user-name',
@@ -20,7 +24,7 @@ export default {
   },
   computed: {
     tagName(): string {
-      return this.user.deleted_at ? 'del' : 'a';
+      return this.user.is_deleted ? 'del' : 'a';
     },
   },
 };
