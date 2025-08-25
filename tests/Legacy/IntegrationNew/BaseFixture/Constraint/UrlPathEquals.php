@@ -3,6 +3,7 @@ namespace Tests\Legacy\IntegrationNew\BaseFixture\Constraint;
 
 use Override;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Util\Exporter;
 use SebastianBergmann\Comparator\ComparisonFailure;
 
 class UrlPathEquals extends Constraint
@@ -32,7 +33,7 @@ class UrlPathEquals extends Constraint
         if ($this->hasScheme($other)) {
             return '';
         }
-        $value = $this->exporter()->export($other);
+        $value = Exporter::export($other);
         return "In fact, $value is not an absolute URL at all";
     }
 
@@ -41,8 +42,8 @@ class UrlPathEquals extends Constraint
     {
         parent::fail($other, $description,
             new ComparisonFailure(null, null,
-                $this->exporter()->export($this->url),
-                $this->exporter()->export($other)));
+                Exporter::export($this->url),
+                Exporter::export($other)));
     }
 
     private function hasScheme(string $url): bool

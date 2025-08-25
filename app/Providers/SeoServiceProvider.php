@@ -55,7 +55,7 @@ class SeoServiceProvider extends ServiceProvider {
             return null;
         }
         return 'https://' .
-            $request->getHost() .
+            $this->host($request->getHost()) .
             $canonicalPath .
             $this->queryString($request);
     }
@@ -108,5 +108,12 @@ class SeoServiceProvider extends ServiceProvider {
     private function queryParams(Request $request): array {
         \parse_str($request->getQueryString(), $queryParams);
         return $queryParams;
+    }
+
+    private function host(string $host): string {
+        if ($host === 'static.4programmers.net') {
+            return '4programmers.net';
+        }
+        return $host;
     }
 }
