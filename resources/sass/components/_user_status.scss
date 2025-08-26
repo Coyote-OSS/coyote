@@ -1,0 +1,20 @@
+@use "../../feature/theme/theme" as theme;
+
+.user-status {
+  font-size:     10px;
+  line-height:   12px;
+  padding:       4px 4px 2px;
+  border-radius: 4px;
+  margin-top:    -1px;
+
+  &.user-status--banned {
+    @include theme.light {
+      color:      #e7000b;
+      background: #ffe2e2;
+    }
+    @include theme.dark {
+      color:      #c7191c;
+      background: #460809;
+    }
+  }
+}

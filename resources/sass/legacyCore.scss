@@ -104,6 +104,7 @@ $alert-danger-border:      #f4cfce;
 @import "components/tags";
 @import "components/forum/post"; // it needs to be here because post's placeholder use styles in this specific file
 @import "components/forum/tree_topic";
+@import "components/user_status";
 
 @import "pages/auth";
 @import "pages/errors";

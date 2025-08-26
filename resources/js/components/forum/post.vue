@@ -54,15 +54,18 @@
         </div>
         <div :class="{'collapse': isCollapsed, 'd-lg-block': !isCollapsed && is_mode_linear}" class="d-none p-2 backport-post-header">
           <div class="row">
-            <div class="col-2">
-              <h5 class="mb-0 post-author ms-2">
-                <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
-                <span v-else>{{post.user_name}}</span>
-                <i
-                  v-if="post.user.is_verified"
-                  class="fa-solid fa-shield-check ms-2" style="color:#00a538;"
-                  title="Użytkownik zweryfikował swoje konto."/>
-              </h5>
+            <div class="col-2 pe-0">
+              <div class="d-flex align-items-center gap-2">
+                <span class="mb-0 post-author ms-2">
+                  <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
+                  <span v-else v-text="post.user_name"/>
+                </span>
+                <span
+                  v-if="post.user.is_blocked"
+                  class="user-status user-status--banned"
+                  title="Konto użytkownika zostało zablokowane."
+                  v-text="'Zbanowany'"/>
+              </div>
             </div>
             <div class="col-10 text-truncate small">
               <div class="d-flex">
@@ -105,6 +108,11 @@
               <span class="mb-0 post-author me-2">
                 <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
                 <span v-else>{{post.user_name}}</span>
+                <span
+                  v-if="post.user.is_blocked"
+                  class="ms-2 user-status user-status--banned"
+                  title="Konto użytkownika zostało zablokowane."
+                  v-text="'Zbanowany'"/>
               </span>
               <a :href="post.url" class="text-muted small">
                 <vue-timeago :datetime="post.created_at"/>

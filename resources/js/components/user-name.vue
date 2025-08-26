@@ -6,7 +6,7 @@
     class="username"
     :class="owner ? 'neon-username-author': 'neon-color-link'"
     :style="{
-      textDecoration: this.user.is_blocked ? 'line-through' : '',
+      textDecoration: this.user.is_deleted ? 'line-through' : '',
       marginRight: this.user.is_deleted ? '3px': '0', 
     }"
     v-text="user.name"/>
@@ -24,7 +24,7 @@ export default {
   },
   computed: {
     tagName(): string {
-      return this.user.is_deleted ? 'del' : 'a';
+      return this.user.is_deleted ? 'span' : 'a';
     },
   },
 };

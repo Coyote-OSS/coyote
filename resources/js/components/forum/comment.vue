@@ -12,8 +12,7 @@
           :comment="comment"
           @save="$store.commit('posts/editEnd', comment)"
           @cancel="$store.commit('posts/editEnd', comment)"
-          ref="comment-form"
-        />
+          ref="comment-form"/>
         <div class="d-flex" v-else>
           <div>
             <div class="neon-avatar-border">
@@ -23,6 +22,11 @@
           <div class="ms-2">
             <div>
               <vue-username :user="comment.user" :owner="comment.user.id === topic.owner_id"/>
+              <span
+                v-if="comment.user.is_blocked"
+                class="ms-1 me-1 user-status user-status--banned"
+                title="Konto użytkownika zostało zablokowane."
+                v-text="'Zbanowany'"/>
               {{ ' ' }}
               <a :href="comment.url">
                 <vue-timeago :datetime="comment.created_at" class="text-muted small"/>
