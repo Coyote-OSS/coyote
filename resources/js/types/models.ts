@@ -37,6 +37,7 @@ export interface User {
   name: string;
   deleted_at?: Date;
   is_blocked: boolean;
+  is_blocked_perm: boolean;
   group_name?: string;
   photo: string;
   posts?: number;

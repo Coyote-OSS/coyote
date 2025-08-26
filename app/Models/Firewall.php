@@ -1,9 +1,9 @@
 <?php
-
 namespace Coyote;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -15,10 +15,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $updated_at
  * @property string $ip
  * @property string $fingerprint
- * @property \Coyote\User $user
+ * @property User $user
  */
-class Firewall extends Model
-{
+class Firewall extends Model {
     protected $table = 'firewall';
 
     protected $fillable = ['expire_at', 'user_id', 'ip', 'reason', 'moderator_id', 'fingerprint'];
@@ -31,8 +30,7 @@ class Firewall extends Model
 
     protected $dateFormat = 'Y-m-d H:i:se';
 
-    public function user()
-    {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
 }

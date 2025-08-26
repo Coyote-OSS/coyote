@@ -327,4 +327,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             ->belongsToMany(Multiacc::class, 'multiacc_users')
             ->withTimestamps();
     }
+
+    public function isBlockedPerm(): bool {
+        return $this->hasMany(Firewall::class)
+            ->whereNull('expire_at')
+            ->exists();
+    }
 }

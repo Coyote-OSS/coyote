@@ -22,12 +22,8 @@
           <div class="ms-2">
             <div>
               <vue-username :user="comment.user" :owner="comment.user.id === topic.owner_id"/>
-              <span
-                v-if="comment.user.is_blocked"
-                class="ms-1 me-1 user-status user-status--banned"
-                title="Konto użytkownika zostało zablokowane."
-                v-text="'Zbanowany'"/>
-              {{ ' ' }}
+              <vue-user-status-banned class="ms-1 me-1" :user="comment.user"/>
+              {{' '}}
               <a :href="comment.url">
                 <vue-timeago :datetime="comment.created_at" class="text-muted small"/>
               </a>
@@ -41,7 +37,8 @@
                 <span v-if="comment.editable" @click="migrate" title="Zamień w post" class="btn-comment cursor-pointer">
                   <vue-icon name="postCommentConvertToPost"/>
                 </span>
-                <span :data-metadata="comment.metadata" :data-url="comment.url" title="Zgłoś ten komentarz" class="btn-comment cursor-pointer">
+                <span :data-metadata="comment.metadata" :data-url="comment.url" title="Zgłoś ten komentarz"
+                      class="btn-comment cursor-pointer">
                   <vue-icon name="postCommentReport"/>
                 </span>
               </template>
@@ -66,6 +63,7 @@ import VueIcon from "../icon";
 import {default as mixins} from '../mixins/user.js';
 import VueUserName from '../user-name.vue';
 import VueCommentForm from "./comment-form.vue";
+import UserStatusBanned from "./UserStatusBanned.vue";
 
 export default {
   name: 'comment',
@@ -77,6 +75,7 @@ export default {
     'vue-comment-form': VueCommentForm,
     'vue-flag': VueFlag,
     'vue-timeago': VueTimeAgo,
+    'vue-user-status-banned': UserStatusBanned,
   },
   props: {
     comment: {

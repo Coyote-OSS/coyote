@@ -27,13 +27,14 @@ class UserResource extends JsonResource {
         return \array_merge(
             \array_filter($parent, fn($value) => $value !== null),
             [
-                'initials'     => (new Initials)->of($this->name),
-                'is_verified'  => $user->is_verified,
-                'is_deleted'   => $user->deleted_at !== null,
-                'is_incognito' => $user->is_incognito,
-                'is_blocked'   => $user->is_blocked,
-                'deleted_at'   => $user->deleted_at,
-                'photo'        => (string)$this->photo->url() ?: null,
+                'initials'        => (new Initials)->of($this->name),
+                'is_verified'     => $user->is_verified,
+                'is_deleted'      => $user->deleted_at !== null,
+                'is_incognito'    => $user->is_incognito,
+                'is_blocked'      => $user->is_blocked,
+                'is_blocked_perm' => $user->is_blocked && $user->isBlockedPerm(),
+                'deleted_at'      => $user->deleted_at,
+                'photo'           => (string)$this->photo->url() ?: null,
             ],
             $this->isSignatureAllowed($request)
                 ? ['sig' => $this->parsedSignature($this->sig)]

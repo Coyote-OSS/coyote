@@ -60,11 +60,7 @@
                   <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
                   <span v-else v-text="post.user_name"/>
                 </span>
-                <span
-                  v-if="post.user.is_blocked"
-                  class="user-status user-status--banned"
-                  title="Konto użytkownika zostało zablokowane."
-                  v-text="'Zbanowany'"/>
+                <vue-user-status-banned :user="post.user"/>
               </div>
             </div>
             <div class="col-10 text-truncate small">
@@ -108,11 +104,7 @@
               <span class="mb-0 post-author me-2">
                 <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
                 <span v-else>{{post.user_name}}</span>
-                <span
-                  v-if="post.user.is_blocked"
-                  class="ms-2 user-status user-status--banned"
-                  title="Konto użytkownika zostało zablokowane."
-                  v-text="'Zbanowany'"/>
+                <vue-user-status-banned class="ms-2" :user="post.user"/>
               </span>
               <a :href="post.url" class="text-muted small">
                 <vue-timeago :datetime="post.created_at"/>
@@ -434,6 +426,7 @@ import VueCommentForm from "./comment-form.vue";
 import VueComment from './comment.vue';
 import VueForm from './form.vue';
 import VuePostGuiderail, {ChildLink} from "./post-guiderail.vue";
+import UserStatusBanned from "./UserStatusBanned.vue";
 
 export default {
   name: 'post',
@@ -454,6 +447,7 @@ export default {
     'vue-tags': VueTags,
     'vue-timeago': VueTimeAgo,
     'vue-username': VueUserName,
+    'vue-user-status-banned': UserStatusBanned,
   },
   emits: ['reply'],
   props: {
