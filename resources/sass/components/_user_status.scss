@@ -5,7 +5,7 @@
   line-height:   12px;
   padding:       4px 4px 2px;
   border-radius: 4px;
-  margin-top:    -1px;
+  display:       inline-block;
 
   &.user-status--banned {
     @include theme.light {
@@ -15,6 +15,17 @@
     @include theme.dark {
       color:      #c7191c;
       background: #460809;
+    }
+  }
+
+  &.user-status--author {
+    @include theme.light {
+      color:      #2358cc;
+      background: #dee8fa;
+    }
+    @include theme.dark {
+      color:      #3a6bd6;
+      background: #152233;
     }
   }
 }

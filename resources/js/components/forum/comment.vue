@@ -21,8 +21,8 @@
           </div>
           <div class="ms-2">
             <div>
-              <vue-username :user="comment.user" :owner="comment.user.id === topic.owner_id"/>
-              <vue-user-status-banned class="ms-1 me-1" :user="comment.user"/>
+              <vue-username :user="comment.user"/>
+              <vue-user-status-banned class="ms-1 me-1" :user="comment.user" :is-author="comment.user.id === topic.owner_id"/>
               {{' '}}
               <a :href="comment.url">
                 <vue-timeago :datetime="comment.created_at" class="text-muted small"/>

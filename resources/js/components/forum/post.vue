@@ -55,12 +55,12 @@
         <div :class="{'collapse': isCollapsed, 'd-lg-block': !isCollapsed && is_mode_linear}" class="d-none p-2 backport-post-header">
           <div class="row">
             <div class="col-2 pe-0">
-              <div class="d-flex align-items-center gap-2">
+              <div class="d-flex align-items-center">
                 <span class="mb-0 post-author ms-2">
-                  <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
+                  <vue-username v-if="post.user" :user="post.user"/>
                   <span v-else v-text="post.user_name"/>
                 </span>
-                <vue-user-status-banned :user="post.user"/>
+                <vue-user-status-banned :user="post.user" :is-author="post.user_id === topic.owner_id"/>
               </div>
             </div>
             <div class="col-10 text-truncate small">
@@ -102,9 +102,9 @@
 
             <div class="media-body">
               <span class="mb-0 post-author me-2">
-                <vue-username v-if="post.user" :user="post.user" :owner="post.user_id === topic.owner_id"/>
+                <vue-username v-if="post.user" :user="post.user"/>
                 <span v-else>{{post.user_name}}</span>
-                <vue-user-status-banned class="ms-2" :user="post.user"/>
+                <vue-user-status-banned class="ms-2" :user="post.user" :is-author="post.user_id === topic.owner_id"/>
               </span>
               <a :href="post.url" class="text-muted small">
                 <vue-timeago :datetime="post.created_at"/>
