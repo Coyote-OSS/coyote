@@ -29,3 +29,7 @@
     }
   }
 }
+
+.user-deleted {
+  @include theme.color(#91969c, #5c6166);
+}

@@ -3,7 +3,9 @@
     :is="tagName"
     :href="`/Profile/${user.id}`"
     :data-user-id="user.id"
-    class="username neon-color-link"
+    class="username"
+    :class="user.is_deleted ? 'user-deleted' : 'neon-color-link'"
+    :title="user.is_deleted ? 'Użytkownik usunął swoje konto.' : ''"
     v-text="user.name"/>
 </template>
 
