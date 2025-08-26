@@ -12,6 +12,7 @@ use Coyote\Events\UserDeleted;
 use Coyote\Events\UserSaved;
 use Coyote\Http\Forms\User\AdminForm;
 use Coyote\Http\Grids\Adm\UsersGrid;
+use Coyote\Models\Multiacc;
 use Coyote\Repositories\Criteria\WithTrashed;
 use Coyote\Repositories\Eloquent\UserRepository;
 use Coyote\Services\Adm\UserContent\UserContentFactory;
@@ -50,10 +51,9 @@ class UsersController extends BaseController {
         return $this->view('adm.users.show', [
             'userDetails'       => [
                 'accountCreated' => new Date($user->created_at, Carbon::now()),
-                'lastVisit'      =>
-                    $user->visited_at
-                        ? new Date($user->visited_at, Carbon::now())
-                        : null,
+                'lastVisit'      => $user->visited_at
+                    ? new Date($user->visited_at, Carbon::now())
+                    : null,
                 'isBanned'       => $user->is_blocked,
                 'isIncognito'    => $user->is_incognito,
                 'isDeleted'      => !$user->is_active,
@@ -168,6 +168,7 @@ class UsersController extends BaseController {
     }
 
     private function userDetailMultiacc(User $user): ?array {
+        /** @var Multiacc $multiacc */
         $multiacc = $user->multiaccs->first();
         if ($multiacc) {
             return [

@@ -1,27 +1,24 @@
 <?php
-
 namespace Coyote\Http\Grids\Adm;
 
 use Boduch\Grid\Components\EditButton;
 use Boduch\Grid\Decorators\Boolean;
 use Boduch\Grid\Decorators\FormatDateRelative;
 use Boduch\Grid\Filters\FilterOperator;
-use Boduch\Grid\Filters\Select;
 use Boduch\Grid\Filters\Text;
+use Boduch\Grid\GridHelper;
 use Boduch\Grid\Order;
 use Coyote\Services\Grid\Components\FirewallButton;
 use Coyote\Services\Grid\Grid;
 use Coyote\User;
 
-class UsersGrid extends Grid
-{
-    const YES = 1;
-    const NO = 0;
+class UsersGrid extends Grid {
+    public function __construct(GridHelper $gridHelper) {
+        parent::__construct($gridHelper);
+        $this->perPage = 50;
+    }
 
-    public function buildGrid()
-    {
-        $booleanOptions = [self::YES => 'Tak', self::NO => 'Nie'];
-
+    public function buildGrid(): void {
         $this
             ->setDefaultOrder(new Order('id', 'desc'))
             ->addColumn('id', [
@@ -54,7 +51,6 @@ class UsersGrid extends Grid
             ->addColumn('is_blocked', [
                 'title'      => 'Zablokowany',
                 'decorators' => [new Boolean()],
-                'filter'     => new Select(['options' => $booleanOptions]),
             ])
             ->addColumn('reputation', [
                 'title'    => 'Reputacja',

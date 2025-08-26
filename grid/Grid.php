@@ -9,8 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Str;
 
-class Grid
-{
+class Grid {
     /**
      * @var string
      */
@@ -62,8 +61,8 @@ class Grid
      * @var array
      */
     protected $defaultOrder = [
-        'column' => 'id',
-        'direction' => 'desc'
+        'column'    => 'id',
+        'direction' => 'desc',
     ];
 
     /**
@@ -89,23 +88,20 @@ class Grid
     /**
      * @param GridHelper $gridHelper
      */
-    public function __construct(GridHelper $gridHelper)
-    {
+    public function __construct(GridHelper $gridHelper) {
         $this->gridHelper = $gridHelper;
 
         $this->makeDefaultOrder();
     }
 
-    public function buildGrid()
-    {
+    public function buildGrid() {
         //
     }
 
     /**
      * @return GridHelper
      */
-    public function getGridHelper()
-    {
+    public function getGridHelper() {
         return $this->gridHelper;
     }
 
@@ -113,8 +109,7 @@ class Grid
      * @param SourceInterface $source
      * @return $this
      */
-    public function setSource(SourceInterface $source)
-    {
+    public function setSource(SourceInterface $source) {
         $this->source = $source;
 
         return $this;
@@ -125,8 +120,7 @@ class Grid
      * @param array $options
      * @return $this
      */
-    public function addColumn($name, array $options = [])
-    {
+    public function addColumn($name, array $options = []) {
         if ($name instanceof Column) {
             $column = $name;
         } else {
@@ -143,16 +137,14 @@ class Grid
      * @param string $name
      * @return Column|null
      */
-    public function getColumn($name)
-    {
+    public function getColumn($name) {
         return $this->columns[$name] ?? null;
     }
 
     /**
      * @return Column[]
      */
-    public function getColumns()
-    {
+    public function getColumns() {
         return $this->columns;
     }
 
@@ -160,8 +152,7 @@ class Grid
      * @param Order $order
      * @return $this
      */
-    public function setDefaultOrder(Order $order)
-    {
+    public function setDefaultOrder(Order $order) {
         $this->order = $order;
 
         return $this;
@@ -170,8 +161,7 @@ class Grid
     /**
      * @return Order
      */
-    public function getOrder()
-    {
+    public function getOrder() {
         return $this->order;
     }
 
@@ -179,8 +169,7 @@ class Grid
      * @param int $perPage
      * @return $this
      */
-    public function setPerPage($perPage)
-    {
+    public function setPerPage($perPage) {
         $this->perPage = $perPage;
 
         return $this;
@@ -189,8 +178,7 @@ class Grid
     /**
      * @return string
      */
-    public function getEmptyMessage()
-    {
+    public function getEmptyMessage() {
         return $this->emptyMessage;
     }
 
@@ -198,8 +186,7 @@ class Grid
      * @param RowAction $rowAction
      * @return $this
      */
-    public function addRowAction(RowAction $rowAction)
-    {
+    public function addRowAction(RowAction $rowAction) {
         $rowAction->setGrid($this);
         $this->rowActions[] = $rowAction;
 
@@ -210,21 +197,18 @@ class Grid
      * @param bool $flag
      * @return $this
      */
-    public function setEnablePagination($flag)
-    {
-        $this->enablePagination = (bool) $flag;
+    public function setEnablePagination($flag) {
+        $this->enablePagination = (bool)$flag;
         $this->setPerPage(null);
 
         return $this;
     }
 
-
     /**
      * @param callable $callback
      * @deprecated
      */
-    public function each(callable $callback)
-    {
+    public function each(callable $callback) {
         $this->after($callback);
     }
 
@@ -232,8 +216,7 @@ class Grid
      * @param callable $callback
      * @return $this
      */
-    public function after(callable $callback)
-    {
+    public function after(callable $callback) {
         $this->afterCallback = $callback;
 
         return $this;
@@ -243,8 +226,7 @@ class Grid
      * @param Component $component
      * @return $this
      */
-    public function addComponent(Component $component)
-    {
+    public function addComponent(Component $component) {
         $component->setGrid($this);
         $this->viewData[$component->getName()] = $component->render();
 
@@ -255,8 +237,7 @@ class Grid
      * @param array $viewData
      * @return $this
      */
-    public function setViewData($viewData)
-    {
+    public function setViewData($viewData) {
         $this->viewData = $viewData;
 
         return $this;
@@ -265,8 +246,7 @@ class Grid
     /**
      * @return \Illuminate\View\View
      */
-    public function render()
-    {
+    public function render() {
         $rows = $this->getRows();
         $pagination = null;
 
@@ -279,7 +259,7 @@ class Grid
             'rows'          => $rows,
             'pagination'    => $pagination,
             'grid'          => $this,
-            'is_filterable' => $this->isFilterable()
+            'is_filterable' => $this->isFilterable(),
         ], $this->viewData);
     }
 
@@ -288,8 +268,7 @@ class Grid
      *
      * @return bool
      */
-    public function isFilterable()
-    {
+    public function isFilterable() {
         $hasFilters = false;
 
         foreach ($this->columns as $column) {
@@ -305,8 +284,7 @@ class Grid
     /**
      * @return Rows
      */
-    public function getRows()
-    {
+    public function getRows() {
         if (empty($this->source)) {
             throw new \InvalidArgumentException('You MUST set the data grid source by calling setSource() method.');
         }
@@ -318,7 +296,7 @@ class Grid
         if ($this->gridHelper->getRequest()->has('column') && !empty($this->defaultOrder)) {
             $this->order = new Order(
                 $this->gridHelper->getRequest()->get('column', $this->defaultOrder['column']),
-                $this->gridHelper->getRequest()->get('direction', $this->defaultOrder['direction'])
+                $this->gridHelper->getRequest()->get('direction', $this->defaultOrder['direction']),
             );
 
             $validator = $this->gridHelper->getValidatorInstance($this->getValidatorRules());
@@ -363,8 +341,7 @@ class Grid
      * @param Rows $rows
      * @return LengthAwarePaginator
      */
-    protected function getPaginator(Rows $rows)
-    {
+    protected function getPaginator(Rows $rows) {
         return new LengthAwarePaginator($rows, $this->total, $this->perPage, $this->resolveCurrentPage(), [
             'path' => $this->resolveCurrentPath(),
         ]);
@@ -373,8 +350,7 @@ class Grid
     /**
      * @return mixed
      */
-    protected function execute()
-    {
+    protected function execute() {
         // apply filters first
         $this->source->applyFilters($this->columns);
 
@@ -389,24 +365,21 @@ class Grid
     /**
      * @return int
      */
-    protected function resolveCurrentPage()
-    {
+    protected function resolveCurrentPage() {
         return Paginator::resolveCurrentPage();
     }
 
     /**
      * @return string
      */
-    protected function resolveCurrentPath()
-    {
+    protected function resolveCurrentPath() {
         return Paginator::resolveCurrentPath();
     }
 
     /**
      * @return array
      */
-    protected function getValidatorRules()
-    {
+    protected function getValidatorRules() {
         $allowed = [];
 
         foreach ($this->columns as $column) {
@@ -416,13 +389,12 @@ class Grid
         }
 
         return [
-            'column' => 'sometimes|in:' . implode(',', $allowed),
-            'direction' => 'sometimes|in:asc,desc'
+            'column'    => 'sometimes|in:' . implode(',', $allowed),
+            'direction' => 'sometimes|in:asc,desc',
         ];
     }
 
-    protected function makeDefaultOrder()
-    {
+    protected function makeDefaultOrder() {
         $this->order = $this->defaultOrder
             ? new Order($this->defaultOrder['column'], $this->defaultOrder['direction'])
             : new Order();
@@ -433,8 +405,7 @@ class Grid
      * @param array $options
      * @return Column
      */
-    protected function makeColumn($name, array $options = [])
-    {
+    protected function makeColumn($name, array $options = []) {
         $options = $this->setupColumnOptions($name, $options);
 
         if (empty($options['title'])) {
@@ -449,8 +420,7 @@ class Grid
      * @param array $options
      * @return array
      */
-    protected function setupColumnOptions($name, array $options)
-    {
+    protected function setupColumnOptions($name, array $options) {
         $default = ['name' => $name];
 
         return array_merge($default, $options);
@@ -459,8 +429,7 @@ class Grid
     /**
      * @return string
      */
-    public function __toString()
-    {
-        return (string) $this->render();
+    public function __toString() {
+        return (string)$this->render();
     }
 }
