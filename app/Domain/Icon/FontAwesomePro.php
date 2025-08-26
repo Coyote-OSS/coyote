@@ -521,6 +521,10 @@ readonly class FontAwesomePro {
             'adminCensoreRemove'                        => 'fa-light fa-trash-can',
 
             // admin user
+            'adminUsersUser'                            => 'fa-light fa-user',
+            'adminUsersEmail'                           => 'fa-light fa-envelope',
+            'adminUsersEmailVerified'                   => 'fa-light fa-envelope-circle-check',
+            'adminUsersEmailUnverified'                 => 'fa-light fa-envelope-open',
             'adminUserAccountSettings'                  => 'fa-light fa-user-gear',
             'adminUserFindFingerprints'                 => 'fa-light fa-fingerprint',
             'adminUserFindInLog'                        => 'fa-light fa-newspaper',

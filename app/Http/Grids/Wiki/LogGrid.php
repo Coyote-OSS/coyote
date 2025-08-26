@@ -5,14 +5,14 @@ namespace Coyote\Http\Grids\Wiki;
 use Boduch\Grid\Cell;
 use Boduch\Grid\Order;
 use Boduch\Grid\Row;
+use Collective\Html\HtmlBuilder;
 use Coyote\Services\Grid\Components\SubmitButton;
 use Coyote\Services\Grid\Decorators\TextSize;
 use Coyote\Services\Grid\Grid;
+use Coyote\Wiki;
 
-class LogGrid extends Grid
-{
-    public function buildGrid()
-    {
+class LogGrid extends Grid {
+    public function buildGrid() {
         $this
             ->setDefaultOrder(new Order('wiki_log.created_at', 'desc'))
             ->addColumn('user_id', [
@@ -23,16 +23,12 @@ class LogGrid extends Grid
             ])
             ->addColumn('comment', [
                 'title'  => 'Komentarz',
-                'render' => function ($row) {
+                'render' => function (Wiki\Log $row) {
                     /** @var Cell $this */
-                    $html = $this->getColumn()->getGrid()->getGridHelper()->getHtmlBuilder();
-
-                    $this->setValue(
-                        $html->tag('strong', (string)$html->link($row->path, $row->title)) .
-                        $html->tag('p', (string)htmlspecialchars($this->getValue()), ['class' => 'text-muted']),
-                    );
-
-                    return $this->getValue();
+                    $html = app(HtmlBuilder::class);
+                    $title = $html->tag('strong', (string)$html->link($row->path, $row->title));
+                    $comment = $html->tag('p', htmlSpecialChars($row->comment), ['class' => 'text-muted']);
+                    return $title . $comment;
                 },
             ])
             ->addColumn('length', [
@@ -48,8 +44,7 @@ class LogGrid extends Grid
             ]);
     }
 
-    public function addComparisionButtons()
-    {
+    public function addComparisionButtons() {
         $form = $this->getGridHelper()->getFormBuilder();
         $original = $this->columns;
 

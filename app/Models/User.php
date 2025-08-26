@@ -88,6 +88,7 @@ use Ramsey\Uuid\Uuid;
  * @property Tag[] $skills
  * @property string|null $gdpr
  * @property bool is_verified
+ * @property bool is_incognito
  * @property Guest|null $guest
  * @property TrialSession|null $trialSession
  * @property UserPlanBundle[]|Eloquent\Collection $planBundles
