@@ -36,10 +36,10 @@
         <div class="card-header">Wiarygodność konta {{ navigation.mention }}</div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
-            <span>Adres e-mail:</span>
+            {{ userDetails.email }}
             <span>
               {% if not userDetails.mailVerified %}
-                {{ icon('alertDanger') }}
+                {{ icon('adminUsersEmailUnverified') }}
                 <b>Niepotwierdzony</b>
               {% else %}
                 Zweryfikowany

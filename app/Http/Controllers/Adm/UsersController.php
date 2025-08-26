@@ -50,6 +50,7 @@ class UsersController extends BaseController {
         $store = new UserStore($user, Carbon::now()->subDays($daysAgo));
         return $this->view('adm.users.show', [
             'userDetails'       => [
+                'email'          => $user->email,
                 'accountCreated' => new Date($user->created_at, Carbon::now()),
                 'lastVisit'      => $user->visited_at
                     ? new Date($user->visited_at, Carbon::now())
