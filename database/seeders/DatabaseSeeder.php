@@ -31,5 +31,6 @@ class DatabaseSeeder extends Seeder {
         $this->call(ActivityTableSeeder::class);
         $this->call(UserAvatarsSeeder::class);
         $this->call(JobOfferSeeder::class);
+        $this->call(TempEmailSeeder::class);
     }
 }

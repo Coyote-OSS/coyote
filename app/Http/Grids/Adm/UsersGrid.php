@@ -7,11 +7,17 @@ use Boduch\Grid\Filters\Text;
 use Boduch\Grid\GridHelper;
 use Boduch\Grid\Order;
 use Coyote\Domain\Icon\Icons;
+use Coyote\Domain\TempEmail\TempEmailCategory;
+use Coyote\Domain\TempEmail\TempEmailRepository;
 use Coyote\Services\Grid\Grid;
 use Coyote\User;
 
 class UsersGrid extends Grid {
-    public function __construct(GridHelper $gridHelper, private Icons $icons) {
+    public function __construct(
+        GridHelper                           $gridHelper,
+        private readonly Icons               $icons,
+        private readonly TempEmailRepository $tempEmails,
+    ) {
         parent::__construct($gridHelper);
         $this->perPage = 50;
     }
@@ -53,15 +59,35 @@ class UsersGrid extends Grid {
     }
 
     private function userEmail(User $user): string {
-        return "{$this->userEmailVerifiedIcon($user)} $user->email";
-    }
-
-    private function userEmailVerifiedIcon(User $user): string {
+        $mail = $this->userEmailHtml($user->email);
         if ($user->is_confirm) {
-            return '';
+            return $mail;
         }
         $icon = $this->icons->icon('adminUsersEmailUnverified');
-        return "<span title='Adres email nie został zweryfikowany.'>$icon</span>";
+        return "<b title='Adres email nie został zweryfikowany.'>$icon $mail</b>";
+    }
+
+    private function userEmailHtml(string $email): string {
+        [$username, $domain] = \explode('@', $email);
+        $color = $this->emailCssColor($email);
+        $title = $this->emailCategoryTitle($email);
+        return "$username@<span title='$title' style='color:$color;'>$domain</span>";
+    }
+
+    private function emailCssColor(string $email): string {
+        return match ($this->tempEmails->findCategory($email)) {
+            TempEmailCategory::TEMPORARY => 'red',
+            TempEmailCategory::TRUSTED   => 'inherit',
+            TempEmailCategory::UNKNOWN   => 'orange',
+        };
+    }
+
+    private function emailCategoryTitle(string $email): string {
+        return match ($this->tempEmails->findCategory($email)) {
+            TempEmailCategory::TEMPORARY => 'Tymczasowy adres email.',
+            TempEmailCategory::TRUSTED   => 'Adres email od zaufanego dostawcy.',
+            TempEmailCategory::UNKNOWN   => 'Nieznana domena adresu email.',
+        };
     }
 
     private function userStatusHtml(User $user): string {
