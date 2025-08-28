@@ -28,6 +28,9 @@ use Illuminate\View\View;
 
 class TopicController extends BaseController {
     public function index(Request $request, Forum $forum, Topic $topic): Collection|View|array {
+        if (!$this->visibleDespiteIncognitoUser($topic)) {
+            abort(404);
+        }
         $this->breadcrumb->push($topic->title, route('forum.topic', [$forum->slug, $topic->id, $topic->slug]),
             leafWithLink:true);
 
@@ -204,5 +207,12 @@ class TopicController extends BaseController {
     public function mark(Topic $topic): void {
         $tracker = Tracker::make($topic);
         $tracker->asRead($topic->last_post_created_at);
+    }
+
+    private function visibleDespiteIncognitoUser(Topic $topic): bool {
+        if ($topic->firstPost->user?->is_incognito) {
+            return auth()->id() === $topic->firstPost->user_id;
+        }
+        return true;
     }
 }

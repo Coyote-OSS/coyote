@@ -7,6 +7,7 @@ use Coyote\Http\Resources\FlagResource;
 use Coyote\Http\Resources\ForumCollection;
 use Coyote\Http\Resources\TopicCollection;
 use Coyote\Repositories\Contracts\UserRepositoryInterface;
+use Coyote\Repositories\Criteria\SkipIncognitoTopicAuthors;
 use Coyote\Repositories\Criteria\Topic\OnlyMine;
 use Coyote\Repositories\Criteria\Topic\OnlyThoseWithAccess;
 use Coyote\Repositories\Criteria\Topic\SkipForum;
@@ -126,6 +127,7 @@ class HomeController extends BaseController {
 
     public function all(): View {
         $this->topic->pushCriteria(new SkipLockedCategories());
+        $this->topic->pushCriteria(new SkipIncognitoTopicAuthors(auth()->id()));
         return $this->loadAndRender();
     }
 
@@ -214,7 +216,7 @@ class HomeController extends BaseController {
         $this->topic->pushCriteria(new OnlyThoseWithAccess($this->auth));
 
         // if someone wants to find all user's topics, we can't hide those from our hidden categories.
-        if (strpos($this->request->route()->getActionName(), '@user') === false) {
+        if (!str_contains($this->request->route()->getActionName(), '@user')) {
             $this->topic->pushCriteria(new SkipForum($this->forum->findHiddenIds($this->userId)));
         }
 

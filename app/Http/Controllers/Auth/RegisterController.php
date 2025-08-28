@@ -4,6 +4,8 @@ namespace Coyote\Http\Controllers\Auth;
 use Carbon\Carbon;
 use Coyote\Actkey;
 use Coyote\Domain\RouteVisits;
+use Coyote\Domain\TempEmail\TempEmailCategory;
+use Coyote\Domain\TempEmail\TempEmailRepository;
 use Coyote\Events\UserSaved;
 use Coyote\Http\Controllers\Controller;
 use Coyote\Http\Forms\Auth\RegisterForm;
@@ -37,9 +39,9 @@ class RegisterController extends Controller {
         ]);
     }
 
-    public function signup(RegisterForm $form): RedirectResponse {
+    public function signup(RegisterForm $form, TempEmailRepository $repository): RedirectResponse {
         $request = $form->getRequest();
-        $this->transaction(function () use ($request) {
+        $this->transaction(function () use ($repository, $request) {
             $user = User::query()->forceCreate([
                 'name'                 => $request->input('name'),
                 'email'                => $request->input('email'),
@@ -48,6 +50,7 @@ class RegisterController extends Controller {
                 'marketing_agreement'  => $request->input('marketing_agreement'),
                 'newsletter_agreement' => true,
                 'allow_smilies'        => true,
+                'is_incognito'         => $this->hasTemporaryMail($request->input('email')),
             ]);
             app(MailQueue::class)
                 ->to($request->input('email'))
@@ -59,5 +62,12 @@ class RegisterController extends Controller {
         return redirect()
             ->to($request->input('refererUrl'))
             ->with('success', 'Konto zostało utworzone. Na podany adres e-mail, przesłany został link aktywacyjny.');
+    }
+
+    private function hasTemporaryMail(string $email): bool {
+        /** @var TempEmailRepository $repository */
+        $repository = app(TempEmailRepository::class);
+        $category = $repository->findCategory($email);
+        return $category === TempEmailCategory::TEMPORARY;
     }
 }
