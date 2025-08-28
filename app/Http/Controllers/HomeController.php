@@ -11,6 +11,7 @@ use Coyote\Repositories\Contracts\ActivityRepositoryInterface as ActivityReposit
 use Coyote\Repositories\Contracts\TopicRepositoryInterface as TopicRepository;
 use Coyote\Repositories\Criteria\Forum\OnlyThoseWithAccess as OnlyThoseForumsWithAccess;
 use Coyote\Repositories\Criteria\Forum\SkipHiddenCategories;
+use Coyote\Repositories\Criteria\SkipIncognitoUsers;
 use Coyote\Repositories\Criteria\Topic\OnlyThoseWithAccess as OnlyThoseTopicsWithAccess;
 use Coyote\Repositories\Eloquent\ReputationRepository;
 use Coyote\Services\Flags;
@@ -77,7 +78,8 @@ class HomeController extends Controller {
     private function getActivities(): array {
         $this->activity->pushCriteria(new OnlyThoseForumsWithAccess($this->auth));
         $this->activity->pushCriteria(new SkipHiddenCategories($this->userId));
-        $result = $this->activity->latest(20);
+        $this->activity->pushCriteria(new SkipIncognitoUsers());
+        $result = $this->activity->latest(25);
         return ActivityResource::collection($result)->toArray($this->request);
     }
 

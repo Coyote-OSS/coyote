@@ -5,21 +5,18 @@ namespace Coyote\Repositories\Eloquent;
 use Coyote\Activity;
 use Coyote\Repositories\Contracts\ActivityRepositoryInterface;
 
-class ActivityRepository extends Repository implements ActivityRepositoryInterface
-{
+class ActivityRepository extends Repository implements ActivityRepositoryInterface {
     /**
      * @return string
      */
-    public function model()
-    {
+    public function model() {
         return Activity::class;
     }
 
     /**
      * @inheritdoc
      */
-    public function latest(int $limit)
-    {
+    public function latest(int $limit) {
         return $this->applyCriteria(function () use ($limit) {
             return $this
                 ->model
@@ -32,7 +29,7 @@ class ActivityRepository extends Repository implements ActivityRepositoryInterfa
                 ->with(['user' => function ($builder) {
                     return $builder->withTrashed();
                 }])
-                ->latest()
+                ->latest('activities.created_at')
                 ->limit($limit)
                 ->get();
         });
