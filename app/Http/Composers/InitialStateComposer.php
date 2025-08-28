@@ -62,18 +62,19 @@ class InitialStateComposer {
         $user = $this->request->user();
         return [
             'user' => [
-                'id'                   => $user->id,
-                'name'                 => $user->name,
-                'date_format'          => $this->mapFormat($user->date_format),
-                'token'                => $this->jwtToken,
-                'notifications_unread' => $user->notifications_unread,
-                'pm_unread'            => $user->pm_unread,
-                'created_at'           => $user->created_at->toIso8601String(),
-                'photo'                => (string)$user->photo->url(),
-                'is_sponsor'           => $user->is_sponsor,
-                'postCommentStyle'     => $user->guest->settings['postCommentStyle'] ?? 'legacy',
-                'initials'             => (new Initials)->of($user->name),
-                'confirmedMail'        => $user->is_confirm,
+                'id'                     => $user->id,
+                'name'                   => $user->name,
+                'date_format'            => $this->mapFormat($user->date_format),
+                'token'                  => $this->jwtToken,
+                'notifications_unread'   => $user->notifications_unread,
+                'pm_unread'              => $user->pm_unread,
+                'created_at'             => $user->created_at->toIso8601String(),
+                'photo'                  => (string)$user->photo->url(),
+                'is_sponsor'             => $user->is_sponsor,
+                'postCommentStyle'       => $user->guest->settings['postCommentStyle'] ?? 'legacy',
+                'initials'               => (new Initials)->of($user->name),
+                'confirmedMail'          => $user->is_confirm,
+                'needsPhoneVerification' => $user->is_incognito && !$user->is_verified,
             ],
         ];
     }

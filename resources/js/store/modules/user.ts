@@ -14,6 +14,7 @@ const getters = {
   follows: state => (userId: number) => state.followers.find(follower => follower.user_id === userId && !follower.is_blocked),
   followers: state => state.followers.find(follower => !follower.is_blocked),
   confirmedMail: state => state.user.confirmedMail,
+  needsPhoneVerification: state => state.user.needsPhoneVerification,
 };
 
 const mutations = {

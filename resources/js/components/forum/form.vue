@@ -53,6 +53,11 @@
         Potwierdź adres e-mail, by odpowiedzieć w wątku.
       </template>
     </div>
+    <div v-if="confirmPrompt && needsPhoneVerification" class="alert alert-warning">
+      <span v-if="showTitleInput">Zweryfikuj swoje konto, by rozpocząć wątek.</span>
+      <span v-else>Zweryfikuj swoje konto, by odpowiedzieć w wątku.</span>
+      <a style="font-weight:bold; text-decoration:underline;" href="/User/Verification">Zweryfikuj.</a>
+    </div>
     <div class="form-group">
       <label class="col-form-label" v-if="is_mode_linear">
         Treść <em>*</em>
@@ -323,7 +328,7 @@ export default {
   computed: {
     ...mapGetters('topics', ['topic', 'is_mode_tree', 'is_mode_linear']),
     ...mapState('poll', ['poll']),
-    ...mapGetters('user', ['confirmedMail']),
+    ...mapGetters('user', ['confirmedMail', 'needsPhoneVerification']),
     ...mapGetters('posts', ['totalPages', 'currentPage']),
     isFirstPost() {
       return !this.topic || this.topic.first_post_id === this.post.id;

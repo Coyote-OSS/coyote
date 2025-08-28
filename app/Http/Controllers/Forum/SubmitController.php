@@ -51,6 +51,9 @@ class SubmitController extends BaseController {
         if (!$user->is_confirm) {
             abort(403, 'Potwierdź adres e-mail, by dodać post lub wątek.');
         }
+        if ($user->is_incognito && !$user->is_verified) {
+            abort(403, 'Zweryfikuj swoje konto, by dodać post lub wątek.');
+        }
         if (!$topic->exists) {
             $topic = $this->topic->makeModel();
             $topic->forum()->associate($forum);
