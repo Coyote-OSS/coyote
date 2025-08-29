@@ -4,7 +4,7 @@
 /** @var $this \Illuminate\Routing\Router */
 $this->group(['namespace' => 'Microblog', 'prefix' => 'Mikroblogi', 'as' => 'microblog.'], function () {
     $this->get('/', ['uses' => 'HomeController@index', 'as' => 'home']);
-    $this->post('Edit/{microblog?}', ['uses' => 'SubmitController@save', 'as' => 'save', 'middleware' => ['auth', 'throttle.submission:1,5']]);
+    $this->post('Edit/{microblog?}', ['uses' => 'SubmitController@save', 'as' => 'save', 'middleware' => ['auth', 'throttle.submission:1,1']]);
     $this->post('Preview', ['uses' => 'SubmitController@preview', 'middleware' => 'auth']);
 
     $this->get('View/{id}', ['uses' => 'HomeController@show', 'as' => 'view']);
@@ -15,7 +15,7 @@ $this->group(['namespace' => 'Microblog', 'prefix' => 'Mikroblogi', 'as' => 'mic
     $this->post('Sponsored/{microblog}', ['uses' => 'SubmitController@toggleSponsored', 'middleware' => 'auth']);
 
     // edycja/publikacja komentarza oraz jego usuniecie
-    $this->post('Comment/{microblog?}', ['uses' => 'CommentController@save', 'as' => 'comment.save', 'middleware' => ['auth', 'throttle.submission:1,5']]);
+    $this->post('Comment/{microblog?}', ['uses' => 'CommentController@save', 'as' => 'comment.save', 'middleware' => ['auth', 'throttle.submission:1,1']]);
     $this->delete('Comment/Delete/{microblog}', ['uses' => 'CommentController@delete', 'as' => 'comment.delete', 'middleware' => 'auth']);
     // pokaz reszte komentarzy...
     $this->get('Comment/Show/{id}', ['uses' => 'CommentController@show', 'as' => 'comment.show']);

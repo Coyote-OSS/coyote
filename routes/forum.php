@@ -34,7 +34,7 @@ $this->group(['namespace' => 'Forum', 'prefix' => 'Forum', 'as' => 'forum.'], fu
     $this->post('{forum}/Submit/{topic}/{post?}', [
         'uses'       => 'SubmitController@save',
         'as'         => 'topic.save',
-        'middleware' => ['topic.access', 'can:access,forum', 'forum.write', 'throttle.submission:1,5'],
+        'middleware' => ['topic.access', 'can:access,forum', 'forum.write', 'throttle.submission:1,1'],
     ]);
 
     // Add new topic
@@ -47,7 +47,7 @@ $this->group(['namespace' => 'Forum', 'prefix' => 'Forum', 'as' => 'forum.'], fu
 
     $this->post('{forum}/Submit/{topic?}', [
         'uses'       => 'SubmitController@save',
-        'middleware' => ['can:access,forum', 'forum.write', 'forum.url', 'throttle.submission:1,5'],
+        'middleware' => ['can:access,forum', 'forum.write', 'forum.url', 'throttle.submission:1,1'],
     ]);
 
     // Change topic's title
@@ -112,7 +112,7 @@ $this->group(['namespace' => 'Forum', 'prefix' => 'Forum', 'as' => 'forum.'], fu
     $this->post('Comment/{comment?}', [
         'uses'       => 'CommentController@save',
         'as'         => 'comment.save',
-        'middleware' => ['auth', 'throttle.submission:1,5'],
+        'middleware' => ['auth', 'throttle.submission:1,1'],
     ]);
 
     $this->delete('Comment/Delete/{comment}', [
