@@ -9,7 +9,7 @@ readonly class UserContent {
         public int $postVotes,
         public int $blogs,
         public int $blogComments,
-        public int $microblogVotes,
+        public int $blogVotes,
         public int $flags,
         public int $privateMessages,
         public int $jobOffers,

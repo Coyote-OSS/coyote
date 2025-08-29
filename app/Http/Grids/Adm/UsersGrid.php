@@ -6,9 +6,11 @@ use Boduch\Grid\Filters\FilterOperator;
 use Boduch\Grid\Filters\Text;
 use Boduch\Grid\GridHelper;
 use Boduch\Grid\Order;
+use Coyote\Domain\Administrator\UserContent\UserContent;
 use Coyote\Domain\Icon\Icons;
 use Coyote\Domain\TempEmail\TempEmailCategory;
 use Coyote\Domain\TempEmail\TempEmailRepository;
+use Coyote\Services\Adm\UserContent\UserContentFactory;
 use Coyote\Services\Grid\Grid;
 use Coyote\User;
 
@@ -44,11 +46,11 @@ class UsersGrid extends Grid {
                 'sortable'   => true,
                 'decorators' => [new FormatDateRelative('nigdy', shortDate:true)],
             ])
+            ->addColumn('Treści', [
+                'clickable' => $this->userContent(...),
+            ])
             ->addColumn('Status', [
                 'clickable' => $this->userStatusHtml(...),
-            ])
-            ->addColumn('reputation', [
-                'title' => 'Reputacja',
             ]);
     }
 
@@ -101,5 +103,52 @@ class UsersGrid extends Grid {
             return 'ShadowBan';
         }
         return '';
+    }
+
+    private function userContent(User $user): string {
+        /** @var UserContentFactory $factory */
+        $factory = app(UserContentFactory::class);
+        return $this->userContentCell(
+            $factory->create($user),
+            $user->reputation);
+    }
+
+    private function userContentCell(UserContent $content, $reputation): string {
+        return \sPrintF('<span title="%s">%s</span>',
+            htmlSpecialChars($this->userContentSummary($content, $reputation)),
+            $this->userContentSum($content));
+    }
+
+    private function userContentSummary(UserContent $content, int $reputation): string {
+        return <<<summary
+            Wątki: $content->topics
+            Posty: $content->posts (+$content->postsDeleted usuniętych)
+            Komentarze: $content->postComments (+$content->postCommentsDeleted usuniętych)
+            Głosy: $content->postVotes
+            Blogi: $content->blogs (+$content->blogsDeleted usuniętych)
+            Komentarze: $content->blogComments (+$content->blogCommentsDeleted usuniętych)
+            Głosy: $content->blogVotes
+            Oferty pracy: $content->jobOffers
+            Raporty: $content->flagsTotal
+            Wiadomości: $content->privateMessages
+            Reputacja: $reputation
+            summary;
+    }
+
+    private function userContentSum(UserContent $content): int {
+        return $content->posts +
+            $content->postsDeleted +
+            $content->postComments +
+            $content->postCommentsDeleted +
+            $content->blogs +
+            $content->blogsDeleted +
+            $content->blogComments +
+            $content->blogCommentsDeleted +
+            $content->postVotes +
+            $content->blogVotes +
+            $content->topics +
+            $content->jobOffers +
+            $content->flagsTotal +
+            $content->privateMessages;
     }
 }
