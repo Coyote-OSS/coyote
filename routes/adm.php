@@ -75,6 +75,7 @@ $this->group(
         $this->post('Users/Save/{user_trashed}', 'UsersController@save');
         $this->get('Users/Inspect/{user_trashed}', 'UsersController@inspect')->name('users.inspect');
         $this->post('Users/{user_trashed}/ContentDelete', 'UsersController@contentDelete')->name('users.contentDelete');
+        $this->post('Users/{user_trashed}/ShadowBan', 'UsersController@shadowBan')->name('users.shadowBan');
 
         $this->get('Firewall', 'FirewallController@index')->name('firewall');
         $this->get('Firewall/Save/{firewall?}', 'FirewallController@edit')->name('firewall.save');

@@ -35,6 +35,11 @@
           {{ session_get('warning') }}
         </div>
       {% endif %}
+      {% if session_has('info') %}
+        <div class="alert alert-info">
+          {{ session_get('info') }}
+        </div>
+      {% endif %}
       <article>
         {% block container %}
           <div class="card">

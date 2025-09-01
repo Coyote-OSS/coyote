@@ -543,6 +543,8 @@ readonly class FontAwesomePro {
             'adminUserStatisticsLastWeek'               => 'fa-light fa-calendar-week',
             'adminUserStatisticsLastYear'               => 'fa-light fa-calendar',
             'adminUserUsersByFingerprint'               => 'fa-light fa-users',
+            'adminShadowBanRevoke'                      => 'fa-light fa-xmark',
+            'adminShadowBanActive'                      => 'fa-light fa-eye-slash',
 
             // footer
             'footerContactUs'                           => 'fa-light fa-circle-info',

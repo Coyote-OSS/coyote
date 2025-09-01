@@ -31,11 +31,6 @@ class AdminForm extends SettingsForm {
                 'label' => 'Potwierdzony adres e-mail',
                 'rules' => 'bool',
             ])
-            ->addAfter('group_id', 'is_incognito', 'checkbox', [
-                'label' => 'Shadow Ban',
-                'help'  => 'Ukryj wszystkie posty użytkownika przed innymi użytkownikami.',
-                'rules' => 'bool',
-            ])
             ->addAfter('group_id', 'is_active', 'checkbox', [
                 'label' => 'Konto aktywne',
                 'rules' => 'bool',

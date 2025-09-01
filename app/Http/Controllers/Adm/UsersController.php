@@ -49,7 +49,7 @@ class UsersController extends BaseController {
         $daysAgo = $this->daysAgo($this->request);
         $store = new UserStore($user, Carbon::now()->subDays($daysAgo));
         return $this->view('adm.users.show', [
-            'userDetails'       => [
+            'userDetails'            => [
                 'email'          => $user->email,
                 'accountCreated' => new Date($user->created_at, Carbon::now()),
                 'lastVisit'      => $user->visited_at
@@ -57,20 +57,24 @@ class UsersController extends BaseController {
                     : null,
                 'isBanned'       => $user->is_blocked,
                 'isIncognito'    => $user->is_incognito,
+                'incognitoSince' => $user->incognito_at
+                    ? new Date($user->incognito_at, Carbon::now())
+                    : null,
                 'isDeleted'      => !$user->is_active,
                 'mailVerified'   => $user->is_confirm,
                 'multiacc'       => $this->userDetailMultiacc($user),
             ],
-            'accountCreated'    => new Date($user->created_at, Carbon::now()),
-            'navigation'        => new Navigation($user->id, $user->name),
-            'activity'          => new Activity(
+            'userShadowBanActionUrl' => route('adm.users.shadowBan', [$user]),
+            'accountCreated'         => new Date($user->created_at, Carbon::now()),
+            'navigation'             => new Navigation($user->id, $user->name),
+            'activity'               => new Activity(
                 $store->postsCategoriesStatistic(),
                 $store->postsCategoriesStatisticLikes(),
                 $store->deleteReasons(),
                 $store->reportReasons(),
                 $store->postStats()),
-            'userContent'       => $service->create($user),
-            'userContentAction' => [
+            'userContent'            => $service->create($user),
+            'userContentAction'      => [
                 'url'       => route('adm.users.contentDelete', [$user]),
                 'canDelete' => $this->canDeleteContent($user),
             ],
@@ -92,6 +96,35 @@ class UsersController extends BaseController {
             new MassDelete($user, $type, $deletedItems));
         return response()->redirectTo(
             route('adm.users.show', [$user]));
+    }
+
+    public function shadowBan(
+        User    $user,
+        Request $request,
+    ): RedirectResponse {
+        $request->validate([
+            'action' => 'in:banShadow,removeBanShadow',
+        ]);
+        return match ($request->get('action')) {
+            'banShadow'       => $this->grantShadowBan($user),
+            'removeBanShadow' => $this->removeShadowBan($user),
+        };
+    }
+
+    private function grantShadowBan(User $user): RedirectResponse {
+        if (!$user->incognito_at) {
+            $user->is_incognito = true;
+            $user->incognito_at = now();
+            $user->save();
+        }
+        return back()->with('success', 'Przyznano shadow-bana użytkownikowi.');
+    }
+
+    private function removeShadowBan(User $user): RedirectResponse {
+        $user->is_incognito = false;
+        $user->incognito_at = null;
+        $user->save();
+        return back()->with('success', 'Odebrano shadow-bana użytkownikowi.');
     }
 
     private function daysAgo(Request $request): int {
@@ -179,4 +212,5 @@ class UsersController extends BaseController {
         }
         return null;
     }
+
 }

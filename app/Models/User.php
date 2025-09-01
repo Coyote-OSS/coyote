@@ -89,6 +89,7 @@ use Ramsey\Uuid\Uuid;
  * @property string|null $gdpr
  * @property bool is_verified
  * @property bool is_incognito
+ * @property Carbon incognito_at
  * @property Guest|null $guest
  * @property TrialSession|null $trialSession
  * @property UserPlanBundle[]|Eloquent\Collection $planBundles
@@ -135,6 +136,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'updated_at'          => 'datetime',
         'visited_at'          => 'datetime',
         'deleted_at'          => 'datetime',
+        'incognito_at'        => 'datetime',
     ];
 
     public static function boot(): void {

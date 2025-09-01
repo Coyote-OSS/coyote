@@ -108,23 +108,65 @@
             </div>
             <small class="text-muted">Nie dotyczy banów na IP ani fingerprint.</small>
           </li>
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between">
-              <span>Shadow-ban:</span>
-              <span>
-                {% if userDetails.isIncognito %}
-                  {{ icon('alertDanger') }}
-                  <b>Zbanowany</b>
-                {% else %}
-                  Brak
-                {% endif %}
-              </span>
-            </div>
-            <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
-          </li>
         </ul>
       </div>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      Shadow-ban dla {{ navigation.mention }}
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between">
+          <div>
+            <div>
+              Status:
+              {% if userDetails.isIncognito %}
+                {{ icon('adminShadowBanActive') }}
+                <b>Zbanowany</b>
+              {% else %}
+                <span class="text-muted">Brak</span>
+              {% endif %}
+            </div>
+            <small class="text-muted">Stan aktualny. Nie dotyczy przeszłych banów.</small>
+          </div>
+          <div>
+            <form method="POST" action="{{ userShadowBanActionUrl }}">
+              <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              {% if userDetails.isIncognito %}
+                <button class="btn btn-sm btn-secondary" type="submit" name="action" value="removeBanShadow">
+                  {{ icon('adminShadowBanRevoke') }}
+                  Odbierz bana
+                </button>
+              {% else %}
+                <button class="btn btn-sm btn-secondary" type="submit" name="action" value="banShadow">
+                  Przyznaj bana
+                </button>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+      </li>
+      {% if userDetails.isIncognito %}
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between">
+            <span>
+              Przyznany:
+              {% if userDetails.incognitoSince %}
+                {{ userDetails.incognitoSince.ago }}
+              {% else %}
+                <span class="text-muted">Brak informacji - ban przyznany przed zapisywaniem daty</span>
+              {% endif %}
+            </span>
+            <span>
+              <span class="text-muted">{{ userDetails.incognitoSince.format }}</span>
+            </span>
+          </div>
+        </li>
+      {% endif %}
+    </ul>
   </div>
 
   <div class="card">
@@ -280,8 +322,8 @@
       </li>
       <li class="list-group-item">
         Napisanych komentarzy pod mikroblogami:
-        <b title="Komentarzy pod mikroblogami (wyłączając usunięte)">{{ userContent.blogComments }}</b> 
-        / 
+        <b title="Komentarzy pod mikroblogami (wyłączając usunięte)">{{ userContent.blogComments }}</b>
+        /
         <b title="Usuniętych komentarzy pod mikroblogami">{{ userContent.blogCommentsDeleted }}</b>
       </li>
       <li class="list-group-item">
