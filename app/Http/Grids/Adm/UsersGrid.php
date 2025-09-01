@@ -13,6 +13,7 @@ use Coyote\Domain\TempEmail\TempEmailRepository;
 use Coyote\Services\Adm\UserContent\UserContentFactory;
 use Coyote\Services\Grid\Grid;
 use Coyote\User;
+use Illuminate\Contracts\Cache;
 
 class UsersGrid extends Grid {
     public function __construct(
@@ -108,9 +109,14 @@ class UsersGrid extends Grid {
     private function userContent(User $user): string {
         /** @var UserContentFactory $factory */
         $factory = app(UserContentFactory::class);
-        return $this->userContentCell(
-            $factory->create($user),
-            $user->reputation);
+        /** @var Cache\Repository $cache */
+        $cache = app(Cache\Repository::class);
+        return $cache->remember(
+            "user-content:$user->id",
+            60 * 10, // 30 minutes
+            fn(): string => $this->userContentCell(
+                $factory->create($user),
+                $user->reputation));
     }
 
     private function userContentCell(UserContent $content, $reputation): string {
