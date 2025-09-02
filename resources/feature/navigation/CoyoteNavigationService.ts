@@ -77,7 +77,7 @@ export class CoyoteNavigationService implements NavigationService {
   }
 
   viewNotifications(): void {
-    this.coyoteApi.markAllNotificationsAsViewed()
+    this.coyoteApi.viewAllNotifications()
       .then(() => this.view.viewNotifications());
   }
 
