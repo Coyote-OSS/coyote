@@ -23,11 +23,10 @@
             style="width:40px; z-index:1;"/>
         </div>
       </div>
-      <div
-        :id="anchor"
-        class="neon-tile neon-rounded card-post flex-grow-1 mb-0"
-        :style="{minWidth:0}"
-        :class="{'is-deleted': hidden, 'not-read': !post.is_read, 'highlight-flash': highlight, 'post-deleted-collapsed': isCollapsed}">
+      <div :id="anchor" class="position-relative" :style="{top:'-'+navigationBarOffset+'px'}"/>
+      <div class="neon-tile neon-rounded card-post flex-grow-1 mb-0"
+           :style="{minWidth:0}"
+           :class="{'is-deleted': hidden, 'not-read': !post.is_read, 'highlight-flash': highlight, 'post-deleted-collapsed': isCollapsed}">
         <div v-if="post.deleted_at"
              @click="toggleDeletedPost"
              class="post-delete card-body text-decoration-none"
@@ -233,6 +232,7 @@
                 <vue-comment
                   v-for="comment in post.comments"
                   :key="comment.id"
+                  :navbar-offset="navigationBarOffset"
                   :comment="comment"/>
                 <vue-comment-form
                   v-show="isCommenting"
@@ -467,6 +467,7 @@ export default {
       treeTopicReplyVisible: false,
       galleryImages: [],
       galleryImageIndex: null as number|null,
+      navigationBarOffset: 92,
     };
   },
   created(): void {

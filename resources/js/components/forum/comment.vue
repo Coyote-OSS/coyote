@@ -1,5 +1,6 @@
 <template>
-  <div :id="anchor" :class="{'highlight-flash': highlight, 'not-read': comment.is_read === false}" class="post-comment">
+  <div :id="anchor" class="position-relative" :style="{top:'-'+$props.navbarOffset+'px'}"/>
+  <div :class="{'highlight-flash': highlight, 'not-read': comment.is_read === false}" class="post-comment">
     <vue-flag v-for="flag in flags" :key="flag.id" :flag="flag"/>
     <div :class="{'comment-delete-border':authorBlocked, 'comment-delete-border--expanded':authorBlocked && blockedExpanded}">
       <div class="comment-delete p-2 cursor-pointer" v-if="authorBlocked" @click="blockedToggle">
@@ -80,6 +81,10 @@ export default {
   props: {
     comment: {
       type: Object,
+      required: true,
+    },
+    navbarOffset: {
+      type: Number,
       required: true,
     },
   },
