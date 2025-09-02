@@ -1,0 +1,11 @@
+{% extends 'adm.base' %}
+{% block title %}ShadowBan {{ parent() }}{% endblock %}
+
+{% block container %}
+  <div class="card">
+    <div class="card-header">
+      Konta użytkowników z przyznanym shadow banem
+    </div>
+    {{ grid(grid) }}
+  </div>
+{% endblock %}
