@@ -229,11 +229,13 @@
                     {{declination(totalComments, ['komentarz', 'komentarze', 'komentarzy'])}}
                   </span>
                 </div>
-                <vue-comment
-                  v-for="comment in post.comments"
-                  :key="comment.id"
-                  :navbar-offset="navigationBarOffset"
-                  :comment="comment"/>
+                <template v-for="comment in post.comments">
+                  <vue-comment
+                    v-if="!is_incognito(comment.user)"
+                    :key="comment.id"
+                    :navbar-offset="navigationBarOffset"
+                    :comment="comment"/>
+                </template>
                 <vue-comment-form
                   v-show="isCommenting"
                   :comment="commentDefault"
@@ -592,7 +594,7 @@ export default {
     ...mapState('topics', ['reasons']),
     ...mapGetters('user', ['isAuthorized']),
     ...mapGetters('posts', ['posts', 'isLinearized']),
-    ...mapGetters('topics', ['topic', 'is_mode_tree', 'is_mode_linear']),
+    ...mapGetters('topics', ['topic', 'is_mode_tree', 'is_mode_linear', 'is_incognito']),
     formatBrowsingDevice(): string {
       const device = this.$props.post.browsingDevice;
       return device.browser + '/' + device.platform + '/' + device.type;

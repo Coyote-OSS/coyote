@@ -21,8 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property User $user
  * @property Carbon $created_at
  */
-class Comment extends Model
-{
+class Comment extends Model {
     use SoftDeletes;
 
     protected $fillable = ['post_id', 'user_id', 'text'];
@@ -32,25 +31,21 @@ class Comment extends Model
 
     private string|null $html = null;
 
-    public function post(): BelongsTo
-    {
+    public function post(): BelongsTo {
         return $this->belongsTo(Post::class)->withTrashed();
     }
 
-    public function user(): BelongsTo
-    {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class)
-            ->select(['id', 'name', 'photo', 'is_blocked', 'is_online', 'deleted_at', 'reputation'])
+            ->select(['id', 'name', 'photo', 'is_blocked', 'is_online', 'deleted_at', 'reputation', 'is_incognito'])
             ->withTrashed();
     }
 
-    public function flags(): MorphToMany
-    {
+    public function flags(): MorphToMany {
         return $this->morphToMany(Flag::class, 'resource', 'flag_resources');
     }
 
-    public function getHtmlAttribute(): string
-    {
+    public function getHtmlAttribute(): string {
         if ($this->html === null) {
             $app = new CommentFactory(app(), $this->user_id);
             $this->html = $app->parse($this->text);
