@@ -11,8 +11,8 @@ class SkipIncognitoUsers extends Criteria {
      * @return Eloquent\Builder
      */
     public function apply($model, RepositoryInterface $repository): Eloquent\Builder {
-        return $model
-            ->leftJoin('users', 'users.id', '=', 'user_id')
-            ->where('users.is_incognito', '=', false);
+        return $model->whereHas(
+            'user',
+            fn(Eloquent\Builder $sub) => $sub->where('is_incognito', false));
     }
 }
