@@ -51,9 +51,9 @@ readonly class CoyoteIntegration implements Integration {
         $this->job->pushCriteria(new EagerLoading(['firm', 'firm.assets', 'locations', 'tags', 'currency']));
         $this->job->pushCriteria(new IncludeSubscribers(auth()->id()));
         return $this->job->listJobOffers(auth()->id(), $includeExpired)
-            ->sortBy('boost_at')
-            ->sortBy('is_on_top')
-            ->sortBy($this->isNew(...))
+            ->sortByDesc('boost_at')
+            ->sortByDesc('is_on_top')
+            ->sortByDesc($this->isNew(...))
             ->sortBy('is_publish')
             ->sortBy($this->userWithIdNot(22))
             ->values()
