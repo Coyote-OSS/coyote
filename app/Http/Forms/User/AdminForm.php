@@ -19,7 +19,7 @@ class AdminForm extends SettingsForm {
         parent::buildForm();
 
         $this
-            ->addAfter('allow_sticky_header', 'delete_photo', 'checkbox', [
+            ->add('delete_photo', 'checkbox', [
                 'label' => 'Usuń zdjęcie',
             ])
             ->add('groups', 'choice', [
@@ -27,22 +27,25 @@ class AdminForm extends SettingsForm {
                 'choices'  => $this->group->pluck('name', 'id'),
                 'property' => 'id',
             ])
-            ->addAfter('group_id', 'is_confirm', 'checkbox', [
+            ->add('is_confirm', 'checkbox', [
                 'label' => 'Potwierdzony adres e-mail',
                 'rules' => 'bool',
             ])
-            ->addAfter('group_id', 'is_active', 'checkbox', [
+            ->add('is_verified', 'checkbox', [
+                'label' => 'Potwierdzony numer telefonu',
+                'rules' => 'bool',
+            ])
+            ->add('is_active', 'checkbox', [
                 'label' => 'Konto aktywne',
                 'rules' => 'bool',
             ])
-            ->addAfter('group_id', 'marketing_agreement', 'checkbox', [
+            ->add('marketing_agreement', 'checkbox', [
                 'label' => 'Zgoda marketingowa',
                 'rules' => 'bool',
             ])
-            ->addAfter('group_id', 'is_sponsor', 'checkbox', [
+            ->add('is_sponsor', 'checkbox', [
                 'label' => 'Sponsor',
                 'rules' => 'bool',
-            ])
-        ;
+            ]);
     }
 }
