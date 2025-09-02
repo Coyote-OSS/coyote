@@ -6,6 +6,7 @@ use Coyote\Events\UserSaved;
 use Coyote\Http\Resources\FlagResource;
 use Coyote\Http\Resources\ForumCollection;
 use Coyote\Http\Resources\TopicCollection;
+use Coyote\Repositories\Criteria\SkipIncognitoTopicAuthors;
 use Coyote\Repositories\Criteria\Topic\BelongsToForum;
 use Coyote\Repositories\Criteria\Topic\StickyGoesFirst;
 use Coyote\Services\Flags;
@@ -15,16 +16,10 @@ use Coyote\Services\Guest;
 use Coyote\Topic;
 use Illuminate\Http\Request;
 
-class CategoryController extends BaseController
-{
-    /**
-     * @param \Coyote\Forum $forum
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index($forum, Request $request)
-    {
+class CategoryController extends BaseController {
+    public function index(\Coyote\Forum $forum, Request $request) {
         $this->pushForumCriteria();
+        $this->topic->pushCriteria(new SkipIncognitoTopicAuthors($this->userId));
 
         $forumList = (new ListDecorator(new Builder($this->forum->list())))->build();
 
@@ -64,14 +59,12 @@ class CategoryController extends BaseController
             ->setGuest($guest)
             ->setRepository($this->topic);
 
-        $collapse = $this->collapse();
-
         return $this->view('forum.category')->with([
             'forumList'    => $forumList,
             'forum'        => $forum,
             'topics'       => $topics,
             'forums'       => $forums,
-            'collapse'     => $collapse,
+            'collapse'     => $this->collapse(),
             'flags'        => $flags,
             'postsPerPage' => $this->postsPerPage($this->request),
         ]);
@@ -80,8 +73,7 @@ class CategoryController extends BaseController
     /**
      * @param \Coyote\Forum $forum
      */
-    public function mark($forum)
-    {
+    public function mark($forum) {
         $forum->markAsRead($this->guestId);
         $this->topic->flushRead($forum->id, $this->guestId);
 
@@ -98,8 +90,7 @@ class CategoryController extends BaseController
      *
      * @param \Coyote\Forum $forum
      */
-    public function collapseSection($forum)
-    {
+    public function collapseSection($forum) {
         $collapse = $this->getSetting('forum.collapse');
         if ($collapse !== null) {
             $collapse = unserialize($collapse);
@@ -113,8 +104,7 @@ class CategoryController extends BaseController
      * @param Request $request
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function setup(Request $request)
-    {
+    public function setup(Request $request) {
         $this->validate($request, ['*.order' => 'required|int', '*.id' => 'required|int']);
 
         $this->pushForumCriteria();
