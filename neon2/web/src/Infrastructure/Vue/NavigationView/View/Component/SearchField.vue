@@ -6,19 +6,26 @@
       class="w-full border border-tile-border rounded-lg p-2 outline-none"
       placeholder="Wyszukaj"
       @update:model-value="search"
-      @focus="suspendEntryPoints(true)"
+      @keyup.up="keyboardCursor(-1)"
+      @keyup.down="keyboardCursor(+1)"
+      @keyup.enter="keyboardSubmit()"
       @keyup.esc="cancelSearch"
+      @focus="suspendEntryPoints(true)"
       @click.stop/>
     <div class="relative" v-if="searchItemsVisible" @click.stop>
-      <div class="absolute top-2 w-full xl:min-w-100 bg-tile p-4 rounded-lg border border-tile-border w-110 space-y-4">
-        <div v-for="(searchItems, type) in searchItemsGroupedByType">
-          <div class="text-neutral2-500 text-sm" v-text="searchItemTypeTitle(type)"/>
+      <div class="absolute top-2 w-full xl:min-w-100 bg-tile p-4 rounded-lg border border-tile-border w-110">
+        <div class="-mt-4"/>
+        <template v-for="(listItem, index) in listItems">
+          <div
+            v-if="listItem.includeType"
+            class="text-neutral2-500 text-sm mt-4"
+            v-text="searchItemTypeTitle(listItem.typeName)"/>
           <a class="block hover:accent whitespace-nowrap truncate py-1 px-2 rounded -mx-2"
-             v-for="searchItem in searchItems"
-             :href="searchItem.contentHref"
+             :class="{'accent': index === keyboardCursorIndex}"
+             :href="listItem.searchItem.contentHref"
              data-testid="searchItem"
-             v-text="searchItem.title"/>
-        </div>
+             v-text="listItem.searchItem.title"/>
+        </template>
       </div>
     </div>
   </div>
@@ -43,6 +50,7 @@ const store = useNavigationStore();
 
 const searchPhrase = ref<string>('');
 const searchInput = ref<HTMLInputElement>();
+const keyboardCursorIndex = ref<number>(-1);
 
 function searchStart(): void {
   suspendEntryPoints(true);
@@ -54,6 +62,7 @@ function searchStart(): void {
 function search(): void {
   service.search(searchPhrase.value);
   searchCloseForced.value = false;
+  keyboardCursorIndex.value = -1;
 }
 
 function suspendEntryPoints(suspended: boolean): void {
@@ -65,13 +74,11 @@ function cancelSearch(): void {
   store.searchItems = [];
   searchPhrase.value = '';
   searchInput.value!.blur();
+  keyboardCursorIndex.value = -1;
 }
 
 const searchCloseForced = ref<boolean>(false);
 const clickOutside = useClickOutside(false);
-const searchHasItems = computed<boolean>(() => {
-  return store.searchItems.length > 0;
-});
 
 onMounted(() => {
   clickOutside.addClickListener(() => {
@@ -80,7 +87,7 @@ onMounted(() => {
 });
 
 const searchItemsVisible = computed<boolean>(() => {
-  return searchHasItems.value && !searchCloseForced.value;
+  return store.searchItems.length > 0 && !searchCloseForced.value;
 });
 
 function searchItemTypeTitle(type: SearchItemType): string {
@@ -93,11 +100,37 @@ function searchItemTypeTitle(type: SearchItemType): string {
   return titles[type];
 }
 
-const searchItemsGroupedByType = computed<GroupedByType>(() => {
-  return Object.groupBy(store.searchItems, searchItem => searchItem.type);
+const listItems = computed<ListItem[]>(() => {
+  const listItems = [];
+  const sections = Object.groupBy(store.searchItems, searchItem => searchItem.type);
+  let lastType: string|null = null;
+  for (const [type, searchItems] of Object.entries(sections)) {
+    for (const searchItem of searchItems) {
+      listItems.push({searchItem, typeName: type, includeType: type !== lastType});
+      lastType = type;
+    }
+  }
+  return listItems;
 });
 
-interface GroupedByType {
-  [type: SearchItemType]: SearchItem[];
+interface ListItem {
+  searchItem: SearchItem;
+  typeName: string;
+  includeType: boolean;
+}
+
+function keyboardCursor(update: number): void {
+  keyboardCursorIndex.value = (keyboardCursorIndex.value + update) % store.searchItems.length;
+  if (keyboardCursorIndex.value < 0) {
+    keyboardCursorIndex.value = store.searchItems.length - 1;
+  }
+}
+
+function keyboardSubmit(): void {
+  const listItem = listItems.value[keyboardCursorIndex.value];
+  if (listItem) {
+    const href = listItem.searchItem.contentHref;
+    window.location.href = href;
+  }
 }
 </script>
