@@ -33,3 +33,32 @@
 .user-deleted {
   @include theme.color(#91969c, #5c6166);
 }
+
+.topic-answer {
+  padding:       3px 5px 3px 2px;
+  font-size:     13px;
+  border-radius: 4px;
+  display:       inline-block;
+
+  &.topic-answer--fixed {
+    @include theme.light {
+      color:      #2358cc;
+      background: #dee8fa;
+    }
+    @include theme.dark {
+      color:      #3a6bd6;
+      background: #152233;
+    }
+  }
+
+  &.topic-answer--answered {
+    @include theme.light {
+      color: #014718;
+      background: #e7f7e6;
+    }
+    @include theme.dark {
+      color: #00a538;
+      background: #001407;
+    }
+  }
+}
