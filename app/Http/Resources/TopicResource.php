@@ -31,12 +31,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property int $replies_real
  * @property boolean $is_tree
  */
-class TopicResource extends JsonResource
-{
+class TopicResource extends JsonResource {
     private ?int $selectedPostId = null;
 
-    public function toArray(Request $request): array
-    {
+    public function toArray(Request $request): array {
         $only = $this->resource->only([
             'id', 'title', 'slug', 'score', 'views', 'is_sticky', 'is_subscribed', 'is_locked',
             'first_post_id', 'last_post_id', 'accepted_id', 'is_voted', 'is_replied',
@@ -67,25 +65,23 @@ class TopicResource extends JsonResource
                 'discuss_mode'              => $this->discussMode(),
                 'treeSelectedSubtree'       => $this->selectedPostId != null,
                 'treeSelectedSubtreePostId' => $this->selectedPostId ?? $this->resource->first_post_id,
+                'customAcceptBadge'         => $this->forum->slug ==='Coyote',
             ],
         );
     }
 
-    public function setSelectedPostId(int $postId): void
-    {
+    public function setSelectedPostId(int $postId): void {
         $this->selectedPostId = $postId;
     }
 
-    private function replies(Request $request): int
-    {
+    private function replies(Request $request): int {
         if ($request->user() && $request->user()->can('delete', $this->forum)) {
             return $this->replies_real;
         }
         return $this->replies;
     }
 
-    private function isSubscribed(Request $request): bool
-    {
+    private function isSubscribed(Request $request): bool {
         if ($this->resource->is_subscribed !== null) {
             return $this->resource->is_subscribed;
         }
@@ -95,8 +91,7 @@ class TopicResource extends JsonResource
         return false;
     }
 
-    private function discussMode(): string
-    {
+    private function discussMode(): string {
         return $this->is_tree ? 'tree' : 'linear';
     }
 }
