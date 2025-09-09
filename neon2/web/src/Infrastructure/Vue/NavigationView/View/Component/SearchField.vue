@@ -131,6 +131,8 @@ function keyboardSubmit(): void {
   if (listItem) {
     const href = listItem.searchItem.contentHref;
     window.location.href = href;
+  } else {
+    window.location.href = '/Search?' + new URLSearchParams({q: searchPhrase.value});
   }
 }
 </script>
