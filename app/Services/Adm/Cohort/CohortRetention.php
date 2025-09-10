@@ -25,7 +25,7 @@ readonly class CohortRetention {
         return \round($percentage, 1) . '%';
     }
 
-    private function cohortSize(): int {
+    public function cohortSize(): int {
         return $this->retention[0];
     }
 }
