@@ -12,11 +12,13 @@ class CohortController {
         $activeByMonths = $this->userStreamActivityByMonth($connection);
         $cohortRetentions = $cohort->retentionGridStats(24, $activeByMonths);
         $last2Years = \array_slice($cohortRetentions, -24);
-        $records = $this->formatCohortRetentions($last2Years);
         return $this->downloadFile(
             "4programmers.cohort.$date.csv",
             'text/csv',
-            $this->recordsToCsvString($records));
+            $this->recordsToCsvString([
+                ['date', 'cohort size'],
+                ...$this->formatCohortRetentions($last2Years),
+            ]));
     }
 
     private function userStreamActivityByMonth(Connection $connection): array {
@@ -60,6 +62,10 @@ class CohortController {
     }
 
     private function formatCohortRetention(CohortRetention $retention): array {
-        return [$retention->date, ...$retention->toFractionRetention()];
+        return [
+            $retention->date,
+            $retention->cohortSize(),
+            ...$retention->toFractionRetention(),
+        ];
     }
 }
