@@ -51,6 +51,9 @@ class DashboardController extends BaseController {
             'jobsCreatedChartWeeks'  => $this->historyChartHtml($jobsCreated, Period::Week),
             'jobsCreatedChartMonths' => $this->historyChartHtml($jobsCreated, Period::Month),
             'jobsCreatedChartYears'  => $this->historyChartHtml($jobsCreated, Period::Year),
+
+            'cohortDownloadUrl'  => route('adm.cohort.download'),
+            'cohortDownloadDate' => date('Y-m-d'),
         ]);
     }
 
