@@ -7,6 +7,7 @@ use Coyote\Domain\Registration\HistoryRange;
 use Coyote\Domain\Registration\JobsCreated;
 use Coyote\Domain\Registration\Period;
 use Coyote\Domain\Registration\PostsCreated;
+use Coyote\Domain\Registration\UserActivity;
 use Coyote\Domain\Registration\UserRegistrations;
 use Coyote\Domain\StringHtml;
 use Coyote\Domain\View\Chart;
@@ -15,7 +16,7 @@ use Illuminate\Redis\RedisManager;
 use Illuminate\View\View;
 
 class DashboardController extends BaseController {
-    public function index(UserRegistrations $userRegistrations, PostsCreated $postCreated, JobScreated $jobsCreated): View {
+    public function index(UserRegistrations $userRegistrations, PostsCreated $postCreated, JobScreated $jobsCreated,UserActivity $activity): View {
         return $this->view('adm.dashboard', [
             'checklist' => [
                 $this->directoryWritable('storage/', \storage_path()),
@@ -52,6 +53,11 @@ class DashboardController extends BaseController {
             'jobsCreatedChartMonths' => $this->historyChartHtml($jobsCreated, Period::Month),
             'jobsCreatedChartYears'  => $this->historyChartHtml($jobsCreated, Period::Year),
 
+            'activityChartDays'  => $this->historyChartHtml($activity, Period::Day),
+            'activityChartWeeks'  => $this->historyChartHtml($activity, Period::Week),
+            'activityChartMonths' => $this->historyChartHtml($activity, Period::Month),
+            'activityChartYears'  => $this->historyChartHtml($activity, Period::Year),
+            
             'cohortDownloadUrl'  => route('adm.cohort.download'),
             'cohortDownloadDate' => date('Y-m-d'),
         ]);
