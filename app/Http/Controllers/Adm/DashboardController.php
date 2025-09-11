@@ -11,12 +11,18 @@ use Coyote\Domain\Registration\UserActivity;
 use Coyote\Domain\Registration\UserRegistrations;
 use Coyote\Domain\StringHtml;
 use Coyote\Domain\View\Chart;
+use Coyote\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Redis\RedisManager;
 use Illuminate\View\View;
 
 class DashboardController extends BaseController {
-    public function index(UserRegistrations $userRegistrations, PostsCreated $postCreated, JobScreated $jobsCreated,UserActivity $activity): View {
+    public function index(
+        UserRegistrations $userRegistrations,
+        PostsCreated      $postCreated,
+        JobScreated       $jobsCreated,
+        UserActivity      $activity,
+    ): View {
         return $this->view('adm.dashboard', [
             'checklist' => [
                 $this->directoryWritable('storage/', \storage_path()),
@@ -53,11 +59,12 @@ class DashboardController extends BaseController {
             'jobsCreatedChartMonths' => $this->historyChartHtml($jobsCreated, Period::Month),
             'jobsCreatedChartYears'  => $this->historyChartHtml($jobsCreated, Period::Year),
 
-            'activityChartDays'  => $this->historyChartHtml($activity, Period::Day),
+            'activityChartDays'   => $this->historyChartHtml($activity, Period::Day),
             'activityChartWeeks'  => $this->historyChartHtml($activity, Period::Week),
             'activityChartMonths' => $this->historyChartHtml($activity, Period::Month),
             'activityChartYears'  => $this->historyChartHtml($activity, Period::Year),
-            
+
+            'cohortCanAccess'    => $this->user()->can('adm-payment'),
             'cohortDownloadUrl'  => route('adm.cohort.download'),
             'cohortDownloadDate' => date('Y-m-d'),
         ]);
@@ -105,5 +112,11 @@ class DashboardController extends BaseController {
         $redis = app('redis');
         $clientsInfo = $redis->command('info', ['clients']);
         return $clientsInfo['connected_clients'] ?? null;
+    }
+
+    private function user(): User {
+        /** @var User $user */
+        $user = auth()->user();
+        return $user;
     }
 }

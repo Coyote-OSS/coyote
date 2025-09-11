@@ -3,11 +3,15 @@ namespace Coyote\Http\Controllers\Adm;
 
 use Coyote\Services\Adm\Cohort\CohortRetention;
 use Coyote\Services\Adm\Cohort\CohortService;
+use Coyote\User;
 use Illuminate\Database\Connection;
 use Illuminate\Http\Response;
 
 class CohortController {
     public function download(CohortService $cohort, Connection $connection): Response {
+        if (!$this->user()->can('adm-payment')) {
+            abort(403);
+        }
         $date = date('Y-m-d');
         $activeByMonths = $this->userStreamActivityByMonth($connection);
         $cohortRetentions = $cohort->retentionGridStats(24, $activeByMonths);
@@ -67,5 +71,11 @@ class CohortController {
             $retention->cohortSize(),
             ...$retention->toFractionRetention(),
         ];
+    }
+
+    private function user(): User {
+        /** @var User $user */
+        $user = auth()->user();
+        return $user;
     }
 }

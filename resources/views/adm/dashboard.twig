@@ -17,23 +17,25 @@
       {% endfor %}
     </ul>
   </div>
-  <div class="card">
-    <div class="card-header">Analiza kohortowa</div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">
-        <div class="d-flex justify-content-between align-items-center">
-          <span>
-            {{ icon('adminTickMark') }}
-            <span>Dane cohortowe z: <code>{{ cohortDownloadDate }}</code></span>
-          </span>
-          <a href="{{ cohortDownloadUrl }}" class="btn btn-sm btn-secondary" target="_blank">
-            Pobierz
-          </a>
-        </div>
-      </li>
-    </ul>
-  </div>
 
+  {% if cohortCanAccess %}
+    <div class="card">
+      <div class="card-header">Analiza kohortowa</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>
+              {{ icon('adminTickMark') }}
+              <span>Dane cohortowe z: <code>{{ cohortDownloadDate }}</code></span>
+            </span>
+            <a href="{{ cohortDownloadUrl }}" class="btn btn-sm btn-secondary" target="_blank">
+              Pobierz
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  {% endif %}
 
   <ul class="nav nav-pills mb-3 justify-content-end">
     <li class="nav-item" role="presentation">
