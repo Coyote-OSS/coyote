@@ -8,6 +8,12 @@ use Coyote\Domain\Administrator\User\View\Activity;
 use Coyote\Domain\Administrator\User\View\Navigation;
 use Coyote\Domain\Administrator\View\Date;
 use Coyote\Domain\Administrator\View\Mention;
+use Coyote\Domain\Registration\ChartSource;
+use Coyote\Domain\Registration\HistoryRange;
+use Coyote\Domain\Registration\Period;
+use Coyote\Domain\Registration\SingleUserActivity;
+use Coyote\Domain\StringHtml;
+use Coyote\Domain\View\Chart;
 use Coyote\Events\UserDeleted;
 use Coyote\Events\UserSaved;
 use Coyote\Http\Forms\User\AdminForm;
@@ -44,10 +50,14 @@ class UsersController extends BaseController {
         return $this->view('adm.users.home', ['grid' => $grid]);
     }
 
-    public function show(User $user, UserContentFactory $service): View {
+    public function show(
+        User               $user,
+        UserContentFactory $service,
+    ): View {
         $this->breadcrumb->push("@$user->name", route('adm.users.show', [$user->id]));
         $daysAgo = $this->daysAgo($this->request);
         $store = new UserStore($user, Carbon::now()->subDays($daysAgo));
+        $activity = new SingleUserActivity($user);
         return $this->view('adm.users.show', [
             'userDetails'            => [
                 'email'          => $user->email,
@@ -78,7 +88,41 @@ class UsersController extends BaseController {
                 'url'       => route('adm.users.contentDelete', [$user]),
                 'canDelete' => $this->canDeleteContent($user),
             ],
+
+            'activityChartDays'   => $this->historyChartHtml($activity, Period::Day),
+            'activityChartWeeks'  => $this->historyChartHtml($activity, Period::Week),
+            'activityChartMonths' => $this->historyChartHtml($activity, Period::Month),
+            'activityChartYears'  => $this->historyChartHtml($activity, Period::Year),
         ]);
+    }
+
+    private function historyChartHtml(ChartSource $source, Period $period): StringHtml {
+        return new StringHtml($this->view('adm.registrations-chart', [
+            'chart'              => $this->registrationsChart($source, $period),
+            'chartLibrarySource' => Chart::librarySourceHtml(),
+            'title'              => $source->title(),
+        ]));
+    }
+
+    private function registrationsChart(ChartSource $source, Period $period): Chart {
+        $range = new HistoryRange($this->dateNow(), $period, 30);
+        return $this->chart(
+            "$period->name.{$source->id()}",
+            $source->inRange($range),
+        );
+    }
+
+    private function dateNow(): string {
+        return Carbon::now()->toDateString();
+    }
+
+    private function chart(string $chartId, array $registeredUsers): Chart {
+        return new Chart(
+            \array_keys($registeredUsers),
+            \array_values($registeredUsers),
+            ['#ff9f40'],
+            "registration-history-chart-$chartId",
+        );
     }
 
     public function contentDelete(

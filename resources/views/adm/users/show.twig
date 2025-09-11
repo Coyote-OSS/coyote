@@ -169,6 +169,35 @@
     </ul>
   </div>
 
+  <ul class="nav nav-pills mb-3 justify-content-end">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#pills-days-activity" type="button">ostatnie 30 dni</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-weeks-activity" type="button">ostatnie 30 tygodni</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-months-activity" type="button">ostatnie 30 miesięcy</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-years-activity" type="button">ostatnie 30 lat</button>
+    </li>
+  </ul>
+  <div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane show active" id="pills-days-activity">
+      {{ activityChartDays }}
+    </div>
+    <div class="tab-pane" id="pills-weeks-activity">
+      {{ activityChartWeeks }}
+    </div>
+    <div class="tab-pane" id="pills-months-activity">
+      {{ activityChartMonths }}
+    </div>
+    <div class="tab-pane" id="pills-years-activity">
+      {{ activityChartYears }}
+    </div>
+  </div>
+  
   <div class="card">
     <div class="card-header">
       {{ icon('adminUserStatistics') }}
