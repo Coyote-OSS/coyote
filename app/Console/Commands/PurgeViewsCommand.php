@@ -1,13 +1,13 @@
 <?php
-
 namespace Coyote\Console\Commands;
 
+use Carbon\Carbon;
 use Coyote\Repositories\Contracts\PageRepositoryInterface as PageRepository;
 use Illuminate\Console\Command;
 use Illuminate\Database\Connection as Db;
+use Illuminate\Support;
 
-class PurgeViewsCommand extends Command
-{
+class PurgeViewsCommand extends Command {
     /**
      * The name and signature of the console command.
      *
@@ -41,8 +41,7 @@ class PurgeViewsCommand extends Command
      * @param Db $db
      * @param PageRepository $page
      */
-    public function __construct(Db $db, PageRepository $page)
-    {
+    public function __construct(Db $db, PageRepository $page) {
         parent::__construct();
 
         $this->db = $db;
@@ -53,8 +52,7 @@ class PurgeViewsCommand extends Command
     /**
      * @throws \Exception
      */
-    public function handle()
-    {
+    public function handle() {
         // get hits as serialized arrays
         $keys = $this->redis->smembers('hits');
 
@@ -66,6 +64,8 @@ class PurgeViewsCommand extends Command
         $pages = collect(array_map('unserialize', $keys))->groupBy('path');
 
         foreach ($pages as $path => $hits) {
+            $this->saveUrlVisit($hits);
+
             /** @var \Coyote\Page $page */
             $page = $this->page->findByPath('/' . $path);
 
@@ -80,8 +80,7 @@ class PurgeViewsCommand extends Command
      * @param \Illuminate\Support\Collection $hits
      * @throws \Exception
      */
-    private function commit($page, $hits)
-    {
+    private function commit($page, $hits) {
         $keys = array_map('serialize', $hits->toArray());
 
         foreach ($keys as $key) {
@@ -100,16 +99,9 @@ class PurgeViewsCommand extends Command
 
         try {
             $this->db->beginTransaction();
-
             $content->timestamps = false;
             $content->increment('views', count($hits));
-
-            //tymczasowo wylaczone
-//            $this->registerVisit($page, $hits);
-//            $this->registerTags($page, $hits);
-
             $this->db->commit();
-
             $this->info('Added ' . count($hits) . ' views to: ' . $page->path);
         } catch (\Exception $e) {
             $this->db->rollBack();
@@ -118,54 +110,13 @@ class PurgeViewsCommand extends Command
         }
     }
 
-//    /**
-//     * @param \Coyote\Page $page
-//     * @param \Illuminate\Support\Collection $hits
-//     */
-//    private function registerVisit($page, $hits)
-//    {
-//        foreach ($hits as $hit) {
-//            if ($hit['user_id']) {
-//                /** @var \Coyote\Page\Visit $visits */
-//                $visits = $page->visits()->firstOrNew(['user_id' => $hit['user_id']]);
-//                $visits->visits++;
-//
-//                $visits->save();
-//            }
-//
-//            /** @var \Coyote\Page\Stat $stats */
-//            $stats = $page->stats()->firstOrNew(['date' => date('Y-m-d')]);
-//            $stats->visits++;
-//
-//            $stats->save();
-//        }
-//    }
-//
-//    /**
-//     * @param \Coyote\Page $page
-//     * @param \Illuminate\Support\Collection $hits
-//     */
-//    private function registerTags($page, $hits)
-//    {
-//        if (empty($page->tags)) {
-//            return;
-//        }
-//
-//        foreach ($hits as $hit) {
-//            /** @var \Coyote\Guest $guest */
-//            $guest = $this->guest->findOrNew($hit['guest_id']);
-//
-//            if (!$guest->exists) {
-//                $guest->id = $hit['guest_id'];
-//                $guest->created_at = $guest->updated_at = Carbon::now();
-//            }
-//
-//            $calculator = new Calculator($guest->interests);
-//            $calculator->increment($page->tags);
-//
-//            $guest->interests = $calculator->toArray();
-//
-//            $guest->save();
-//        }
-//    }
+    private function saveUrlVisit(Support\Collection $hits): void {
+        $batchInsert = $hits
+            ->map(fn(array $hit): array => [
+                'url'        => $hit['path'],
+                'created_at' => new Carbon($hit['timestamp']),
+            ])
+            ->toArray();
+        $this->db->table('url_visits')->insert($batchInsert);
+    }
 }
