@@ -113,7 +113,7 @@ class UsersGrid extends Grid {
         $cache = app(Cache\Repository::class);
         return $cache->remember(
             "user-content:$user->id",
-            60 * 10, // 30 minutes
+            60 * 60 * 24,
             fn(): string => $this->userContentCell(
                 $factory->create($user),
                 $user->reputation));
