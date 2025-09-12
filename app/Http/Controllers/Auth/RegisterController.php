@@ -42,6 +42,7 @@ class RegisterController extends Controller {
     public function signup(RegisterForm $form, TempEmailRepository $repository): RedirectResponse {
         $request = $form->getRequest();
         $this->transaction(function () use ($repository, $request) {
+            $isIncognito = $this->hasTemporaryMail($request->input('email'));
             $user = User::query()->forceCreate([
                 'name'                 => $request->input('name'),
                 'email'                => $request->input('email'),
@@ -50,7 +51,8 @@ class RegisterController extends Controller {
                 'marketing_agreement'  => $request->input('marketing_agreement'),
                 'newsletter_agreement' => true,
                 'allow_smilies'        => true,
-                'is_incognito'         => $this->hasTemporaryMail($request->input('email')),
+                'is_incognito'         => $isIncognito,
+                'incognito_at'         => $isIncognito ? now() : null,
             ]);
             app(MailQueue::class)
                 ->to($request->input('email'))
