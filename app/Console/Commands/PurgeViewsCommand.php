@@ -113,7 +113,7 @@ class PurgeViewsCommand extends Command {
     private function saveUrlVisit(Support\Collection $hits): void {
         $batchInsert = $hits
             ->map(fn(array $hit): array => [
-                'url'        => $hit['path'],
+                'url'        => \mb_subStr($hit['path'], 0, 255),
                 'created_at' => new Carbon($hit['timestamp']),
             ])
             ->toArray();
