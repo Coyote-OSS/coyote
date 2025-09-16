@@ -24,7 +24,9 @@ class NavigationUserNotificationPresenter {
                 route('user.notifications.url', [$notification['id']]),
                 $notification['photo'] ?: null,
                 $notification['initials'],
-                \route('profile', [$notification['user_id']]),
+                $notification['user_id'] === null
+                    ? '' // Some notification resources don't provide user id, due to a bug, (e.g. application for a job offer)
+                    : \route('profile', [$notification['user_id']]),
             );
         }
         return $result;
