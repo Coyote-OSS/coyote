@@ -7,8 +7,8 @@ use Coyote\Domain\Registration\HistoryRange;
 use Coyote\Domain\Registration\JobsCreated;
 use Coyote\Domain\Registration\Period;
 use Coyote\Domain\Registration\PostsCreated;
-use Coyote\Domain\Registration\UserRegistrations;
 use Coyote\Domain\Registration\UserActivity;
+use Coyote\Domain\Registration\UserRegistrations;
 use Coyote\Domain\StringHtml;
 use Coyote\Domain\View\Chart;
 use Coyote\User;
@@ -64,9 +64,15 @@ class DashboardController extends BaseController {
             'activityChartMonths' => $this->historyChartHtml($activity, Period::Month),
             'activityChartYears'  => $this->historyChartHtml($activity, Period::Year),
 
-            'cohortCanAccess'    => $this->user()->can('adm-payment'),
-            'cohortDownloadUrl'  => route('adm.cohort.download'),
-            'cohortDownloadDate' => date('Y-m-d'),
+            'cohortCanAccess' => $this->user()->can('adm-payment'),
+            'cohortByStream'  => [
+                'downloadUrl'  => route('adm.cohort.download', ['by' => 'stream']),
+                'downloadDate' => date('Y-m-d'),
+            ],
+            'cohortByView'    => [
+                'downloadUrl'  => route('adm.cohort.download', ['by' => 'view']),
+                'downloadDate' => date('Y-m-d'),
+            ],
         ]);
     }
 
