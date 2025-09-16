@@ -13,8 +13,9 @@ class CohortController {
             abort(403);
         }
         $date = date('Y-m-d');
-        $activeByMonths = $this->userStreamActivityByMonth($connection);
-        $cohortRetentions = $cohort->retentionGridStats(24, $activeByMonths);
+        $cohortRetentions = $cohort->retentionGridStats(
+            24,
+            $this->userActivityByMonth($connection));
         $last2Years = \array_slice($cohortRetentions, -24);
         return $this->downloadFile(
             "4programmers.cohort.$date.csv",
@@ -23,6 +24,22 @@ class CohortController {
                 ['date', 'cohort size'],
                 ...$this->formatCohortRetentions($last2Years),
             ]));
+    }
+
+    private function cohortActivitySource(): string {
+        $by = request()->query('by');
+        if (\in_array($by, ['view', 'stream'])) {
+            return $by;
+        }
+        abort(400);
+    }
+
+    private function userActivityByMonth(Connection $connection): array {
+        $query = $this->cohortActivitySource();
+        if ($query === 'stream') {
+            return $this->userStreamActivityByMonth($connection);
+        }
+        return [];
     }
 
     private function userStreamActivityByMonth(Connection $connection): array {

@@ -26,9 +26,20 @@
           <div class="d-flex justify-content-between align-items-center">
             <span>
               {{ icon('adminTickMark') }}
-              <span>Dane cohortowe z: <code>{{ cohortDownloadDate }}</code></span>
+              <span>Dane kohortowe z: <code>{{ cohortByStream.downloadDate }}</code> (na podstawie dziennika zdarzeń)</span>
             </span>
-            <a href="{{ cohortDownloadUrl }}" class="btn btn-sm btn-secondary" target="_blank">
+            <a href="{{ cohortByStream.downloadUrl }}" class="btn btn-sm btn-secondary" target="_blank">
+              Pobierz
+            </a>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>
+              {{ icon('adminTickMark') }}
+              <span>Dane kohortowe z: <code>{{ cohortByView.downloadDate }}</code> (na podstawie wyświetleń podstron)</span>
+            </span>
+            <a href="{{ cohortByView.downloadUrl }}" class="btn btn-sm btn-secondary" target="_blank">
               Pobierz
             </a>
           </div>
