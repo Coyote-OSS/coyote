@@ -12,11 +12,11 @@ export interface PlanCard {
   color: PricingCardColor;
 }
 
-export type PricingCardColor = 'yellow'|'blue'|'violet'|'green'|'phantom';
+export type PricingCardColor = 'gray'|'yellow'|'blue'|'violet'|'green'|'phantom';
 
 export const offerPlans: PlanCard[] = [
-  {name: 'free', title: 'Free*', price: 0, expiresIn: 14, bundleSize: 1, free: true, color: 'yellow'},
-  {name: 'premium', title: 'Premium', price: 159, expiresIn: 30, bundleSize: 1, color: 'blue'},
+  {name: 'free', title: 'Free*', price: 0, expiresIn: 14, bundleSize: 1, free: true, color: 'gray'},
+  {name: 'premium', title: 'Premium', price: 159, expiresIn: 30, bundleSize: 1, color: 'yellow'},
 ];
 
 export const bundlePlans: PlanCard[] = [
