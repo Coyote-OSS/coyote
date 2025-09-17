@@ -2,7 +2,7 @@
   <div class="bg-tile rounded-xl flex-grow-1 basis-1 flex flex-col gap-2" :class="{'p-2': !isPhantom}">
     <div class="flex-grow-1 flex flex-col"
          :class="isPhantom ? 'rounded-xl' : 'rounded-lg'"
-         :style="{background: colorSet.weak}">
+         :style="{background: colorSet.backgroundCss}">
       <div class="flex-grow-1 space-y-3" :class="isPhantom ? 'p-6' : 'p-4'">
         <div class="flex items-center gap-2">
           <JobOfferPricingCardIcon :plan="props.plan" :phantom="isPhantom"/>
@@ -69,11 +69,36 @@ interface Emit {
 export type PlanContent = 'restricted'|'full'|'premium-summary';
 
 const colorSets: Record<PricingCardColor, ColorSet> = {
-  yellow: {weak: '#f7f5e6', medium: '#dbd7bb', strong: '#3d3709'},
-  blue: {weak: '#eff5ff', medium: '#dbeafe', strong: '#2563eb'},
-  violet: {weak: '#ebe8fc', medium: '#cac5e9', strong: '#3620c2'},
-  green: {weak: '#e7f7e6', medium: '#d5f0d3', strong: '#028d30'},
-  phantom: {weak: 'var(--color-neutral2-025)', medium: 'transparent', strong: 'var(--color-neutral2-950)'},
+  gray: {
+    backgroundCss: 'linear-gradient(150deg, #ebeced, rgba(235, 236, 237, 0.24))',
+    medium: '#c7c9cc',
+    strong: '#2b2e30',
+  },
+  yellow: {
+    backgroundCss: 'linear-gradient(150deg, #f3f0d6, rgba(243, 240, 214, 0.24))',
+    medium: '#dbd7bb',
+    strong: '#3d3709',
+  },
+  blue: {
+    backgroundCss: 'linear-gradient(150deg, #dce7f9, rgba(239, 245, 255, 0.35))',
+    medium: '#dbeafe',
+    strong: '#2563eb',
+  },
+  violet: {
+    backgroundCss: 'linear-gradient(150deg, #e6e2fd, rgba(235, 232, 252, 0.35))',
+    medium: '#cac5e9',
+    strong: '#3620c2',
+  },
+  green: {
+    backgroundCss: 'linear-gradient(150deg, #dcf9db, rgba(231, 247, 230, 0.35))',
+    medium: '#d5f0d3',
+    strong: '#028d30',
+  },
+  phantom: {
+    backgroundCss: 'linear-gradient(150deg, rgba(214, 222, 231, 0.24), #d2e0e7)',
+    medium: 'transparent',
+    strong: 'var(--color-neutral2-950)',
+  },
 };
 
 const dividerClass = computed(() => {
