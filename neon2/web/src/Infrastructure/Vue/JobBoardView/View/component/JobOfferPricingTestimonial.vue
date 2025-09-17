@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-center text-neutral2-500 text-lg mb-6">
-      Pomogliśmy z sukcesami między innymi takim firmom jak:
+      <b>Pomogliśmy</b> z sukcesami między innymi takim firmom jak:
     </p>
     <div class="grid grid-cols-3 lg:grid-cols-5">
       <img
