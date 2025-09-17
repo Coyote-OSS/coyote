@@ -13,14 +13,22 @@
           {{publishedOffersTitle}}
         </p>
         <hr :class="dividerClass">
-        <b class="text-4xl font-semibold" :style="{color: colorSet.strong}" v-text="props.price"/>
-        <p class="text-sm">
-          za ogłoszenie publikowane <b>{{props.expiresIn}}</b>
-        </p>
-        <p v-if="props.bundlePrice" class="text-sm">
-          <b class="text-lg font-medium" :style="{color: colorSet.strong}" v-text="props.bundlePrice"/>
-          koszt całego pakietu
-        </p>
+        <template v-if="props.bundlePrice">
+          <b class="text-4xl font-semibold" :style="{color: colorSet.strong}" v-text="props.bundlePrice"/>
+          <p class="text-sm">
+            koszt całego pakietu
+          </p>
+          <p class="text-sm">
+            <b class="text-lg font-medium" :style="{color: colorSet.strong}" v-text="props.price"/>
+            za ogłoszenie na <b>{{props.expiresIn}}</b>
+          </p>
+        </template>
+        <template v-else>
+          <b class="text-4xl font-semibold" :style="{color: colorSet.strong}" v-text="props.price"/>
+          <p class="text-sm">
+            za ogłoszenie publikowane <b>{{props.expiresIn}}</b>
+          </p>
+        </template>
         <hr :class="dividerClass">
         <JobOfferPricingCardList :content="props.content" :color-set="colorSet"/>
       </div>
