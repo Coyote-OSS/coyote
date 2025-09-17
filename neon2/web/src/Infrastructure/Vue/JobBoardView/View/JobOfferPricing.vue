@@ -46,7 +46,7 @@ import JobOfferPricingTestimonial from "./component/JobOfferPricingTestimonial.v
 import {useJobBoardService} from "./vue";
 
 const service = useJobBoardService();
-const pricingTab = ref<PricingTab>('offers');
+const pricingTab = ref<PricingTab>('bundles');
 
 function buttonTitle(plan: PlanCard): string {
   const titles: Record<PricingPlan, string> = {
