@@ -1,5 +1,8 @@
 <template>
-  <p class="text-center text-neutral2-500 text-lg mb-6 mt-12">
+  <h1 class="text-2xl leading-6 font-semibold text-center mt-6">
+    Znajdź najlepszych programistów szybciej i skuteczniej!
+  </h1>
+  <p class="text-center text-neutral2-500 text-lg mb-6 mt-3">
     4programmers każdego miesiąca odwiedza ponad <b>150 000+</b> programistów.
   </p>
   <div class="flex justify-center gap-2">

@@ -4,10 +4,7 @@
       <NavigationTopbar/>
       <template v-if="!navigationStore.$state.navigationMainContentSuspended">
         <div class="pt-3 px-2 max-w-264 mx-auto space-y-3">
-          <Design.BannerHeading
-            :pricing="store.screen === 'pricing'"
-            :back="showHomeLink"
-            @back="navigateHome"/>
+          <Design.BannerHeading @back="navigateHome"/>
           <Design.Toast
             v-if="toastTitle"
             :title="toastTitle"/>
@@ -51,8 +48,6 @@ const navigationStore = useNavigationStore();
 function navigateHome(): void {
   service.navigate('home', null);
 }
-
-const showHomeLink = computed<boolean>(() => store.screen !== 'home');
 
 const toastTitle = computed<string|null>(() => {
   if (store.toast === null) {
