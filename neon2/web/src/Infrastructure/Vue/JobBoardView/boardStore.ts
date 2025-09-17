@@ -13,7 +13,6 @@ export const useBoardStore = defineStore('jobBoard', {
     return {
       // layout
       toast: null,
-      screen: 'home',
       paymentNotification: null,
       paymentStatus: null,
 
