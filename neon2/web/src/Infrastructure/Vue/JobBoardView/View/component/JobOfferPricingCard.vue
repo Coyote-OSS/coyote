@@ -1,8 +1,9 @@
 <template>
   <div class="bg-tile rounded-xl flex-grow-1 basis-1 flex flex-col gap-2" :class="{'p-2': !isPhantom}">
-    <div class="flex-grow-1 flex flex-col"
-         :class="isPhantom ? 'rounded-xl' : 'rounded-lg'"
-         :style="{background: colorSet.backgroundCss}">
+    <div class="flex-grow-1 flex flex-col" :class="[
+         isPhantom ? 'rounded-xl' : 'rounded-lg',
+         'bg-linear-150', colorSet.backgroundCssClass
+       ]">
       <div class="flex-grow-1 space-y-3" :class="isPhantom ? 'p-6' : 'p-4'">
         <div class="flex items-center gap-2">
           <JobOfferPricingCardIcon :plan="props.plan" :phantom="isPhantom"/>
@@ -14,17 +15,17 @@
         </p>
         <hr :class="dividerClass">
         <template v-if="props.bundlePrice">
-          <b class="text-4xl font-semibold" :style="{color: colorSet.strong}" v-text="props.bundlePrice"/>
+          <b :class="['text-4xl font-semibold', colorSet.strongCssClass]" v-text="props.bundlePrice"/>
           <p class="text-sm">
             koszt całego pakietu
           </p>
           <p class="text-sm">
-            <b class="text-lg font-medium" :style="{color: colorSet.strong}" v-text="props.price"/>
+            <b :class="['text-lg font-medium', colorSet.strongCssClass]" v-text="props.price"/>
             za ogłoszenie na <b>{{props.expiresIn}}</b>
           </p>
         </template>
         <template v-else>
-          <b class="text-4xl font-semibold" :style="{color: colorSet.strong}" v-text="props.price"/>
+          <b :class="['text-4xl font-semibold', colorSet.strongCssClass]" v-text="props.price"/>
           <p class="text-sm">
             za ogłoszenie publikowane <b>{{props.expiresIn}}</b>
           </p>
@@ -34,8 +35,7 @@
       </div>
       <div
         v-if="props.bundleDiscount"
-        :style="{background: colorSet.medium, color: colorSet.strong}"
-        class="p-4 rounded-b-xl text-sm text-center">
+        :class="['p-4 rounded-b-xl text-sm text-center', colorSet.mediumCssClass, colorSet.strongCssClass]">
         Kup pakiet i zaoszczędź <b v-text="props.bundleDiscount"/>
       </div>
     </div>
@@ -78,34 +78,39 @@ export type PlanContent = 'restricted'|'full'|'premium-summary';
 
 const colorSets: Record<PricingCardColor, ColorSet> = {
   gray: {
-    backgroundCss: 'linear-gradient(150deg, #ebeced, rgba(235, 236, 237, 0.24))',
-    medium: '#c7c9cc',
+    backgroundCssClass: 'from-[#ebeced] to-[#ebeced40] dark:from-[#3741514d] dark:to-[#00000033]',
+    mediumCssClass: 'bg-[#c7c9cc] dark:bg-[#ffffff1a]',
+    strongCssClass: 'text-[#2b2e30] dark:text-white',
     strong: '#2b2e30',
   },
   yellow: {
-    backgroundCss: 'linear-gradient(150deg, #f3f0d6, rgba(243, 240, 214, 0.24))',
-    medium: '#dbd7bb',
+    backgroundCssClass: 'from-[#f3f0d6] to-[#f3f0d640] dark:from-[#fbbf241a] dark:to-[#00000033]',
+    mediumCssClass: 'bg-[#dbd7bb] dark:bg-[#fbbf2433]',
+    strongCssClass: 'text-[#3d3709] dark:text-white',
     strong: '#3d3709',
   },
   blue: {
-    backgroundCss: 'linear-gradient(150deg, #dce7f9, rgba(239, 245, 255, 0.35))',
-    medium: '#dbeafe',
+    backgroundCssClass: 'from-[#dce7f9] to-[#eff5ff59] dark:from-[#3b82f61a] dark:to-[#00000033]',
+    mediumCssClass: 'bg-[#dbeafe] dark:bg-[#3b82f633]',
+    strongCssClass: 'text-[#2563eb] dark:text-[#60a5fa]',
     strong: '#2563eb',
   },
   violet: {
-    backgroundCss: 'linear-gradient(150deg, #e6e2fd, rgba(235, 232, 252, 0.35))',
-    medium: '#cac5e9',
+    backgroundCssClass: 'from-[#e6e2fd] to-[#ebe8fc59] dark:from-[#7b55f71a] dark:to-[#00000033]',
+    mediumCssClass: 'bg-[#cac5e9] dark:bg-[#7b55f733]',
+    strongCssClass: 'text-[#3620c2] dark:text-[#9a84fc]',
     strong: '#3620c2',
   },
   green: {
-    backgroundCss: 'linear-gradient(150deg, #dcf9db, rgba(231, 247, 230, 0.35))',
-    medium: '#d5f0d3',
+    backgroundCssClass: 'from-[#dcf9db] to-[#e7f7e659] dark:from-[#22c55e1a] dark:to-[#00000033]',
+    mediumCssClass: 'bg-[#d5f0d3] dark:bg-[#22c55e33]',
+    strongCssClass: 'text-[#028d30] dark:text-[#4ade80]',
     strong: '#028d30',
   },
   phantom: {
-    backgroundCss: 'linear-gradient(150deg, rgba(214, 222, 231, 0.24), #d2e0e7)',
-    medium: 'transparent',
-    strong: 'var(--color-neutral2-950)',
+    backgroundCssClass: 'from-[#d6dee740] to-[#d2e0e7] dark:from-[#3741514d] dark:to-[#00000033]',
+    mediumCssClass: 'bg-transparent',
+    strong: 'text-neutral2-950',
   },
 };
 
@@ -113,7 +118,7 @@ const dividerClass = computed(() => {
   if (isPhantom.value) {
     return 'text-neutral2-200';
   }
-  return 'text-white';
+  return 'text-white dark:text-[#6b728033]';
 });
 
 const colorSet = computed(() => colorSets[props.color]);

@@ -3,7 +3,9 @@
     <span :class="[
         'flex-shrink-0 rounded-md size-5',
         'inline-flex items-center justify-center',
-      ]" :style="{color:props.colorSet.strong, background:props.colorSet.medium}">
+        props.colorSet.mediumCssClass,
+        props.colorSet.strongCssClass,
+      ]">
       <Icon name="jobOfferPricingPlanListBulletSpecialCase" v-if="props.specialCase"/>
       <Icon name="jobOfferPricingPlanListBullet" v-else/>
     </span>
