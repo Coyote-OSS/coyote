@@ -4,7 +4,7 @@
       <NavigationTopbar/>
       <template v-if="!navigationStore.$state.navigationMainContentSuspended">
         <div class="pt-3 px-2 max-w-264 mx-auto space-y-3">
-          <Design.BannerHeading @back="navigateHome"/>
+          <Design.BannerHeading @back="navigateHome" v-if="service.bannerVisible()"/>
           <Design.Toast
             v-if="toastTitle"
             :title="toastTitle"/>

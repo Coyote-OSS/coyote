@@ -15,6 +15,10 @@ export class JobBoardNavigator {
     this.router.addDefaultRoute('home');
   }
 
+  public isCurrentScreen(screen: ScreenName): boolean {
+    return this.router.currentScreen() === screen;
+  }
+
   private addRoutes(): void {
     this.router.addRoute('home');
     this.router.addRoute('show');

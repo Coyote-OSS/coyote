@@ -26,6 +26,10 @@ export class VueRouter<R extends string> implements Router<R> {
     private components: RouteComponentMap<R>,
   ) {}
 
+  currentScreen(): R {
+    return this.router.currentRoute.value.name;
+  }
+
   useIn(app: App): void {
     app.use(this.router);
   }
