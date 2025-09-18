@@ -45,6 +45,10 @@ export class JobBoardService {
     this.filterService = new JobOfferFilterService(jobOffersRepo);
   }
 
+  bannerVisible(): boolean {
+    return !this.navigator.isCurrentScreen('pricing');
+  }
+
   paymentStatusChanged(paymentId: string, status: PaymentUpdatedStatus): void {
     this.view.setPaymentStatus(status);
     if (status === 'paymentComplete') {
