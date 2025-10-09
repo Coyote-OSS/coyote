@@ -265,9 +265,10 @@ blockquote {
 }
 
 .youtube-player {
-  width:   420px;
-  height:  236.25px;
-  display: block;
+  display:      block;
+  width:        100%;
+  aspect-ratio: 16 / 9;
+  max-width:    420px;
 }
 
 .comment-text a {
