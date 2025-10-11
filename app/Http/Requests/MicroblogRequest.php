@@ -17,7 +17,7 @@ class MicroblogRequest extends FormRequest
     {
         return [
             'parent_id'   => ['nullable', 'integer', Rule::exists('microblogs', 'id')->whereNull('deleted_at')],
-            'text'        => 'required|string|max:20000',
+            'text'        => 'required|string|max:65535',
             'tags'        => 'array|max:5',
             'tags.*.name' => [
                 'bail',
