@@ -132,6 +132,9 @@ $this->group(['namespace' => 'Forum', 'prefix' => 'Forum', 'as' => 'forum.'], fu
         'middleware' => ['auth'],
     ]);
 
+    $this->post('Comment/Vote/{comment}', ['uses' => 'CommentController@vote', 'middleware' => ['auth']]);
+    $this->get('Comment/Vote/{comment}', 'CommentController@getVotes');
+
     $this->get('Comment/{comment}', [
         'uses'       => 'CommentController@show',
         'middleware' => ['auth'],

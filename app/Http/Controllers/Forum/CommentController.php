@@ -32,6 +32,7 @@ class CommentController extends Controller {
         if (!$comment->exists) {
             $comment->user()->associate($this->auth);
             $comment->post_id = $request->input('post_id');
+            $comment->score = 0;
         } else {
             $this->authorize('update', [$comment, $comment->post->forum]);
         }
@@ -168,6 +169,25 @@ class CommentController extends Controller {
         $postResource = new PostResource($post);
         $postResource->setTracker($tracker);
         return $postResource->resolve($this->request);
+    }
+
+    public function vote(Post\Comment $comment): array {
+        $comment->voters()->toggle(auth()->user()->id);
+        $score = $comment->voters()->count();
+        $comment->update(['score' => $score]);
+        $voters = $comment->voters->pluck('name', 'id');
+        return [
+            'votes'    => $score,
+            'voters'   => $voters->values()->toArray(),
+            'own_vote' => $voters->has(auth()->user()->id),
+        ];
+    }
+
+    public function getVotes(Post\Comment $comment): array {
+        return [
+            'votes'  => $comment->voters->count(),
+            'voters' => $comment->voters->pluck('name')->toArray(),
+        ];
     }
 
     private function target(Post\Comment $comment): array {

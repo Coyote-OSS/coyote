@@ -162,6 +162,9 @@ export interface PostComment {
   is_editing?: boolean;
   url: string;
   metadata: string;
+  votes: number;
+  voters: string[];
+  ownVote: boolean;
 }
 
 export interface Post {

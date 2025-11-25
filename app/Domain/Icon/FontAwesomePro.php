@@ -324,6 +324,7 @@ readonly class FontAwesomePro {
             'postCommentConvertToPost'                  => 'fa-light fa-compress',
             'postCommentReport'                         => 'fa-light fa-flag',
             'postCommentAuthorBlocked'                  => 'fa-light fa-user-slash',
+            'postCommentVote'                           => 'fa-light fa-thumbs-up',
 
             // profile
             'profileReputationHistory'                  => 'fa-light fa-chart-line',

@@ -28,6 +28,18 @@
               <a :href="comment.url">
                 <vue-timeago :datetime="comment.created_at" class="text-muted small"/>
               </a>
+              <span
+                @click="checkAuth(vote)"
+                @mouseenter.once="loadVoters"
+                :class="{'vote-active': comment.is_voted}"
+                class="text-muted small cursor-pointer ms-1 me-1"
+                data-balloon-pos="up"
+                data-balloon-break
+                :aria-label="commentVoters">
+                Doceń:
+                <vue-icon name="postCommentVote"/>
+                {{comment.votes}}
+              </span>
               <template v-if="!authorBlocked">
                 <span v-if="comment.editable" @click="edit" title="Edytuj ten komentarz" class="btn-comment cursor-pointer">
                   <vue-icon name="postCommentEdit"/>
@@ -96,6 +108,7 @@ export default {
   },
   computed: {
     ...mapGetters('topics', ['topic']),
+    ...mapGetters('user', ['isAuthorized']),
     anchor() {
       return `comment-${this.comment.id}`;
     },
@@ -110,6 +123,13 @@ export default {
     },
     authorBlocked(): boolean {
       return store.getters['user/isBlocked'](this.comment.user.id);
+    },
+    commentVoters(): string {
+      const voters = this.$props.comment.voters;
+      if (voters.length) {
+        return 'Doceniajacy: ' + voters.join(',');
+      }
+      return 'Doceń komentarz';
     },
   },
   methods: {
@@ -139,6 +159,12 @@ export default {
             .dispatch('posts/migrateComment', this.comment)
             .then(response => window.location.href = response.data.url);
         });
+    },
+    vote(): void {
+      store.dispatch('posts/voteComment', this.comment);
+    },
+    loadVoters(): void {
+      store.dispatch('posts/commentLoadVoters', this.comment);
     },
   },
 };

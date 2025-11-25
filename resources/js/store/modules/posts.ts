@@ -258,6 +258,16 @@ const mutations = {
     delete post.comments[comment.id!];
     post.comments_count! -= 1;
   },
+  updateCommentVotes(state, update: {
+    comment: PostComment,
+    votes: number,
+    voters: string[],
+    ownVote: boolean
+  }): void {
+    update.comment.votes = update.votes;
+    update.comment.voters = update.voters;
+    update.comment.ownVote = update.ownVote;
+  },
   setComments(state, {post, comments}): void {
     post.comments = comments;
     post.comments_count = comments.length;
@@ -299,7 +309,7 @@ const mutations = {
   unsubscribe(state, postId: number): void {
     state.data[postId].is_subscribed = false;
   },
-  updateVoters(state, {postId, users, user}: { postId: number, users: string[], user?: User }): void {
+  updateVoters(state, {postId, users, user}: {postId: number, users: string[], user?: User}): void {
     state.data[postId].voters = users;
     state.data[postId].score = users.length;
     state.data[postId].is_voted = users.includes(user?.name!);
@@ -384,7 +394,7 @@ const actions = {
     });
   },
 
-  delete({commit}, {post, reasonId}: { post: Post, reasonId: number|null }) {
+  delete({commit}, {post, reasonId}: {post: Post, reasonId: number|null}) {
     return axios.delete(`/Forum/Post/Delete/${post.id}`, {data: {reason: reasonId}}).then(() => commit('delete', post));
   },
 
@@ -400,6 +410,27 @@ const actions = {
     });
   },
 
+  voteComment({commit}, comment: PostComment): Promise<void> {
+    return axios.post(`/Forum/Comment/Vote/${comment.id}`).then(response => {
+      commit('updateCommentVotes', {
+        comment,
+        votes: response.data.votes,
+        voters: response.data.voters,
+        ownVote: response.data.own_vote,
+      });
+    });
+  },
+
+  commentLoadVoters({commit}, comment: PostComment): Promise<void> {
+    return axios.get(`/Forum/Comment/Vote/${comment.id}`).then(response => {
+      commit('updateCommentVotes', {
+        comment,
+        votes: response.data.votes,
+        voters: response.data.voters,
+      });
+    });
+  },
+
   restore({commit}, post: Post) {
     return axios.post(`/Forum/Post/Restore/${post.id}`).then(() => commit('restore', post));
   },
@@ -412,7 +443,7 @@ const actions = {
   },
 
   rollback({commit}, log: PostLog) {
-    return axios.post<{ url: string }>(`/Forum/Post/Rollback/${log.post_id}/${log.id}`);
+    return axios.post<{url: string}>(`/Forum/Post/Rollback/${log.post_id}/${log.id}`);
   },
 
   loadComments({commit}, post: Post) {
@@ -440,7 +471,7 @@ const actions = {
     });
   },
 
-  updateVoters({commit, rootState}, {postId, users}: { postId: number, users: string[] }) {
+  updateVoters({commit, rootState}, {postId, users}: {postId: number, users: string[]}) {
     commit('updateVoters', {postId, users, user: rootState.user.user});
   },
 

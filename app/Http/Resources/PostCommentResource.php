@@ -21,12 +21,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property int $post_id
  * @property string $text
  */
-class PostCommentResource extends JsonResource
-{
-    public function toArray(Request $request): array
-    {
+class PostCommentResource extends JsonResource {
+    public function toArray(Request $request): array {
+        /** @var Post\Comment $comment */
+        $comment = $this->resource;
         return array_merge(
-            $this->resource->only(['id', 'text', 'html', 'post_id']),
+            $comment->only(['id', 'text', 'html', 'post_id']),
             [
                 'created_at' => $this->created_at->toIso8601String(),
                 'updated_at' => $this->updated_at->toIso8601String(),
@@ -36,17 +36,18 @@ class PostCommentResource extends JsonResource
                 $this->mergeWhen($request->user(), fn() => [
                     'editable' => $request->user()->can('update', [$this->resource, $this->forum]),
                 ]),
+                'votes'      => $comment->score,
+                'ownVote'    => false, // Introduce eager load, not fail at n+1
+                'voters'     => [],  // Introduce eager load, not fail at n+1
             ],
         );
     }
 
-    private function commentUrl(): string
-    {
+    private function commentUrl(): string {
         return UrlBuilder::topic($this->post->topic) . '?p=' . $this->post_id . '#comment-' . $this->id;
     }
 
-    private function metadata(): array
-    {
+    private function metadata(): array {
         return [
             Post\Comment::class => $this->id,
             Post::class         => $this->post_id,
