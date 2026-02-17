@@ -9,6 +9,7 @@ use Coyote\Http\Controllers\Controller;
 use Coyote\Http\Requests\Forum\PostCommentRequest;
 use Coyote\Http\Resources\PostCommentResource;
 use Coyote\Http\Resources\PostResource;
+use Coyote\Notifications\Post\Comment;
 use Coyote\Notifications\Post\Comment\MigratedNotification;
 use Coyote\Post;
 use Coyote\Repositories\Contracts\TopicRepositoryInterface;
@@ -176,6 +177,7 @@ class CommentController extends Controller {
         $score = $comment->voters()->count();
         $comment->update(['score' => $score]);
         $voters = $comment->voters->pluck('name', 'id');
+        $comment->user->notify(new Comment\VotedNotification($this->auth, $comment->post));
         return [
             'votes'    => $score,
             'voters'   => $voters->values()->toArray(),
