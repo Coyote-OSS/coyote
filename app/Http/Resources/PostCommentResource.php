@@ -37,8 +37,8 @@ class PostCommentResource extends JsonResource {
                     'editable' => $request->user()->can('update', [$this->resource, $this->forum]),
                 ]),
                 'votes'      => $comment->score,
-                'ownVote'    => false, // Introduce eager load, not fail at n+1
-                'voters'     => [],  // Introduce eager load, not fail at n+1
+                'ownVote'    => false, // Don't load voters, to avoid n+1
+                'voters'     => [],  // Don't load voters, to avoid n+1
             ],
         );
     }

@@ -1,8 +1,7 @@
 <?php
 namespace Neon2\JobBoard;
 
-enum WorkExperience: string
-{
+enum WorkExperience: string {
     case Intern = 'intern';
     case Junior = 'junior';
     case MidLevel = 'mid-level';
