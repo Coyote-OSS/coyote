@@ -178,7 +178,7 @@ class ModelsDriverTest extends TestCase
         $this->models->newPostReported('content', 'report text');
         $this->assertSame(
             'report text',
-            Post::query()->firstWhere(['text' => 'content'])->flags->pluck('text')->first());
+            Post::query()->where(['text' => 'content'])->first()->flags->pluck('text')->first());
     }
 
     #[Test]
@@ -195,7 +195,7 @@ class ModelsDriverTest extends TestCase
         $this->models->newMicroblogReported(microblogContentMarkdown:'content', reportContent:'report text');
         $this->assertSame(
             'report text',
-            Microblog::query()->firstWhere(['text' => 'content'])->flags->pluck('text')->first());
+            Microblog::query()->where(['text' => 'content'])->first()->flags->pluck('text')->first());
     }
 
     private function reportedMicroblogsCount(): int

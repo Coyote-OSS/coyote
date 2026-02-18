@@ -68,6 +68,6 @@ class VatRateCalculatorTest extends TestCase
 
     private function firstOrForceCreate(array $attributes): Country
     {
-        return Country::query()->firstWhere($attributes) ?? Country::query()->forceCreate($attributes);
+        return Country::query()->where($attributes)->first() ?? Country::query()->forceCreate($attributes);
     }
 }

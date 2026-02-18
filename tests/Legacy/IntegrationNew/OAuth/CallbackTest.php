@@ -87,7 +87,7 @@ class CallbackTest extends TestCase
         $this->driver->newUserConfirmedEmail('andy@mail');
         $this->oAuthLoggedIn('andy@mail', provider:'github', providerId:'provided-id');
         /** @var User $user */
-        $user = User::query()->firstWhere('email', 'andy@mail');
+        $user = User::query()->where('email', 'andy@mail')->first();
         $this->assertSame('github', $user->provider);
         $this->assertSame('provided-id', $user->provider_id);
     }

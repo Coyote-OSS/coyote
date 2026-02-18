@@ -37,7 +37,7 @@ class PermissionsTableSeeder extends Seeder
         $this->addPermission('beta-access', 'Wczesny dostęp do funkcjonalności serwisu');
 
         /** @var Group $group */
-        $group = Group::query()->firstWhere('name', 'Administrator');
+        $group = Group::query()->where('name', 'Administrator')->first();
         $this->db->table('group_permissions')
             ->where('group_id', $group->id)
             ->update(['value' => true]);

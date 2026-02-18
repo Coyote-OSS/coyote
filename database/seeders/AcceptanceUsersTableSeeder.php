@@ -39,7 +39,7 @@ class AcceptanceUsersTableSeeder extends Seeder {
         $group = new Group(['name' => 'Acceptance test']);
         $group->save();
         /** @var Permission $alphaAccess */
-        $alphaAccess = Permission::query()->firstWhere('name', 'alpha-access');
+        $alphaAccess = Permission::query()->where('name', 'alpha-access')->first();
         $this->db->table('group_permissions')
             ->where('group_id', $group->id)
             ->where('permission_id', $alphaAccess->id)
