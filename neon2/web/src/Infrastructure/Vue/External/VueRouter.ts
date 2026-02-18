@@ -27,7 +27,7 @@ export class VueRouter<R extends string> implements Router<R> {
   ) {}
 
   currentScreen(): R {
-    return this.router.currentRoute.value.name;
+    return this.router.currentRoute.value.name as R;
   }
 
   useIn(app: App): void {

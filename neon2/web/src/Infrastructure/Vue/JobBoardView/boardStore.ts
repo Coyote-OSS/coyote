@@ -1,12 +1,12 @@
 import {defineStore} from 'pinia';
-import {VatIdState} from "../../../Application/JobBoard/Port/PaymentListener";
-import {emptyJobOfferFilter} from "./View/component/JobOfferFilters";
-import {PaymentNotification} from "../../../Application/JobBoard/Port/PaymentProvider";
 import {Filter, FilterOptions} from "../../../Application/JobBoard/filter";
 import {PlanBundle} from "../../../Application/JobBoard/Model";
+import {VatIdState} from "../../../Application/JobBoard/Port/PaymentListener";
+import {PaymentNotification} from "../../../Application/JobBoard/Port/PaymentProvider";
+import {Country, PaymentSummary, PaymentUpdatedStatus, PricingPlan} from "../../../Domain/JobBoard/JobBoard";
 import {JobOffer} from "../../../Domain/JobBoard/JobOffer";
-import {Country, PaymentUpdatedStatus, PaymentSummary, PricingPlan} from "../../../Domain/JobBoard/JobBoard";
-import {ScreenName, Toast} from "./Model";
+import {Toast} from "./Model";
+import {emptyJobOfferFilter} from "./View/component/JobOfferFilters";
 
 export const useBoardStore = defineStore('jobBoard', {
   state(): State {
@@ -40,7 +40,6 @@ export const useBoardStore = defineStore('jobBoard', {
 
 interface State {
   // layout
-  screen: ScreenName;
   toast: Toast|null;
   paymentNotification: PaymentNotification|null;
   paymentStatus: PaymentUpdatedStatus|null;
