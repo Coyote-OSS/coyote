@@ -15,7 +15,7 @@ services:
       - coyote
 
   php:
-    image: 4programmers/php-node:8.4.2
+    image: 4programmers/php-node:8.4.2-1
     environment:
       - ENABLE_XDEBUG=$ENABLE_XDEBUG
       - XDEBUG_HOST=$XDEBUG_HOST
