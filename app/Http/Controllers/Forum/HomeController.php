@@ -155,9 +155,14 @@ class HomeController extends BaseController {
 
             $item->link->attr(['class' => 'nav-link']);
             $item->activate();
+            $title = 'Posty: ' . $user->name;
+        } else {
+            $title = null;
         }
-
-        return $this->render($topics)->with('user_id', $userId);
+        return $this->render($topics)->with([
+            'title'   => $title,
+            'user_id' => $userId,
+        ]);
     }
 
     /**
