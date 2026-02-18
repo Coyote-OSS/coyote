@@ -167,8 +167,10 @@ export class Driver {
 
   private async selectPricingPlan(pricingPlan: PricingPlan): None {
     if (pricingPlan === 'free') {
+      await this.web.click('1 ogłoszenie');
       await this.web.click('Publikuj ogłoszenie');
     } else if (pricingPlan === 'premium') {
+      await this.web.click('1 ogłoszenie');
       await this.web.click('Kup ogłoszenie');
     } else {
       await this.web.click('Pakiety -50%');
