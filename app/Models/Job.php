@@ -438,9 +438,7 @@ class Job extends Model
 
     public function getDeadlineAttribute(): int
     {
-        $deadline = new Carbon($this->deadline_at);
-        $current = Carbon::now();
-        return $deadline->diff($current)->dayz;
+        return Carbon::now()->diff(new Carbon($this->deadline_at))->totalDays;
     }
 
     public function getIsExpiredAttribute(): bool
