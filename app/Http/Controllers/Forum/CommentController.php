@@ -173,7 +173,12 @@ class CommentController extends Controller {
     }
 
     public function vote(Post\Comment $comment): array {
-        $comment->voters()->toggle(auth()->user()->id);
+        $currentUserId = auth()->user()->id;
+        if ($comment->user_id !== $currentUserId) {
+            $comment->voters()->toggle($currentUserId);
+        } else {
+            abort(400, 'Nie możesz oddać głosu na komentarz swojego autorstwa.');
+        }
         $score = $comment->voters()->count();
         $comment->update(['score' => $score]);
         $voters = $comment->voters->pluck('name', 'id');
