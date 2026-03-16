@@ -11,8 +11,7 @@ class RedirectToCanonicalUrl
     {
         if ($this->hasTrailingSlash($request)
             || $this->hasScriptFile($request)
-            || $this->hasWww($request)
-            || $this->hasFirstPage($request)) {
+            || $this->hasWww($request)) {
             return $this->redirectToCanonical($request);
         }
         return $next($request);
