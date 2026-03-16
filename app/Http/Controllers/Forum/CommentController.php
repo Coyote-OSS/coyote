@@ -125,7 +125,7 @@ class CommentController extends Controller {
         $this->authorize('access', [$comment->post->forum]);
         // Only moderators can post comment if topic (or forum) was locked
         $this->authorize('write', [$comment]);
-        $this->authorize('delete', [$comment, $comment->post->forum]);
+        $this->authorize('merge', $topic->forum);
 
         /** @var Post $post */
         $post = $this->transaction(function () use ($topic, $comment, $repository) {

@@ -34,7 +34,8 @@ class PostCommentResource extends JsonResource {
                 'url'        => $this->commentUrl(),
                 'metadata'   => \encrypt($this->metadata()),
                 $this->mergeWhen($request->user(), fn() => [
-                    'editable' => $request->user()->can('update', [$this->resource, $this->forum]),
+                    'editable'   => $request->user()->can('update', [$this->resource, $this->forum]),
+                    'canMigrate' => $request->user()->can('merge', [$this->forum]),
                 ]),
                 'votes'      => $comment->score,
                 'ownVote'    => false, // Don't load voters, to avoid n+1

@@ -14,7 +14,10 @@ class MailgunController extends Controller
     public function permanentFailure(UserRepository $user, Request $request)
     {
         abort_unless(
-            $this->verify($request->input('signature.timestamp'), $request->input('signature.token'), $request->input('signature.signature')),
+            $this->verify(
+                $request->input('signature.timestamp'), 
+                $request->input('signature.token'), 
+                $request->input('signature.signature')),
             500
         );
 

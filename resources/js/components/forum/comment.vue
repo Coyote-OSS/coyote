@@ -47,7 +47,7 @@
                 <span v-if="comment.editable" @click="deleteComment" title="Usuń ten komentarz" class="btn-comment cursor-pointer">
                   <vue-icon name="postCommentDelete"/>
                 </span>
-                <span v-if="comment.editable" @click="migrate" title="Zamień w post" class="btn-comment cursor-pointer">
+                <span v-if="comment.canMigrate" @click="migrate" title="Zamień w post" class="btn-comment cursor-pointer">
                   <vue-icon name="postCommentConvertToPost"/>
                 </span>
                 <span :data-metadata="comment.metadata" :data-url="comment.url" title="Zgłoś ten komentarz"
