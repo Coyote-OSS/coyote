@@ -3,7 +3,7 @@
     :tree-topic-post-first="treeTopicPostFirst"
     @reply="reply"
     :post="post"
-    v-if="!is_incognito(post.user)"
+    v-if="post.user === null || !is_incognito(post.user)"
     :tree-item="treeItem"
   />
 </template>
