@@ -9,11 +9,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 
-  &.tall { // supposed to be more or less tall-rectangle-like
-    height: 600px;
-  }
-
-  &.square { // supposed to be more or less square-like
-    height: 250px;
+  img {
+    width: 100%;
   }
 }
