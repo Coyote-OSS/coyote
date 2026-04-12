@@ -3,13 +3,17 @@
     {% if size == 'square' %}
       <div><img src="/img/jobAdPlaceholder/narrow-h250.png"/></div>
     {% elseif size == 'tall' %}
+      <div><img src="/img/jobAdPlaceholder/narrow-h250.png"/></div>
       <div><img src="/img/jobAdPlaceholder/narrow-h600.png"/></div>
     {% else %}
-      <div><img src="/img/jobAdPlaceholder/extrawide-h200.png"/></div>
-      <div><img src="/img/jobAdPlaceholder/extrawide-h90.png"/></div>
-
-      <div><img src="/img/jobAdPlaceholder/wide-h200.png"/></div>
-      <div><img src="/img/jobAdPlaceholder/wide-h90.png"/></div>
+      <div class="d-none d-lg-block">
+        <div><img src="/img/jobAdPlaceholder/extrawide-h200.png"/></div>
+        <div><img src="/img/jobAdPlaceholder/extrawide-h90.png"/></div>
+      </div>
+      <div class="d-lg-none">
+        <div><img src="/img/jobAdPlaceholder/wide-h200.png"/></div>
+        <div><img src="/img/jobAdPlaceholder/wide-h90.png"/></div>
+      </div>
     {% endif %}
   </div>
 {% endmacro %}
