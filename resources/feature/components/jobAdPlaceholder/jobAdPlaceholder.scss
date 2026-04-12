@@ -10,6 +10,8 @@
   text-overflow: ellipsis;
 
   img {
-    width: 100%;
+    margin: 0 auto;
+    max-width: 100%;
+    display: block;
   }
 }

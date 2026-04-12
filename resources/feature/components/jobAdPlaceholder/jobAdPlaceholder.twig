@@ -1,6 +1,9 @@
 {% macro jobAdPlaceholder(size) %}
   <div class="job-ad-placeholder {{ size }}">
-    {% if size == 'square' %}
+    {% if size == 'horizontal-mobile' %}
+      <div><img src="/img/jobAdPlaceholder/wide-h200.png"/></div>
+      <div><img src="/img/jobAdPlaceholder/wide-h90.png"/></div>
+    {% elseif size == 'square' %}
       <div><img src="/img/jobAdPlaceholder/narrow-h250.png"/></div>
     {% elseif size == 'tall' %}
       <div><img src="/img/jobAdPlaceholder/narrow-h250.png"/></div>
