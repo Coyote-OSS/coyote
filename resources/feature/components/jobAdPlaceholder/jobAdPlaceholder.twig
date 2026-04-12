@@ -1,6 +1,15 @@
 {% macro jobAdPlaceholder(size) %}
   <div class="job-ad-placeholder {{ size }}">
-    Miejsce w którym zostanie wyświetlona reklama od sponsorów 4programmers.
-    Placeholder ma charakter poglądowy, ma służyć jako wizualizacja przestrzeni reklamowej.
+    {% if size == 'square' %}
+      <div><img src="/img/jobAdPlaceholder/narrow-h250.png"/></div>
+    {% elseif size == 'tall' %}
+      <div><img src="/img/jobAdPlaceholder/narrow-h600.png"/></div>
+    {% else %}
+      <div><img src="/img/jobAdPlaceholder/extrawide-h200.png"/></div>
+      <div><img src="/img/jobAdPlaceholder/extrawide-h90.png"/></div>
+
+      <div><img src="/img/jobAdPlaceholder/wide-h200.png"/></div>
+      <div><img src="/img/jobAdPlaceholder/wide-h90.png"/></div>
+    {% endif %}
   </div>
 {% endmacro %}
