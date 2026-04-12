@@ -1,0 +1,19 @@
+.job-ad-placeholder {
+  font-family: 'Inter Tight', sans-serif;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 12px;
+  color: gray;
+  border: 3px dashed gray;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.tall { // supposed to be more or less tall-rectangle-like
+    height: 600px;
+  }
+
+  &.square { // supposed to be more or less square-like
+    height: 250px;
+  }
+}

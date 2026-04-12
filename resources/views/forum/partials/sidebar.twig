@@ -4,6 +4,11 @@
 
   {{ render_block('job_ads') }}
 
+  <div>
+    {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
+    {{ jobAdPlaceholder() }}
+  </div>
+
   {% if auth_check() %}
     <div id="js-tags" class="box mt-5">
       <h4 class="heading">

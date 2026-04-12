@@ -6,6 +6,7 @@
 {% import 'legacyComponents.forms' as forms %}
 {% import 'legacyComponents.modals' as modals %}
 {% from 'titleBanner.titleBanner' import titleBanner %}
+{% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
 
 {% block content %}
   {{ schema_topic }}
@@ -13,6 +14,10 @@
   <h1 class="topic-title pe-4 neon-legacy">
     {{ model.title }}
   </h1>
+  <div class="mb-3">
+    {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
+    {{ jobAdPlaceholder('horizontal') }}
+  </div>
   <div class="neon-modern mb-3">
     {{ titleBanner(title: model.title, crumbs:breadcrumbs) }}
   </div>
@@ -262,6 +267,10 @@
           :post="post"
           @reply="reply"
       ></vue-post-wrapper>
+
+      <div class="mb-3">
+        {{ jobAdPlaceholder('horizontal') }}
+      </div>
 
       <div class="page-pagination d-flex mb-3" v-if="is_mode_linear">
         <div class="page-page-selector me-auto">
