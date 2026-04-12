@@ -1,5 +1,5 @@
 {% macro boardBanner(mode) %}
-  <div class="board-banner {{ mode == 'small' ? 'board-banner--short' }}">
+  <div class="board-banner {{ mode == 'small' ? 'board-banner--short' }}" style=" margin-bottom:16px; margin-top:-96px;">
     <div class="board-banner__squiggle">
       <div class="on-theme-light">{{ _self.light_squiggle() }}</div>
       <div class="on-theme-dark">{{ _self.dark_squiggle() }}</div>

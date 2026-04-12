@@ -14,8 +14,6 @@
   font-family: 'Inter Tight', sans-serif;
   border-radius: 8px;
   padding: 16px;
-  margin-bottom: 16px;
-  margin-top: -96px;
 
   @include theme.light {
     @include borderGradient(rgba(0, 165, 56, 0.4), rgba(255, 255, 255, 0.4), 135deg, #e7f6ec, white);
