@@ -68,6 +68,7 @@ $this->group(['namespace' => 'Job', 'prefix' => 'Praca', 'as' => 'job.'], functi
     $this->get('recommendations', ['uses' => 'AdController@index', 'as' => 'ad']);
     $this->get('fb', ['uses' => 'FbController@showByCategory']);
     $this->get('fb_keyword', ['uses' => 'FbController@showByKeyword']);
+    $this->get('redirect', ['uses' => 'AdController@redirect']);
 });
 
 $this->group(['namespace' => 'Firm', 'prefix' => 'Firma', 'as' => 'firm.'], function () {

@@ -1,22 +1,20 @@
 {% macro jobAdPlaceholder(size) %}
-  <div class="job-ad-placeholder {{ size }}">
-    {% if size == 'horizontal-mobile' %}
-      <div><img src="/img/jobAdPlaceholder/wide-h200.png"/></div>
-      <div><img src="/img/jobAdPlaceholder/wide-h90.png"/></div>
-    {% elseif size == 'square' %}
-      <div><img src="/img/jobAdPlaceholder/narrow-h250.png"/></div>
-    {% elseif size == 'tall' %}
-      <div><img src="/img/jobAdPlaceholder/narrow-h250.png"/></div>
-      <div><img src="/img/jobAdPlaceholder/narrow-h600.png"/></div>
-    {% else %}
-      <div class="d-none d-lg-block">
-        <div><img src="/img/jobAdPlaceholder/extrawide-h200.png"/></div>
-        <div><img src="/img/jobAdPlaceholder/extrawide-h90.png"/></div>
-      </div>
-      <div class="d-lg-none">
-        <div><img src="/img/jobAdPlaceholder/wide-h200.png"/></div>
-        <div><img src="/img/jobAdPlaceholder/wide-h90.png"/></div>
-      </div>
-    {% endif %}
-  </div>
+  <a href="/Praca/redirect" target="_blank">
+    <div class="job-ad-placeholder {{ size }}">
+      {% if size == 'horizontal-mobile' %}
+        <div><img src="/img/jobAd/wide-h200.png"/></div>
+      {% elseif size == 'square' %}
+        <div><img src="/img/jobAd/narrow-h250.png"/></div>
+      {% elseif size == 'tall' %}
+        <div><img src="/img/jobAd/narrow-h250.png"/></div>
+      {% else %}
+        <div class="d-none d-lg-block">
+          <div><img src="/img/jobAd/extrawide-h90.png"/></div>
+        </div>
+        <div class="d-lg-none">
+          <div><img src="/img/jobAd/wide-h200.png"/></div>
+        </div>
+      {% endif %}
+    </div>
+  </a>
 {% endmacro %}
