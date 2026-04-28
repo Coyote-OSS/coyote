@@ -8,13 +8,14 @@
 {% from 'titleBanner.titleBanner' import titleBanner %}
 {% from 'membersRadar.membersRadar' import membersRadar %}
 {% from 'progressBar.progressBar' import progressBar %}
+{% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholderComposite %}
 {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
 
 {% block container %}
   {{ render_block('homepage_banner') }}
   <div class="row">
     <div class="col-12 mb-3">
-      {{ jobAdPlaceholder('horizontal') }}
+      {{ jobAdPlaceholderComposite('horizontal') }}
     </div>
   </div>
   <div class="row neon-modern">
@@ -242,7 +243,7 @@
           </div>
         </section>
         <div class="mt-4">
-          {{ jobAdPlaceholder('square') }}
+          {{ jobAdPlaceholder('square', random(['mobileViking', 'myDevil'])) }}
         </div>
       </aside>
     </div>

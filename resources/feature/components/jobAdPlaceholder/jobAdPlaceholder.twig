@@ -1,18 +1,33 @@
-{% macro jobAdPlaceholder(size) %}
-  <a href="/Praca/redirect" target="_blank">
+{% macro jobAdPlaceholderComposite() %}
+  <div class="job-ad-placeholder horizontal">
+    <div class="row">
+      <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+        <a href="/Praca/redirect?family=mobileViking" target="_blank">
+          <div><img src="/img/jobAd/mobileViking/wide-h200.png"/></div>
+        </a>
+      </div>
+      <div class="col-12 col-lg-6">
+        <a href="/Praca/redirect?family=myDevil" target="_blank">
+          <div><img src="/img/jobAd/myDevil/wide-h200.png"/></div>
+        </a>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro jobAdPlaceholder(size, family) %}
+  <a href="/Praca/redirect?family={{ family }}" target="_blank">
     <div class="job-ad-placeholder {{ size }}">
-      {% if size == 'horizontal-mobile' %}
-        <div><img src="/img/jobAd/wide-h200.png"/></div>
-      {% elseif size == 'square' %}
-        <div><img src="/img/jobAd/narrow-h250.png"/></div>
+      {% if size == 'square' %}
+        <div><img src="/img/jobAd/{{ family }}/narrow-h250.png"/></div>
       {% elseif size == 'tall' %}
-        <div><img src="/img/jobAd/narrow-h250.png"/></div>
+        <div><img src="/img/jobAd/{{ family }}/narrow-h250.png"/></div>
       {% else %}
         <div class="d-none d-lg-block">
-          <div><img src="/img/jobAd/extrawide-h90.png"/></div>
+          <div><img src="/img/jobAd/{{ family }}/wide-h200.png"/></div>
         </div>
         <div class="d-lg-none">
-          <div><img src="/img/jobAd/wide-h200.png"/></div>
+          <div><img src="/img/jobAd/{{ family }}/wide-h200.png"/></div>
         </div>
       {% endif %}
     </div>

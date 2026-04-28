@@ -6,7 +6,7 @@
 
   <div>
     {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
-    {{ jobAdPlaceholder('tall') }}
+    {{ jobAdPlaceholder('tall', random(['mobileViking', 'myDevil'])) }}
   </div>
 
   {% if auth_check() %}

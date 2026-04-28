@@ -15,8 +15,8 @@
     {{ model.title }}
   </h1>
   <div class="mb-3">
-    {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
-    {{ jobAdPlaceholder('horizontal') }}
+    {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholderComposite %}
+    {{ jobAdPlaceholderComposite('horizontal') }}
   </div>
   <div class="neon-modern mb-3">
     {{ titleBanner(title: model.title, crumbs:breadcrumbs) }}
@@ -269,7 +269,7 @@
       ></vue-post-wrapper>
 
       <div class="mb-3">
-        {{ jobAdPlaceholder('horizontal') }}
+        {{ jobAdPlaceholderComposite('horizontal') }}
       </div>
 
       <div class="page-pagination d-flex mb-3" v-if="is_mode_linear">

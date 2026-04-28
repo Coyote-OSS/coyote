@@ -87,10 +87,18 @@ class AdController extends Controller {
         }
     }
 
-    public function redirect(): RedirectResponse {
-        $redirectUrl = 'https://mobilevikings.pl/pl/oferta-na-karte/?utm_source=4programmers&utm_medium=cpc&utm_campaign=voice_display_cpm_null_1';
-        $this->settingsIncrement('job_ad.1.mobile_vikings');
-        return redirect()->to($redirectUrl);
+    public function redirect(Request $request): RedirectResponse {
+        if ($request->query('family') === 'mobileViking') {
+            $redirectUrl = 'https://mobilevikings.pl/pl/oferta-na-karte/?utm_source=4programmers&utm_medium=cpc&utm_campaign=voice_display_cpm_null_1';
+            $this->settingsIncrement('job_ad.1.mobile_vikings');
+            return redirect()->to($redirectUrl);
+        }
+        if ($request->query('family') === 'myDevil') {
+            $redirectUrl = 'https://www.mydevil.net/hosting-dla-developerow/?__s=4programmers.net';
+            $this->settingsIncrement('job_ad.1.my_devil');
+            return redirect()->to($redirectUrl);
+        }
+        return redirect()->to('/');
     }
 
     private function settingsIncrement(string $key): void {
