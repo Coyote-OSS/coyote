@@ -13,11 +13,13 @@
 
 {% block container %}
   {{ render_block('homepage_banner') }}
-  <div class="row">
-    <div class="col-12 mb-3">
-      {{ jobAdPlaceholderComposite('horizontal') }}
+  {% if home_ads %}
+    <div class="row">
+      <div class="col-12 mb-3">
+        {{ jobAdPlaceholderComposite('horizontal') }}
+      </div>
     </div>
-  </div>
+  {% endif %}
   <div class="row neon-modern">
     <div class="col-lg-8">
       {{ titleBanner(title:'Największa społeczność programistyczna w Polsce') }}
@@ -126,7 +128,9 @@
                 <div class="recent-activity neon-divider-l">
                   {% for activity in activities %}
                     <div class="media">
-                      <div class="neon-tile__timeline-icon homepage-activity {{ activity.object }} d-none d-sm-flex justify-content-center align-items-center" title="{{ activity.headline|striptags|unescape }}">
+                      <div
+                          class="neon-tile__timeline-icon homepage-activity {{ activity.object }} d-none d-sm-flex justify-content-center align-items-center"
+                          title="{{ activity.headline|striptags|unescape }}">
                         {% if activity.object == 'microblog' %}
                           {{ icon('homepageActivityMicroblog') }}
                         {% elseif activity.object == 'comment' %}
@@ -188,15 +192,18 @@
           <div class="tab-content neon-tile neon-rounded variable-names card-reputation">
             <div class="pt-2 px-3">
               <div id="reputation-tabs" class="nav nav-pills neon-tabber">
-                <span data-bs-toggle="tab" data-bs-target="#week" class="nav-link neon-tabber-tab {{ settings.reputationMode == 'week' ? 'active' }}">
+                <span data-bs-toggle="tab" data-bs-target="#week"
+                      class="nav-link neon-tabber-tab {{ settings.reputationMode == 'week' ? 'active' }}">
                   <span class="long-name">W tym tygodniu</span>
                   <span class="short-name">Tyg.</span>
                 </span>
-                <span data-bs-toggle="tab" data-bs-target="#month" class="nav-link neon-tabber-tab {{ settings.reputationMode == 'month' ? 'active' }}">
+                <span data-bs-toggle="tab" data-bs-target="#month"
+                      class="nav-link neon-tabber-tab {{ settings.reputationMode == 'month' ? 'active' }}">
                   <span class="long-name">W tym miesiącu</span>
                   <span class="short-name">Mies.</span>
                 </span>
-                <span data-bs-toggle="tab" data-bs-target="#quarter" class="nav-link neon-tabber-tab {{ settings.reputationMode == 'quarter' ? 'active' }}">
+                <span data-bs-toggle="tab" data-bs-target="#quarter"
+                      class="nav-link neon-tabber-tab {{ settings.reputationMode == 'quarter' ? 'active' }}">
                   <span class="long-name">W tym kwartale</span>
                   <span class="short-name">Kwar.</span>
                 </span>
@@ -242,9 +249,11 @@
             {% endfor %}
           </div>
         </section>
-        <div class="mt-4">
-          {{ jobAdPlaceholder('square', random(['mobileViking', 'myDevil'])) }}
-        </div>
+        {% if home_ads %}
+          <div class="mt-4">
+            {{ jobAdPlaceholder('square', random(['mobileViking', 'myDevil'])) }}
+          </div>
+        {% endif %}
       </aside>
     </div>
   </div>

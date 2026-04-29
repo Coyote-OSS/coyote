@@ -1,13 +1,15 @@
+{% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
+
 <aside class="sticky-aside p-4 neon-tile neon-rounded neon-forum-aside" id="sidebar" style="margin-bottom:16px;">
   {% block side_menu %}
   {% endblock %}
 
-  {{ render_block('job_ads') }}
-
-  <div>
-    {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
-    {{ jobAdPlaceholder('tall', random(['mobileViking', 'myDevil'])) }}
-  </div>
+  {% if topic_ads %}
+    {{ render_block('job_ads') }}
+    <div>
+      {{ jobAdPlaceholder('tall', random(['mobileViking', 'myDevil'])) }}
+    </div>
+  {% endif %}
 
   {% if auth_check() %}
     <div id="js-tags" class="box mt-5">

@@ -13,6 +13,7 @@ use Coyote\Post;
 use Coyote\Repositories\Criteria\Post\WithSubscribers;
 use Coyote\Repositories\Criteria\Post\WithTrashedInfo;
 use Coyote\Repositories\Criteria\WithTrashed;
+use Coyote\Reputation;
 use Coyote\Services\Flags;
 use Coyote\Services\Forum\Tracker;
 use Coyote\Services\Forum\TreeBuilder\Builder;
@@ -21,6 +22,7 @@ use Coyote\Services\Forum\TreeBuilder\ListDecorator;
 use Coyote\Services\Parser\Extensions\Emoji;
 use Coyote\Services\UrlBuilder;
 use Coyote\Topic;
+use Coyote\User;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -176,6 +178,7 @@ class TopicController extends BaseController {
                 'description'             => excerpt($post['text'], 100),
                 'flags'                   => $this->flags($forum),
                 'schema_topic'            => $this->discussionForumPosting($topic, $post['html']),
+                'topic_ads'               => $this->userIncludeAds(),
             ]);
     }
 
@@ -214,5 +217,14 @@ class TopicController extends BaseController {
             return auth()->id() === $topic->firstPost->user_id;
         }
         return true;
+    }
+
+    private function userIncludeAds(): bool {
+        /** @var User|null $user */
+        $user = auth()->user();
+        if ($user === null) {
+            return true;
+        }
+        return $user->reputation < Reputation::NO_ADS;
     }
 }

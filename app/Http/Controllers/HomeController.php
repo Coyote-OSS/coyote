@@ -14,6 +14,7 @@ use Coyote\Repositories\Criteria\Forum\SkipHiddenCategories;
 use Coyote\Repositories\Criteria\SkipIncognitoUsers;
 use Coyote\Repositories\Criteria\Topic\OnlyThoseWithAccess as OnlyThoseTopicsWithAccess;
 use Coyote\Repositories\Eloquent\ReputationRepository;
+use Coyote\Reputation;
 use Coyote\Services\Flags;
 use Coyote\Services\Microblogs\Builder;
 use Coyote\Services\Parser\Extensions\Emoji;
@@ -53,6 +54,7 @@ class HomeController extends Controller {
             'globalViewers'   => $this->globalViewers(),
             'homepageMembers' => $this->members(),
             'settings'        => $this->getSettings(),
+            'home_ads'        => $this->userIncludeAds(),
         ]);
     }
 
@@ -97,5 +99,14 @@ class HomeController extends Controller {
             ->permission('microblog-delete')
             ->get();
         return FlagResource::collection($resourceFlags)->toArray($this->request);
+    }
+
+    private function userIncludeAds(): bool {
+        /** @var User|null $user */
+        $user = auth()->user();
+        if ($user === null) {
+            return true;
+        }
+        return $user->reputation < Reputation::NO_ADS;
     }
 }
