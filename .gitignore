@@ -26,3 +26,6 @@ public/js/
 # Secrets
 storage/oauth-private.key
 storage/oauth-public.key
+
+# Claude
+.claude/
