@@ -20,7 +20,7 @@ class Campaigns {
         string $campaignKey,
         string $redirectUrl,
     ): void {
-        $existed = $this->store->createIfNotExists($campaignKey);
+        $existed = $this->store->createIfNotExists($campaignKey, '', '', '');
         if ($existed) {
             throw new DuplicateCampaign('Failed to add a duplicated campaign.');
         }
@@ -47,10 +47,15 @@ class Campaigns {
 
     private function enabledCampaignBanners(): CampaignBanners {
         return new CampaignBanners(
-            \array_values($this->horizontal), $this->sidebar());
+            $this->horizontalBanners(),
+            $this->sidebarBanner());
     }
 
-    private function sidebar(): ?CampaignBanner {
+    private function horizontalBanners(): array {
+        return \array_values($this->horizontal);
+    }
+
+    private function sidebarBanner(): ?CampaignBanner {
         if (empty($this->sidebar)) {
             return null;
         }

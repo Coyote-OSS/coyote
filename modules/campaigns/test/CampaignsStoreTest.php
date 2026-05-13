@@ -17,21 +17,31 @@ class CampaignsStoreTest extends TestCase {
 
     #[Test]
     public function didNotExistInitially(): void {
-        $existed = $this->store->createIfNotExists('new-campaign');
+        $existed = $this->store->createIfNotExists('new-campaign', '', '', '');
         $this->assertFalse($existed);
     }
 
     #[Test]
     public function existedWhenCreatedDuplicateCampaign(): void {
-        $this->store->createIfNotExists('new-campaign');
-        $existed = $this->store->createIfNotExists('new-campaign');
+        $this->store->createIfNotExists('new-campaign', '', '', '');
+        $existed = $this->store->createIfNotExists('new-campaign', '', '', '');
         $this->assertTrue($existed);
     }
 
     #[Test]
     public function didNotExistWhenCampaignKeyDiffers(): void {
-        $this->store->createIfNotExists('old-campaign');
-        $existed = $this->store->createIfNotExists('new-campaign');
+        $this->store->createIfNotExists('old-campaign', '', '', '');
+        $existed = $this->store->createIfNotExists('new-campaign', '', '', '');
         $this->assertFalse($existed);
+    }
+
+    #[Test]
+    public function listCampaigns(): void {
+        $this->store->createIfNotExists('key', 'sidebar', 'horizontal', 'redirect');
+        [$campaign] = $this->store->listCampaigns();
+        $this->assertEquals('key', $campaign->campaignKey);
+        $this->assertEquals('sidebar', $campaign->sidebarBanner);
+        $this->assertEquals('horizontal', $campaign->horizontalBanner);
+        $this->assertEquals('redirect', $campaign->redirectUrl);
     }
 }

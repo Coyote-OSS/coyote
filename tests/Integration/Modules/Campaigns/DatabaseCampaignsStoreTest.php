@@ -2,9 +2,9 @@
 namespace Tests\Integration\Modules\Campaigns;
 
 use Coyote\Modules\Campaigns\DatabaseCampaignsStore;
+use Illuminate\Database;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query;
-use Illuminate\Support\Facades\DB;
 use Modules\Campaigns\CampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -19,45 +19,74 @@ class DatabaseCampaignsStoreTest extends TestCase {
     use Laravel\Transactional;
 
     private CampaignsStore $store;
+    private Database\Connection $connection;
 
     #[Before]
     public function initialize(): void {
-        $connection = $this->laravel->app->get(Connection::class);
-        $this->store = new DatabaseCampaignsStore($connection);
+        $this->connection = $this->laravel->app->get(Connection::class);
+        $this->store = new DatabaseCampaignsStore($this->connection);
+        $this->table()->delete();
     }
 
     #[Test]
     public function didNotExistInitially(): void {
-        $this->assertFalse($this->store->createIfNotExists('new-campaign'));
+        $this->assertFalse($this->createIfNotExists('new-campaign'));
     }
 
     #[Test]
     public function createdCampaign(): void {
-        $this->store->createIfNotExists('new-campaign');
-        $this->laravel->assertSeeInDatabase('campaign_keys', ['key' => 'new-campaign']);
+        $this->createIfNotExists('new-campaign');
+        $this->laravel->assertSeeInDatabase('module_campaigns', ['campaign_key' => 'new-campaign']);
     }
 
     #[Test]
     public function existedWhenCreatedDuplicateCampaign(): void {
-        $this->table()->insert(['key' => 'new-campaign']);
-        $this->assertTrue($this->store->createIfNotExists('new-campaign'));
+        $this->insert('new-campaign');
+        $this->assertTrue($this->createIfNotExists('new-campaign'));
     }
 
     #[Test]
     public function doesNotInsertIfAlreadyExists(): void {
-        $this->table()->insert(['key' => 'new-campaign']);
-        $this->store->createIfNotExists('old-campaign');
-        $this->assertEquals(1, $this->table()->where('key', 'new-campaign')->count());
+        $this->insert('new-campaign');
+        $this->createIfNotExists('old-campaign');
+        $this->assertEquals(1, $this->selectCount('new-campaign'));
     }
 
     #[Test]
     public function didNotExistWhenCampaignKeyDiffers(): void {
-        $this->table()->insert(['key' => 'other-campaign']);
-        $existed = $this->store->createIfNotExists('new-campaign');
+        $this->insert('other-campaign');
+        $existed = $this->createIfNotExists('new-campaign');
         $this->assertFalse($existed);
     }
 
+    #[Test]
+    public function listCampaigns(): void {
+        $this->store->createIfNotExists('key', 'sidebar', 'horizontal', 'redirect');
+        [$campaign] = $this->store->listCampaigns();
+        $this->assertEquals('key', $campaign->campaignKey);
+        $this->assertEquals('sidebar', $campaign->sidebarBanner);
+        $this->assertEquals('horizontal', $campaign->horizontalBanner);
+        $this->assertEquals('redirect', $campaign->redirectUrl);
+    }
+
+    private function createIfNotExists(string $campaignKey): bool {
+        return $this->store->createIfNotExists($campaignKey, '', '', '');
+    }
+
     private function table(): Query\Builder {
-        return DB::table('campaign_keys');
+        return $this->connection->table('module_campaigns');
+    }
+
+    private function insert(string $campaignKey): void {
+        $this->table()->insert([
+            'campaign_key' => $campaignKey,
+            'sidebar'      => '',
+            'horizontal'   => '',
+            'redirect_url' => '',
+        ]);
+    }
+
+    private function selectCount(string $campaignKey): int {
+        return $this->table()->where(['campaign_key' => $campaignKey])->count();
     }
 }
