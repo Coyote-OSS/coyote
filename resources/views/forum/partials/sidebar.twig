@@ -4,12 +4,7 @@
   {% block side_menu %}
   {% endblock %}
 
-  {% if topic_ads %}
-    {{ render_block('job_ads') }}
-    <div>
-      {{ jobAdPlaceholder('tall', random(['mobileViking', 'myDevil'])) }}
-    </div>
-  {% endif %}
+  {{ jobAdPlaceholder(campaign_banners_topic, 'sidebar') }}
 
   {% if auth_check() %}
     <div id="js-tags" class="box mt-5">

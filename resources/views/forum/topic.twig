@@ -7,7 +7,6 @@
 {% import 'legacyComponents.modals' as modals %}
 {% from 'titleBanner.titleBanner' import titleBanner %}
 {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
-{% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholderComposite %}
 
 {% block content %}
   {{ schema_topic }}
@@ -15,11 +14,10 @@
   <h1 class="topic-title pe-4 neon-legacy">
     {{ model.title }}
   </h1>
-  {% if topic_ads %}
-    <div class="mb-3">
-      {{ jobAdPlaceholderComposite('horizontal') }}
-    </div>
-  {% endif %}
+  <div class="mb-3">
+    <!-- TODO remove margin if not enabled -->
+    {{ jobAdPlaceholder(campaign_banners_topic, 'horizontal') }}
+  </div>
   <div class="neon-modern mb-3">
     {{ titleBanner(title: model.title, crumbs:breadcrumbs) }}
   </div>
@@ -270,11 +268,10 @@
           @reply="reply"
       ></vue-post-wrapper>
 
-      {% if topic_ads %}
-        <div class="mb-3">
-          {{ jobAdPlaceholderComposite('horizontal') }}
-        </div>
-      {% endif %}
+      <div class="mb-3">
+        <!-- TODO remove margin if not enabled -->
+        {{ jobAdPlaceholder(campaign_banners_topic, 'horizontal') }}
+      </div>
 
       <div class="page-pagination d-flex mb-3" v-if="is_mode_linear">
         <div class="page-page-selector me-auto">

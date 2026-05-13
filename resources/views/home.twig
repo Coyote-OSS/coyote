@@ -8,18 +8,16 @@
 {% from 'titleBanner.titleBanner' import titleBanner %}
 {% from 'membersRadar.membersRadar' import membersRadar %}
 {% from 'progressBar.progressBar' import progressBar %}
-{% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholderComposite %}
 {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
 
 {% block container %}
   {{ render_block('homepage_banner') }}
-  {% if home_ads %}
-    <div class="row">
-      <div class="col-12 mb-3">
-        {{ jobAdPlaceholderComposite('horizontal') }}
-      </div>
+  <div class="row">
+    <div class="col-12 mb-3">
+      <!-- TODO remove margin if not enabled -->
+      {{ jobAdPlaceholder(campaign_banners_home, 'horizontal') }}
     </div>
-  {% endif %}
+  </div>
   <div class="row neon-modern">
     <div class="col-lg-8">
       {{ titleBanner(title:'Największa społeczność programistyczna w Polsce') }}
@@ -249,11 +247,9 @@
             {% endfor %}
           </div>
         </section>
-        {% if home_ads %}
-          <div class="mt-4">
-            {{ jobAdPlaceholder('square', random(['mobileViking', 'myDevil'])) }}
-          </div>
-        {% endif %}
+        <div class="mt-4">
+          {{ jobAdPlaceholder(campaign_banners_home, 'sidebar') }}
+        </div>
       </aside>
     </div>
   </div>
