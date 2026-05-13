@@ -112,6 +112,14 @@ class CampaignsBannersTest extends TestCase {
         $this->assertEquals('second', $this->facade->getSidebarCampaignKey());
     }
 
+    #[Test]
+    public function horizontalBannerContainsRedirectUrl(): void {
+        $this->facade->addCampaign(campaignKey:'first-key');
+        $this->facade->addCampaign(campaignKey:'second-key');
+        $this->assertEquals(['first-key', 'second-key'],
+            $this->facade->getHorizontalCampaignKeys());
+    }
+
     private function assertArrayKeys(array $expectedKeys, array $actualArray): void {
         $this->assertEquals($expectedKeys, \array_keys($actualArray));
     }
