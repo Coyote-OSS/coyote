@@ -49,6 +49,13 @@ class CampaignsBannersTest extends TestCase {
     }
 
     #[Test]
+    public function horizontalBannersAreSequential(): void {
+        $this->facade->addCampaign(campaignKey:'first');
+        $this->facade->addCampaign(campaignKey:'second');
+        $this->assertArrayKeys([0, 1], $this->facade->getHorizontalBanners());;
+    }
+
+    #[Test]
     public function noBanner_forPriviligedUser_dueToHighReputation(): void {
         $this->facade->addCampaign(sidebarBanner:'sidebar.png', horizontalBanner:'horizontal.png');
         $this->priviligedUsers->setUserHighReputation(true);
@@ -103,5 +110,9 @@ class CampaignsBannersTest extends TestCase {
         $this->assertEquals('first', $this->facade->getSidebarCampaignKey());
         $this->rotateBanners->rotate();
         $this->assertEquals('second', $this->facade->getSidebarCampaignKey());
+    }
+
+    private function assertArrayKeys(array $expectedKeys, array $actualArray): void {
+        $this->assertEquals($expectedKeys, \array_keys($actualArray));
     }
 }

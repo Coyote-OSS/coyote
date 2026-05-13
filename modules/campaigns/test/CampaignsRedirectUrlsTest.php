@@ -31,8 +31,8 @@ class CampaignsRedirectUrlsTest extends TestCase {
     #[Test]
     public function sidebarCampaignKey(): void {
         $this->campaigns->add('', '', 'campaignKey', '');
-        $this->assertEquals('campaignKey', 
-            $this->campaigns->campaignBanners()->sidebarCampaignKey);
+        $this->assertEquals('campaignKey',
+            $this->campaigns->campaignBanners()->sidebar->campaignKey);
     }
 
     #[Test]

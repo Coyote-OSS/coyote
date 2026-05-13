@@ -17,11 +17,11 @@ class Campaigns {
         string $campaignKey,
         string $redirectUrl,
     ): void {
-        if (\array_key_exists($campaignKey, $this->redirectUrls)) {
+        if ($this->campaignExists($campaignKey)) {
             throw new DuplicateCampaign('Failed to add a duplicated campaign.');
         }
-        $this->sidebar[] = $sidebar;
-        $this->horizontal[] = $horizontal;
+        $this->sidebar[$campaignKey] = new CampaignBanner($sidebar, $campaignKey);
+        $this->horizontal[$campaignKey] = new CampaignBanner($horizontal, $campaignKey);
         $this->redirectUrls[$campaignKey] = $redirectUrl;
     }
 
@@ -38,35 +38,34 @@ class Campaigns {
     }
 
     private function disabledCampaignBanners(): CampaignBanners {
-        return new CampaignBanners(
-            [], null, null);
+        return new CampaignBanners([], null);
     }
 
     private function enabledCampaignBanners(): CampaignBanners {
         return new CampaignBanners(
-            $this->horizontal,
-            $this->sidebar(),
-            $this->sidebarCampaignKey());
+            \array_values($this->horizontal), $this->sidebar());
     }
 
-    private function sidebar(): ?string {
+    private function sidebar(): ?CampaignBanner {
         if (empty($this->sidebar)) {
             return null;
         }
-        return $this->rotate->rotateBanners($this->sidebar);
-    }
-
-    private function sidebarCampaignKey(): ?string {
-        if (empty($this->redirectUrls)) {
-            return null;
-        }
-        return $this->rotate->rotateBanners(\array_keys($this->redirectUrls));
+        $rotatedCampaignKey = $this->rotate->rotateBanners($this->campaignKeys());
+        return $this->sidebar[$rotatedCampaignKey];
     }
 
     public function redirectUrl(string $campaignKey): string {
-        if (\array_key_exists($campaignKey, $this->redirectUrls)) {
+        if ($this->campaignExists($campaignKey)) {
             return $this->redirectUrls[$campaignKey];
         }
         throw new NoSuchCampaign('Failed to get campaign redirect url.');
+    }
+
+    private function campaignKeys(): array {
+        return \array_keys($this->sidebar);
+    }
+
+    private function campaignExists(string $campaignKey): bool {
+        return \array_key_exists($campaignKey, $this->redirectUrls);
     }
 }

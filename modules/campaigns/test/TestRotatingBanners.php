@@ -10,7 +10,7 @@ class TestRotatingBanners implements ForRotatingBanners {
         $this->index++;
     }
 
-    public function rotateBanners(array $banners): string {
-        return $banners[$this->index];
+    public function rotateBanners(array $campaignKeys): string {
+        return $campaignKeys[$this->index];
     }
 }

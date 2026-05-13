@@ -10,15 +10,17 @@ readonly class CampaignsFacade {
      * @return string[]
      */
     public function getHorizontalBanners(): array {
-        return $this->campaigns->campaignBanners()->horizontal;
+        return \array_map(
+            fn(Campaigns\CampaignBanner $banner): string => $banner->bannerUrl,
+            $this->campaigns->campaignBanners()->horizontal);
     }
 
     public function getSidebarBanner(): ?string {
-        return $this->campaigns->campaignBanners()->sidebar;
+        return $this->campaigns->campaignBanners()->sidebar->bannerUrl;
     }
 
     public function getSidebarCampaignKey(): ?string {
-        return $this->campaigns->campaignBanners()->sidebarCampaignKey;
+        return $this->campaigns->campaignBanners()->sidebar->campaignKey;
     }
 
     public function addCampaign(

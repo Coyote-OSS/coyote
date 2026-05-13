@@ -3,11 +3,10 @@ namespace Modules\Campaigns;
 
 readonly class CampaignBanners {
     /**
-     * @param string[] $horizontal
+     * @param CampaignBanner[] $horizontal
      */
     public function __construct(
-        public array   $horizontal,
-        public ?string $sidebar,
-        public ?string $sidebarCampaignKey,
+        public array           $horizontal,
+        public ?CampaignBanner $sidebar,
     ) {}
 }

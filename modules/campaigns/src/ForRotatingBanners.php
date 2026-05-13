@@ -3,7 +3,7 @@ namespace Modules\Campaigns;
 
 interface ForRotatingBanners {
     /**
-     * @param string[] $banners
+     * @param string[] $campaignKeys
      */
-    public function rotateBanners(array $banners): string;
+    public function rotateBanners(array $campaignKeys): string;
 }
