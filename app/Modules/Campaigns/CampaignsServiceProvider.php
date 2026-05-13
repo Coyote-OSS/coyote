@@ -27,7 +27,8 @@ class CampaignsServiceProvider extends ServiceProvider {
             Campaigns\Campaigns::class,
             fn(Application $app) => new Campaigns\Campaigns(
                 $app->get(ForPriviligedUsers::class),
-                $app->get(Campaigns\ForRotatingBanners::class),));
+                $app->get(Campaigns\ForRotatingBanners::class),
+                new Campaigns\InMemoryCampaignsStore()));
 
         $this->registerCampaigns($this->app->get(Campaigns\Campaigns::class));
         $this->registerRoutes($this->app->make(Router::class));

@@ -3,6 +3,7 @@ namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns\Campaigns;
 use Modules\Campaigns\DuplicateCampaign;
+use Modules\Campaigns\InMemoryCampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,7 +19,11 @@ class CampaignsBannersTest extends TestCase {
     public function initialize(): void {
         $this->priviligedUsers = new TestPriviligedUsers();
         $this->rotateBanners = new TestRotatingBanners();
-        $this->facade = new CampaignsFacade(new Campaigns($this->priviligedUsers, $this->rotateBanners));
+        $this->facade = new CampaignsFacade(new Campaigns(
+            $this->priviligedUsers,
+            $this->rotateBanners,
+            new InMemoryCampaignsStore(),
+        ));
     }
 
     #[Test]

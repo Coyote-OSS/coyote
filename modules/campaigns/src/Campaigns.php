@@ -1,18 +1,12 @@
 <?php
 namespace Modules\Campaigns;
 
-class Campaigns {
-    private readonly CampaignsStore $store;
-    private array $sidebar = [];
-    private array $horizontal = [];
-    private array $redirectUrls = [];
-
+readonly class Campaigns {
     public function __construct(
-        private readonly ForPriviligedUsers $users,
-        private readonly ForRotatingBanners $rotate,
-    ) {
-        $this->store = new InMemoryCampaignsStore();
-    }
+        private ForPriviligedUsers $users,
+        private ForRotatingBanners $rotate,
+        private CampaignsStore     $store,
+    ) {}
 
     public function add(
         string $sidebar,
@@ -20,23 +14,20 @@ class Campaigns {
         string $campaignKey,
         string $redirectUrl,
     ): void {
-        $existed = $this->store->createIfNotExists($campaignKey, '', '', '');
+        $existed = $this->store->createIfNotExists($campaignKey, $sidebar, $horizontal, $redirectUrl);
         if ($existed) {
             throw new DuplicateCampaign('Failed to add a duplicated campaign.');
         }
-        $this->sidebar[$campaignKey] = new CampaignBanner($sidebar, $campaignKey);
-        $this->horizontal[$campaignKey] = new CampaignBanner($horizontal, $campaignKey);
-        $this->redirectUrls[$campaignKey] = $redirectUrl;
     }
 
     public function campaignBanners(): CampaignBanners {
-        if ($this->campaignBannersDisabled()) {
+        if ($this->isCampaignBannersDisabled()) {
             return $this->disabledCampaignBanners();
         }
         return $this->enabledCampaignBanners();
     }
 
-    private function campaignBannersDisabled(): bool {
+    private function isCampaignBannersDisabled(): bool {
         return $this->users->userHasHighReputation()
             || $this->users->userIsSponsor();
     }
@@ -46,35 +37,38 @@ class Campaigns {
     }
 
     private function enabledCampaignBanners(): CampaignBanners {
+        $sidebars = [];
+        $horizontals = [];
+        $redirectUrls = [];
+        foreach ($this->store->listCampaigns() as $campaign) {
+            $sidebars[$campaign->campaignKey] = new CampaignBanner($campaign->sidebarBanner, $campaign->campaignKey);
+            $horizontals[] = new CampaignBanner($campaign->horizontalBanner, $campaign->campaignKey);
+            $redirectUrls[$campaign->campaignKey] = $campaign->redirectUrl;
+        }
         return new CampaignBanners(
-            $this->horizontalBanners(),
-            $this->sidebarBanner());
+            $horizontals,
+            $this->sidebarBanner($sidebars));
     }
 
-    private function horizontalBanners(): array {
-        return \array_values($this->horizontal);
-    }
-
-    private function sidebarBanner(): ?CampaignBanner {
-        if (empty($this->sidebar)) {
+    /**
+     * @param CampaignBanner[] $sidebarBanners
+     */
+    private function sidebarBanner(array $sidebarBanners): ?CampaignBanner {
+        if (empty($sidebarBanners)) {
             return null;
         }
-        $rotatedCampaignKey = $this->rotate->rotateBanners($this->campaignKeys());
-        return $this->sidebar[$rotatedCampaignKey];
+        $rotatedCampaignKey = $this->rotate->rotateBanners(\array_keys($sidebarBanners));
+        return $sidebarBanners[$rotatedCampaignKey];
     }
 
     public function redirectUrl(string $campaignKey): string {
-        if ($this->campaignExists($campaignKey)) {
-            return $this->redirectUrls[$campaignKey];
+        $redirectUrls = [];
+        foreach ($this->store->listCampaigns() as $campaign) {
+            $redirectUrls[$campaign->campaignKey] = $campaign->redirectUrl;
+        }
+        if (\array_key_exists($campaignKey, $redirectUrls)) {
+            return $redirectUrls[$campaignKey];
         }
         throw new NoSuchCampaign('Failed to get campaign redirect url.');
-    }
-
-    private function campaignKeys(): array {
-        return \array_keys($this->sidebar);
-    }
-
-    private function campaignExists(string $campaignKey): bool {
-        return \array_key_exists($campaignKey, $this->redirectUrls);
     }
 }
