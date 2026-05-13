@@ -2,6 +2,7 @@
 namespace Modules\Campaigns;
 
 class Campaigns {
+    private readonly CampaignsStore $store;
     private array $sidebar = [];
     private array $horizontal = [];
     private array $redirectUrls = [];
@@ -9,7 +10,9 @@ class Campaigns {
     public function __construct(
         private readonly ForPriviligedUsers $users,
         private readonly ForRotatingBanners $rotate,
-    ) {}
+    ) {
+        $this->store = new InMemoryCampaignsStore();
+    }
 
     public function add(
         string $sidebar,
@@ -17,7 +20,8 @@ class Campaigns {
         string $campaignKey,
         string $redirectUrl,
     ): void {
-        if ($this->campaignExists($campaignKey)) {
+        $existed = $this->store->createIfNotExists($campaignKey);
+        if ($existed) {
             throw new DuplicateCampaign('Failed to add a duplicated campaign.');
         }
         $this->sidebar[$campaignKey] = new CampaignBanner($sidebar, $campaignKey);

@@ -1,0 +1,37 @@
+<?php
+namespace Test\Modules\Campaigns;
+
+use Modules\Campaigns\CampaignsStore;
+use Modules\Campaigns\InMemoryCampaignsStore;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+
+class CampaignsStoreTest extends TestCase {
+    private CampaignsStore $store;
+
+    #[Before]
+    public function initialize(): void {
+        $this->store = new InMemoryCampaignsStore();
+    }
+
+    #[Test]
+    public function didNotExistInitially(): void {
+        $existed = $this->store->createIfNotExists('new-campaign');
+        $this->assertFalse($existed);
+    }
+
+    #[Test]
+    public function existedWhenCreatedDuplicateCampaign(): void {
+        $this->store->createIfNotExists('new-campaign');
+        $existed = $this->store->createIfNotExists('new-campaign');
+        $this->assertTrue($existed);
+    }
+
+    #[Test]
+    public function didNotExistWhenCampaignKeyDiffers(): void {
+        $this->store->createIfNotExists('old-campaign');
+        $existed = $this->store->createIfNotExists('new-campaign');
+        $this->assertFalse($existed);
+    }
+}
