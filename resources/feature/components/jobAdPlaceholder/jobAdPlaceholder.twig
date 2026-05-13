@@ -5,9 +5,13 @@
         <img src="{{ banners.sidebar }}"/>
       {% endif %}
       {% if size == 'horizontal' %}
-        {% for horizontal in banners.horizontal %}
-          <img src="{{ horizontal }}"/>
-        {% endfor %}
+        <div class="row g-2">
+          {% for horizontal in banners.horizontal %}
+            <div class="col-12 col-lg-6">
+              <img src="{{ horizontal }}"/>
+            </div>
+          {% endfor %}
+        </div>
       {% endif %}
     </div>
   </a>

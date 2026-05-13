@@ -67,6 +67,13 @@ class CampaignsTest extends TestCase {
         return $this->campaigns->campaignBanners()->sidebar;
     }
 
+    #[Test]
+    public function twoHorizontalBanners(): void {
+        $this->campaigns->add('', 'foo.png');
+        $this->campaigns->add('', 'bar.png');
+        $this->assertEquals(['foo.png', 'bar.png'], $this->horizontalBanners());
+    }
+
     // TODO two campaigns displayed in horizontal
     // TODO two campaigns displayed in sidebar
     // TODO hide after time passes
