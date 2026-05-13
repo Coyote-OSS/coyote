@@ -8,5 +8,6 @@ readonly class CampaignBanners {
     public function __construct(
         public array   $horizontal,
         public ?string $sidebar,
+        public ?string $sidebarCampaignKey,
     ) {}
 }

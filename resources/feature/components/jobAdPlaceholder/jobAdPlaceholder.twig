@@ -1,18 +1,18 @@
 {% macro jobAdPlaceholder(banners, size) %}
-  <a href="/Praca/redirect?family={{ family }}" target="_blank">
-    <div class="job-ad-placeholder {{ size }}">
-      {% if size == 'sidebar' %}
+  <div class="job-ad-placeholder {{ size }}">
+    {% if size == 'sidebar' %}
+      <a href="/campaigns/{{ banners.sidebarCampaignKey }}" target="_blank">
         <img src="{{ banners.sidebar }}"/>
-      {% endif %}
-      {% if size == 'horizontal' %}
-        <div class="row g-2">
-          {% for horizontal in banners.horizontal %}
-            <div class="col-12 col-lg-6">
-              <img src="{{ horizontal }}"/>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    </div>
-  </a>
+      </a>
+    {% endif %}
+    {% if size == 'horizontal' %}
+      <div class="row g-2">
+        {% for horizontal in banners.horizontal %}
+          <div class="col-12 col-lg-6">
+            <img src="{{ horizontal }}"/>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
 {% endmacro %}

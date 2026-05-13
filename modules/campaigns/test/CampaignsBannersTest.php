@@ -1,0 +1,107 @@
+<?php
+namespace Test\Modules\Campaigns;
+
+use Modules\Campaigns\Campaigns;
+use Modules\Campaigns\DuplicateCampaign;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+
+#[CoversClass(Campaigns::class)]
+class CampaignsBannersTest extends TestCase {
+    private TestPriviligedUsers $priviligedUsers;
+    private TestRotatingBanners $rotateBanners;
+    private CampaignsFacade $facade;
+
+    #[Before]
+    public function initialize(): void {
+        $this->priviligedUsers = new TestPriviligedUsers();
+        $this->rotateBanners = new TestRotatingBanners();
+        $this->facade = new CampaignsFacade(new Campaigns($this->priviligedUsers, $this->rotateBanners));
+    }
+
+    #[Test]
+    public function noSidebarBanner(): void {
+        $this->assertNull($this->facade->getSidebarBanner());
+    }
+
+    #[Test]
+    public function noHorizontalBanners(): void {
+        $this->assertEmpty($this->facade->getHorizontalBanners());
+    }
+
+    #[Test]
+    public function noSidebarCampaignKey(): void {
+        $this->assertNull($this->facade->getSidebarCampaignKey());
+    }
+
+    #[Test]
+    public function singleSidebarBanner(): void {
+        $this->facade->addCampaign(sidebarBanner:'sidebar.png');
+        $this->assertEquals('sidebar.png', $this->facade->getSidebarBanner());
+    }
+
+    #[Test]
+    public function singleHorizontalBanner(): void {
+        $this->facade->addCampaign(horizontalBanner:'horizontal.png');
+        $this->assertEquals(['horizontal.png'], $this->facade->getHorizontalBanners());
+    }
+
+    #[Test]
+    public function noBanner_forPriviligedUser_dueToHighReputation(): void {
+        $this->facade->addCampaign(sidebarBanner:'sidebar.png', horizontalBanner:'horizontal.png');
+        $this->priviligedUsers->setUserHighReputation(true);
+        $this->assertNull($this->facade->getSidebarBanner());
+        $this->assertEmpty($this->facade->getHorizontalBanners());
+        $this->assertNull($this->facade->getSidebarCampaignKey());
+    }
+
+    #[Test]
+    public function noBanner_forPriviligedUser_dueToBeingSponsor(): void {
+        $this->facade->addCampaign(sidebarBanner:'sidebar.png', horizontalBanner:'horizontal.png');
+        $this->priviligedUsers->setUserSponsor(true);
+        $this->assertNull($this->facade->getSidebarBanner());
+        $this->assertEmpty($this->facade->getHorizontalBanners());
+        $this->assertNull($this->facade->getSidebarCampaignKey());
+    }
+
+    #[Test]
+    public function twoHorizontalBanners(): void {
+        $this->facade->addCampaign(horizontalBanner:'foo.png', campaignKey:'key-1');
+        $this->facade->addCampaign(horizontalBanner:'bar.png', campaignKey:'key-2');
+        $this->assertEquals(['foo.png', 'bar.png'], $this->facade->getHorizontalBanners());
+    }
+
+    #[Test]
+    public function sidebarBannerRotates(): void {
+        $this->facade->addCampaign(sidebarBanner:'first.png', campaignKey:'key-1');
+        $this->facade->addCampaign(sidebarBanner:'second.png', campaignKey:'key-2');
+        $this->assertEquals('first.png', $this->facade->getSidebarBanner());
+        $this->rotateBanners->rotate();
+        $this->assertEquals('second.png', $this->facade->getSidebarBanner());
+    }
+
+    #[Test]
+    public function failToCreateCampaignWithDuplicateKey(): void {
+        $this->facade->addCampaign(redirectUrl:'duplicate-key');
+        $this->expectException(DuplicateCampaign::class);
+        $this->expectExceptionMessage('Failed to add a duplicated campaign.');
+        $this->facade->addCampaign(redirectUrl:'duplicate-key');
+    }
+
+    #[Test]
+    public function sidebarCampaignKeyForRedirectUrl(): void {
+        $this->facade->addCampaign(campaignKey:'campaignKey');
+        $this->assertEquals('campaignKey', $this->facade->getSidebarCampaignKey());
+    }
+
+    #[Test]
+    public function sidebarCampaignKeyRotates(): void {
+        $this->facade->addCampaign(campaignKey:'first');
+        $this->facade->addCampaign(campaignKey:'second');
+        $this->assertEquals('first', $this->facade->getSidebarCampaignKey());
+        $this->rotateBanners->rotate();
+        $this->assertEquals('second', $this->facade->getSidebarCampaignKey());
+    }
+}

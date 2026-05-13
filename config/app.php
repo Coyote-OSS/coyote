@@ -193,6 +193,7 @@ return [
         Coyote\Providers\EventServiceProvider::class,
         Coyote\Providers\Neon\ServiceProvider::class,
         Neon2\Laravel\RouteServiceProvider::class,
+        Coyote\Modules\Campaigns\CampaignsServiceProvider::class,
         Coyote\Providers\RouteServiceProvider::class,
         Coyote\Providers\ViewServiceProvider::class,
         Coyote\Providers\AuthServiceProvider::class,
@@ -230,7 +231,6 @@ return [
         Swap\Laravel\SwapServiceProvider::class,
         Coyote\Providers\SeoServiceProvider::class,
         Coyote\Feature\JobBoard\JobBoardServiceProvider::class,
-        Coyote\Modules\Campaigns\CampaignsServiceProvider::class,
     ],
 
     /*
