@@ -230,7 +230,9 @@ return [
         Swap\Laravel\SwapServiceProvider::class,
         Coyote\Providers\SeoServiceProvider::class,
         Coyote\Feature\JobBoard\JobBoardServiceProvider::class,
+        Coyote\Modules\Campaigns\CampaignsServiceProvider::class,
     ],
+
     /*
     |--------------------------------------------------------------------------
     | Class Aliases

@@ -27,9 +27,15 @@ use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use Modules\Campaigns;
 
 class TopicController extends BaseController {
-    public function index(Request $request, Forum $forum, Topic $topic): Collection|View|array {
+    public function index(
+        Request             $request,
+        Forum               $forum,
+        Topic               $topic,
+        Campaigns\Campaigns $campaigns,
+    ): Collection|View|array {
         if (!$this->visibleDespiteIncognitoUser($topic)) {
             abort(404);
         }
@@ -179,6 +185,7 @@ class TopicController extends BaseController {
                 'flags'                   => $this->flags($forum),
                 'schema_topic'            => $this->discussionForumPosting($topic, $post['html']),
                 'topic_ads'               => $this->userIncludeAds(),
+                'campaign_banners_topic'  => $campaigns->campaignBanners(),
             ]);
     }
 
