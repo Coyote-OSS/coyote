@@ -6,12 +6,9 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Legacy\IntegrationNew\BaseFixture;
 
 #[CoversClass(TimeRotatingBanners::class)]
 class TimeRotatingBannersTest extends TestCase {
-    use BaseFixture\Server\Http;
-
     private TimeRotatingBanners $rotate;
     private TestClock $clock;
 

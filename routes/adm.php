@@ -143,19 +143,26 @@ $this->group(
         $this->get('Tags/Save/{tag?}', 'TagsController@edit')->name('tags.save');
         $this->post('Tags/Save/{tag?}', 'TagsController@save');
         $this->post('Tags/Delete/{tag?}', 'TagsController@delete')->name('tags.delete');
-        
-        $this->get('Multiacc','MultiaccController@index')->name('multiacc.home');
-        $this->post('Multiacc','MultiaccController@createEmpty')->name('multiacc.create');
-        $this->get('Multiacc/Join','MultiaccController@form')->name('multiacc.join.form');
-        $this->post('Multiacc/Join','MultiaccController@create')->name('multiacc.join.save');
-        $this->get('Multiacc/{multiacc}/Show','MultiaccController@show')->name('multiacc.show');
-        $this->get('Multiacc/{multiacc}/Note','MultiaccController@noteForm')->name('multiacc.noteForm');
-        $this->post('Multiacc/{multiacc}/Note','MultiaccController@noteSave')->name('multiacc.noteSave');
-        $this->post('Multiacc/Find','MultiaccController@findByUsername')->name('multiacc.findByUsername');
-        $this->get('Multiacc/{multiacc}/Include','MultiaccController@includeUserForm')->name('multiacc.includeUser.form');
-        $this->post('Multiacc/{multiacc}/Include','MultiaccController@includeUserSave')->name('multiacc.includeUser.save');
-        
-        $this->get('Incognito','IncognitoController@index')->name('incognito.home');
-        $this->get('Cohort/Download','CohortController@download')->name('cohort.download');
+
+        $this->get('Multiacc', 'MultiaccController@index')->name('multiacc.home');
+        $this->post('Multiacc', 'MultiaccController@createEmpty')->name('multiacc.create');
+        $this->get('Multiacc/Join', 'MultiaccController@form')->name('multiacc.join.form');
+        $this->post('Multiacc/Join', 'MultiaccController@create')->name('multiacc.join.save');
+        $this->get('Multiacc/{multiacc}/Show', 'MultiaccController@show')->name('multiacc.show');
+        $this->get('Multiacc/{multiacc}/Note', 'MultiaccController@noteForm')->name('multiacc.noteForm');
+        $this->post('Multiacc/{multiacc}/Note', 'MultiaccController@noteSave')->name('multiacc.noteSave');
+        $this->post('Multiacc/Find', 'MultiaccController@findByUsername')->name('multiacc.findByUsername');
+        $this->get('Multiacc/{multiacc}/Include', 'MultiaccController@includeUserForm')->name('multiacc.includeUser.form');
+        $this->post('Multiacc/{multiacc}/Include', 'MultiaccController@includeUserSave')->name('multiacc.includeUser.save');
+
+        $this->get('Incognito', 'IncognitoController@index')->name('incognito.home');
+        $this->get('Cohort/Download', 'CohortController@download')->name('cohort.download');
+
+        $this->group(['namespace' => '\Coyote\Modules\Campaigns\Adm'], function () {
+            $this->get('Campaigns', 'CampaignsController@index')->name('campaigns');
+            $this->get('Campaigns/Save/{campaign?}', 'CampaignsController@edit')->name('campaigns.save');
+            $this->post('Campaigns/Save/{campaign?}', 'CampaignsController@save');
+            $this->post('Campaigns/Delete/{campaign}', 'CampaignsController@delete')->name('campaigns.delete');
+        });
     },
 );

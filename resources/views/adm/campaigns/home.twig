@@ -1,0 +1,15 @@
+{% extends 'adm.base' %}
+{% block title %}Kampanie {{ parent() }}{% endblock %}
+
+{% block container %}
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span class="me-auto">Kampanie reklamowe</span>
+      <a class="ms-2 btn btn-sm btn-primary" href="{{ createFormHref }}">
+        {{ icon('genericAdd') }}
+        Dodaj nową
+      </a>
+    </div>
+    {{ grid(grid) }}
+  </div>
+{% endblock %}

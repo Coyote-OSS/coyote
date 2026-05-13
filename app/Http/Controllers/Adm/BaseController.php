@@ -52,6 +52,7 @@ class BaseController extends Controller
             $menu->add('Dziennik zdarzeń', ['route' => 'adm.stream'])->prepend($fa('fa-newspaper fa-fw'));
             $menu->add('Cenzura', ['route' => 'adm.words'])->prepend($fa('fa-highlighter fa-fw'));
             $menu->add('Tagi', ['route' => 'adm.tags'])->prepend($fa('fa-tag fa-fw'));
+            $menu->add('Kampanie', ['route' => 'adm.campaigns'])->prepend($fa('fa-bullhorn fa-fw'));
 
             $menu->divide(['class' => 'menu-group-service-operations']);
 

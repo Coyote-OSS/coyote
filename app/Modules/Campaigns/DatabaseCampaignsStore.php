@@ -25,7 +25,7 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
     }
 
     /**
-     * @return Campaign[]
+     * @return Eloquent\Campaign[]
      */
     public function listCampaigns(): array {
         return $this->table()

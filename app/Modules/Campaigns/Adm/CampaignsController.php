@@ -1,0 +1,47 @@
+<?php
+namespace Coyote\Modules\Campaigns\Adm;
+
+use Boduch\Grid\Source\EloquentSource;
+use Coyote\Http\Controllers\Adm\BaseController;
+use Coyote\Modules\Campaigns\Eloquent\Campaign;
+use Coyote\Services\FormBuilder\Form;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+
+class CampaignsController extends BaseController {
+    public function __construct() {
+        parent::__construct();
+        $this->breadcrumb->push('Kampanie', route('adm.campaigns'));
+    }
+
+    public function index(): View {
+        return $this->view('adm.campaigns.home', [
+            'createFormHref' => route('adm.campaigns.save'),
+            'grid'           => $this->gridBuilder()
+                ->createGrid(CampaignsGrid::class)
+                ->setSource(new EloquentSource(Campaign::query())),
+        ]);
+    }
+
+    public function edit(Campaign $campaign): View {
+        $this->breadcrumb->push('Edycja', route('adm.campaigns.save', ['campaign' => $campaign]));
+        return $this->view('adm.campaigns.save')->with('form', $this->getForm($campaign));
+    }
+
+    public function save(Campaign $campaign): RedirectResponse {
+        $form = $this->getForm($campaign);
+        $form->validate();
+        $campaign->fill($form->all());
+        $campaign->save();
+        return redirect()->route('adm.campaigns')->with('success', 'Zmiany zostały zapisane.');
+    }
+
+    public function delete(Campaign $campaign): RedirectResponse {
+        $campaign->delete();
+        return redirect()->route('adm.campaigns')->with('success', 'Kampania została usunięta.');
+    }
+
+    private function getForm(Campaign $campaign): Form {
+        return $this->createForm(CampaignsForm::class, $campaign);
+    }
+}

@@ -10,13 +10,11 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Legacy\IntegrationNew\BaseFixture;
-use Tests\Legacy\IntegrationNew\BaseFixture\Server\Laravel;
+use Tests\Legacy\IntegrationNew\BaseFixture\Server;
 
 #[CoversClass(DatabaseCampaignsStore::class)]
 class DatabaseCampaignsStoreTest extends TestCase {
-    use BaseFixture\Server\Http;
-    use Laravel\Transactional;
+    use Server\Laravel\Transactional;
 
     private CampaignsStore $store;
     private Database\Connection $connection;
@@ -73,10 +71,6 @@ class DatabaseCampaignsStoreTest extends TestCase {
         return $this->store->createIfNotExists($campaignKey, '', '', '');
     }
 
-    private function table(): Query\Builder {
-        return $this->connection->table('module_campaigns');
-    }
-
     private function insert(string $campaignKey): void {
         $this->table()->insert([
             'campaign_key' => $campaignKey,
@@ -88,5 +82,9 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     private function selectCount(string $campaignKey): int {
         return $this->table()->where(['campaign_key' => $campaignKey])->count();
+    }
+
+    private function table(): Query\Builder {
+        return $this->connection->table('module_campaigns');
     }
 }

@@ -6,11 +6,11 @@ use Modules\Campaigns\Campaigns;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Legacy\IntegrationNew\BaseFixture;
+use Tests\Legacy\IntegrationNew\BaseFixture\Server;
 
 #[CoversClass(CampaignController::class)]
 class CampaignControllerTest extends TestCase {
-    use BaseFixture\Server\Http;
+    use Server\Laravel\Transactional;
 
     #[Test]
     public function redirectsToHomepage_forNoSuchCampaign(): void {
