@@ -12,9 +12,7 @@ use Coyote\Services\Geocoder\Location;
 use Coyote\Services\Skills\Predictions;
 use Coyote\Tag;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -85,27 +83,5 @@ class AdController extends Controller {
             $job->ad_views = $views + 1;
             $job->save();
         }
-    }
-
-    public function redirect(Request $request): RedirectResponse {
-        if ($request->query('family') === 'mobileViking') {
-            $redirectUrl = 'https://mobilevikings.pl/pl/oferta-na-karte/?utm_source=4programmers&utm_medium=cpc&utm_campaign=voice_display_cpm_null_1';
-            $this->settingsIncrement('job_ad.1.mobile_vikings');
-            return redirect()->to($redirectUrl);
-        }
-        if ($request->query('family') === 'myDevil') {
-            $redirectUrl = 'https://www.mydevil.net/hosting-dla-developerow/?__s=4programmers.net';
-            $this->settingsIncrement('job_ad.1.my_devil');
-            return redirect()->to($redirectUrl);
-        }
-        return redirect()->to('/');
-    }
-
-    private function settingsIncrement(string $key): void {
-        $connection = app(Connection::class);
-        $connection->table('settings_key_value')->insert([
-            'key'   => $key,
-            'value' => now(),
-        ]);
     }
 }

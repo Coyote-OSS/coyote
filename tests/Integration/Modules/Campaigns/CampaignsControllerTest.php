@@ -1,15 +1,15 @@
 <?php
 namespace Tests\Integration\Modules\Campaigns;
 
-use Coyote\Modules\Campaigns\CampaignController;
+use Coyote\Modules\Campaigns\CampaignsController;
 use Modules\Campaigns\Campaigns;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\Legacy\IntegrationNew\BaseFixture\Server;
 
-#[CoversClass(CampaignController::class)]
-class CampaignControllerTest extends TestCase {
+#[CoversClass(CampaignsController::class)]
+class CampaignsControllerTest extends TestCase {
     use Server\Laravel\Transactional;
 
     #[Test]
