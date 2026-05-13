@@ -2,13 +2,16 @@
 namespace Modules\Campaigns;
 
 class Campaigns {
-    private ?string $sidebar = null;
+    private array $sidebar = [];
     private array $horizontal = [];
 
-    public function __construct(private readonly ForPriviligedUsers $users) {}
+    public function __construct(
+        private readonly ForPriviligedUsers $users,
+        private readonly ForRotatingBanners $rotate,
+    ) {}
 
     public function add(string $sidebar, string $horizontal): void {
-        $this->sidebar = $sidebar;
+        $this->sidebar[] = $sidebar;
         $this->horizontal[] = $horizontal;
     }
 
@@ -29,6 +32,13 @@ class Campaigns {
     }
 
     private function enabledCampaignBanners(): CampaignBanners {
-        return new CampaignBanners($this->horizontal, $this->sidebar);
+        return new CampaignBanners($this->horizontal, $this->sidebar());
+    }
+
+    private function sidebar(): ?string {
+        if (empty($this->sidebar)) {
+            return null;
+        }
+        return $this->rotate->rotateBanners($this->sidebar);
     }
 }

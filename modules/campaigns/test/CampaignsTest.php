@@ -11,11 +11,13 @@ use PHPUnit\Framework\TestCase;
 class CampaignsTest extends TestCase {
     private Campaigns $campaigns;
     private TestPriviligedUsers $priviligedUsers;
+    private TestRotatingBanners $rotateBanners;
 
     #[Before]
     public function initialize(): void {
         $this->priviligedUsers = new TestPriviligedUsers();
-        $this->campaigns = new Campaigns($this->priviligedUsers);
+        $this->rotateBanners = new TestRotatingBanners();
+        $this->campaigns = new Campaigns($this->priviligedUsers, $this->rotateBanners);
     }
 
     #[Test]
@@ -56,6 +58,22 @@ class CampaignsTest extends TestCase {
         $this->assertEmpty($this->horizontalBanners());
     }
 
+    #[Test]
+    public function twoHorizontalBanners(): void {
+        $this->campaigns->add('', 'foo.png');
+        $this->campaigns->add('', 'bar.png');
+        $this->assertEquals(['foo.png', 'bar.png'], $this->horizontalBanners());
+    }
+
+    #[Test]
+    public function sidebarBannerRotates_firstBanner(): void {
+        $this->campaigns->add('first.png', '');
+        $this->campaigns->add('second.png', '');
+        $this->assertEquals('first.png', $this->sidebarBanner());
+        $this->rotateBanners->rotate();
+        $this->assertEquals('second.png', $this->sidebarBanner());
+    }
+
     /**
      * @return string[]
      */
@@ -67,15 +85,6 @@ class CampaignsTest extends TestCase {
         return $this->campaigns->campaignBanners()->sidebar;
     }
 
-    #[Test]
-    public function twoHorizontalBanners(): void {
-        $this->campaigns->add('', 'foo.png');
-        $this->campaigns->add('', 'bar.png');
-        $this->assertEquals(['foo.png', 'bar.png'], $this->horizontalBanners());
-    }
-
-    // TODO two campaigns displayed in horizontal
-    // TODO two campaigns displayed in sidebar
     // TODO hide after time passes
     // TODO hide after views passed
     // TODO count and present views
