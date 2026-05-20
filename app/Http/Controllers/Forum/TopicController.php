@@ -31,10 +31,11 @@ use Modules\Campaigns;
 
 class TopicController extends BaseController {
     public function index(
-        Request             $request,
-        Forum               $forum,
-        Topic               $topic,
-        Campaigns\Campaigns $campaigns,
+        Request                  $request,
+        Forum                    $forum,
+        Topic                    $topic,
+        Campaigns\Campaigns      $campaigns,
+        Campaigns\CampaignsStore $store,
     ): Collection|View|array {
         if (!$this->visibleDespiteIncognitoUser($topic)) {
             abort(404);
@@ -162,6 +163,12 @@ class TopicController extends BaseController {
         $topic->load('tags');
 
         $post = array_first($posts['data']);
+
+        $campaignBanners = $campaigns->campaignBanners();
+        foreach ($campaignBanners->all() as $banner) {
+            $store->campaignView($banner->campaignKey, $banner->bannerType);
+        }
+
         return $this
             ->view('forum.topic', [
                 'threadStartUrl'          => route('forum.topic', [$forum->slug, $topic->id, $topic->slug]),
@@ -185,7 +192,7 @@ class TopicController extends BaseController {
                 'flags'                   => $this->flags($forum),
                 'schema_topic'            => $this->discussionForumPosting($topic, $post['html']),
                 'topic_ads'               => $this->userIncludeAds(),
-                'campaign_banners_topic'  => $campaigns->campaignBanners(),
+                'campaign_banners_topic'  => $campaignBanners,
             ]);
     }
 

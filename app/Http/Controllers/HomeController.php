@@ -33,11 +33,19 @@ class HomeController extends Controller {
         parent::__construct();
     }
 
-    public function index(Campaigns\Campaigns $campaigns): View {
+    public function index(
+        Campaigns\Campaigns      $campaigns,
+        Campaigns\CampaignsStore $store,
+    ): View {
         $cache = app(Cache\Repository::class);
         $this->topic->pushCriteria(new OnlyThoseTopicsWithAccess());
         $this->topic->pushCriteria(new SkipHiddenCategories($this->userId));
         $date = new DiscreetDate(date('Y-m-d H:i:s'));
+
+        $campaignBanners = $campaigns->campaignBanners();
+        foreach ($campaignBanners->all() as $banner) {
+            $store->campaignView($banner->campaignKey, $banner->bannerType);
+        }
 
         return $this->view('home', [
             'flags'                 => $this->flags(),
@@ -56,7 +64,7 @@ class HomeController extends Controller {
             'homepageMembers'       => $this->members(),
             'settings'              => $this->getSettings(),
             'home_ads'              => $this->userIncludeAds(),
-            'campaign_banners_home' => $campaigns->campaignBanners(),
+            'campaign_banners_home' => $campaignBanners,
         ]);
     }
 

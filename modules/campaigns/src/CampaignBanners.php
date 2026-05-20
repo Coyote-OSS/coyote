@@ -9,4 +9,14 @@ readonly class CampaignBanners {
         public array           $horizontal,
         public ?CampaignBanner $sidebar,
     ) {}
+
+    /**
+     * @return CampaignBanner[]
+     */
+    public function all(): array {
+        if ($this->sidebar === null) {
+            return $this->horizontal;
+        }
+        return [...$this->horizontal, $this->sidebar];
+    }
 }
