@@ -36,12 +36,10 @@ class CampaignsController extends BaseController {
             'bannerHorizontal' => new BannerViewModel(
                 $store->campaignViewCount($campaignKey, 'horizontal'),
                 $store->campaignClickCount($campaignKey, 'horizontal'),
-                -1,
                 $campaign->horizontal),
             'bannerSidebar'    => new BannerViewModel(
                 $store->campaignViewCount($campaignKey, 'sidebar'),
                 $store->campaignClickCount($campaignKey, 'sidebar'),
-                -1,
                 $campaign->sidebar),
         ]);
     }

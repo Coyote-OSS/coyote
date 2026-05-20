@@ -54,6 +54,7 @@ readonly class FontAwesomePro {
             'campaign'                                  => 'fa-light fa-bullhorn',
             'campaignViews'                             => 'fa-light fa-eye',
             'campaignClicks'                            => 'fa-light fa-hand-pointer',
+            'campaignCtr'                               => 'fa-light fa-chart-area',
 
             // microblog
             'microblogNew'                              => 'fa-light fa-plus',
