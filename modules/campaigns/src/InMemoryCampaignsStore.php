@@ -34,4 +34,12 @@ class InMemoryCampaignsStore implements CampaignsStore {
     public function campaignClickCount(string $campaignKey, string $bannerType): int {
         throw new \Exception('Not implemented');
     }
+
+    public function campaignView(string $campaignKey, string $bannerType): void {
+        throw new \Exception('Not implemented');
+    }
+
+    public function campaignViewCount(string $campaignKey, string $bannerType): int {
+        throw new \Exception('Not implemented');
+    }
 }

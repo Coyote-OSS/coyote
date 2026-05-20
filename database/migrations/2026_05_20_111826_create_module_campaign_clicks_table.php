@@ -9,6 +9,7 @@ return new class extends Migration {
         Schema::create('module_campaign_clicks', function (Blueprint $table) {
             $table->id();
             $table->string('banner_type');
+            $table->string('event_type');
             $table->integer('campaign_id')->nullable()->index();
             $table->foreign('campaign_id')
                 ->references('id')

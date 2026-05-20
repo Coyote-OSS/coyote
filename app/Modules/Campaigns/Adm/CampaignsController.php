@@ -34,12 +34,12 @@ class CampaignsController extends BaseController {
                 $campaign->redirect_url,
                 route('adm.campaigns.save', [$campaign->id])),
             'bannerHorizontal' => new BannerViewModel(
-                -1,
+                $store->campaignViewCount($campaignKey, 'horizontal'),
                 $store->campaignClickCount($campaignKey, 'horizontal'),
                 -1,
                 $campaign->horizontal),
             'bannerSidebar'    => new BannerViewModel(
-                -1,
+                $store->campaignViewCount($campaignKey, 'sidebar'),
                 $store->campaignClickCount($campaignKey, 'sidebar'),
                 -1,
                 $campaign->sidebar),

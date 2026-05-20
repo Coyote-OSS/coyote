@@ -16,5 +16,9 @@ interface CampaignsStore {
 
     public function campaignClick(string $campaignKey, string $bannerType): void;
 
+    public function campaignView(string $campaignKey, string $bannerType): void;
+
     public function campaignClickCount(string $campaignKey, string $bannerType): int;
+
+    public function campaignViewCount(string $campaignKey, string $bannerType): int;
 }

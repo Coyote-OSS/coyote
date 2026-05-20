@@ -3,7 +3,6 @@ namespace Coyote\Modules\Campaigns;
 
 use Illuminate\Database;
 use Illuminate\Database\Query;
-use Illuminate\Support\Facades\DB;
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
 
@@ -45,33 +44,51 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
     }
 
     public function campaignClickCount(string $campaignKey, string $bannerType): int {
-        return $this->connection
-            ->table('module_campaigns')
-            ->leftJoin('module_campaign_clicks', function (Query\JoinClause $join) use ($bannerType): void {
-                $join->on('campaign_id', '=', 'module_campaigns.id');
-                $join->on('banner_type', '=', DB::raw("'$bannerType'"));
-            })
-            ->where('campaign_key', $campaignKey)
-            ->groupBy('module_campaigns.id', 'banner_type')
-            ->selectRaw('COUNT(module_campaign_clicks.id) AS clicks')
-            ->first('clicks')
-            ?->clicks
-            ?? throw new \Exception('No such campaign.');
+        return $this->countCampaignEvents($campaignKey, $bannerType, 'click');
     }
 
     public function campaignClick(string $campaignKey, string $bannerType): void {
-        $this->connection
-            ->table('module_campaign_clicks')
-            ->insert([
-                'campaign_id' => $this->findCampaignId($campaignKey),
-                'banner_type' => $bannerType,
-            ]);
+        $this->insertCampaignEvent($campaignKey, $bannerType, 'click');
+    }
+
+    public function campaignView(string $campaignKey, string $bannerType): void {
+        $this->insertCampaignEvent($campaignKey, $bannerType, 'view');
+    }
+
+    public function campaignViewCount(string $campaignKey, string $bannerType): int {
+        return $this->countCampaignEvents($campaignKey, $bannerType, 'view');
     }
 
     private function findCampaignId(string $campaignKey): int {
         return $this->table()
             ->where('campaign_key', $campaignKey)
             ->first('id')
-            ->id;
+            ?->id
+            ?? throw new \Exception('No such campaign.');
+    }
+
+    private function insertCampaignEvent(string $campaignKey, string $bannerType, string $eventType): void {
+        $this->connection
+            ->table('module_campaign_clicks')
+            ->insert([
+                'campaign_id' => $this->findCampaignId($campaignKey),
+                'banner_type' => $bannerType,
+                'event_type'  => $eventType,
+            ]);
+    }
+
+    private function countCampaignEvents(string $campaignKey, string $bannerType, string $eventType) {
+        return $this->connection
+            ->table('module_campaigns')
+            ->leftJoin('module_campaign_clicks', fn(Query\JoinClause $join) => $join
+                ->on('campaign_id', '=', 'module_campaigns.id')
+                ->where('banner_type', '=', $bannerType)
+                ->where('event_type', '=', $eventType))
+            ->where('campaign_key', $campaignKey)
+            ->groupBy('module_campaigns.id', 'banner_type')
+            ->selectRaw('COUNT(module_campaign_clicks.id) AS clicks')
+            ->first('clicks')
+            ?->clicks
+            ?? throw new \Exception('No such campaign.');
     }
 }

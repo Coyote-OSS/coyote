@@ -105,6 +105,41 @@ class DatabaseCampaignsStoreTest extends TestCase {
         $this->assertEquals(2, $this->store->campaignClickCount('key', 'banner2'));
     }
 
+    #[Test]
+    public function failToClick_noSuchCampaign(): void {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No such campaign.');
+        $this->store->campaignClick('key', 'banner');
+    }
+
+    #[Test]
+    public function failToCountCampaignViews_noSuchCampaign(): void {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No such campaign.');
+        $this->store->campaignView('key', 'banner');
+    }
+
+    #[Test]
+    public function countCampaignViews_campaignHasZeroViews(): void {
+        $this->store->createIfNotExists('key', '', '', '');
+        $this->assertEquals(0, $this->store->campaignViewCount('key', 'banner'));
+    }
+
+    #[Test]
+    public function countCampaignViews_campaignHasOneView(): void {
+        $this->store->createIfNotExists('key', '', '', '');
+        $this->store->campaignView('key', 'banner');
+        $this->assertEquals(1, $this->store->campaignViewCount('key', 'banner'));
+    }
+
+    #[Test]
+    public function countCampaignViews_campaignHasManyView(): void {
+        $this->store->createIfNotExists('key', '', '', '');
+        $this->store->campaignView('key', 'banner');
+        $this->store->campaignView('key', 'banner');
+        $this->assertEquals(2, $this->store->campaignViewCount('key', 'banner'));
+    }
+
     private function createIfNotExists(string $campaignKey): bool {
         return $this->store->createIfNotExists($campaignKey, '', '', '');
     }
