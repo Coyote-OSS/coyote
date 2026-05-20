@@ -1,6 +1,8 @@
 {% extends 'adm.base' %}
 {% block title %}Edycja kampanii {{ parent() }}{% endblock %}
 
+{% from 'adm.campaigns.campaignBannerCard' import campaignBannerCard %}
+
 {% block container %}
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
@@ -21,7 +23,7 @@
             {{ icon('genericLink') }}
             <b>Klucz reklamy</b>: <code>{{ campaign.key }}</code>
           </span>
-          <span class="text-muted">
+          <span class="text-muted d-none d-lg-block">
             Klucz używany do identyfikacji reklamy i kliknięć.
           </span>
         </div>
@@ -33,47 +35,8 @@
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header">
-      {{ icon('genericImage') }}
-      Baner poziomy
-    </div>
-    <div class="card-body">
-      <div class="d-flex justify-content-between">
-        <div>
-          <p>{{ icon('campaignViews') }} Wyświetlenia: <code>{{ bannerHorizontal.views }}</code></p>
-          <p>{{ icon('campaignClicks') }} Kliknięcia: <code>{{ bannerHorizontal.clicks }}</code></p>
-          <p>CTR: <code>{{ bannerHorizontal.ctr }} (not-ready)</code></p>
-        </div>
-        <div>
-          <img class="img-thumbnail banner-horizontal"
-               src="{{ bannerHorizontal.bannerSrc }}"
-               alt="Baner poziomy">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      {{ icon('genericImage') }}
-      Baner boczny
-    </div>
-    <div class="card-body">
-      <div class="d-flex justify-content-between">
-        <div>
-          <p>{{ icon('campaignViews') }} Wyświetlenia: <code>{{ bannerSidebar.views }}</code></p>
-          <p>{{ icon('campaignClicks') }} Kliknięcia: <code>{{ bannerSidebar.clicks }}</code></p>
-          <p>CTR: <code>{{ bannerSidebar.ctr }}</code> (not-ready)</p>
-        </div>
-        <div>
-          <img class="img-thumbnail banner-sidebar"
-               src="{{ bannerSidebar.bannerSrc }}"
-               alt="Baner boczny">
-        </div>
-      </div>
-    </div>
-  </div>
+  {{ campaignBannerCard(title:'Baner poziomy', banner:bannerHorizontal, imgClass:'banner-horizontal') }}
+  {{ campaignBannerCard(title:'Baner boczny', banner:bannerSidebar, imgClass:'banner-sidebar') }}
 
   <style>
     .banner-horizontal {

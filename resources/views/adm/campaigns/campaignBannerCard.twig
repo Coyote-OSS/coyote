@@ -1,0 +1,28 @@
+{% macro campaignBannerCard(title, banner, imgClass) %}
+  <div class="card">
+    <div class="card-header">
+      {{ icon('genericImage') }}
+      {{ title }}
+    </div>
+    <div class="list-group list-group-flush flex-grow-1">
+      <div class="list-group-item">
+        {{ icon('campaignViews') }}
+        <b>Wyświetlenia:</b>
+        <code>{{ banner.views }}</code>
+      </div>
+      <div class="list-group-item">
+        {{ icon('campaignClicks') }}
+        <b>Kliknięcia:</b>
+        <code>{{ banner.clicks }}</code>
+      </div>
+      <div class="list-group-item">
+        CTR: <code>{{ banner.ctr }} (not-ready)</code>
+      </div>
+      <div class="list-group-item">
+        <img class="img-thumbnail {{ imgClass }}"
+             src="{{ banner.bannerSrc }}"
+             alt="{{ title }}">
+      </div>
+    </div>
+  </div>
+{% endmacro %}
