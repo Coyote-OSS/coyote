@@ -9,6 +9,7 @@ use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Coyote\Services\FormBuilder\Form;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Modules\Campaigns\CampaignsStore;
 
 class CampaignsController extends BaseController {
     public function __construct() {
@@ -25,21 +26,22 @@ class CampaignsController extends BaseController {
         ]);
     }
 
-    public function show(Campaign $campaign): View {
+    public function show(Campaign $campaign, CampaignsStore $store): View {
+        $campaignKey = $campaign->campaign_key;
         return $this->view('adm.campaigns.show', [
             'campaign'         => new CampaignViewModel(
-                $campaign->campaign_key,
+                $campaignKey,
                 $campaign->redirect_url,
                 route('adm.campaigns.save', [$campaign->id])),
             'bannerHorizontal' => new BannerViewModel(
-                123,
-                456,
-                0.45,
+                -1,
+                $store->campaignClickCount($campaignKey, 'horizontal'),
+                -1,
                 $campaign->horizontal),
             'bannerSidebar'    => new BannerViewModel(
-                123,
-                456,
-                0.45,
+                -1,
+                $store->campaignClickCount($campaignKey, 'sidebar'),
+                -1,
                 $campaign->sidebar),
         ]);
     }

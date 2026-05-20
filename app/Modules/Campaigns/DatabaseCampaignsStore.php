@@ -3,6 +3,7 @@ namespace Coyote\Modules\Campaigns;
 
 use Illuminate\Database;
 use Illuminate\Database\Query;
+use Illuminate\Support\Facades\DB;
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
 
@@ -41,5 +42,36 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
 
     private function table(): Query\Builder {
         return $this->connection->table('module_campaigns');
+    }
+
+    public function campaignClickCount(string $campaignKey, string $bannerType): int {
+        return $this->connection
+            ->table('module_campaigns')
+            ->leftJoin('module_campaign_clicks', function (Query\JoinClause $join) use ($bannerType): void {
+                $join->on('campaign_id', '=', 'module_campaigns.id');
+                $join->on('banner_type', '=', DB::raw("'$bannerType'"));
+            })
+            ->where('campaign_key', $campaignKey)
+            ->groupBy('module_campaigns.id', 'banner_type')
+            ->selectRaw('COUNT(module_campaign_clicks.id) AS clicks')
+            ->first('clicks')
+            ?->clicks
+            ?? throw new \Exception('No such campaign.');
+    }
+
+    public function campaignClick(string $campaignKey, string $bannerType): void {
+        $this->connection
+            ->table('module_campaign_clicks')
+            ->insert([
+                'campaign_id' => $this->findCampaignId($campaignKey),
+                'banner_type' => $bannerType,
+            ]);
+    }
+
+    private function findCampaignId(string $campaignKey): int {
+        return $this->table()
+            ->where('campaign_key', $campaignKey)
+            ->first('id')
+            ->id;
     }
 }

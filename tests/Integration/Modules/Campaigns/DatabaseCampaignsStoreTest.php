@@ -67,6 +67,44 @@ class DatabaseCampaignsStoreTest extends TestCase {
         $this->assertEquals('redirect', $campaign->redirectUrl);
     }
 
+    #[Test]
+    public function failToCountCampaignClicks_noSuchCampaign(): void {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No such campaign.');
+        $this->store->campaignClickCount('key', 'banner');
+    }
+
+    #[Test]
+    public function countCampaignClicks_campaignHasNoClicks(): void {
+        $this->store->createIfNotExists('key', '', '', '');
+        $this->assertEquals(0, $this->store->campaignClickCount('key', 'banner'));
+    }
+
+    #[Test]
+    public function countCampaignClicks_campaignHasOneClick(): void {
+        $this->store->createIfNotExists('key', '', '', '');
+        $this->store->campaignClick('key', 'banner');
+        $this->assertEquals(1, $this->store->campaignClickCount('key', 'banner'));
+    }
+
+    #[Test]
+    public function countCampaignClicks_campaignHasManyClicks_sameBanner(): void {
+        $this->store->createIfNotExists('key', '', '', '');
+        $this->store->campaignClick('key', 'banner');
+        $this->store->campaignClick('key', 'banner');
+        $this->assertEquals(2, $this->store->campaignClickCount('key', 'banner'));
+    }
+
+    #[Test]
+    public function countCampaignClicks_campaignHasManyClicks_differentBanners(): void {
+        $this->store->createIfNotExists('key', '', '', '');
+        $this->store->campaignClick('key', 'banner1');
+        $this->store->campaignClick('key', 'banner2');
+        $this->store->campaignClick('key', 'banner2');
+        $this->assertEquals(1, $this->store->campaignClickCount('key', 'banner1'));
+        $this->assertEquals(2, $this->store->campaignClickCount('key', 'banner2'));
+    }
+
     private function createIfNotExists(string $campaignKey): bool {
         return $this->store->createIfNotExists($campaignKey, '', '', '');
     }

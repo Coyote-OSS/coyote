@@ -29,6 +29,6 @@ class CampaignsServiceProvider extends ServiceProvider {
     }
 
     private function registerRoutes(Router $router): void {
-        $router->get('/campaigns/{campaignKey}', [CampaignsController::class, 'click']);
+        $router->get('/campaigns/{campaignKey}/{bannerType}', [CampaignsController::class, 'click']);
     }
 }
