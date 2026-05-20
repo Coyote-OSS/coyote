@@ -39,15 +39,11 @@ readonly class Campaigns {
     private function enabledCampaignBanners(): CampaignBanners {
         $sidebars = [];
         $horizontals = [];
-        $redirectUrls = [];
         foreach ($this->store->listCampaigns() as $campaign) {
             $sidebars[$campaign->campaignKey] = new CampaignBanner($campaign->sidebarBanner, $campaign->campaignKey);
             $horizontals[] = new CampaignBanner($campaign->horizontalBanner, $campaign->campaignKey);
-            $redirectUrls[$campaign->campaignKey] = $campaign->redirectUrl;
         }
-        return new CampaignBanners(
-            $horizontals,
-            $this->sidebarBanner($sidebars));
+        return new CampaignBanners($horizontals, $this->sidebarBanner($sidebars));
     }
 
     /**
