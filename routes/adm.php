@@ -160,6 +160,7 @@ $this->group(
 
         $this->group(['namespace' => '\Coyote\Modules\Campaigns\Adm'], function () {
             $this->get('Campaigns', 'CampaignsController@index')->name('campaigns');
+            $this->get('Campaigns/{campaign}', 'CampaignsController@show')->name('campaigns.show');
             $this->get('Campaigns/Save/{campaign?}', 'CampaignsController@edit')->name('campaigns.save');
             $this->post('Campaigns/Save/{campaign?}', 'CampaignsController@save');
             $this->post('Campaigns/Delete/{campaign}', 'CampaignsController@delete')->name('campaigns.delete');

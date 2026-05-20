@@ -24,7 +24,10 @@ readonly class FontAwesomePro {
             'alertSuccess'                              => $faTick,
             'navigateBack'                              => 'fa-light fa-arrow-left',
             'genericAdd'                                => 'fa-light fa-plus',
+            'genericEdit'                               => 'fa-light fa-edit',
             'genericSearch'                             => 'fa-light fa-magnifying-glass',
+            'genericLink'                               => 'fa-light fa-link',
+            'genericImage'                              => 'fa-light fa-image',
 
             // registration
             'loginGoogle'                               => 'fa-brands fa-google',
@@ -46,6 +49,11 @@ readonly class FontAwesomePro {
 
             // microblog page
             'recommendedUsers'                          => 'fa-light fa-user-plus',
+
+            // campaigns
+            'campaign'                                  => 'fa-light fa-bullhorn',
+            'campaignViews'                             => 'fa-light fa-eye',
+            'campaignClicks'                            => 'fa-light fa-hand-pointer',
 
             // microblog
             'microblogNew'                              => 'fa-light fa-plus',

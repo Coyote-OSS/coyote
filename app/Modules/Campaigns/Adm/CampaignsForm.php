@@ -20,12 +20,12 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
                 'rules' => 'required|url|max:255',
             ])
             ->add('sidebar', 'text', [
-                'label' => 'Baner boczny - Rectangle/RectangleXl (narrow-250/narrow-600)',
+                'label' => 'Baner boczny (narrow-250/narrow-600)',
                 'rules' => 'required|string|max:255',
                 'help'  => 'Podaj adres URL grafiki reklamowej. Baner boczny zostanie wyświetlony przy reputacji użytkowników oraz w panelu bocznym na forum.',
             ])
             ->add('horizontal', 'text', [
-                'label' => 'Baner poziomy - Banner/BannerXL (wide-90/wide-250)',
+                'label' => 'Baner poziomy (wide-90/wide-250)',
                 'rules' => 'required|string|max:255',
                 'help'  => 'Podaj adres URL grafiki reklamowego.',
             ])

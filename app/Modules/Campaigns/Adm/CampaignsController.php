@@ -3,6 +3,8 @@ namespace Coyote\Modules\Campaigns\Adm;
 
 use Boduch\Grid\Source\EloquentSource;
 use Coyote\Http\Controllers\Adm\BaseController;
+use Coyote\Modules\Campaigns\Adm\View\BannerViewModel;
+use Coyote\Modules\Campaigns\Adm\View\CampaignViewModel;
 use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Coyote\Services\FormBuilder\Form;
 use Illuminate\Http\RedirectResponse;
@@ -20,6 +22,25 @@ class CampaignsController extends BaseController {
             'grid'           => $this->gridBuilder()
                 ->createGrid(CampaignsGrid::class)
                 ->setSource(new EloquentSource(Campaign::query())),
+        ]);
+    }
+
+    public function show(Campaign $campaign): View {
+        return $this->view('adm.campaigns.show', [
+            'campaign'         => new CampaignViewModel(
+                $campaign->campaign_key,
+                $campaign->redirect_url,
+                route('adm.campaigns.save', [$campaign->id])),
+            'bannerHorizontal' => new BannerViewModel(
+                123,
+                456,
+                0.45,
+                $campaign->horizontal),
+            'bannerSidebar'    => new BannerViewModel(
+                123,
+                456,
+                0.45,
+                $campaign->sidebar),
         ]);
     }
 

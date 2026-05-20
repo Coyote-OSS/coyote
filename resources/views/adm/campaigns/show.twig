@@ -1,0 +1,91 @@
+{% extends 'adm.base' %}
+{% block title %}Edycja kampanii {{ parent() }}{% endblock %}
+
+{% block container %}
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span class="me-auto">
+        {{ icon('campaign') }}
+        Kampania reklamowa
+      </span>
+      <a class="ms-2 btn btn-sm btn-secondary" href="{{ campaign.editHref }}">
+        {{ icon('genericEdit') }}
+        Edytuj
+      </a>
+    </div>
+
+    <div class="list-group list-group-flush">
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <span>
+            {{ icon('genericLink') }}
+            <b>Klucz reklamy</b>: <code>{{ campaign.key }}</code>
+          </span>
+          <span class="text-muted">
+            Klucz używany do identyfikacji reklamy i kliknięć.
+          </span>
+        </div>
+      </div>
+      <div class="list-group-item">
+        {{ icon('genericLink') }}
+        <b>Odnośnik reklamy</b>: {{ campaign.redirectUrl }}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      {{ icon('genericImage') }}
+      Baner poziomy
+    </div>
+    <div class="card-body">
+      <div class="d-flex justify-content-between">
+        <div>
+          <p>{{ icon('campaignViews') }} Wyświetlenia: <code>{{ bannerHorizontal.views }}</code></p>
+          <p>{{ icon('campaignClicks') }} Kliknięcia: <code>{{ bannerHorizontal.clicks }}</code></p>
+          <p>CTR: <code>{{ bannerHorizontal.ctr }}</code></p>
+        </div>
+        <div>
+          <img class="img-thumbnail banner-horizontal"
+               src="{{ bannerHorizontal.bannerSrc }}"
+               alt="Baner poziomy">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      {{ icon('genericImage') }}
+      Baner boczny
+    </div>
+    <div class="card-body">
+      <div class="d-flex justify-content-between">
+        <div>
+          <p>{{ icon('campaignViews') }} Wyświetlenia: <code>{{ bannerSidebar.views }}</code></p>
+          <p>{{ icon('campaignClicks') }} Kliknięcia: <code>{{ bannerSidebar.clicks }}</code></p>
+          <p>CTR: <code>{{ bannerSidebar.ctr }}</code></p>
+        </div>
+        <div>
+          <img class="img-thumbnail banner-sidebar"
+               src="{{ bannerSidebar.bannerSrc }}"
+               alt="Baner boczny">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .banner-horizontal {
+      max-width: 256px;
+      min-height: 48px;
+      min-width: 144px;
+    }
+
+    .banner-sidebar {
+      max-width: 144px;
+      min-width: 100px;
+      min-height: 100px;
+    }
+  </style>
+{% endblock %}
