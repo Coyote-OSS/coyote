@@ -10,7 +10,7 @@ readonly class CampaignsFacade {
     /**
      * @return string[]
      */
-    public function getHorizontalBanners(): array {
+    public function getHorizontalBannerUrls(): array {
         return \array_map(
             fn(CampaignBanner $banner): string => $banner->bannerUrl,
             $this->horizontalBanners());
@@ -25,7 +25,7 @@ readonly class CampaignsFacade {
             $this->horizontalBanners());
     }
 
-    public function getSidebarBanner(): ?string {
+    public function getSidebarBannerUrl(): ?string {
         return $this->sidebarBanner()->bannerUrl;
     }
 
@@ -49,11 +49,11 @@ readonly class CampaignsFacade {
     /**
      * @return CampaignBanner[]
      */
-    private function horizontalBanners(): array {
+    public function horizontalBanners(): array {
         return $this->campaigns->campaignBanners()->horizontal;
     }
 
-    private function sidebarBanner(): ?CampaignBanner {
+    public function sidebarBanner(): ?CampaignBanner {
         return $this->campaigns->campaignBanners()->sidebar;
     }
 }

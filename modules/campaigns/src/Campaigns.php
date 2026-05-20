@@ -40,8 +40,14 @@ readonly class Campaigns {
         $sidebars = [];
         $horizontals = [];
         foreach ($this->store->listCampaigns() as $campaign) {
-            $sidebars[$campaign->campaignKey] = new CampaignBanner($campaign->sidebarBanner, $campaign->campaignKey);
-            $horizontals[] = new CampaignBanner($campaign->horizontalBanner, $campaign->campaignKey);
+            $sidebars[$campaign->campaignKey] = new CampaignBanner(
+                $campaign->sidebarBanner,
+                $campaign->campaignKey,
+                'sidebar');
+            $horizontals[] = new CampaignBanner(
+                $campaign->horizontalBanner,
+                $campaign->campaignKey,
+                'horizontal');
         }
         return new CampaignBanners($horizontals, $this->sidebarBanner($sidebars));
     }
@@ -53,8 +59,7 @@ readonly class Campaigns {
         if (empty($sidebarBanners)) {
             return null;
         }
-        $rotatedCampaignKey = $this->rotate->rotateBanners(\array_keys($sidebarBanners));
-        return $sidebarBanners[$rotatedCampaignKey];
+        return $sidebarBanners[$this->rotate->rotateBanners(\array_keys($sidebarBanners))];
     }
 
     public function redirectUrl(string $campaignKey): string {
