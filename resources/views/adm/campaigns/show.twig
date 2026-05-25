@@ -32,6 +32,16 @@
         {{ icon('genericLink') }}
         <b>Odnośnik reklamy</b>: {{ campaign.redirectUrl }}
       </div>
+      <div class="list-group-item">
+        {{ icon('campaignViews') }}
+        <b>Wyświetlenia:</b>
+        <code>{{ campaign.views }}</code>
+      </div>
+      <div class="list-group-item">
+        {{ icon('campaignClicks') }}
+        <b>Kliknięcia:</b>
+        <code>{{ campaign.clicks }}</code>
+      </div>
     </div>
   </div>
 

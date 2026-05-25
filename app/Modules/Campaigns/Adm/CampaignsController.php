@@ -28,18 +28,24 @@ class CampaignsController extends BaseController {
 
     public function show(Campaign $campaign, CampaignsStore $store): View {
         $campaignKey = $campaign->campaign_key;
+        $horizontalViews = $store->campaignViewCount($campaignKey, 'horizontal');
+        $horizontalClicks = $store->campaignClickCount($campaignKey, 'horizontal');
+        $sidebarViews = $store->campaignViewCount($campaignKey, 'sidebar');
+        $sidebarClicks = $store->campaignClickCount($campaignKey, 'sidebar');
         return $this->view('adm.campaigns.show', [
             'campaign'         => new CampaignViewModel(
                 $campaignKey,
                 $campaign->redirect_url,
-                route('adm.campaigns.save', [$campaign->id])),
+                route('adm.campaigns.save', [$campaign->id]),
+                $horizontalViews + $sidebarViews,
+                $horizontalClicks + $sidebarClicks),
             'bannerHorizontal' => new BannerViewModel(
-                $store->campaignViewCount($campaignKey, 'horizontal'),
-                $store->campaignClickCount($campaignKey, 'horizontal'),
+                $horizontalViews,
+                $horizontalClicks,
                 $campaign->horizontal),
             'bannerSidebar'    => new BannerViewModel(
-                $store->campaignViewCount($campaignKey, 'sidebar'),
-                $store->campaignClickCount($campaignKey, 'sidebar'),
+                $sidebarViews,
+                $sidebarClicks,
                 $campaign->sidebar),
         ]);
     }
