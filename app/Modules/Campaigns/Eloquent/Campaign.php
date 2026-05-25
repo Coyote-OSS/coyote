@@ -4,8 +4,11 @@ namespace Coyote\Modules\Campaigns\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property int $id
  * @property string $campaign_key
  * @property string $redirect_url
+ * @property string $sidebar
+ * @property string $horizontal
  */
 class Campaign extends Model {
     public $timestamps = false;

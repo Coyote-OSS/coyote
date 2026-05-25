@@ -2,9 +2,13 @@
 namespace Tests\Integration\Modules\Campaigns\Adm\View;
 
 use Coyote\Modules\Campaigns\Adm\View\BannerViewModel;
+use Coyote\Modules\Campaigns\Adm\View\CampaignStats;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(BannerViewModel::class)]
+#[CoversClass(CampaignStats::class)]
 class BannerViewModelTest extends TestCase {
     #[Test]
     public function emptyCtr(): void {
@@ -27,7 +31,7 @@ class BannerViewModelTest extends TestCase {
     }
 
     private function ctr(int $views, int $clicks): string {
-        $viewModel = new BannerViewModel($views, $clicks, '');
-        return $viewModel->ctr();
+        $viewModel = new BannerViewModel('', new CampaignStats($views, $clicks));
+        return $viewModel->stats->ctr();
     }
 }

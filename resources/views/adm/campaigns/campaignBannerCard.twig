@@ -6,23 +6,23 @@
     </div>
     <div class="list-group list-group-flush flex-grow-1">
       <div class="list-group-item">
+        {{ icon('campaignCtr') }}
+        <b>CTR:</b>
+        <code>{{ banner.stats.ctr }}</code>
+      </div>
+      <div class="list-group-item">
         {{ icon('campaignViews') }}
         <b>Wyświetlenia:</b>
-        <code>{{ banner.views }}</code>
+        <code>{{ banner.stats.views }}</code>
       </div>
       <div class="list-group-item">
         {{ icon('campaignClicks') }}
         <b>Kliknięcia:</b>
-        <code>{{ banner.clicks }}</code>
-      </div>
-      <div class="list-group-item">
-        {{ icon('campaignCtr') }}
-        <b>CTR:</b>
-        <code>{{ banner.ctr }}</code>
+        <code>{{ banner.stats.clicks }}</code>
       </div>
       <div class="list-group-item">
         <img class="img-thumbnail {{ imgClass }}"
-             src="{{ banner.bannerSrc }}"
+             src="{{ banner.imageUrl }}"
              alt="{{ title }}">
       </div>
     </div>

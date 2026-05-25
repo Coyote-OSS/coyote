@@ -33,14 +33,19 @@
         <b>Odnośnik reklamy</b>: {{ campaign.redirectUrl }}
       </div>
       <div class="list-group-item">
+        {{ icon('campaignCtr') }}
+        <b>CTR:</b>
+        <code>{{ campaign.stats.ctr }}</code>
+      </div>
+      <div class="list-group-item">
         {{ icon('campaignViews') }}
         <b>Wyświetlenia:</b>
-        <code>{{ campaign.views }}</code>
+        <code>{{ campaign.stats.views }}</code>
       </div>
       <div class="list-group-item">
         {{ icon('campaignClicks') }}
         <b>Kliknięcia:</b>
-        <code>{{ campaign.clicks }}</code>
+        <code>{{ campaign.stats.clicks }}</code>
       </div>
     </div>
   </div>

@@ -4,6 +4,7 @@ namespace Coyote\Modules\Campaigns\Adm;
 use Boduch\Grid\Source\EloquentSource;
 use Coyote\Http\Controllers\Adm\BaseController;
 use Coyote\Modules\Campaigns\Adm\View\BannerViewModel;
+use Coyote\Modules\Campaigns\Adm\View\CampaignStats;
 use Coyote\Modules\Campaigns\Adm\View\CampaignViewModel;
 use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Coyote\Services\FormBuilder\Form;
@@ -28,25 +29,23 @@ class CampaignsController extends BaseController {
 
     public function show(Campaign $campaign, CampaignsStore $store): View {
         $campaignKey = $campaign->campaign_key;
-        $horizontalViews = $store->campaignViewCount($campaignKey, 'horizontal');
-        $horizontalClicks = $store->campaignClickCount($campaignKey, 'horizontal');
-        $sidebarViews = $store->campaignViewCount($campaignKey, 'sidebar');
-        $sidebarClicks = $store->campaignClickCount($campaignKey, 'sidebar');
+
+        $horizontalStats = new CampaignStats(
+            $store->campaignViewCount($campaignKey, 'horizontal'),
+            $store->campaignClickCount($campaignKey, 'horizontal'));
+
+        $sidebarStats = new CampaignStats(
+            $store->campaignViewCount($campaignKey, 'sidebar'),
+            $store->campaignClickCount($campaignKey, 'sidebar'));
+
         return $this->view('adm.campaigns.show', [
             'campaign'         => new CampaignViewModel(
                 $campaignKey,
                 $campaign->redirect_url,
                 route('adm.campaigns.save', [$campaign->id]),
-                $horizontalViews + $sidebarViews,
-                $horizontalClicks + $sidebarClicks),
-            'bannerHorizontal' => new BannerViewModel(
-                $horizontalViews,
-                $horizontalClicks,
-                $campaign->horizontal),
-            'bannerSidebar'    => new BannerViewModel(
-                $sidebarViews,
-                $sidebarClicks,
-                $campaign->sidebar),
+                $horizontalStats->concat($sidebarStats)),
+            'bannerHorizontal' => new BannerViewModel($campaign->horizontal, $horizontalStats),
+            'bannerSidebar'    => new BannerViewModel($campaign->sidebar, $sidebarStats),
         ]);
     }
 
