@@ -9,12 +9,20 @@ readonly class CampaignService {
     ) {}
 
     public function add(
-        string $sidebar,
-        string $horizontal,
-        string $campaignKey,
-        string $redirectUrl,
+        string  $sidebar,
+        string  $horizontal,
+        string  $campaignKey,
+        string  $redirectUrl,
+        ?string $activeSince,
+        ?string $activeUntil,
     ): void {
-        $existed = $this->store->createIfNotExists($campaignKey, $sidebar, $horizontal, $redirectUrl);
+        $existed = $this->store->createIfNotExists(
+            $campaignKey,
+            $sidebar,
+            $horizontal,
+            $redirectUrl,
+            $activeSince,
+            $activeUntil);
         if ($existed) {
             throw new DuplicateCampaign('Failed to add a duplicated campaign.');
         }

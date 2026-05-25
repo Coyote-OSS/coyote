@@ -43,6 +43,19 @@ class CampaignsControllerTest extends TestCase {
     }
 
     #[Test]
+    public function creatingCampaign_allowsOptionalActiveRange(): void {
+        $this->loginAdmin();
+        $this->laravel->post('/Adm/Campaigns/Save', $this->exampleCampaign(
+            campaignKey:'optional-range',
+            includeActiveRange:false));
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'campaign_key' => 'optional-range',
+            'active_since' => null,
+            'active_until' => null,
+        ]);
+    }
+
+    #[Test]
     public function failToCreateDuplicateCampaign(): void {
         $this->loginAdmin();
         $this->laravel->post('/Adm/Campaigns/Save', $this->exampleCampaign('duplicate'));
@@ -76,12 +89,21 @@ class CampaignsControllerTest extends TestCase {
         $this->assertSame('http://nginx' . $expected, $actual);
     }
 
-    private function exampleCampaign(?string $campaignKey = null): array {
+    private function exampleCampaign(
+        ?string $campaignKey = null,
+        ?bool   $includeActiveRange = true,
+    ): array {
         return [
             'campaign_key' => $campaignKey ?? 'created-campaign',
             'redirect_url' => 'http://test',
             'sidebar'      => 'image.png',
             'horizontal'   => 'image.png',
+            ...$includeActiveRange ? $this->exampleActiveRange() : [],
+        ];
+    }
+
+    private function exampleActiveRange(): array {
+        return [
             'active_since' => '2000-01-01T00:00:00',
             'active_until' => '2000-01-01T00:00:00',
         ];

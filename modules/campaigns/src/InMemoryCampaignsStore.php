@@ -8,17 +8,21 @@ class InMemoryCampaignsStore implements CampaignsStore {
     private array $campaigns = [];
 
     public function createIfNotExists(
-        string $campaignKey,
-        string $sidebarBanner,
-        string $horizontalBanner,
-        string $redirectUrl,
+        string  $campaignKey,
+        string  $sidebarBanner,
+        string  $horizontalBanner,
+        string  $redirectUrl,
+        ?string $activeSince,
+        ?string $activeUntil,
     ): bool {
         $existed = \array_key_exists($campaignKey, $this->campaigns);
         $this->campaigns[$campaignKey] = new Campaign(
             $campaignKey,
             $sidebarBanner,
             $horizontalBanner,
-            $redirectUrl);
+            $redirectUrl,
+            '',
+            '');
         return $existed;
     }
 

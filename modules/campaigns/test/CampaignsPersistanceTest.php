@@ -24,7 +24,7 @@ class CampaignsPersistanceTest extends TestCase {
 
     #[Test]
     public function banners(): void {
-        $this->store->createIfNotExists('stored', 'sidebar', 'horizontal', 'redirect');
+        $this->store->createIfNotExists('stored', 'sidebar', 'horizontal', '', null, null);
         $banners = $this->campaigns->campaignBanners();
         $this->assertEquals('stored', $banners->sidebar->campaignKey);
         $this->assertEquals('sidebar', $banners->sidebar->bannerUrl);
@@ -33,7 +33,7 @@ class CampaignsPersistanceTest extends TestCase {
 
     #[Test]
     public function redirectUrl(): void {
-        $this->store->createIfNotExists('stored', 'sidebar', 'horizontal', 'redirect');
+        $this->store->createIfNotExists('stored', '', '', 'redirect', null, null);
         $redirectUrl = $this->campaigns->redirectUrl('stored');
         $this->assertEquals('redirect', $redirectUrl);
     }

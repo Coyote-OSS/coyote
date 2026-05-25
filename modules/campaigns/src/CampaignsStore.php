@@ -3,10 +3,12 @@ namespace Modules\Campaigns;
 
 interface CampaignsStore {
     function createIfNotExists(
-        string $campaignKey,
-        string $sidebarBanner,
-        string $horizontalBanner,
-        string $redirectUrl,
+        string  $campaignKey,
+        string  $sidebarBanner,
+        string  $horizontalBanner,
+        string  $redirectUrl,
+        ?string $activeSince,
+        ?string $activeUntil,
     ): bool;
 
     /**

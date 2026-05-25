@@ -28,8 +28,13 @@ class CampaignsControllerTest extends TestCase {
     }
 
     private function addCampaign(string $campaignKey, string $redirectUrl): void {
-        $this->instance()->add('', '',
-            $campaignKey, $redirectUrl);
+        $this->instance()->add(
+            '',
+            '',
+            $campaignKey,
+            $redirectUrl,
+            null,
+            null);
     }
 
     private function instance(): CampaignService {

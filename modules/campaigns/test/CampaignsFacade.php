@@ -43,7 +43,9 @@ readonly class CampaignsFacade {
             $sidebarBanner ?? '',
             $horizontalBanner ?? '',
             $campaignKey ?? '',
-            $redirectUrl ?? '');
+            $redirectUrl ?? '',
+            null,
+            null);
     }
 
     /**

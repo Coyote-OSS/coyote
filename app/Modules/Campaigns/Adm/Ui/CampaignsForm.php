@@ -3,24 +3,27 @@ namespace Coyote\Modules\Campaigns\Adm\Ui;
 
 use Coyote\Services\FormBuilder\Form;
 use Coyote\Services\FormBuilder\ValidatesWhenSubmitted;
-use Illuminate\Validation\Rule;
 
 class CampaignsForm extends Form implements ValidatesWhenSubmitted {
     public function buildForm(): void {
         $this
             ->add('campaign_key', 'text', [
                 'label' => 'Klucz kampanii',
-                'rules' => [
-                    'string', 'min:2', 'max:32',
-                    'required',
-                    Rule::unique('module_campaigns')->ignore($this->data?->id),
-                ],
+                'rules' => ['required', 'string', 'min:2', 'max:32'],
                 'help'  => 'Klucz kampanii musi być unikalny (e.g. <code>mobileViking</code>, <code>myDevil</code>).',
                 'attr'  => $this->campaignKeyAttributes(),
             ])
             ->add('redirect_url', 'text', [
                 'label' => 'URL przekierowania',
                 'rules' => 'required|url|max:255',
+            ])
+            ->add('active_since', 'datetime', [
+                'label' => 'Aktywna od',
+                'help'  => 'Nie wypełnienie tego pola skutkuje kampanią, która nie jest aktywna.',
+            ])
+            ->add('active_until', 'datetime', [
+                'label' => 'Aktywna do',
+                'help'  => 'Nie wypełnienie tego pola skutkuje kampanią, która nie jest aktywna.',
             ])
             ->add('sidebar', 'text', [
                 'label' => 'Baner boczny (narrow-250/narrow-600)',
@@ -30,16 +33,8 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
             ->add('horizontal', 'text', [
                 'label' => 'Baner poziomy (wide-90/wide-250)',
                 'rules' => 'required|string|max:255',
-                'help'  => 'Podaj adres URL grafiki reklamowego.',
+                'help'  => 'Podaj adres URL grafiki reklamowej. Baner poziomy zostanie wyświetlony na stronie głównej oraz na stronie z wątkami.',
             ]);
-        $this->add('active_since', 'datetime', [
-            'label' => 'Aktywna od',
-            'help'  => 'Nie wypełnienie tego pola skutkuje kampanią, która nie jest aktywna.',
-        ]);
-        $this->add('active_until', 'datetime', [
-            'label' => 'Aktywna do',
-            'help'  => 'Nie wypełnienie tego pola skutkuje kampanią, która nie jest aktywna.',
-        ]);
         $this->add('submit', 'submit_with_delete', [
             'label'             => 'Zapisz',
             'attr'              => ['data-submit-state' => 'Zapisywanie...'],

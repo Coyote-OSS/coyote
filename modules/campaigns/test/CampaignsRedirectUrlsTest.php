@@ -23,14 +23,14 @@ class CampaignsRedirectUrlsTest extends TestCase {
 
     #[Test]
     public function redirectUrl(): void {
-        $this->campaigns->add('', '', 'campaign', 'http://redirect-url');
+        $this->campaigns->add('', '', 'campaign', 'http://redirect-url', null, null);
         $redirectUrl = $this->campaigns->redirectUrl('campaign');
         $this->assertEquals('http://redirect-url', $redirectUrl);
     }
 
     #[Test]
     public function sidebarCampaignKey(): void {
-        $this->campaigns->add('', '', 'campaignKey', '');
+        $this->campaigns->add('', '', 'campaignKey', '', null, null);
         $this->assertEquals('campaignKey',
             $this->campaigns->campaignBanners()->sidebar->campaignKey);
     }
@@ -41,10 +41,4 @@ class CampaignsRedirectUrlsTest extends TestCase {
         $this->expectExceptionMessage('Failed');
         $this->campaigns->redirectUrl('missing');
     }
-
-    // TODO hide after time passes
-    // TODO hide after views passed
-    // TODO count and present views
-    // TODO count and present clicks
-    // TODO present ctr
 }

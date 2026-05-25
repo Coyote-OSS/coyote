@@ -11,16 +11,20 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
     public function __construct(private Database\Connection $connection) {}
 
     public function createIfNotExists(
-        string $campaignKey,
-        string $sidebarBanner,
-        string $horizontalBanner,
-        string $redirectUrl,
+        string  $campaignKey,
+        string  $sidebarBanner,
+        string  $horizontalBanner,
+        string  $redirectUrl,
+        ?string $activeSince,
+        ?string $activeUntil,
     ): bool {
         $inserted = $this->table()->insertOrIgnore([
             'campaign_key' => $campaignKey,
             'sidebar'      => $sidebarBanner,
             'horizontal'   => $horizontalBanner,
             'redirect_url' => $redirectUrl,
+            'active_since' => $activeSince,
+            'active_until' => $activeUntil,
         ]);
         return $inserted === 0;
     }
@@ -36,6 +40,8 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
                 sidebarBanner:$row->sidebar,
                 horizontalBanner:$row->horizontal,
                 redirectUrl:$row->redirect_url,
+                activeSince:$row->active_since,
+                activeUntil:$row->active_until,
             ))
             ->all();
     }

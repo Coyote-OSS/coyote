@@ -60,12 +60,20 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function listCampaigns(): void {
-        $this->store->createIfNotExists('key', 'sidebar', 'horizontal', 'redirect');
+        $this->store->createIfNotExists(
+            'key',
+            'sidebar',
+            'horizontal',
+            'redirect',
+            '2222-02-02T22:22:22',
+            '3333-03-03T03:33:33');
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
         $this->assertEquals('sidebar', $campaign->sidebarBanner);
         $this->assertEquals('horizontal', $campaign->horizontalBanner);
         $this->assertEquals('redirect', $campaign->redirectUrl);
+        $this->assertEquals('2222-02-02 22:22:22', $campaign->activeSince);
+        $this->assertEquals('3333-03-03 03:33:33', $campaign->activeUntil);
     }
 
     #[Test]
@@ -77,20 +85,20 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function countCampaignClicks_campaignHasNoClicks(): void {
-        $this->store->createIfNotExists('key', '', '', '');
+        $this->createCampaign('key');
         $this->assertEquals(0, $this->store->campaignClickCount('key', 'banner'));
     }
 
     #[Test]
     public function countCampaignClicks_campaignHasOneClick(): void {
-        $this->store->createIfNotExists('key', '', '', '');
+        $this->createCampaign('key');
         $this->store->campaignClick('key', 'banner');
         $this->assertEquals(1, $this->store->campaignClickCount('key', 'banner'));
     }
 
     #[Test]
     public function countCampaignClicks_campaignHasManyClicks_sameBanner(): void {
-        $this->store->createIfNotExists('key', '', '', '');
+        $this->createCampaign('key');
         $this->store->campaignClick('key', 'banner');
         $this->store->campaignClick('key', 'banner');
         $this->assertEquals(2, $this->store->campaignClickCount('key', 'banner'));
@@ -98,7 +106,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function countCampaignClicks_campaignHasManyClicks_differentBanners(): void {
-        $this->store->createIfNotExists('key', '', '', '');
+        $this->createCampaign('key');
         $this->store->campaignClick('key', 'banner1');
         $this->store->campaignClick('key', 'banner2');
         $this->store->campaignClick('key', 'banner2');
@@ -122,27 +130,23 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function countCampaignViews_campaignHasZeroViews(): void {
-        $this->store->createIfNotExists('key', '', '', '');
+        $this->createCampaign('key');
         $this->assertEquals(0, $this->store->campaignViewCount('key', 'banner'));
     }
 
     #[Test]
     public function countCampaignViews_campaignHasOneView(): void {
-        $this->store->createIfNotExists('key', '', '', '');
+        $this->createCampaign('key');
         $this->store->campaignView('key', 'banner');
         $this->assertEquals(1, $this->store->campaignViewCount('key', 'banner'));
     }
 
     #[Test]
     public function countCampaignViews_campaignHasManyView(): void {
-        $this->store->createIfNotExists('key', '', '', '');
+        $this->createCampaign('key');
         $this->store->campaignView('key', 'banner');
         $this->store->campaignView('key', 'banner');
         $this->assertEquals(2, $this->store->campaignViewCount('key', 'banner'));
-    }
-
-    private function createIfNotExists(string $campaignKey): bool {
-        return $this->store->createIfNotExists($campaignKey, '', '', '');
     }
 
     private function insert(string $campaignKey): void {
@@ -160,5 +164,14 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     private function table(): Query\Builder {
         return $this->connection->table('module_campaigns');
+    }
+
+    private function createCampaign(string $campaignKey): void {
+        $this->assertFalse($this->createIfNotExists($campaignKey));
+    }
+
+    private function createIfNotExists(string $campaignKey): bool {
+        $date = '1970-01-01T00:00:00';
+        return $this->store->createIfNotExists($campaignKey, '', '', '', $date, $date);
     }
 }
