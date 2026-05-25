@@ -149,6 +149,21 @@ class DatabaseCampaignsStoreTest extends TestCase {
         $this->assertEquals(2, $this->store->campaignViewCount('key', 'banner'));
     }
 
+    #[Test]
+    public function campaignActiveRange(): void {
+        $this->createCampaignRange('key', '1970-01-01T00:00:00', '2222-02-22T22:22:22');
+        [$since, $unitl] = $this->store->campaignActiveRange('key');
+        $this->assertSame('1970-01-01 00:00:00', $since);
+        $this->assertSame('2222-02-22 22:22:22', $unitl);
+    }
+
+    #[Test]
+    public function campaignActiveRange_failForNoSuchCampaign(): void {
+        $this->expectException(Campaigns\NoSuchCampaign::class);
+        $this->expectExceptionMessage('No such campaign.');
+        $this->store->campaignActiveRange('missing');
+    }
+
     private function insert(string $campaignKey): void {
         $this->table()->insert([
             'campaign_key' => $campaignKey,
@@ -173,5 +188,11 @@ class DatabaseCampaignsStoreTest extends TestCase {
     private function createIfNotExists(string $campaignKey): bool {
         $date = '1970-01-01T00:00:00';
         return $this->store->createIfNotExists($campaignKey, '', '', '', $date, $date);
+    }
+
+    private function createCampaignRange(string $campaignKey, string $activeSince, string $activeUntil): void {
+        $this->store->createIfNotExists($campaignKey,
+            '', '', '',
+            $activeSince, $activeUntil);
     }
 }

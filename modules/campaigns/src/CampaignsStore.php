@@ -23,4 +23,6 @@ interface CampaignsStore {
     public function campaignClickCount(string $campaignKey, string $bannerType): int;
 
     public function campaignViewCount(string $campaignKey, string $bannerType): int;
+
+    public function campaignActiveRange(string $campaignKey): array;
 }

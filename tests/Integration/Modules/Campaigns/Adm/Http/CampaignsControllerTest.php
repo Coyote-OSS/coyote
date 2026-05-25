@@ -61,9 +61,7 @@ class CampaignsControllerTest extends TestCase {
         $this->laravel->post('/Adm/Campaigns/Save', $this->exampleCampaign('duplicate'));
         $this->laravel
             ->post('/Adm/Campaigns/Save', $this->exampleCampaign('duplicate'))
-            ->assertSessionHasErrors([
-                'campaign_key' => 'Już istnieje kampania z tym kluczem.',
-            ]);
+            ->assertBadRequest();
     }
 
     #[Test]

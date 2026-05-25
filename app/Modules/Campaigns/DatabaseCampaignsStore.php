@@ -66,14 +66,6 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
         return $this->countCampaignEvents($campaignKey, $bannerType, 'view');
     }
 
-    private function findCampaignId(string $campaignKey): int {
-        return $this->table()
-            ->where('campaign_key', $campaignKey)
-            ->first('id')
-            ?->id
-            ?? throw new Campaigns\NoSuchCampaign('No such campaign.');
-    }
-
     private function insertCampaignEvent(string $campaignKey, string $bannerType, string $eventType): void {
         $this->connection
             ->table('module_campaign_clicks')
@@ -82,6 +74,14 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
                 'banner_type' => $bannerType,
                 'event_type'  => $eventType,
             ]);
+    }
+
+    private function findCampaignId(string $campaignKey): int {
+        return $this->table()
+            ->where('campaign_key', $campaignKey)
+            ->first('id')
+            ?->id
+            ?? throw new Campaigns\NoSuchCampaign('No such campaign.');
     }
 
     private function countCampaignEvents(string $campaignKey, string $bannerType, string $eventType) {
@@ -97,5 +97,15 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             ->first('clicks')
             ?->clicks
             ?? throw new Campaigns\NoSuchCampaign('No such campaign.');
+    }
+
+    public function campaignActiveRange(string $campaignKey): array {
+        $row = $this->table()
+            ->where('campaign_key', $campaignKey)
+            ->first(['active_since', 'active_until']);
+        if ($row === null) {
+            throw new Campaigns\NoSuchCampaign('No such campaign.');
+        }
+        return [$row->active_since, $row->active_until];
     }
 }

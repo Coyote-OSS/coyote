@@ -4,6 +4,8 @@ namespace Modules\Campaigns;
 class InMemoryCampaignsStore implements CampaignsStore {
     private array $views = ['horizontal' => 0, 'sidebar' => 0];
     private array $clicks = ['horizontal' => 0, 'sidebar' => 0];
+    /** @var (string|null)[][] */
+    private array $activeRanges = [];
     /** @var string[] */
     private array $campaigns = [];
 
@@ -57,5 +59,13 @@ class InMemoryCampaignsStore implements CampaignsStore {
             throw new \Exception();
         }
         $this->clicks[$bannerType] = $clicks;
+    }
+
+    public function campaignActiveRange(string $campaignKey): array {
+        return $this->activeRanges[$campaignKey] ?? throw new \Exception();
+    }
+
+    public function stubCampaignActiveRange(string $campaignKey, ?string $since, ?string $until): void {
+        $this->activeRanges[$campaignKey] = [$since, $until];
     }
 }

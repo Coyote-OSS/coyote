@@ -35,6 +35,7 @@ readonly class CampaignPresenter {
     }
 
     public function campaignActive(string $campaignKey): bool {
-        return true;
+        [$since, $until] = $this->store->campaignActiveRange($campaignKey);
+        return $since !== null && $until !== null;
     }
 }

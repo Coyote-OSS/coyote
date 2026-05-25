@@ -60,4 +60,22 @@ class CampaignPresenterTest extends TestCase {
         $vm = $this->presenter->campaignStats('foo');
         $this->assertEquals(23, $vm->clicks);
     }
+
+    #[Test]
+    public function campaignIsActive_whenBothSinceAndUntilAreSet(): void {
+        $this->store->stubCampaignActiveRange('campaign', '1970', '1970');
+        $this->assertTrue($this->presenter->campaignActive('campaign'));
+    }
+
+    #[Test]
+    public function campaignIsNotActive_whenSinceIsNotSet(): void {
+        $this->store->stubCampaignActiveRange('campaign', null, '1970');
+        $this->assertFalse($this->presenter->campaignActive('campaign'));
+    }
+
+    #[Test]
+    public function campaignIsNotActive_whenUntilIsNotSet(): void {
+        $this->store->stubCampaignActiveRange('campaign', '1970', null);
+        $this->assertFalse($this->presenter->campaignActive('campaign'));
+    }
 }
