@@ -1,6 +1,9 @@
 {% extends 'adm.base' %}
 {% block title %}Edycja kampanii {{ parent() }}{% endblock %}
 
+{% from 'adm.campaigns.imageUploaderCard' import imageUploaderCard %}
+
 {% block card %}
-    {{ form(form) }}
+  {{ form(form) }}
+  {{ imageUploaderCard() }}
 {% endblock %}

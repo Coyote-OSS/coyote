@@ -14,6 +14,7 @@ readonly class FontAwesomePro {
         $genericDropdown = 'fa-solid fa-ellipsis';
         $genericDelete = 'fa-light fa-trash-can';
         $genericDropdownVertical = 'fa-solid fa-ellipsis-vertical';
+        $genericCopy = 'fa-light fa-copy';
 
         return [
             // global
@@ -28,6 +29,7 @@ readonly class FontAwesomePro {
             'genericSearch'                             => 'fa-light fa-magnifying-glass',
             'genericLink'                               => 'fa-light fa-link',
             'genericImage'                              => 'fa-light fa-image',
+            'genericCopy'                               => $genericCopy,
 
             // registration
             'loginGoogle'                               => 'fa-brands fa-google',
@@ -82,7 +84,7 @@ readonly class FontAwesomePro {
             'microblogCommentBlockAuthor'               => 'fa-light fa-lock',
             'microblogCommentSaveNew'                   => 'fa-light fa-share-from-square',
             'microblogCommentSaveExisting'              => 'fa-light fa-floppy-disk',
-            'microblogCommentMenuEditRemove'            => 'fa-light fa-bars', // deprecated 
+            'microblogCommentMenuEditRemove'            => 'fa-light fa-bars', // deprecated
             'microblogCommentMenuAnswerFlag'            => $genericDropdown,
 
             // navigation dropdown
@@ -287,7 +289,7 @@ readonly class FontAwesomePro {
             'postSubscribed'                            => 'fa-light fa-bell-slash',
             'postShare'                                 => 'fa-light fa-share-nodes',
             'postComment'                               => 'fa-light fa-comment',
-            'postShareCopyUrl'                          => 'fa-light fa-copy',
+            'postShareCopyUrl'                          => $genericCopy,
             'postCommentActive'                         => 'fa-light fa-comment',
             'postDelete'                                => 'fa-light fa-trash-can',
             'postRestore'                               => 'fa-light fa-arrow-rotate-left',

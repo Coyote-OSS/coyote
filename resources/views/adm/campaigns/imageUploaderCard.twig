@@ -1,0 +1,94 @@
+{% macro imageUploaderCard() %}
+  <style>
+    #image-uploader img.asset {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+  </style>
+
+  <div class="card" style="display:none;" id="image-uploader">
+    <input
+        id="asset-file-input"
+        type="file"
+        accept="image/jpeg,image/png"
+        style="position:absolute;width:0;height:0;opacity:0;overflow:hidden"
+        @change="handleFileChange">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span>Hostuj obrazy</span>
+      <button class="btn btn-secondary" onclick="document.getElementById('asset-file-input').click()">
+        + Hostuj obraz
+      </button>
+    </div>
+    <div class="list-group list-group-flush">
+      <div class="list-group-item text-center p-4" v-if="assetsEmpty">
+        <span class="text-muted">Hostuj obraz korzystając z 4programmers.net.</span>
+      </div>
+      <template v-for="assetUrl in assetUrls" :key="assetUrl">
+        <div class="list-group-item d-flex justify-content-between align-items-center gap-3">
+          <img :src="assetUrl" class="asset">
+          <button class="btn btn-secondary btn-sm" @click="copyString(assetUrl)">
+            {{ icon('genericCopy') }}
+            Kopiuj URL
+          </button>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    (function () {
+      const {createApp, ref, computed} = Vue;
+      const app = createApp({
+        mounted() {
+          const root = this.$el.parentElement;
+          root.style.display = 'block';
+        },
+        setup() {
+          const assetUrls = ref([]);
+          const assetsEmpty = computed(function () {
+            return assetUrls.value.length === 0;
+          });
+          return {
+            assetUrls,
+            copyString,
+            assetsEmpty,
+            handleFileChange(event) {
+              const file = event.target.files[0];
+              if (file) {
+                event.target.value = '';
+                uploadAssetReturnUrl(file).then(assetUrl => {
+                  assetUrls.value.push(assetUrl);
+                });
+              }
+            },
+          };
+        },
+      });
+      app.mount('#image-uploader');
+
+      function uploadAssetReturnUrl(file) {
+        const formData = new FormData();
+        formData.append('asset', file);
+        return fetch('/assets', {
+          method: 'POST',
+          body: formData,
+          headers: {'X-CSRF-TOKEN': csrfToken()},
+        })
+          .then(response => response.json())
+          .then(uploadedAsset => uploadedAsset.url);
+      }
+
+      function csrfToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      }
+
+      function copyString(string) {
+        navigator.clipboard.writeText(string);
+      }
+    })();
+  </script>
+{% endmacro %}
