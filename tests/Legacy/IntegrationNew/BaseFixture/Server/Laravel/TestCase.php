@@ -8,12 +8,14 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Bootstrap\LoadConfiguration;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
+use Illuminate\Foundation\Testing\Concerns\InteractsWithSession;
 use Symfony\Component\HttpFoundation;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
     use OverridesSymfonyRequest;
     use InteractsWithDatabase;
+    use InteractsWithSession;
 
     /** @var Application */
     public $app;

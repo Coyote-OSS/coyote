@@ -3,7 +3,10 @@
 
 {% from 'adm.campaigns.imageUploaderCard' import imageUploaderCard %}
 
-{% block card %}
-  {{ form(form) }}
+{% block container %}
+  <div class="card">
+    <div class="card-header">Kampania reklamowa</div>
+    <div class="card-body">{{ form(form) }}</div>
+  </div>
   {{ imageUploaderCard() }}
 {% endblock %}
