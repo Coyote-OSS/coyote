@@ -158,7 +158,7 @@ $this->group(
         $this->get('Incognito', 'IncognitoController@index')->name('incognito.home');
         $this->get('Cohort/Download', 'CohortController@download')->name('cohort.download');
 
-        $this->group(['namespace' => '\Coyote\Modules\Campaigns\Adm'], function () {
+        $this->group(['namespace' => '\Coyote\Modules\Campaigns\Adm\Http'], function () {
             $this->get('Campaigns', 'CampaignsController@index')->name('campaigns');
             $this->get('Campaigns/Show/{campaign}', 'CampaignsController@show')->name('campaigns.show');
             $this->get('Campaigns/Save/{campaign?}', 'CampaignsController@edit')->name('campaigns.save');

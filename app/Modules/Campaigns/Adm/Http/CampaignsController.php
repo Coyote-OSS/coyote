@@ -1,8 +1,10 @@
 <?php
-namespace Coyote\Modules\Campaigns\Adm;
+namespace Coyote\Modules\Campaigns\Adm\Http;
 
 use Boduch\Grid\Source\EloquentSource;
 use Coyote\Http\Controllers\Adm\BaseController;
+use Coyote\Modules\Campaigns\Adm\Ui\CampaignsForm;
+use Coyote\Modules\Campaigns\Adm\Ui\CampaignsGrid;
 use Coyote\Modules\Campaigns\Adm\View\CampaignPresenter;
 use Coyote\Modules\Campaigns\Adm\View\CampaignViewModel;
 use Coyote\Modules\Campaigns\Eloquent\Campaign;

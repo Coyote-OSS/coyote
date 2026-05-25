@@ -1,5 +1,5 @@
 <?php
-namespace Coyote\Modules\Campaigns\Adm;
+namespace Coyote\Modules\Campaigns\Adm\Ui;
 
 use Boduch\Grid\Components\EditButton;
 use Boduch\Grid\Components\ShowButton;

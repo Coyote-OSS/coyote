@@ -1,5 +1,5 @@
 <?php
-namespace Coyote\Modules\Campaigns\Adm;
+namespace Coyote\Modules\Campaigns\Adm\Ui;
 
 use Coyote\Services\FormBuilder\Form;
 use Coyote\Services\FormBuilder\ValidatesWhenSubmitted;
