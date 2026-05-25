@@ -12,15 +12,15 @@ class CampaignsController extends Controller {
     ) {}
 
     public function click(string $campaignKey, string $bannerType): RedirectResponse {
-        $this->store->campaignClick($campaignKey, $bannerType);
-        return redirect()->to($this->redirectUrl($campaignKey));
+        return redirect()->to($this->clickAndRedirect($campaignKey, $bannerType));
     }
 
-    private function redirectUrl(string $campaignKey): string {
+    private function clickAndRedirect(string $campaignKey, string $bannerType): string {
         try {
-            return $this->campaigns->redirectUrl($campaignKey);
+            $this->store->campaignClick($campaignKey, $bannerType);
         } catch (Campaigns\NoSuchCampaign) {
             return '/';
         }
+        return $this->campaigns->redirectUrl($campaignKey);
     }
 }

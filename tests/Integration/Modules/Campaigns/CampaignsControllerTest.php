@@ -15,7 +15,7 @@ class CampaignsControllerTest extends TestCase {
     #[Test]
     public function redirectsToHomepage_forNoSuchCampaign(): void {
         $this->laravel
-            ->get('/campaigns/no-such-campaign')
+            ->get('/campaigns/no-such-campaign/banner')
             ->assertRedirect('/');
     }
 
@@ -23,7 +23,7 @@ class CampaignsControllerTest extends TestCase {
     public function redirectToCampaignRedirectUrl(): void {
         $this->addCampaign('campaign-key', '/redirect-url');
         $this->laravel
-            ->get('/campaigns/campaign-key')
+            ->get('/campaigns/campaign-key/banner')
             ->assertRedirect('/redirect-url');
     }
 

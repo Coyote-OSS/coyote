@@ -3,6 +3,7 @@ namespace Coyote\Modules\Campaigns;
 
 use Illuminate\Database;
 use Illuminate\Database\Query;
+use Modules\Campaigns;
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
 
@@ -64,7 +65,7 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             ->where('campaign_key', $campaignKey)
             ->first('id')
             ?->id
-            ?? throw new \Exception('No such campaign.');
+            ?? throw new Campaigns\NoSuchCampaign('No such campaign.');
     }
 
     private function insertCampaignEvent(string $campaignKey, string $bannerType, string $eventType): void {
@@ -89,6 +90,6 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             ->selectRaw('COUNT(module_campaign_clicks.id) AS clicks')
             ->first('clicks')
             ?->clicks
-            ?? throw new \Exception('No such campaign.');
+            ?? throw new Campaigns\NoSuchCampaign('No such campaign.');
     }
 }

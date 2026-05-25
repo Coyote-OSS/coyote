@@ -5,6 +5,7 @@ use Coyote\Modules\Campaigns\DatabaseCampaignsStore;
 use Illuminate\Database;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query;
+use Modules\Campaigns;
 use Modules\Campaigns\CampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -69,7 +70,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function failToCountCampaignClicks_noSuchCampaign(): void {
-        $this->expectException(\Exception::class);
+        $this->expectException(Campaigns\NoSuchCampaign::class);
         $this->expectExceptionMessage('No such campaign.');
         $this->store->campaignClickCount('key', 'banner');
     }
@@ -107,14 +108,14 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function failToClick_noSuchCampaign(): void {
-        $this->expectException(\Exception::class);
+        $this->expectException(Campaigns\NoSuchCampaign::class);
         $this->expectExceptionMessage('No such campaign.');
         $this->store->campaignClick('key', 'banner');
     }
 
     #[Test]
     public function failToCountCampaignViews_noSuchCampaign(): void {
-        $this->expectException(\Exception::class);
+        $this->expectException(Campaigns\NoSuchCampaign::class);
         $this->expectExceptionMessage('No such campaign.');
         $this->store->campaignView('key', 'banner');
     }
