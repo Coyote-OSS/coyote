@@ -51,7 +51,11 @@ class CampaignsController extends BaseController {
         $form = $this->getForm($campaign);
         $form->validate();
         $campaign->fill($form->all());
-        $campaign->save();
+        try {
+            $campaign->save();
+        } catch (\Throwable) {
+            abort(400); // Duplicate campaign key
+        }
         return redirect()->route('adm.campaigns')->with('success', 'Zmiany zostały zapisane.');
     }
 
