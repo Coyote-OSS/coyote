@@ -1,23 +1,23 @@
 <?php
 namespace Test\Modules\Campaigns;
 
-use Modules\Campaigns\Campaigns;
+use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\InMemoryCampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Campaigns::class)]
+#[CoversClass(CampaignService::class)]
 class CampaignsPersistanceTest extends TestCase {
-    private Campaigns $campaigns;
+    private CampaignService $campaigns;
     private InMemoryCampaignsStore $store;
 
     #[Before]
     public function initialize(): void {
         $this->store = new InMemoryCampaignsStore();
-        $this->campaigns = new Campaigns(
-            new TestPriviligedUsers(),
+        $this->campaigns = new CampaignService(
+            new TestPrivilegedUsers(),
             new TestRotatingBanners(),
             $this->store);
     }

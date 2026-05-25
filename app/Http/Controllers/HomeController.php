@@ -34,8 +34,8 @@ class HomeController extends Controller {
     }
 
     public function index(
-        Campaigns\Campaigns      $campaigns,
-        Campaigns\CampaignsStore $store,
+        Campaigns\CampaignService $campaigns,
+        Campaigns\CampaignsStore  $store,
     ): View {
         $cache = app(Cache\Repository::class);
         $this->topic->pushCriteria(new OnlyThoseTopicsWithAccess());

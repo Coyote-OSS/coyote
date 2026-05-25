@@ -1,7 +1,7 @@
 <?php
 namespace Test\Modules\Campaigns;
 
-use Modules\Campaigns\Campaigns;
+use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\InMemoryCampaignsStore;
 use Modules\Campaigns\NoSuchCampaign;
 use PHPUnit\Framework\Attributes\Before;
@@ -9,21 +9,16 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Campaigns::class)]
+#[CoversClass(CampaignService::class)]
 class CampaignsRedirectUrlsTest extends TestCase {
-    private Campaigns $campaigns;
-    private TestPriviligedUsers $priviligedUsers;
-    private TestRotatingBanners $rotateBanners;
+    private CampaignService $campaigns;
 
     #[Before]
     public function initialize(): void {
-        $this->priviligedUsers = new TestPriviligedUsers();
-        $this->rotateBanners = new TestRotatingBanners();
-        $this->campaigns = new Campaigns(
-            $this->priviligedUsers,
-            $this->rotateBanners,
-            new InMemoryCampaignsStore(),
-        );
+        $this->campaigns = new CampaignService(
+            new TestPrivilegedUsers(),
+            new TestRotatingBanners(),
+            new InMemoryCampaignsStore());
     }
 
     #[Test]

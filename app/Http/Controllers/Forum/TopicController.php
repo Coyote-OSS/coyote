@@ -31,11 +31,11 @@ use Modules\Campaigns;
 
 class TopicController extends BaseController {
     public function index(
-        Request                  $request,
-        Forum                    $forum,
-        Topic                    $topic,
-        Campaigns\Campaigns      $campaigns,
-        Campaigns\CampaignsStore $store,
+        Request                   $request,
+        Forum                     $forum,
+        Topic                     $topic,
+        Campaigns\CampaignService $campaigns,
+        Campaigns\CampaignsStore  $store,
     ): Collection|View|array {
         if (!$this->visibleDespiteIncognitoUser($topic)) {
             abort(404);

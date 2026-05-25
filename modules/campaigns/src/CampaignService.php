@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Campaigns;
 
-readonly class Campaigns {
+readonly class CampaignService {
     public function __construct(
         private ForPriviligedUsers $users,
         private ForRotatingBanners $rotate,

@@ -1,7 +1,7 @@
 <?php
 namespace Test\Modules\Campaigns;
 
-use Modules\Campaigns\Campaigns;
+use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\DuplicateCampaign;
 use Modules\Campaigns\InMemoryCampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
@@ -9,18 +9,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Campaigns::class)]
+#[CoversClass(CampaignService::class)]
 class CampaignsBannersTest extends TestCase {
-    private TestPriviligedUsers $priviligedUsers;
+    private TestPrivilegedUsers $privilegedUsers;
     private TestRotatingBanners $rotateBanners;
     private CampaignsFacade $facade;
 
     #[Before]
     public function initialize(): void {
-        $this->priviligedUsers = new TestPriviligedUsers();
+        $this->privilegedUsers = new TestPrivilegedUsers();
         $this->rotateBanners = new TestRotatingBanners();
-        $this->facade = new CampaignsFacade(new Campaigns(
-            $this->priviligedUsers,
+        $this->facade = new CampaignsFacade(new CampaignService(
+            $this->privilegedUsers,
             $this->rotateBanners,
             new InMemoryCampaignsStore(),
         ));
@@ -63,7 +63,7 @@ class CampaignsBannersTest extends TestCase {
     #[Test]
     public function noBanner_forPriviligedUser_dueToHighReputation(): void {
         $this->facade->addCampaign(sidebarBanner:'sidebar.png', horizontalBanner:'horizontal.png');
-        $this->priviligedUsers->setUserHighReputation(true);
+        $this->privilegedUsers->setUserHighReputation(true);
         $this->assertNull($this->facade->getSidebarBannerUrl());
         $this->assertEmpty($this->facade->getHorizontalBannerUrls());
         $this->assertNull($this->facade->getSidebarCampaignKey());
@@ -72,7 +72,7 @@ class CampaignsBannersTest extends TestCase {
     #[Test]
     public function noBanner_forPriviligedUser_dueToBeingSponsor(): void {
         $this->facade->addCampaign(sidebarBanner:'sidebar.png', horizontalBanner:'horizontal.png');
-        $this->priviligedUsers->setUserSponsor(true);
+        $this->privilegedUsers->setUserSponsor(true);
         $this->assertNull($this->facade->getSidebarBannerUrl());
         $this->assertEmpty($this->facade->getHorizontalBannerUrls());
         $this->assertNull($this->facade->getSidebarCampaignKey());

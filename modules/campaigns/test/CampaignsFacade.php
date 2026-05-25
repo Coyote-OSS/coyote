@@ -5,7 +5,7 @@ use Modules\Campaigns;
 use Modules\Campaigns\CampaignBanner;
 
 readonly class CampaignsFacade {
-    public function __construct(private Campaigns\Campaigns $campaigns) {}
+    public function __construct(private Campaigns\CampaignService $campaigns) {}
 
     /**
      * @return string[]

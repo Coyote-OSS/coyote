@@ -2,7 +2,7 @@
 namespace Tests\Integration\Modules\Campaigns;
 
 use Coyote\Modules\Campaigns\CampaignsController;
-use Modules\Campaigns\Campaigns;
+use Modules\Campaigns\CampaignService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +32,7 @@ class CampaignsControllerTest extends TestCase {
             $campaignKey, $redirectUrl);
     }
 
-    private function instance(): Campaigns {
-        return $this->laravel->app->get(Campaigns::class);
+    private function instance(): CampaignService {
+        return $this->laravel->app->get(CampaignService::class);
     }
 }

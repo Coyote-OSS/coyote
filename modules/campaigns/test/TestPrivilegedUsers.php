@@ -1,7 +1,7 @@
 <?php
 namespace Test\Modules\Campaigns;
 
-class TestPriviligedUsers implements \Modules\Campaigns\ForPriviligedUsers {
+class TestPrivilegedUsers implements \Modules\Campaigns\ForPriviligedUsers {
     private bool $highReputation = false;
     private bool $userIsSponsor = false;
 

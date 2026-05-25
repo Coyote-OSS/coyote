@@ -7,8 +7,8 @@ use Modules\Campaigns;
 
 class CampaignsController extends Controller {
     public function __construct(
-        private readonly Campaigns\Campaigns      $campaigns,
-        private readonly Campaigns\CampaignsStore $store,
+        private readonly Campaigns\CampaignService $campaigns,
+        private readonly Campaigns\CampaignsStore  $store,
     ) {}
 
     public function click(string $campaignKey, string $bannerType): RedirectResponse {
