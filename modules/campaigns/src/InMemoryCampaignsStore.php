@@ -2,6 +2,8 @@
 namespace Modules\Campaigns;
 
 class InMemoryCampaignsStore implements CampaignsStore {
+    private array $views = ['horizontal' => 0, 'sidebar' => 0];
+    private array $clicks = ['horizontal' => 0, 'sidebar' => 0];
     /** @var string[] */
     private array $campaigns = [];
 
@@ -27,19 +29,29 @@ class InMemoryCampaignsStore implements CampaignsStore {
         return \array_values($this->campaigns);
     }
 
-    public function campaignClick(string $campaignKey, string $bannerType): void {
-        throw new \Exception('Not implemented');
+    public function campaignViewCount(string $campaignKey, string $bannerType): int {
+        return $this->views[$bannerType] ?? throw new \Exception();
     }
 
     public function campaignClickCount(string $campaignKey, string $bannerType): int {
-        throw new \Exception('Not implemented');
+        return $this->clicks[$bannerType] ?? throw new \Exception();
     }
 
-    public function campaignView(string $campaignKey, string $bannerType): void {
-        throw new \Exception('Not implemented');
+    public function campaignView(string $campaignKey, string $bannerType): void {}
+
+    public function campaignClick(string $campaignKey, string $bannerType): void {}
+
+    public function stubCampaignViews(int $views, string $bannerType): void {
+        if (!array_key_exists($bannerType, $this->views)) {
+            throw new \Exception();
+        }
+        $this->views[$bannerType] = $views;
     }
 
-    public function campaignViewCount(string $campaignKey, string $bannerType): int {
-        throw new \Exception('Not implemented');
+    public function stubCampaignClicks(int $clicks, string $bannerType): void {
+        if (!array_key_exists($bannerType, $this->clicks)) {
+            throw new \Exception();
+        }
+        $this->clicks[$bannerType] = $clicks;
     }
 }

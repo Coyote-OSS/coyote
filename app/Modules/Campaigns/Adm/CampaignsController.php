@@ -3,14 +3,12 @@ namespace Coyote\Modules\Campaigns\Adm;
 
 use Boduch\Grid\Source\EloquentSource;
 use Coyote\Http\Controllers\Adm\BaseController;
-use Coyote\Modules\Campaigns\Adm\View\BannerViewModel;
-use Coyote\Modules\Campaigns\Adm\View\CampaignStats;
+use Coyote\Modules\Campaigns\Adm\View\CampaignPresenter;
 use Coyote\Modules\Campaigns\Adm\View\CampaignViewModel;
 use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Coyote\Services\FormBuilder\Form;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Modules\Campaigns\CampaignsStore;
 
 class CampaignsController extends BaseController {
     public function __construct() {
@@ -27,25 +25,15 @@ class CampaignsController extends BaseController {
         ]);
     }
 
-    public function show(Campaign $campaign, CampaignsStore $store): View {
-        $campaignKey = $campaign->campaign_key;
-
-        $horizontalStats = new CampaignStats(
-            $store->campaignViewCount($campaignKey, 'horizontal'),
-            $store->campaignClickCount($campaignKey, 'horizontal'));
-
-        $sidebarStats = new CampaignStats(
-            $store->campaignViewCount($campaignKey, 'sidebar'),
-            $store->campaignClickCount($campaignKey, 'sidebar'));
-
+    public function show(Campaign $campaign, CampaignPresenter $presenter): View {
         return $this->view('adm.campaigns.show', [
             'campaign'         => new CampaignViewModel(
-                $campaignKey,
+                $campaign->campaign_key,
                 $campaign->redirect_url,
                 route('adm.campaigns.save', [$campaign->id]),
-                $horizontalStats->concat($sidebarStats)),
-            'bannerHorizontal' => new BannerViewModel($campaign->horizontal, $horizontalStats),
-            'bannerSidebar'    => new BannerViewModel($campaign->sidebar, $sidebarStats),
+                $presenter->campaignStats($campaign->campaign_key)),
+            'bannerHorizontal' => $presenter->horizontalViewModel($campaign->campaign_key, $campaign->horizontal),
+            'bannerSidebar'    => $presenter->sidebarViewModel($campaign->campaign_key, $campaign->sidebar),
         ]);
     }
 
