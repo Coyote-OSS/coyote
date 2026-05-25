@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $redirect_url
  * @property string $sidebar
  * @property string $horizontal
+ * @property string $active_since
+ * @property string $active_until
  */
 class Campaign extends Model {
     public $timestamps = false;

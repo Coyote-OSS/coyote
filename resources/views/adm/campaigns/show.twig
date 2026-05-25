@@ -29,6 +29,22 @@
         </div>
       </div>
       <div class="list-group-item">
+        {{ icon(campaign.active ? 'campaignStatusActive' : 'campaignStatusInactive') }}
+        <b>Status</b>:
+        {% if campaign.active %}
+          <b class="text-success">aktywna</b>
+        {% else %}
+          <b class="text-danger">nie aktywna</b>
+        {% endif %}
+      </div>
+      <div class="list-group-item">
+        {{ icon('campaignDateRange') }}
+        <b>Zakres</b>:
+        {{ campaign.dateSince ?? '<span class="text-muted">nie określono</span>' }}
+        <span class="text-muted px-1">-</span>
+        {{ campaign.dateUntil ?? '<span class="text-muted">nie określono</span>' }}
+      </div>
+      <div class="list-group-item">
         {{ icon('genericLink') }}
         <b>Odnośnik reklamy</b>: {{ campaign.redirectUrl }}
       </div>

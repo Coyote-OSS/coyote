@@ -33,7 +33,10 @@ class CampaignsController extends BaseController {
                 $campaign->campaign_key,
                 $campaign->redirect_url,
                 route('adm.campaigns.save', [$campaign->id]),
-                $presenter->campaignStats($campaign->campaign_key)),
+                $presenter->campaignStats($campaign->campaign_key),
+                $presenter->campaignActive($campaign->campaign_key),
+                $campaign->active_since,
+                $campaign->active_until),
             'bannerHorizontal' => $presenter->horizontalViewModel($campaign->campaign_key, $campaign->horizontal),
             'bannerSidebar'    => $presenter->sidebarViewModel($campaign->campaign_key, $campaign->sidebar),
         ]);

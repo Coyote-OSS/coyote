@@ -59,6 +59,10 @@ readonly class FontAwesomePro {
             'campaignViews'                             => 'fa-light fa-eye',
             'campaignClicks'                            => 'fa-light fa-hand-pointer',
             'campaignCtr'                               => 'fa-light fa-chart-area',
+            'campaignStatus'                            => 'fa-light fa-check',
+            'campaignStatusActive'                      => 'fa-light fa-circle-check',
+            'campaignStatusInactive'                    => 'fa-light fa-circle-xmark',
+            'campaignDateRange'                         => 'fa-light fa-calendar',
 
             // microblog
             'microblogNew'                              => 'fa-light fa-plus',
