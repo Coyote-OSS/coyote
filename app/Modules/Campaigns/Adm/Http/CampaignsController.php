@@ -33,6 +33,7 @@ class CampaignsController extends BaseController {
                 $campaign->campaign_key,
                 $campaign->redirect_url,
                 route('adm.campaigns.save', [$campaign->id]),
+                route('adm.campaigns'),
                 $presenter->campaignStats($campaign->campaign_key),
                 $presenter->campaignActive($campaign->campaign_key),
                 $campaign->active_since,

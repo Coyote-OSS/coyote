@@ -16,6 +16,7 @@ readonly class FontAwesomePro {
         $genericDropdownVertical = 'fa-solid fa-ellipsis-vertical';
         $genericCopy = 'fa-light fa-copy';
         $genericSave = $faTick;
+        $genericBack = 'fa-light fa-arrow-left';
 
         return [
             // global
@@ -32,6 +33,7 @@ readonly class FontAwesomePro {
             'genericImage'                              => 'fa-light fa-image',
             'genericCopy'                               => $genericCopy,
             'genericSave'                               => $genericSave,
+            'genericBack'                               => $genericBack,
 
             // registration
             'loginGoogle'                               => 'fa-brands fa-google',
