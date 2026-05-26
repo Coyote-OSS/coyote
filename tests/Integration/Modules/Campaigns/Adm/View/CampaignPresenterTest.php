@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Campaigns\Adm\View;
+namespace Tests\Integration\Modules\Campaigns\Adm\View;
 
 use Coyote\Modules\Campaigns\Adm\View\CampaignPresenter;
 use Modules\Campaigns\InMemoryCampaignsStore;

@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Campaigns\Adm\Http;
+namespace Tests\Integration\Modules\Campaigns\Adm\Http;
 
 use Coyote\Modules\Campaigns\Adm;
 use PHPUnit\Framework\Attributes\Before;
