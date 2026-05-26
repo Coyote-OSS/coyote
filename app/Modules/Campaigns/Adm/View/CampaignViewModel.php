@@ -11,5 +11,6 @@ readonly class CampaignViewModel {
         public bool          $active,
         public ?string       $dateSince,
         public ?string       $dateUntil,
+        public ?int          $targetViews,
     ) {}
 }

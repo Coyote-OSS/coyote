@@ -61,6 +61,11 @@
         {{ icon('campaignViews') }}
         <b>Wyświetlenia:</b>
         <code>{{ campaign.stats.views }}</code>
+        {% if campaign.targetViews %}
+          <span class="text-muted">
+            (docelowo: <code>{{ campaign.targetViews }}</code>)
+          </span>
+        {% endif %}
       </div>
       <div class="list-group-item">
         {{ icon('campaignClicks') }}
