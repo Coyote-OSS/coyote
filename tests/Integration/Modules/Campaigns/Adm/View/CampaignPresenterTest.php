@@ -2,11 +2,14 @@
 namespace Tests\Integration\Modules\Campaigns\Adm\View;
 
 use Coyote\Modules\Campaigns\Adm\View\CampaignPresenter;
+use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\InMemoryCampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Test\Modules\Campaigns\TestPrivilegedUsers;
+use Test\Modules\Campaigns\TestRotatingBanners;
 
 #[CoversClass(CampaignPresenter::class)]
 class CampaignPresenterTest extends TestCase {
@@ -16,7 +19,10 @@ class CampaignPresenterTest extends TestCase {
     #[Before]
     public function beforeEach(): void {
         $this->store = new InMemoryCampaignsStore();
-        $this->presenter = new CampaignPresenter($this->store);
+        $this->presenter = new CampaignPresenter($this->store, new CampaignService(
+            new TestPrivilegedUsers(),
+            new TestRotatingBanners(),
+            $this->store));
     }
 
     #[Test]

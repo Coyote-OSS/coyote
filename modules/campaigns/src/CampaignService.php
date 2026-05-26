@@ -80,4 +80,9 @@ readonly class CampaignService {
         }
         throw new NoSuchCampaign('Failed to get campaign redirect url.');
     }
+
+    public function campaignActive(string $campaignKey): bool {
+        [$since, $until] = $this->store->campaignActiveRange($campaignKey);
+        return $since !== null && $until !== null;
+    }
 }

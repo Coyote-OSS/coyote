@@ -1,10 +1,14 @@
 <?php
 namespace Coyote\Modules\Campaigns\Adm\View;
 
+use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\CampaignsStore;
 
 readonly class CampaignPresenter {
-    public function __construct(private CampaignsStore $store) {}
+    public function __construct(
+        private CampaignsStore  $store,
+        private CampaignService $campaigns,
+    ) {}
 
     public function campaignStats(string $campaignKey): CampaignStats {
         $horizontal = $this->horizontalStats($campaignKey);
@@ -35,7 +39,6 @@ readonly class CampaignPresenter {
     }
 
     public function campaignActive(string $campaignKey): bool {
-        [$since, $until] = $this->store->campaignActiveRange($campaignKey);
-        return $since !== null && $until !== null;
+        return $this->campaigns->campaignActive($campaignKey);
     }
 }
