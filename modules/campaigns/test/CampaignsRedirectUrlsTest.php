@@ -18,6 +18,7 @@ class CampaignsRedirectUrlsTest extends TestCase {
         $this->campaigns = new CampaignService(
             new TestPrivilegedUsers(),
             new TestRotatingBanners(),
+            new TestCurrentDate(),
             new InMemoryCampaignsStore());
     }
 

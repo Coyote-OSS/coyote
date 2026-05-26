@@ -5,6 +5,7 @@ readonly class CampaignService {
     public function __construct(
         private ForPriviligedUsers $users,
         private ForRotatingBanners $rotate,
+        private ForCurrentDate     $date,
         private CampaignsStore     $store,
     ) {}
 
@@ -83,6 +84,9 @@ readonly class CampaignService {
 
     public function campaignActive(string $campaignKey): bool {
         [$since, $until] = $this->store->campaignActiveRange($campaignKey);
-        return $since !== null && $until !== null;
+        if ($since === null || $until === null) {
+            return false;
+        }
+        return $this->date->isRangeActive($since, $until);
     }
 }

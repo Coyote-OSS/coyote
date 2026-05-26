@@ -25,6 +25,10 @@ class CampaignsServiceProvider extends ServiceProvider {
             Campaigns\CampaignsStore::class,
             DatabaseCampaignsStore::class);
 
+        $this->app->bind(
+            Campaigns\ForCurrentDate::class,
+            CarbonCurrentDate::class);
+
         $this->registerRoutes($this->app->make(Router::class));
     }
 

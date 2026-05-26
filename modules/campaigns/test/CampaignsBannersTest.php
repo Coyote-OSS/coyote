@@ -22,8 +22,8 @@ class CampaignsBannersTest extends TestCase {
         $this->facade = new CampaignsFacade(new CampaignService(
             $this->privilegedUsers,
             $this->rotateBanners,
-            new InMemoryCampaignsStore(),
-        ));
+            new TestCurrentDate(),
+            new InMemoryCampaignsStore()));
     }
 
     #[Test]

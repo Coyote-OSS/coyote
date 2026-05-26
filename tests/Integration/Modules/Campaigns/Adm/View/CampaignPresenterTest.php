@@ -8,20 +8,24 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Test\Modules\Campaigns\TestCurrentDate;
 use Test\Modules\Campaigns\TestPrivilegedUsers;
 use Test\Modules\Campaigns\TestRotatingBanners;
 
 #[CoversClass(CampaignPresenter::class)]
 class CampaignPresenterTest extends TestCase {
     private InMemoryCampaignsStore $store;
+    private TestCurrentDate $date;
     private CampaignPresenter $presenter;
 
     #[Before]
     public function beforeEach(): void {
         $this->store = new InMemoryCampaignsStore();
+        $this->date = new TestCurrentDate();
         $this->presenter = new CampaignPresenter($this->store, new CampaignService(
             new TestPrivilegedUsers(),
             new TestRotatingBanners(),
+            $this->date,
             $this->store));
     }
 
@@ -69,7 +73,8 @@ class CampaignPresenterTest extends TestCase {
 
     #[Test]
     public function campaignIsActive_whenBothSinceAndUntilAreSet(): void {
-        $this->store->stubCampaignActiveRange('campaign', '1970', '1970');
+        $this->date->stubCurrentDate('2000-01-01T00:00:00');
+        $this->store->stubCampaignActiveRange('campaign', '1970', '2200');
         $this->assertTrue($this->presenter->campaignActive('campaign'));
     }
 
