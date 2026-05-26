@@ -25,6 +25,11 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
                 'label' => 'Aktywna do',
                 'help'  => 'Nie wypełnienie tego pola skutkuje kampanią, która nie jest aktywna.',
             ])
+            ->add('target_views', 'number', [
+                'label' => 'Docelowa liczba wyświetleń',
+                'help'  => 'Po przekroczeniu tej ilośc wyświetleń, kampania zostanie dezaktywowana. ' .
+                    'Nie wypełnienie tego pola skutkuje kampanią, która nie jest aktywna.',
+            ])
             ->add('sidebar', 'text', [
                 'label' => 'Baner boczny (narrow-250/narrow-600)',
                 'rules' => 'required|string|max:255',

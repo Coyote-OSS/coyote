@@ -34,6 +34,7 @@ class CampaignsControllerTest extends TestCase {
             $campaignKey,
             $redirectUrl,
             null,
+            null,
             null);
     }
 

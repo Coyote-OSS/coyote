@@ -16,6 +16,7 @@ readonly class CampaignService {
         string  $redirectUrl,
         ?string $activeSince,
         ?string $activeUntil,
+        ?int    $targetViews,
     ): void {
         $existed = $this->store->createIfNotExists(
             $campaignKey,
@@ -23,7 +24,8 @@ readonly class CampaignService {
             $horizontal,
             $redirectUrl,
             $activeSince,
-            $activeUntil);
+            $activeUntil,
+            $targetViews);
         if ($existed) {
             throw new DuplicateCampaign('Failed to add a duplicated campaign.');
         }
@@ -63,7 +65,7 @@ readonly class CampaignService {
 
     private function listActiveCampaigns(): iterable {
         foreach ($this->store->listCampaigns() as $campaign) {
-            if ($this->campaignActive($campaign->campaignKey)) {
+            if ($this->isCampaignObjectActive($campaign)) {
                 yield $campaign;
             }
         }
@@ -90,11 +92,20 @@ readonly class CampaignService {
         throw new NoSuchCampaign('Failed to get campaign redirect url.');
     }
 
-    public function campaignActive(string $campaignKey): bool {
-        [$since, $until] = $this->store->campaignActiveRange($campaignKey);
-        if ($since === null || $until === null) {
+    public function isCampaignActive(string $campaignKey): bool {
+        return $this->isCampaignObjectActive($this->store->findCampaign($campaignKey));
+    }
+
+    private function isCampaignObjectActive(Campaign $campaign): bool {
+        if ($campaign->activeSince === null || $campaign->activeUntil === null) {
             return false;
         }
-        return $this->date->isRangeActive($since, $until);
+        if (!$this->date->isRangeActive($campaign->activeSince, $campaign->activeUntil)) {
+            return false;
+        }
+        $viewsHorizontal = $this->store->campaignViewCount($campaign->campaignKey, 'horizontal');
+        $viewsSidebar = $this->store->campaignViewCount($campaign->campaignKey, 'sidebar');
+        $total = $viewsHorizontal + $viewsSidebar;
+        return $total < $campaign->targetViews;
     }
 }

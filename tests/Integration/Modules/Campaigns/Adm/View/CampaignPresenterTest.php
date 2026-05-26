@@ -97,6 +97,6 @@ class CampaignPresenterTest extends TestCase {
         ?string $activeSince,
         ?string $activeUntil,
     ): void {
-        $this->campaigns->add('', '', $campaignKey, '', $activeSince, $activeUntil);
+        $this->campaigns->add('', '', $campaignKey, '', $activeSince, $activeUntil, 999);
     }
 }

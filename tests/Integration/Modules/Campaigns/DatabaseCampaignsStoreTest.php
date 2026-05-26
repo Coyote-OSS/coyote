@@ -66,7 +66,8 @@ class DatabaseCampaignsStoreTest extends TestCase {
             'horizontal',
             'redirect',
             '2222-02-02T22:22:22',
-            '3333-03-03T03:33:33');
+            '3333-03-03T03:33:33',
+            999);
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
         $this->assertEquals('sidebar', $campaign->sidebarBanner);
@@ -74,6 +75,39 @@ class DatabaseCampaignsStoreTest extends TestCase {
         $this->assertEquals('redirect', $campaign->redirectUrl);
         $this->assertEquals('2222-02-02 22:22:22', $campaign->activeSince);
         $this->assertEquals('3333-03-03 03:33:33', $campaign->activeUntil);
+        $this->assertEquals(999, $campaign->targetViews);
+    }
+
+    #[Test]
+    public function findCampaign_returnsCampaignObject(): void {
+        $this->store->createIfNotExists(
+            'campaign-key',
+            'sidebar',
+            'horizontal',
+            'redirect',
+            '2222-02-02T22:22:22',
+            '3333-03-03T03:33:33',
+            999);
+        $campaign = $this->store->findCampaign('campaign-key');
+        $this->assertEquals('campaign-key', $campaign->campaignKey);
+        $this->assertEquals('sidebar', $campaign->sidebarBanner);
+        $this->assertEquals('horizontal', $campaign->horizontalBanner);
+        $this->assertEquals('redirect', $campaign->redirectUrl);
+        $this->assertEquals('2222-02-02 22:22:22', $campaign->activeSince);
+        $this->assertEquals('3333-03-03 03:33:33', $campaign->activeUntil);
+        $this->assertEquals(999, $campaign->targetViews);
+    }
+
+    #[Test]
+    public function findCampaign_returnsNull_ifNoSuchCampaign(): void {
+        $this->assertNull($this->store->findCampaign('no-such-campaign'));
+    }
+
+    #[Test]
+    public function allowOptionalTargetViews(): void {
+        $this->store->createIfNotExists('', '', '', '', null, null, null);
+        [$campaign] = $this->store->listCampaigns();
+        $this->assertNull($campaign->targetViews);
     }
 
     #[Test]
@@ -187,12 +221,19 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     private function createIfNotExists(string $campaignKey): bool {
         $date = '1970-01-01T00:00:00';
-        return $this->store->createIfNotExists($campaignKey, '', '', '', $date, $date);
+        return $this->store->createIfNotExists($campaignKey, '', '', '', $date, $date, 999);
     }
 
-    private function createCampaignRange(string $campaignKey, string $activeSince, string $activeUntil): void {
-        $this->store->createIfNotExists($campaignKey,
+    private function createCampaignRange(
+        string $campaignKey,
+        string $activeSince,
+        string $activeUntil,
+    ): void {
+        $this->store->createIfNotExists(
+            $campaignKey,
             '', '', '',
-            $activeSince, $activeUntil);
+            $activeSince,
+            $activeUntil,
+            999);
     }
 }

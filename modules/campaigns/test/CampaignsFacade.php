@@ -38,14 +38,18 @@ readonly class CampaignsFacade {
         ?string $horizontalBanner = null,
         ?string $campaignKey = null,
         ?string $redirectUrl = null,
+        ?string $since = null,
+        ?string $until = null,
     ): void {
         $this->campaigns->add(
             $sidebarBanner ?? '',
             $horizontalBanner ?? '',
             $campaignKey ?? '',
             $redirectUrl ?? '',
-            '1970-01-01T00:00:00',
-            '2999-12-31T23:59:59');
+            $since ?? '1970-01-01T00:00:00', // canonical catch-all since date
+            $until ?? '2999-12-31T23:59:59', // canonical catch-all until date
+            999, // canonica catch-all target views
+        );
     }
 
     /**

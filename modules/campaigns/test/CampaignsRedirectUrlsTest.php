@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 class CampaignsRedirectUrlsTest extends TestCase {
     private CampaignService $campaigns;
     private TestCurrentDate $date;
+    private CampaignsFacade $facade;
 
     #[Before]
     public function initialize(): void {
@@ -22,11 +23,12 @@ class CampaignsRedirectUrlsTest extends TestCase {
             new TestRotatingBanners(),
             $this->date,
             new InMemoryCampaignsStore());
+        $this->facade = new CampaignsFacade($this->campaigns);
     }
 
     #[Test]
     public function redirectUrl(): void {
-        $this->campaigns->add('', '', 'campaign', 'http://redirect-url', null, null);
+        $this->facade->addCampaign(campaignKey:'campaign', redirectUrl:'http://redirect-url');
         $redirectUrl = $this->campaigns->redirectUrl('campaign');
         $this->assertEquals('http://redirect-url', $redirectUrl);
     }
@@ -34,7 +36,7 @@ class CampaignsRedirectUrlsTest extends TestCase {
     #[Test]
     public function sidebarCampaignKey(): void {
         $this->date->stubCurrentDate('2000-01-02');
-        $this->campaigns->add('', '', 'campaignKey', '', '2000-01-01', '2000-01-03');
+        $this->facade->addCampaign(campaignKey:'campaignKey', since:'2000-01-01', until:'2000-01-03');
         $this->assertEquals('campaignKey',
             $this->campaigns->campaignBanners()->sidebar->campaignKey);
     }
@@ -49,8 +51,8 @@ class CampaignsRedirectUrlsTest extends TestCase {
     #[Test]
     public function doNotIncludeInactiveCampaigns(): void {
         $this->date->stubCurrentDate('2000-01-02');
-        $this->campaigns->add('', '', 'inactive', '', '2100-01-01', '2100-01-01');
-        $this->campaigns->add('', '', 'active', '', '2000-01-01', '2000-01-03');
+        $this->facade->addCampaign(campaignKey:'inactive', since:'2100-01-01', until:'2100-01-01');
+        $this->facade->addCampaign(campaignKey:'active', since:'2000-01-01', until:'2000-01-03');
         $campaignBanners = $this->campaigns->campaignBanners()->horizontal;
         $this->assertCampaignKeys(['active'], $campaignBanners);
     }

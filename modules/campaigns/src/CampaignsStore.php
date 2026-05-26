@@ -2,19 +2,22 @@
 namespace Modules\Campaigns;
 
 interface CampaignsStore {
-    function createIfNotExists(
+    public function createIfNotExists(
         string  $campaignKey,
         string  $sidebarBanner,
         string  $horizontalBanner,
         string  $redirectUrl,
         ?string $activeSince,
         ?string $activeUntil,
+        ?int    $targetViews,
     ): bool;
+
+    public function findCampaign(string $campaignKey): ?Campaign;
 
     /**
      * @return Campaign[]
      */
-    function listCampaigns(): array;
+    public function listCampaigns(): array;
 
     public function campaignClick(string $campaignKey, string $bannerType): void;
 

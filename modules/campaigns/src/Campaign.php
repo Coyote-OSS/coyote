@@ -9,5 +9,6 @@ readonly class Campaign {
         public string  $redirectUrl,
         public ?string $activeSince,
         public ?string $activeUntil,
+        public ?int    $targetViews,
     ) {}
 }

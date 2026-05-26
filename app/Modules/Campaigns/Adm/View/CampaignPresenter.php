@@ -39,6 +39,6 @@ readonly class CampaignPresenter {
     }
 
     public function campaignActive(string $campaignKey): bool {
-        return $this->campaigns->campaignActive($campaignKey);
+        return $this->campaigns->isCampaignActive($campaignKey);
     }
 }

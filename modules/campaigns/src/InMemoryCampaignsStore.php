@@ -4,7 +4,7 @@ namespace Modules\Campaigns;
 class InMemoryCampaignsStore implements CampaignsStore {
     private array $views = ['horizontal' => 0, 'sidebar' => 0];
     private array $clicks = ['horizontal' => 0, 'sidebar' => 0];
-    /** @var string[] */
+    /** @var Campaign[] */
     private array $campaigns = [];
 
     public function createIfNotExists(
@@ -14,6 +14,7 @@ class InMemoryCampaignsStore implements CampaignsStore {
         string  $redirectUrl,
         ?string $activeSince,
         ?string $activeUntil,
+        ?int    $targetViews,
     ): bool {
         $existed = \array_key_exists($campaignKey, $this->campaigns);
         $this->campaigns[$campaignKey] = new Campaign(
@@ -22,7 +23,8 @@ class InMemoryCampaignsStore implements CampaignsStore {
             $horizontalBanner,
             $redirectUrl,
             $activeSince,
-            $activeUntil);
+            $activeUntil,
+            $targetViews);
         return $existed;
     }
 
@@ -41,9 +43,13 @@ class InMemoryCampaignsStore implements CampaignsStore {
         return $this->clicks[$bannerType] ?? throw new \Exception();
     }
 
-    public function campaignView(string $campaignKey, string $bannerType): void {}
+    public function campaignView(string $campaignKey, string $bannerType): void {
+        throw new \Exception();
+    }
 
-    public function campaignClick(string $campaignKey, string $bannerType): void {}
+    public function campaignClick(string $campaignKey, string $bannerType): void {
+        throw new \Exception();
+    }
 
     public function stubCampaignViews(int $views, string $bannerType): void {
         if (!array_key_exists($bannerType, $this->views)) {
@@ -60,11 +66,14 @@ class InMemoryCampaignsStore implements CampaignsStore {
     }
 
     public function campaignActiveRange(string $campaignKey): array {
-        /** @var Campaign $campaign */
-        $campaign = $this->campaigns[$campaignKey] ?? throw new \Exception();
+        $campaign = $this->findCampaign($campaignKey) ?? throw new \Exception();
         return [
             $campaign->activeSince,
             $campaign->activeUntil,
         ];
+    }
+
+    public function findCampaign(string $campaignKey): ?Campaign {
+        return $this->campaigns[$campaignKey] ?? null;
     }
 }

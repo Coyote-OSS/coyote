@@ -17,6 +17,7 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
         string  $redirectUrl,
         ?string $activeSince,
         ?string $activeUntil,
+        ?int    $targetViews,
     ): bool {
         $inserted = $this->table()->insertOrIgnore([
             'campaign_key' => $campaignKey,
@@ -25,6 +26,7 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             'redirect_url' => $redirectUrl,
             'active_since' => $activeSince,
             'active_until' => $activeUntil,
+            'target_views' => $targetViews,
         ]);
         return $inserted === 0;
     }
@@ -33,17 +35,7 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
      * @return Eloquent\Campaign[]
      */
     public function listCampaigns(): array {
-        return $this->table()
-            ->get()
-            ->map(fn(object $row) => new Campaign(
-                campaignKey:$row->campaign_key,
-                sidebarBanner:$row->sidebar,
-                horizontalBanner:$row->horizontal,
-                redirectUrl:$row->redirect_url,
-                activeSince:$row->active_since,
-                activeUntil:$row->active_until,
-            ))
-            ->all();
+        return $this->table()->get()->map($this->parseRow(...))->all();
     }
 
     private function table(): Query\Builder {
@@ -107,5 +99,24 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             throw new Campaigns\NoSuchCampaign('No such campaign.');
         }
         return [$row->active_since, $row->active_until];
+    }
+
+    public function findCampaign(string $campaignKey): ?Campaign {
+        $campaign = $this->table()->where('campaign_key', $campaignKey)->first();
+        if ($campaign === null) {
+            return null;
+        }
+        return $this->parseRow($campaign);
+    }
+
+    private function parseRow(object $campaign): Campaign {
+        return new Campaign(
+            campaignKey:$campaign->campaign_key,
+            sidebarBanner:$campaign->sidebar,
+            horizontalBanner:$campaign->horizontal,
+            redirectUrl:$campaign->redirect_url,
+            activeSince:$campaign->active_since,
+            activeUntil:$campaign->active_until,
+            targetViews:$campaign->target_views);
     }
 }
