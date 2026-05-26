@@ -2,6 +2,7 @@
 namespace Tests\Integration\Modules\Campaigns\Adm\Http;
 
 use Coyote\Modules\Campaigns\Adm;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -17,37 +18,43 @@ class CampaignsControllerTest extends TestCase {
     private ModelsDriver $models;
 
     #[Before]
-    public function initializeModels(): void {
+    public function givenAccessToCampaigns(): void {
         $this->models = new ModelsDriver();
+        $this->loginAdmin();
     }
 
     #[Test]
     public function creatingCampaign_failsWithoutAuthorization(): void {
+        // given I don't have access to campaigns
         $this->loginUser();
-        $this->laravel->post('/Adm/Campaigns/Save')->assertForbidden();
+        // when I attempt to create a new campaign
+        $response = $this->httpCreate([]);
+        // then the request is rejected
+        $response->assertForbidden();
     }
 
     #[Test]
-    public function creatingCampaign_redirectsToHome(): void {
-        $this->loginAdmin();
-        $this->laravel
-            ->post('/Adm/Campaigns/Save', $this->exampleCampaign())
-            ->assertRedirect('/Adm/Campaigns');
+    public function creatingCampaign_redirectsToTheCampaign(): void {
+        // when I create a new campaign
+        $response = $this->httpCreate($this->exampleCampaign());
+        // then I am redirected to the campaign
+        $campaignId = $this->campaignId($response);
+        $response->assertRedirect("/Adm/Campaigns/Show/$campaignId");
     }
 
     #[Test]
     public function creatingCampaign_savesCampaignInDatabase(): void {
-        $this->loginAdmin();
-        $this->laravel->post('/Adm/Campaigns/Save', $this->exampleCampaign());
+        // when I create a new campaign
+        $this->httpCreate($this->exampleCampaign());
+        // then the campaign is persisted
         $this->laravel->assertSeeInDatabase('module_campaigns', $this->exampleCampaign());
     }
 
     #[Test]
     public function creatingCampaign_allowsOptionalActiveRange(): void {
-        $this->loginAdmin();
-        $this->laravel->post('/Adm/Campaigns/Save', $this->exampleCampaign(
-            campaignKey:'optional-range',
-            includeActiveRange:false));
+        // when I create a new camapgin without active range
+        $this->httpCreate($this->exampleCampaign(campaignKey:'optional-range', includeActiveRange:false));
+        // then the campaign is persisted without active range
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'campaign_key' => 'optional-range',
             'active_since' => null,
@@ -57,11 +64,25 @@ class CampaignsControllerTest extends TestCase {
 
     #[Test]
     public function failToCreateDuplicateCampaign(): void {
-        $this->loginAdmin();
-        $this->laravel->post('/Adm/Campaigns/Save', $this->exampleCampaign('duplicate'));
-        $this->laravel
-            ->post('/Adm/Campaigns/Save', $this->exampleCampaign('duplicate'))
-            ->assertBadRequest();
+        // given a campaign already exists
+        $this->httpCreate($this->exampleCampaign('duplicate'));
+        // when I attempt to create a campaign with a duplicate campaign key
+        $response = $this->httpCreate($this->exampleCampaign('duplicate'));
+        // then the request is rejected
+        $response->assertBadRequest();
+    }
+
+    #[Test]
+    public function updateCampaign(): void {
+        // given a campaign already exists
+        $campaignId = $this->httpCreateReturnId($this->exampleCampaign('updated', redirectUrl:'http://old'));
+        // when I update the campaign
+        $this->httpUpdate($campaignId, $this->exampleCampaign('updated', redirectUrl:'http://new'));
+        // then the campaign is updated
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'campaign_key' => 'updated',
+            'redirect_url' => 'http://new',
+        ]);
     }
 
     #[Test]
@@ -90,10 +111,11 @@ class CampaignsControllerTest extends TestCase {
     private function exampleCampaign(
         ?string $campaignKey = null,
         ?bool   $includeActiveRange = true,
+        ?string $redirectUrl = null,
     ): array {
         return [
             'campaign_key' => $campaignKey ?? 'created-campaign',
-            'redirect_url' => 'http://test',
+            'redirect_url' => $redirectUrl ?? 'http://test',
             'sidebar'      => 'image.png',
             'horizontal'   => 'image.png',
             ...$includeActiveRange ? $this->exampleActiveRange() : [],
@@ -105,5 +127,23 @@ class CampaignsControllerTest extends TestCase {
             'active_since' => '2000-01-01T00:00:00',
             'active_until' => '2000-01-01T00:00:00',
         ];
+    }
+
+    private function httpCreateReturnId(array $exampleCampaign): int {
+        $response = $this->httpCreate($exampleCampaign);
+        $response->assertRedirect();
+        return $this->campaignId($response);
+    }
+
+    private function httpCreate(array $exampleCampaign): TestResponse {
+        return $this->laravel->post('/Adm/Campaigns/Save', $exampleCampaign);
+    }
+
+    private function httpUpdate(int $campaignId, array $campaign): void {
+        $this->laravel->post("/Adm/Campaigns/Save/$campaignId", $campaign);
+    }
+
+    private function campaignId(TestResponse $response): string {
+        return $response->headers->get('X-Campaign-Id');
     }
 }

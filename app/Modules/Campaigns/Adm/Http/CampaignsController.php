@@ -56,7 +56,10 @@ class CampaignsController extends BaseController {
         } catch (\Throwable) {
             abort(400); // Duplicate campaign key
         }
-        return redirect()->route('adm.campaigns')->with('success', 'Zmiany zostały zapisane.');
+        return redirect()
+            ->route('adm.campaigns.show', [$campaign->id])
+            ->header('X-Campaign-Id', $campaign->id)
+            ->with('success', 'Zmiany zostały zapisane.');
     }
 
     public function delete(Campaign $campaign): RedirectResponse {
