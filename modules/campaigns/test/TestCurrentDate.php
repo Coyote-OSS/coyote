@@ -4,7 +4,7 @@ namespace Test\Modules\Campaigns;
 use Modules\Campaigns\ForCurrentDate;
 
 class TestCurrentDate implements ForCurrentDate {
-    private string|null $currentDate = null;
+    public function __construct(private ?string $currentDate = null) {}
 
     public function stubCurrentDate(string $currentDate): void {
         $this->currentDate = $currentDate;

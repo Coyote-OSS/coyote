@@ -22,7 +22,7 @@ class CampaignsBannersTest extends TestCase {
         $this->facade = new CampaignsFacade(new CampaignService(
             $this->privilegedUsers,
             $this->rotateBanners,
-            new TestCurrentDate(),
+            new TestCurrentDate('2000-01-01T00:00:00'),
             new InMemoryCampaignsStore()));
     }
 

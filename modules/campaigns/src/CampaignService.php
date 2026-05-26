@@ -48,7 +48,7 @@ readonly class CampaignService {
     private function enabledCampaignBanners(): CampaignBanners {
         $sidebars = [];
         $horizontals = [];
-        foreach ($this->store->listCampaigns() as $campaign) {
+        foreach ($this->listActiveCampaigns() as $campaign) {
             $sidebars[$campaign->campaignKey] = new CampaignBanner(
                 $campaign->sidebarBanner,
                 $campaign->campaignKey,
@@ -58,13 +58,21 @@ readonly class CampaignService {
                 $campaign->campaignKey,
                 'horizontal');
         }
-        return new CampaignBanners($horizontals, $this->sidebarBanner($sidebars));
+        return new CampaignBanners($horizontals, $this->rotatedSidebarBanner($sidebars));
+    }
+
+    private function listActiveCampaigns(): iterable {
+        foreach ($this->store->listCampaigns() as $campaign) {
+            if ($this->campaignActive($campaign->campaignKey)) {
+                yield $campaign;
+            }
+        }
     }
 
     /**
      * @param CampaignBanner[] $sidebarBanners
      */
-    private function sidebarBanner(array $sidebarBanners): ?CampaignBanner {
+    private function rotatedSidebarBanner(array $sidebarBanners): ?CampaignBanner {
         if (empty($sidebarBanners)) {
             return null;
         }

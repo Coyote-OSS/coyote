@@ -17,16 +17,18 @@ class CampaignPresenterTest extends TestCase {
     private InMemoryCampaignsStore $store;
     private TestCurrentDate $date;
     private CampaignPresenter $presenter;
+    private CampaignService $campaigns;
 
     #[Before]
     public function beforeEach(): void {
         $this->store = new InMemoryCampaignsStore();
         $this->date = new TestCurrentDate();
-        $this->presenter = new CampaignPresenter($this->store, new CampaignService(
+        $this->campaigns = new CampaignService(
             new TestPrivilegedUsers(),
             new TestRotatingBanners(),
             $this->date,
-            $this->store));
+            $this->store);
+        $this->presenter = new CampaignPresenter($this->store, $this->campaigns);
     }
 
     #[Test]
@@ -74,19 +76,27 @@ class CampaignPresenterTest extends TestCase {
     #[Test]
     public function campaignIsActive_whenBothSinceAndUntilAreSet(): void {
         $this->date->stubCurrentDate('2000-01-01T00:00:00');
-        $this->store->stubCampaignActiveRange('campaign', '1970', '2200');
+        $this->stubCampaignActiveRange('campaign', '1970', '2200');
         $this->assertTrue($this->presenter->campaignActive('campaign'));
     }
 
     #[Test]
     public function campaignIsNotActive_whenSinceIsNotSet(): void {
-        $this->store->stubCampaignActiveRange('campaign', null, '1970');
+        $this->stubCampaignActiveRange('campaign', null, '1970');
         $this->assertFalse($this->presenter->campaignActive('campaign'));
     }
 
     #[Test]
     public function campaignIsNotActive_whenUntilIsNotSet(): void {
-        $this->store->stubCampaignActiveRange('campaign', '1970', null);
+        $this->stubCampaignActiveRange('campaign', '1970', null);
         $this->assertFalse($this->presenter->campaignActive('campaign'));
+    }
+
+    private function stubCampaignActiveRange(
+        string  $campaignKey,
+        ?string $activeSince,
+        ?string $activeUntil,
+    ): void {
+        $this->campaigns->add('', '', $campaignKey, '', $activeSince, $activeUntil);
     }
 }

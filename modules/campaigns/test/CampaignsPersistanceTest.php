@@ -19,13 +19,14 @@ class CampaignsPersistanceTest extends TestCase {
         $this->campaigns = new CampaignService(
             new TestPrivilegedUsers(),
             new TestRotatingBanners(),
-            new TestCurrentDate(),
+            new TestCurrentDate('2000-01-02T00:00:00'),
             $this->store);
     }
 
     #[Test]
     public function banners(): void {
-        $this->store->createIfNotExists('stored', 'sidebar', 'horizontal', '', null, null);
+        $this->store->createIfNotExists('stored', 'sidebar', 'horizontal', '',
+            '2000-01-01T00:00:00', '2000-01-03T00:00:00');
         $banners = $this->campaigns->campaignBanners();
         $this->assertEquals('stored', $banners->sidebar->campaignKey);
         $this->assertEquals('sidebar', $banners->sidebar->bannerUrl);
