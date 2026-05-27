@@ -77,7 +77,7 @@ class CampaignPresenterTest extends TestCase {
     public function campaignIsActive_whenBothSinceAndUntilAreSet(): void {
         $this->date->stubCurrentDate('2000-01-01T00:00:00');
         $this->stubCampaignActiveRange('campaign', '1970', '2200');
-        $this->assertTrue($this->presenter->campaignActive('campaign'));
+        $this->assertTrue($this->presenter->campaignStatus('campaign')->active());
     }
 
     private function stubCampaignActiveRange(

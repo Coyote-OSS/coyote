@@ -92,30 +92,34 @@ readonly class CampaignService {
         throw new NoSuchCampaign('Failed to get campaign redirect url.');
     }
 
-    public function isCampaignActive(string $campaignKey): bool {
-        return $this->isCampaignObjectActive($this->store->findCampaign($campaignKey));
+    public function campaignStatus(string $campaignKey): string {
+        return $this->campaignObjectStatus($this->store->findCampaign($campaignKey));
     }
 
     private function isCampaignObjectActive(Campaign $campaign): bool {
+        return $this->campaignObjectStatus($campaign) === 'active';
+    }
+
+    private function campaignObjectStatus(Campaign $campaign): string {
         if (!$this->hasTarget($campaign)) {
-            return false;
+            return 'misconfigured';
         }
         if ($campaign->targetViews !== null) {
             if ($campaign->targetViews < $this->campaignTotalViewCount($campaign)) {
-                return false;
+                return 'target-reached';
             }
         }
         if ($campaign->activeSince !== null) {
             if (!$this->date->hasStarted($campaign->activeSince)) {
-                return false;
+                return 'not-started';
             }
         }
         if ($campaign->activeUntil !== null) {
             if (!$this->date->hasNotFinished($campaign->activeUntil)) {
-                return false;
+                return 'finished';
             }
         }
-        return true;
+        return 'active';
     }
 
     private function campaignTotalViewCount(Campaign $campaign): int {

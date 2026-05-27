@@ -50,7 +50,7 @@ class CampaignsGrid extends Grid {
     }
 
     private function campaignActiveCell(CampaignService $campaigns, Campaign $campaign): string {
-        $active = $campaigns->isCampaignActive($campaign->campaign_key);
+        $active = $campaigns->campaignStatus($campaign->campaign_key) === 'active';
         $icon = $this->icon($active ? 'campaignStatusActive' : 'campaignStatusInactive');
         $title = $active ? 'aktywna' : 'nie aktywna';
         return "$icon $title";

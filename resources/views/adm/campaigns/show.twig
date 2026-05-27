@@ -32,14 +32,19 @@
           </span>
         </div>
       </div>
-      <div class="list-group-item">
-        {{ icon(campaign.active ? 'campaignStatusActive' : 'campaignStatusInactive') }}
-        <b>Status</b>:
-        {% if campaign.active %}
-          <b class="text-success">aktywna</b>
-        {% else %}
-          <b class="text-danger">nie aktywna</b>
-        {% endif %}
+      <div class="list-group-item d-flex">
+        <span>
+          {{ icon(campaign.status.active ? 'campaignStatusActive' : 'campaignStatusInactive') }}
+          <b>Status</b>:
+          {% if campaign.status.active %}
+            <b class="text-success">aktywna</b>
+          {% else %}
+            <b class="text-danger">nie aktywna</b>
+          {% endif %}
+        </span>
+        <span class="ms-auto text-muted">
+          {{ campaign.status.statusText }}
+        </span>
       </div>
       <div class="list-group-item">
         {{ icon('campaignDateRange') }}

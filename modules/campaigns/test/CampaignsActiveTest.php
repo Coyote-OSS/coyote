@@ -31,7 +31,7 @@ class CampaignsActiveTest extends TestCase {
     public function campaignIsNotActive_givenCurrentDate_isBeforeActiveSince(): void {
         $this->calendar->stubCurrentDate('1999-12-31T00:00:00');
         $this->setupCampaignActiveRange('2000-01-01T00:00:00', '2000-01-31T00:00:00');
-        $this->assertCampaignNotActive();
+        $this->assertCampaignNotActive('not-started');
     }
 
     #[Test]
@@ -45,7 +45,7 @@ class CampaignsActiveTest extends TestCase {
     public function campaignIsNotActive_givenCurrentDate_isAfterActiveUntil(): void {
         $this->calendar->stubCurrentDate('2000-02-01T00:00:00');
         $this->setupCampaignActiveRange('2000-01-01T00:00:00', '2000-01-31T00:00:00');
-        $this->assertCampaignNotActive();
+        $this->assertCampaignNotActive('finished');
     }
 
     #[Test]
@@ -85,7 +85,7 @@ class CampaignsActiveTest extends TestCase {
         // when the campaign is viewed 3 times
         $this->store->stubCampaignViews(3, 'horizontal');
         // then the campaign is not active
-        $this->assertCampaignNotActive();
+        $this->assertCampaignNotActive('target-reached');
     }
 
     #[Test]
@@ -95,7 +95,7 @@ class CampaignsActiveTest extends TestCase {
         // when the campaign is viewed 3 times
         $this->store->stubCampaignViews(3, 'sidebar');
         // then the campaign is not active
-        $this->assertCampaignNotActive();
+        $this->assertCampaignNotActive('target-reached');
     }
 
     #[Test]
@@ -106,7 +106,7 @@ class CampaignsActiveTest extends TestCase {
         $this->store->stubCampaignViews(4, 'sidebar');
         $this->store->stubCampaignViews(4, 'horizontal');
         // then the campaign is not active
-        $this->assertCampaignNotActive();
+        $this->assertCampaignNotActive('target-reached');
     }
 
     #[Test]
@@ -118,7 +118,7 @@ class CampaignsActiveTest extends TestCase {
     #[Test]
     public function campaignWithoutUntilOrTarget_isNotActive(): void {
         $this->setupCampaign(since:false, until:false, target:false);
-        $this->assertCampaignNotActive();
+        $this->assertCampaignNotActive('misconfigured');
     }
 
     #[Test]
@@ -134,11 +134,11 @@ class CampaignsActiveTest extends TestCase {
     }
 
     private function assertCampaignActive(): void {
-        $this->assertTrue($this->campaigns->isCampaignActive($this->campaignKey));
+        $this->assertSame('active', $this->campaigns->campaignStatus($this->campaignKey));
     }
 
-    private function assertCampaignNotActive(): void {
-        $this->assertFalse($this->campaigns->isCampaignActive($this->campaignKey));
+    private function assertCampaignNotActive(string $status): void {
+        $this->assertSame($status, $this->campaigns->campaignStatus($this->campaignKey));
     }
 
     private function setupCampaign(bool $since, bool $until, bool $target): void {

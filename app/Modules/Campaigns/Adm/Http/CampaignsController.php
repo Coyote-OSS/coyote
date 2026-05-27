@@ -35,7 +35,7 @@ class CampaignsController extends BaseController {
                 route('adm.campaigns.save', [$campaign->id]),
                 route('adm.campaigns'),
                 $presenter->campaignStats($campaign->campaign_key),
-                $presenter->campaignActive($campaign->campaign_key),
+                $presenter->campaignStatus($campaign->campaign_key),
                 $campaign->active_since,
                 $campaign->active_until,
                 $campaign->target_views),
