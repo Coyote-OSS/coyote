@@ -55,12 +55,14 @@ readonly class CampaignService {
                 $campaign->sidebarBanner,
                 $campaign->campaignKey,
                 'sidebar');
-            $horizontals[] = new CampaignBanner(
+            $horizontals[$campaign->campaignKey] = new CampaignBanner(
                 $campaign->horizontalBanner,
                 $campaign->campaignKey,
                 'horizontal');
         }
-        return new CampaignBanners($horizontals, $this->rotatedSidebarBanner($sidebars));
+        return new CampaignBanners(
+            $this->rotatedBanners($horizontals, 2),
+            $this->rotatedBanners($sidebars, 1)[0] ?? null);
     }
 
     private function listActiveCampaigns(): iterable {
@@ -71,14 +73,16 @@ readonly class CampaignService {
         }
     }
 
-    /**
-     * @param CampaignBanner[] $sidebarBanners
-     */
-    private function rotatedSidebarBanner(array $sidebarBanners): ?CampaignBanner {
-        if (empty($sidebarBanners)) {
-            return null;
-        }
-        return $sidebarBanners[$this->rotate->rotateBanners(\array_keys($sidebarBanners))];
+    private function rotatedBanners(array $banners, int $amount): array {
+        $keys = \array_keys($banners);
+        return \array_map(
+            fn($key) => $banners[$key],
+            $this->rotated($keys, $amount));
+    }
+
+    private function rotated(array $keys, int $amount): array {
+        return new BannerRotation()->rotatedBanners($keys, $amount,
+            $this->rotate->rotationSeed());
     }
 
     public function redirectUrl(string $campaignKey): string {

@@ -1,6 +1,7 @@
 <?php
 namespace Test\Modules\Campaigns;
 
+use Modules\Campaigns\BannerRotation;
 use Modules\Campaigns\ForRotatingBanners;
 
 class TestRotatingBanners implements ForRotatingBanners {
@@ -10,7 +11,11 @@ class TestRotatingBanners implements ForRotatingBanners {
         $this->index++;
     }
 
-    public function rotateBanners(array $campaignKeys): string {
-        return $campaignKeys[$this->index];
+    public function rotatedBanners(array $keys, int $amount): array {
+        return new BannerRotation()->rotatedBanners($keys, $amount, $this->index);
+    }
+
+    public function rotationSeed(): int {
+        return $this->index;
     }
 }

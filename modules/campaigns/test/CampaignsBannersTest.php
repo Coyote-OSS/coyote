@@ -118,6 +118,23 @@ class CampaignsBannersTest extends TestCase {
     }
 
     #[Test]
+    public function givenThreeCampaigns_firstTwoAreAvailable(): void {
+        $this->facade->addCampaign(campaignKey:'first');
+        $this->facade->addCampaign(campaignKey:'second');
+        $this->facade->addCampaign(campaignKey:'third');
+        $this->assertSame(['first', 'second'], $this->facade->getHorizontalCampaignKeys());
+    }
+
+    #[Test]
+    public function givenThreeCampaigns_afterRotation_lastTwoAreAvailable(): void {
+        $this->facade->addCampaign(campaignKey:'first');
+        $this->facade->addCampaign(campaignKey:'second');
+        $this->facade->addCampaign(campaignKey:'third');
+        $this->rotateBanners->rotate();
+        $this->assertSame(['second', 'third'], $this->facade->getHorizontalCampaignKeys());
+    }
+
+    #[Test]
     public function horizontalBannerContainsRedirectUrl(): void {
         $this->facade->addCampaign(campaignKey:'first-key');
         $this->facade->addCampaign(campaignKey:'second-key');

@@ -19,28 +19,8 @@ class TimeRotatingBannersTest extends TestCase {
     }
 
     #[Test]
-    public function returnsTheOnlyBanner(): void {
-        $this->assertEquals('foo.png', $this->rotate->rotateBanners(['foo.png']));
-    }
-
-    #[Test]
-    public function failsForEmptyBanners(): void {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Failed to rotate empty banners.');
-        $this->rotate->rotateBanners([]);
-    }
-
-    #[Test]
-    public function returnsTheFirstBanner(): void {
+    public function returnsRotationSeed_basedOnTime(): void {
         $this->clock->advanceTime(1000);
-        $banner = $this->rotate->rotateBanners(['first.png', 'second.png']);
-        $this->assertEquals('first.png', $banner);
-    }
-
-    #[Test]
-    public function returnsTheSecondBanner(): void {
-        $this->clock->advanceTime(1001);
-        $banner = $this->rotate->rotateBanners(['first.png', 'second.png']);
-        $this->assertEquals('second.png', $banner);
+        $this->assertSame(1000, $this->rotate->rotationSeed());
     }
 }
