@@ -2,5 +2,7 @@
 namespace Modules\Campaigns;
 
 interface ForCurrentDate {
-    public function isRangeActive(string $since, string $until): bool;
+    public function hasStarted(string $startDate): bool;
+
+    public function hasNotFinished(string $endDate): bool;
 }

@@ -6,6 +6,7 @@ use Coyote\Services\FormBuilder\ValidatesWhenSubmitted;
 
 class CampaignsForm extends Form implements ValidatesWhenSubmitted {
     public function buildForm(): void {
+        $targetRequired = 'Jedno z pól "Aktywna do" lub "Docelowa liczba wyświetleń" jest konieczna do aktywowania kampanii.';
         $this
             ->add('campaign_key', 'text', [
                 'label' => 'Klucz kampanii',
@@ -19,16 +20,15 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
             ])
             ->add('active_since', 'datetime', [
                 'label' => 'Aktywna od',
-                'help'  => 'Nie wypełnienie tego pola skutkuje kampanią, która nie jest aktywna.',
+                'help'  => 'Nie wypełnienie tego pola skutkuje kampanią, która jest aktywna od razu.',
             ])
             ->add('active_until', 'datetime', [
                 'label' => 'Aktywna do',
-                'help'  => 'Nie wypełnienie tego pola skutkuje kampanią, która nie jest aktywna.',
+                'help'  => $targetRequired,
             ])
             ->add('target_views', 'number', [
                 'label' => 'Docelowa liczba wyświetleń',
-                'help'  => 'Po przekroczeniu tej ilośc wyświetleń, kampania zostanie dezaktywowana. ' .
-                    'Nie wypełnienie tego pola skutkuje kampanią, która nie jest aktywna.',
+                'help'  => $targetRequired,
             ])
             ->add('sidebar', 'text', [
                 'label' => 'Baner boczny (narrow-250/narrow-600)',

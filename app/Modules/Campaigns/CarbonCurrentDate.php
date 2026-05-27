@@ -5,13 +5,12 @@ use Carbon\Carbon;
 use Modules\Campaigns\ForCurrentDate;
 
 class CarbonCurrentDate implements ForCurrentDate {
-    public function isRangeActive(string $since, string $until): bool {
-        return $this->isNowBetween($this->parsed($since), $this->parsed($until));
+    public function hasStarted(string $startDate): bool {
+        return $this->parsed($startDate) < Carbon::now();
     }
 
-    private function isNowBetween(Carbon $since, Carbon $after): bool {
-        $now = Carbon::now();
-        return $since < $now && $now < $after;
+    public function hasNotFinished(string $endDate): bool {
+        return Carbon::now() < $this->parsed($endDate);
     }
 
     private function parsed(string $date): Carbon {

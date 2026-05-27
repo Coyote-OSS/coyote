@@ -97,15 +97,35 @@ readonly class CampaignService {
     }
 
     private function isCampaignObjectActive(Campaign $campaign): bool {
-        if ($campaign->activeSince === null || $campaign->activeUntil === null) {
+        if (!$this->hasTarget($campaign)) {
             return false;
         }
-        if (!$this->date->isRangeActive($campaign->activeSince, $campaign->activeUntil)) {
-            return false;
+        if ($campaign->targetViews !== null) {
+            if ($campaign->targetViews < $this->campaignTotalViewCount($campaign)) {
+                return false;
+            }
         }
-        $viewsHorizontal = $this->store->campaignViewCount($campaign->campaignKey, 'horizontal');
-        $viewsSidebar = $this->store->campaignViewCount($campaign->campaignKey, 'sidebar');
-        $total = $viewsHorizontal + $viewsSidebar;
-        return $total < $campaign->targetViews;
+        if ($campaign->activeSince !== null) {
+            if (!$this->date->hasStarted($campaign->activeSince)) {
+                return false;
+            }
+        }
+        if ($campaign->activeUntil !== null) {
+            if (!$this->date->hasNotFinished($campaign->activeUntil)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function campaignTotalViewCount(Campaign $campaign): int {
+        return $this->store->campaignViewCount($campaign->campaignKey, 'horizontal')
+            + $this->store->campaignViewCount($campaign->campaignKey, 'sidebar');
+    }
+
+    private function hasTarget(Campaign $campaign): bool {
+        $hasViewTarget = $campaign->targetViews !== null;
+        $hasDateTarget = $campaign->activeUntil !== null;
+        return $hasViewTarget || $hasDateTarget;
     }
 }

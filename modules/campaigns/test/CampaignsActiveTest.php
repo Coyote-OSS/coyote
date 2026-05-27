@@ -13,6 +13,7 @@ class CampaignsActiveTest extends TestCase {
     private CampaignService $campaigns;
     private InMemoryCampaignsStore $store;
     private TestCurrentDate $calendar;
+    private string $campaignKey;
 
     #[Before]
     public function initialize(): void {
@@ -23,108 +24,152 @@ class CampaignsActiveTest extends TestCase {
             new TestRotatingBanners(),
             $this->calendar,
             $this->store);
-    }
-
-    #[Test]
-    public function campaignIsNotActive_whenSinceIsNotSet(): void {
-        $this->addCampaign('campaign', null, '1970');
-        $this->assertFalse($this->campaigns->isCampaignActive('campaign'));
-    }
-
-    #[Test]
-    public function campaignIsNotActive_whenUntilIsNotSet(): void {
-        $this->addCampaign('campaign', '1970', null);
-        $this->assertFalse($this->campaigns->isCampaignActive('campaign'));
+        $this->campaignKey = 'campaign-key';
     }
 
     #[Test]
     public function campaignIsNotActive_givenCurrentDate_isBeforeActiveSince(): void {
-        $this->stubCurrentDate('1999-12-31T00:00:00');
-        $this->addCampaign('campaign', '2000-01-01T00:00:00', '2000-01-31T00:00:00');
-        $this->assertFalse($this->campaigns->isCampaignActive('campaign'));
+        $this->calendar->stubCurrentDate('1999-12-31T00:00:00');
+        $this->setupCampaignActiveRange('2000-01-01T00:00:00', '2000-01-31T00:00:00');
+        $this->assertCampaignNotActive();
     }
 
     #[Test]
     public function campaignIsActive_givenCurrentDate_isAfterActiveSince_andBeforeActiveUntil(): void {
-        $this->stubCurrentDate('2000-01-15T00:00:00');
-        $this->addCampaign('campaign', '2000-01-01T00:00:00', '2000-01-31T00:00:00');
-        $this->assertTrue($this->campaigns->isCampaignActive('campaign'));
+        $this->calendar->stubCurrentDate('2000-01-15T00:00:00');
+        $this->setupCampaignActiveRange('2000-01-01T00:00:00', '2000-01-31T00:00:00');
+        $this->assertCampaignActive();
     }
 
     #[Test]
     public function campaignIsNotActive_givenCurrentDate_isAfterActiveUntil(): void {
-        $this->stubCurrentDate('2000-02-01T00:00:00');
-        $this->addCampaign('campaign', '2000-01-01T00:00:00', '2000-01-31T00:00:00');
-        $this->assertFalse($this->campaigns->isCampaignActive('campaign'));
+        $this->calendar->stubCurrentDate('2000-02-01T00:00:00');
+        $this->setupCampaignActiveRange('2000-01-01T00:00:00', '2000-01-31T00:00:00');
+        $this->assertCampaignNotActive();
     }
 
     #[Test]
     public function givenViewsAreBelowTarget_campaignIsActive(): void {
         // given a campaign with target of 2 views
-        $this->setupCampaignTargetViews('campaign', 2);
+        $this->setupCampaignTargetViews(2);
         // when the campaign is viewed 0 times
         $this->store->stubCampaignViews(0, 'horizontal');
         // then the campaign is active
-        $this->assertTrue($this->campaigns->isCampaignActive('campaign'));
+        $this->assertCampaignActive();
+    }
+
+    #[Test]
+    public function givenZeroViews_whenTargetViewsIsNotSet_campaignIsActive(): void {
+        // given a campaign without target views
+        $this->setupCampaignTargetViews(null);
+        // when the campaign is viewed 0 times
+        $this->store->stubCampaignViews(0, 'horizontal');
+        // then the campaign is active
+        $this->assertCampaignActive();
+    }
+
+    #[Test]
+    public function givenTwoViews_whenTargetViewsIsNotSet_campaignIsActive(): void {
+        // given a campaign without target views
+        $this->setupCampaignTargetViews(null);
+        // when the campaign is viewed 2 times
+        $this->store->stubCampaignViews(2, 'horizontal');
+        // then the campaign is active
+        $this->assertCampaignActive();
     }
 
     #[Test]
     public function givenHorizontalViewsAboveTarget_campaignIsNotActive(): void {
         // given a campaign with target of 2 views
-        $this->setupCampaignTargetViews('campaign', 2);
+        $this->setupCampaignTargetViews(2);
         // when the campaign is viewed 3 times
         $this->store->stubCampaignViews(3, 'horizontal');
         // then the campaign is not active
-        $this->assertFalse($this->campaigns->isCampaignActive('campaign'));
+        $this->assertCampaignNotActive();
     }
 
     #[Test]
     public function givenSidebarViewsAboveTarget_campaignIsNotActive(): void {
         // given a campaign with target of 2 views
-        $this->setupCampaignTargetViews('campaign', 2);
+        $this->setupCampaignTargetViews(2);
         // when the campaign is viewed 3 times
         $this->store->stubCampaignViews(3, 'sidebar');
         // then the campaign is not active
-        $this->assertFalse($this->campaigns->isCampaignActive('campaign'));
+        $this->assertCampaignNotActive();
     }
 
     #[Test]
     public function givenTotalViewsAboveTarget_campaignIsNotActive(): void {
         // given a campaign with target of 2 views
-        $this->setupCampaignTargetViews('campaign', 7);
+        $this->setupCampaignTargetViews(7);
         // when the campaign is viewed 3 times
         $this->store->stubCampaignViews(4, 'sidebar');
         $this->store->stubCampaignViews(4, 'horizontal');
         // then the campaign is not active
-        $this->assertFalse($this->campaigns->isCampaignActive('campaign'));
+        $this->assertCampaignNotActive();
     }
 
     #[Test]
-    public function givenTargetNotSet_campaignIsNotActive(): void {
-        // given a campaign without target views
-        $this->setupCampaignTargetViews('campaign', null);
-        // then the campaign is not active
-        $this->assertFalse($this->campaigns->isCampaignActive('campaign'));
+    public function fullyConfiguredCampaign_isActive(): void {
+        $this->setupCampaign(since:false, until:true, target:true);
+        $this->assertCampaignActive();
     }
 
-    private function stubCurrentDate(string $currentDate): void {
-        $this->calendar->stubCurrentDate($currentDate);
+    #[Test]
+    public function campaignWithoutUntilOrTarget_isNotActive(): void {
+        $this->setupCampaign(since:false, until:false, target:false);
+        $this->assertCampaignNotActive();
     }
 
-    private function addCampaign(
-        string  $campaignKey,
-        ?string $activeSince,
-        ?string $activeUntil,
-    ): void {
-        $this->campaigns->add('', '', $campaignKey, '', $activeSince, $activeUntil, 999);
+    #[Test]
+    public function campaignWithUntilWithoutTarget_isNotActive(): void {
+        $this->setupCampaign(since:false, until:true, target:false);
+        $this->assertCampaignActive();
     }
 
-    private function setupCampaignTargetViews(string $campaignKey, ?int $targetViews): void {
-        $this->stubCurrentDate('2000-01-15T00:00:00');
+    #[Test]
+    public function campaignWithoutUntilWithTarget_isNotActive(): void {
+        $this->setupCampaign(since:false, until:false, target:true);
+        $this->assertCampaignActive();
+    }
+
+    private function assertCampaignActive(): void {
+        $this->assertTrue($this->campaigns->isCampaignActive($this->campaignKey));
+    }
+
+    private function assertCampaignNotActive(): void {
+        $this->assertFalse($this->campaigns->isCampaignActive($this->campaignKey));
+    }
+
+    private function setupCampaign(bool $since, bool $until, bool $target): void {
+        $this->calendar->stubCurrentDate('2000-01-01T00:00:00');
         $this->campaigns->add(
             '',
             '',
-            $campaignKey,
+            $this->campaignKey,
+            '',
+            $since ? '1970-01-01T00:00:00' : null,
+            $until ? '2999-12-31T23:59:59' : null,
+            $target ? 999 : null);
+    }
+
+    private function setupCampaignActiveRange(string $activeSince, string $activeUntil): void {
+        $this->campaigns->add(
+            '',
+            '',
+            $this->campaignKey,
+            '',
+            $activeSince,
+            $activeUntil,
+            999);
+    }
+
+    private function setupCampaignTargetViews(?int $targetViews) {
+        $this->calendar->stubCurrentDate('2000-01-15T00:00:00');
+        $this->campaigns->add(
+            '',
+            '',
+            $this->campaignKey,
             '',
             '1970-01-01T00:00:00',
             '2999-12-31T23:59:59',

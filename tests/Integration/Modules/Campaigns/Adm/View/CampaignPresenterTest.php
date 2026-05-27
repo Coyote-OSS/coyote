@@ -80,18 +80,6 @@ class CampaignPresenterTest extends TestCase {
         $this->assertTrue($this->presenter->campaignActive('campaign'));
     }
 
-    #[Test]
-    public function campaignIsNotActive_whenSinceIsNotSet(): void {
-        $this->stubCampaignActiveRange('campaign', null, '1970');
-        $this->assertFalse($this->presenter->campaignActive('campaign'));
-    }
-
-    #[Test]
-    public function campaignIsNotActive_whenUntilIsNotSet(): void {
-        $this->stubCampaignActiveRange('campaign', '1970', null);
-        $this->assertFalse($this->presenter->campaignActive('campaign'));
-    }
-
     private function stubCampaignActiveRange(
         string  $campaignKey,
         ?string $activeSince,

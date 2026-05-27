@@ -16,9 +16,16 @@ class TestCalendarTest extends TestCase {
     }
 
     #[Test]
-    public function failForUnsetStubbedDate(): void {
+    public function failForUnsetStubbedDate_hasFinished(): void {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Failed to determine range active, current date not set.');
-        $this->calendar->isRangeActive('', '');
+        $this->calendar->hasNotFinished('', '');
+    }
+
+    #[Test]
+    public function failForUnsetStubbedDate_hasStarted(): void {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Failed to determine range active, current date not set.');
+        $this->calendar->hasStarted('', '');
     }
 }
