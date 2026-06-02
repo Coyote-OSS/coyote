@@ -2,6 +2,9 @@
 namespace Modules\Campaigns;
 
 interface CampaignsStore {
+    /**
+     * @deprecated
+     */
     public function createIfNotExists(
         string  $campaignKey,
         string  $sidebarBanner,
@@ -28,4 +31,8 @@ interface CampaignsStore {
     public function campaignViewCount(string $campaignKey, string $bannerType): int;
 
     public function campaignActiveRange(string $campaignKey): array;
+
+    public function createCampaignReturnId(Campaign $campaign): ?int;
+
+    public function updateCampaign(int $campaignId, Campaign $campaign): bool;
 }

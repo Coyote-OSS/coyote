@@ -79,4 +79,12 @@ class InMemoryCampaignsStore implements CampaignsStore {
     public function findCampaign(string $campaignKey): ?Campaign {
         return $this->campaigns[$campaignKey] ?? null;
     }
+
+    public function createCampaignReturnId(Campaign $campaign): ?int {
+        throw new \Exception();
+    }
+
+    public function updateCampaign(int $campaignId, Campaign $campaign): bool {
+        throw new \Exception();
+    }
 }

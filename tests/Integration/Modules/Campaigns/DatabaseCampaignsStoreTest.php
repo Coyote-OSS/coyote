@@ -236,4 +236,150 @@ class DatabaseCampaignsStoreTest extends TestCase {
             $activeUntil,
             999);
     }
+
+    #[Test]
+    public function createCampaignWithCampaignKey(): void {
+        $this->store->createCampaignReturnId($this->campaign('inserted-campaign'));
+        $this->laravel->assertSeeInDatabase('module_campaigns', ['campaign_key' => 'inserted-campaign']);
+    }
+
+    #[Test]
+    public function reportCreatedSuccessfully(): void {
+        $createdId = $this->store->createCampaignReturnId($this->campaign('new-campaign'));
+        $this->assertNotNull($createdId);
+    }
+
+    #[Test]
+    public function reportNotCreatedForDuplicateKey(): void {
+        $this->insert('existing-campaign');
+        $createdId = $this->store->createCampaignReturnId($this->campaign('existing-campaign'));
+        $this->assertNull($createdId);
+    }
+
+    #[Test]
+    public function returnCreatedCampaignId(): void {
+        $campaignId = $this->store->createCampaignReturnId($this->campaign('inserted-campaign'));
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'id'           => $campaignId,
+            'campaign_key' => 'inserted-campaign',
+        ]);
+    }
+
+    #[Test]
+    public function createCampaignWithFields(): void {
+        $this->store->createCampaignReturnId(new Campaigns\Campaign(
+            'campaign-key',
+            'sidebar-banner',
+            'horizontal-banner',
+            'redirect-url',
+            '2000-01-01',
+            '2000-01-01',
+            20,
+        ));
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'campaign_key' => 'campaign-key',
+            'sidebar'      => 'sidebar-banner',
+            'horizontal'   => 'horizontal-banner',
+            'redirect_url' => 'redirect-url',
+            'active_since' => '2000-01-01',
+            'active_until' => '2000-01-01',
+            'target_views' => 20,
+        ]);
+    }
+
+    #[Test]
+    public function createCampaignWithOptionalFields(): void {
+        $this->store->createCampaignReturnId(new Campaigns\Campaign(
+            'campaign-key',
+            'sidebar-banner',
+            'horizontal-banner',
+            'redirect-url',
+            null,
+            null,
+            null,
+        ));
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'campaign_key' => 'campaign-key',
+            'active_since' => null,
+            'active_until' => null,
+            'target_views' => null,
+        ]);
+    }
+
+    private function campaign(string $campaignKey): Campaigns\Campaign {
+        return $this->campaignRedirectUrl($campaignKey, '');
+    }
+
+    private function campaignRedirectUrl(string $campaignKey, string $redirectUrl): Campaigns\Campaign {
+        return new Campaigns\Campaign($campaignKey, '', '', $redirectUrl, null, null, null);
+    }
+
+    #[Test]
+    public function updateCampaignFields(): void {
+        // given
+        $campaignId = $this->store->createCampaignReturnId(new Campaigns\Campaign(
+            'old-key',
+            'old-sidebar',
+            'old-horizontal',
+            'old-redirect-url',
+            '1970-01-01',
+            '1970-01-01',
+            5,
+        ));
+        // when
+        $this->store->updateCampaign($campaignId, new Campaigns\Campaign(
+            'new-key',
+            'new-sidebar',
+            'new-horizontal',
+            'new-redirect-url',
+            '2011-11-11',
+            '2012-12-12',
+            66));
+        // then
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'campaign_key' => 'old-key',
+            'sidebar'      => 'new-sidebar',
+            'horizontal'   => 'new-horizontal',
+            'redirect_url' => 'new-redirect-url',
+            'active_since' => '2011-11-11 00:00:00',
+            'active_until' => '2012-12-12 00:00:00',
+            'target_views' => 66,
+        ]);
+        $this->laravel->assertDatabaseRecordNotExists('module_campaigns', [
+            'campaign_key' => 'new-key',
+        ]);
+    }
+
+    #[Test]
+    public function reportUpdatedSuccessfully(): void {
+        // given
+        $campaignId = $this->store->createCampaignReturnId($this->campaign('key'));
+        // when
+        $updated = $this->store->updateCampaign($campaignId, $this->campaign('key'));
+        // then
+        $this->assertTrue($updated);
+    }
+
+    #[Test]
+    public function reportNotUpdatedForNoSuchCampaign(): void {
+        // when
+        $noSuchCampaignId = -1;
+        $updated = $this->store->updateCampaign($noSuchCampaignId, $this->campaign('key'));
+        // then
+        $this->assertFalse($updated);
+    }
+
+    #[Test]
+    public function updateCampaignByCampaignId(): void {
+        // given
+        $firstId = $this->store->createCampaignReturnId($this->campaignRedirectUrl('first-campaign', 'original-url'));
+        $secondId = $this->store->createCampaignReturnId($this->campaignRedirectUrl('second-campaign', 'original-url'));
+        // when
+        $this->store->updateCampaign($secondId, $this->campaignRedirectUrl('', 'updated-url'));
+        // then
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'campaign_key' => 'first-campaign',
+            'redirect_url' => 'original-url',
+        ]);
+    }
 }

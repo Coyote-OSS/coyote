@@ -119,4 +119,33 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             activeUntil:$campaign->active_until,
             targetViews:$campaign->target_views);
     }
+
+    public function createCampaignReturnId(Campaign $campaign): ?int {
+        try {
+            return $this->table()->insertGetId([
+                'campaign_key' => $campaign->campaignKey,
+                ...$this->campaignRow($campaign),
+            ]);
+        } catch (Database\UniqueConstraintViolationException) {
+            return null;
+        }
+    }
+
+    public function updateCampaign(int $campaignId, Campaign $campaign): bool {
+        $updated = $this->table()
+            ->where('id', $campaignId)
+            ->update($this->campaignRow($campaign));
+        return $updated === 1;
+    }
+
+    private function campaignRow(Campaign $campaign): array {
+        return [
+            'sidebar'      => $campaign->sidebarBanner,
+            'horizontal'   => $campaign->horizontalBanner,
+            'redirect_url' => $campaign->redirectUrl,
+            'active_since' => $campaign->activeSince,
+            'active_until' => $campaign->activeUntil,
+            'target_views' => $campaign->targetViews,
+        ];
+    }
 }
