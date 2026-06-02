@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class BannerViewModelTest extends TestCase {
     #[Test]
     public function emptyCtr(): void {
-        $this->assertSame('?', $this->ctr(views:0, clicks:0));
+        $this->assertNull($this->ctr(views:0, clicks:0));
     }
 
     #[Test]
@@ -30,7 +30,7 @@ class BannerViewModelTest extends TestCase {
         $this->assertSame('16.667%', $this->ctr(views:6, clicks:1));
     }
 
-    private function ctr(int $views, int $clicks): string {
+    private function ctr(int $views, int $clicks): ?string {
         $viewModel = new BannerViewModel('', new CampaignStats($views, $clicks));
         return $viewModel->stats->ctr();
     }

@@ -8,7 +8,11 @@
       <div class="list-group-item">
         {{ icon('campaignCtr') }}
         <b>CTR:</b>
-        <code>{{ banner.stats.ctr }}</code>
+        {% if campaign.stats.ctr %}
+          <code>{{ campaign.stats.ctr }}</code>
+        {% else %}
+          <span class="text-muted">nie wyświetlono</span>
+        {% endif %}
       </div>
       <div class="list-group-item">
         {{ icon('campaignViews') }}

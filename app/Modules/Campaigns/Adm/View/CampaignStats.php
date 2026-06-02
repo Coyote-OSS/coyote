@@ -13,9 +13,9 @@ readonly class CampaignStats {
             $this->clicks + $other->clicks);
     }
 
-    public function ctr(): string {
+    public function ctr(): ?string {
         if ($this->views === 0) {
-            return '?';
+            return null;
         }
         return $this->percentage($this->clicks / $this->views);
     }
