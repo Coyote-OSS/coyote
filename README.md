@@ -41,16 +41,17 @@ to work on.
 3. Install dependencies:
    - Developer mode (debug, source maps, hmr):
      ```
-     make install-dev
+     make file-permission composer-install migrate seed es-create es-index
+     make yarn-install yarn-prod
+     make install-passport        # Optional
+     make install-push            # Optional
      ```
-   - Production mode (debug disabled, resource minification):
-     ```
-     make install
-     ```
+   
    Should the starting fail on Windows, remove `-u nginx` from commands in `Makefile`.
 4. The application is running
    - Visit `localhost:8880`
    - Login to administrator account with credentials: `admin`/`admin`.
+   - Login to user account with credentials: `user`/`user`.
 5. Terminate the application:
    ```
    docker compose stop
@@ -87,12 +88,12 @@ set PHP_IDE_CONFIG="serverName=your_server_name"
 $env:PHP_IDE_CONFIG = 'serverName=your_server_name'
 ```
 
-Nazwa `your_server_name` powinna odpowiadać nazwie servera w sekcji "path mappings".
+Nazwa `your_server_name` powinna odpowiadać nazwie serwera w sekcji "path mappings".
 
 ### Praca z CSS oraz JS
 
-W projekcie korzystamy z `yarn` oraz `webpack`. Aby skompilować pliki źródłowe do postaci finalnej, należy wykonać
-polecenie:
+W projekcie korzystamy z `yarn` oraz `webpack`. Aby skompilować pliki źródłowe do postaci finalnej, 
+należy wykonać polecenie:
  - Wersja developerska
    ```
    docker-compose exec php yarn run dev
@@ -102,8 +103,8 @@ polecenie:
    docker-compose exec php yarn run watch
    ```
 
-   Polecenie `docker-compose exec php yarn run watch` powoduje stałe monitorowanie zmian w plikach źródłowych. Jakiekolwiek zmiany w tych plikach
-   spowodują wygenerowanie nowych plików wynikowych CSS oraz JS.
+   Polecenie `docker-compose exec php yarn run watch` powoduje stałe monitorowanie zmian w plikach źródłowych. 
+   Jakiekolwiek zmiany w tych plikach spowodują wygenerowanie nowych plików wynikowych CSS oraz JS.
 
  - Wersja produkcyjna:
    ```
@@ -210,8 +211,9 @@ docker-compose exec php php vendor/bin/phpunit
 
 ### Zadania uruchomiane w tle
 
-Na serwerze produkcyjnym niektóre zadanie wykonywane są w tle. Dodawane są one do kolejki oraz wykonywane przez proces działający w tle.
-Domyślnie, na serwerze lokalnym zadania nie są dodawane do kolejki (w pliku `.env` ustawienie `QUEUE_DRIVER=sync`).
+Na serwerze produkcyjnym niektóre zadanie wykonywane są w tle. Dodawane są one do kolejki oraz 
+wykonywane przez proces działający w tle. Domyślnie, na serwerze lokalnym zadania nie są dodawane
+do kolejki (w pliku `.env` ustawienie `QUEUE_DRIVER=sync`).
 
 Jeżeli jednak chciałbyś przetestować działanie mechanizmu kolejek, ustaw wartość zmiennej środowiskowej `QUEUE_DRIVER` na `redis`.
 

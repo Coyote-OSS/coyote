@@ -18,7 +18,7 @@ file-permission:
 	docker compose exec -T php chmod -R 777 storage/
 	docker compose exec -T php chmod 777 bootstrap/cache/
 
-migration:
+migrate:
 	docker compose exec -T -u nginx php php artisan migrate --force
 
 seed:
