@@ -7,29 +7,8 @@ use Modules\Campaigns;
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
 
-readonly class DatabaseCampaignsStore implements CampaignsStore {
-    public function __construct(private Database\Connection $connection) {}
-
-    public function createIfNotExists(
-        string  $campaignKey,
-        string  $sidebarBanner,
-        string  $horizontalBanner,
-        string  $redirectUrl,
-        ?string $activeSince,
-        ?string $activeUntil,
-        ?int    $targetViews,
-    ): bool {
-        $inserted = $this->table()->insertOrIgnore([
-            'campaign_key' => $campaignKey,
-            'sidebar'      => $sidebarBanner,
-            'horizontal'   => $horizontalBanner,
-            'redirect_url' => $redirectUrl,
-            'active_since' => $activeSince,
-            'active_until' => $activeUntil,
-            'target_views' => $targetViews,
-        ]);
-        return $inserted === 0;
-    }
+class DatabaseCampaignsStore extends CampaignsStore {
+    public function __construct(private readonly Database\Connection $connection) {}
 
     /**
      * @return Eloquent\Campaign[]

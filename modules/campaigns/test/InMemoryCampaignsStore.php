@@ -4,32 +4,11 @@ namespace Test\Modules\Campaigns;
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
 
-class InMemoryCampaignsStore implements CampaignsStore {
+class InMemoryCampaignsStore extends CampaignsStore {
     private array $views = ['horizontal' => 0, 'sidebar' => 0];
     private array $clicks = ['horizontal' => 0, 'sidebar' => 0];
     /** @var Campaign[] */
     private array $campaigns = [];
-
-    public function createIfNotExists(
-        string  $campaignKey,
-        string  $sidebarBanner,
-        string  $horizontalBanner,
-        string  $redirectUrl,
-        ?string $activeSince,
-        ?string $activeUntil,
-        ?int    $targetViews,
-    ): bool {
-        $existed = \array_key_exists($campaignKey, $this->campaigns);
-        $this->campaigns[$campaignKey] = new Campaign(
-            $campaignKey,
-            $sidebarBanner,
-            $horizontalBanner,
-            $redirectUrl,
-            $activeSince,
-            $activeUntil,
-            $targetViews);
-        return $existed;
-    }
 
     /**
      * @return Campaign[]
@@ -81,7 +60,9 @@ class InMemoryCampaignsStore implements CampaignsStore {
     }
 
     public function createCampaignReturnId(Campaign $campaign): ?int {
-        throw new \Exception();
+        $existed = \array_key_exists($campaign->campaignKey, $this->campaigns);
+        $this->campaigns[$campaign->campaignKey] = $campaign;
+        return $existed ? null : 1;
     }
 
     public function updateCampaign(int $campaignId, Campaign $campaign): bool {

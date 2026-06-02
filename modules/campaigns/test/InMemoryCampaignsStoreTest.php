@@ -3,9 +3,11 @@ namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns\CampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(InMemoryCampaignsStore::class)]
 class InMemoryCampaignsStoreTest extends TestCase {
     private CampaignsStore $store;
 
