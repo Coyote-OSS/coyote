@@ -17,11 +17,12 @@ class CampaignsBannersTest extends TestCase {
     public function initialize(): void {
         $this->privilegedUsers = new TestPrivilegedUsers();
         $this->rotateBanners = new TestRotatingBanners();
+        $store = new InMemoryCampaignsStore();
         $this->facade = new CampaignsFacade(new CampaignService(
             $this->privilegedUsers,
             $this->rotateBanners,
             new TestCurrentDate('2000-01-01T00:00:00'),
-            new InMemoryCampaignsStore()));
+            $store), $store);
     }
 
     #[Test]

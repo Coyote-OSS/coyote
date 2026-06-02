@@ -17,18 +17,16 @@ class CampaignPresenterTest extends TestCase {
     private InMemoryCampaignsStore $store;
     private TestCurrentDate $date;
     private CampaignPresenter $presenter;
-    private CampaignService $campaigns;
 
     #[Before]
     public function beforeEach(): void {
         $this->store = new InMemoryCampaignsStore();
         $this->date = new TestCurrentDate();
-        $this->campaigns = new CampaignService(
+        $this->presenter = new CampaignPresenter($this->store, new CampaignService(
             new TestPrivilegedUsers(),
             new TestRotatingBanners(),
             $this->date,
-            $this->store);
-        $this->presenter = new CampaignPresenter($this->store, $this->campaigns);
+            $this->store));
     }
 
     #[Test]
@@ -85,6 +83,13 @@ class CampaignPresenterTest extends TestCase {
         ?string $activeSince,
         ?string $activeUntil,
     ): void {
-        $this->campaigns->add('', '', $campaignKey, '', $activeSince, $activeUntil, 999);
+        $this->store->createIfNotExists(
+            $campaignKey,
+            '',
+            '',
+            '',
+            $activeSince,
+            $activeUntil,
+            999);
     }
 }

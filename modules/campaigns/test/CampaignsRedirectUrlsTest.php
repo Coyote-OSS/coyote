@@ -17,12 +17,13 @@ class CampaignsRedirectUrlsTest extends TestCase {
     #[Before]
     public function initialize(): void {
         $this->date = new TestCurrentDate();
+        $store = new InMemoryCampaignsStore();
         $this->campaigns = new CampaignService(
             new TestPrivilegedUsers(),
             new TestRotatingBanners(),
             $this->date,
-            new InMemoryCampaignsStore());
-        $this->facade = new CampaignsFacade($this->campaigns);
+            $store);
+        $this->facade = new CampaignsFacade($this->campaigns, $store);
     }
 
     #[Test]

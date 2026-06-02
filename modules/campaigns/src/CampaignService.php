@@ -9,28 +9,6 @@ readonly class CampaignService {
         private CampaignsStore     $store,
     ) {}
 
-    /**
-     * @deprecated
-     */
-    public function add(
-        string  $sidebar,
-        string  $horizontal,
-        string  $campaignKey,
-        string  $redirectUrl,
-        ?string $activeSince,
-        ?string $activeUntil,
-        ?int    $targetViews,
-    ): void {
-        $this->store->createIfNotExists(
-            $campaignKey,
-            $sidebar,
-            $horizontal,
-            $redirectUrl,
-            $activeSince,
-            $activeUntil,
-            $targetViews);
-    }
-
     public function campaignBanners(): CampaignBanners {
         if ($this->isCampaignBannersDisabled()) {
             return $this->disabledCampaignBanners();

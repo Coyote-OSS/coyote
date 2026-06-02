@@ -16,6 +16,10 @@
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit/</directory>
         </testsuite>
+      <testsuite name="Campaigns">
+        <directory suffix="Test.php">./modules/campaigns/test/</directory>
+        <directory suffix="Test.php">./tests/Integration/Modules/Campaigns/</directory>
+      </testsuite>
     </testsuites>
     <php>
         <env name="APP_ENV" value="testing"/>

@@ -142,10 +142,10 @@ class CampaignsActiveTest extends TestCase {
 
     private function setupCampaign(bool $since, bool $until, bool $target): void {
         $this->calendar->stubCurrentDate('2000-01-01T00:00:00');
-        $this->campaigns->add(
-            '',
-            '',
+        $this->store->createIfNotExists(
             $this->campaignKey,
+            '',
+            '',
             '',
             $since ? '1970-01-01T00:00:00' : null,
             $until ? '2999-12-31T23:59:59' : null,
@@ -153,10 +153,10 @@ class CampaignsActiveTest extends TestCase {
     }
 
     private function setupCampaignActiveRange(string $activeSince, string $activeUntil): void {
-        $this->campaigns->add(
-            '',
-            '',
+        $this->store->createIfNotExists(
             $this->campaignKey,
+            '',
+            '',
             '',
             $activeSince,
             $activeUntil,
@@ -165,10 +165,10 @@ class CampaignsActiveTest extends TestCase {
 
     private function setupCampaignTargetViews(?int $targetViews) {
         $this->calendar->stubCurrentDate('2000-01-15T00:00:00');
-        $this->campaigns->add(
-            '',
-            '',
+        $this->store->createIfNotExists(
             $this->campaignKey,
+            '',
+            '',
             '',
             '1970-01-01T00:00:00',
             '2999-12-31T23:59:59',
