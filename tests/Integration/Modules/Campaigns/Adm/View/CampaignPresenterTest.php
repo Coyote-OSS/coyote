@@ -3,11 +3,11 @@ namespace Tests\Integration\Modules\Campaigns\Adm\View;
 
 use Coyote\Modules\Campaigns\Adm\View\CampaignPresenter;
 use Modules\Campaigns\CampaignService;
-use Modules\Campaigns\InMemoryCampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Test\Modules\Campaigns\InMemoryCampaignsStore;
 use Test\Modules\Campaigns\TestCurrentDate;
 use Test\Modules\Campaigns\TestPrivilegedUsers;
 use Test\Modules\Campaigns\TestRotatingBanners;

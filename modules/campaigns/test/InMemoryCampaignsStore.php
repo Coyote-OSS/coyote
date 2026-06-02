@@ -1,5 +1,8 @@
 <?php
-namespace Modules\Campaigns;
+namespace Test\Modules\Campaigns;
+
+use Modules\Campaigns\Campaign;
+use Modules\Campaigns\CampaignsStore;
 
 class InMemoryCampaignsStore implements CampaignsStore {
     private array $views = ['horizontal' => 0, 'sidebar' => 0];

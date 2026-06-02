@@ -2,7 +2,6 @@
 namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns\CampaignService;
-use Modules\Campaigns\InMemoryCampaignsStore;
 use Modules\Campaigns\NoSuchCampaign;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;

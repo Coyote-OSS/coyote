@@ -2,12 +2,11 @@
 namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns\CampaignsStore;
-use Modules\Campaigns\InMemoryCampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-class CampaignsStoreTest extends TestCase {
+class InMemoryCampaignsStoreTest extends TestCase {
     private CampaignsStore $store;
 
     #[Before]
