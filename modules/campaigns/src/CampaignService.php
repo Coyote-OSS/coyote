@@ -9,6 +9,9 @@ readonly class CampaignService {
         private CampaignsStore     $store,
     ) {}
 
+    /**
+     * @deprecated
+     */
     public function add(
         string  $sidebar,
         string  $horizontal,
@@ -18,7 +21,7 @@ readonly class CampaignService {
         ?string $activeUntil,
         ?int    $targetViews,
     ): void {
-        $existed = $this->store->createIfNotExists(
+        $this->store->createIfNotExists(
             $campaignKey,
             $sidebar,
             $horizontal,
@@ -26,9 +29,6 @@ readonly class CampaignService {
             $activeSince,
             $activeUntil,
             $targetViews);
-        if ($existed) {
-            throw new DuplicateCampaign('Failed to add a duplicated campaign.');
-        }
     }
 
     public function campaignBanners(): CampaignBanners {

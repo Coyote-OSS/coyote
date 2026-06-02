@@ -2,7 +2,6 @@
 namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns\CampaignService;
-use Modules\Campaigns\DuplicateCampaign;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -91,14 +90,6 @@ class CampaignsBannersTest extends TestCase {
         $this->assertEquals('first.png', $this->facade->getSidebarBannerUrl());
         $this->rotateBanners->rotate();
         $this->assertEquals('second.png', $this->facade->getSidebarBannerUrl());
-    }
-
-    #[Test]
-    public function failToCreateCampaignWithDuplicateKey(): void {
-        $this->facade->addCampaign(redirectUrl:'duplicate-key');
-        $this->expectException(DuplicateCampaign::class);
-        $this->expectExceptionMessage('Failed to add a duplicated campaign.');
-        $this->facade->addCampaign(redirectUrl:'duplicate-key');
     }
 
     #[Test]
