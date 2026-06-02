@@ -1,6 +1,7 @@
 <?php
 namespace Test\Modules\Campaigns;
 
+use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignService;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -110,25 +111,25 @@ class CampaignsActiveTest extends TestCase {
 
     #[Test]
     public function fullyConfiguredCampaign_isActive(): void {
-        $this->setupCampaign(since:false, until:true, target:true);
+        $this->setupCampaign(activeSince:false, activeUntil:true, hasTargetViews:true);
         $this->assertCampaignActive();
     }
 
     #[Test]
     public function campaignWithoutUntilOrTarget_isNotActive(): void {
-        $this->setupCampaign(since:false, until:false, target:false);
+        $this->setupCampaign(activeSince:false, activeUntil:false, hasTargetViews:false);
         $this->assertCampaignNotActive('misconfigured');
     }
 
     #[Test]
     public function campaignWithUntilWithoutTarget_isNotActive(): void {
-        $this->setupCampaign(since:false, until:true, target:false);
+        $this->setupCampaign(activeSince:false, activeUntil:true, hasTargetViews:false);
         $this->assertCampaignActive();
     }
 
     #[Test]
     public function campaignWithoutUntilWithTarget_isNotActive(): void {
-        $this->setupCampaign(since:false, until:false, target:true);
+        $this->setupCampaign(activeSince:false, activeUntil:false, hasTargetViews:true);
         $this->assertCampaignActive();
     }
 
@@ -140,38 +141,34 @@ class CampaignsActiveTest extends TestCase {
         $this->assertSame($status, $this->campaigns->campaignStatus($this->campaignKey));
     }
 
-    private function setupCampaign(bool $since, bool $until, bool $target): void {
+    private function setupCampaign(bool $activeSince, bool $activeUntil, bool $hasTargetViews): void {
         $this->calendar->stubCurrentDate('2000-01-01T00:00:00');
-        $this->store->createIfNotExists(
-            $this->campaignKey,
-            '',
-            '',
-            '',
-            $since ? '1970-01-01T00:00:00' : null,
-            $until ? '2999-12-31T23:59:59' : null,
-            $target ? 999 : null);
+        $this->createCampaign(
+            $activeSince ? '1970-01-01T00:00:00' : null,
+            $activeUntil ? '2999-12-31T23:59:59' : null,
+            $hasTargetViews ? 999 : null);
+    }
+
+    private function setupCampaignTargetViews(?int $targetViews): void {
+        $this->calendar->stubCurrentDate('2000-01-01T00:00:00');
+        $this->createCampaign(
+            '1970-01-01T00:00:00',
+            '2999-12-31T23:59:59',
+            $targetViews);
     }
 
     private function setupCampaignActiveRange(string $activeSince, string $activeUntil): void {
-        $this->store->createIfNotExists(
+        $this->createCampaign($activeSince, $activeUntil, 999);
+    }
+
+    private function createCampaign(?string $activeSince, ?string $activeUntil, ?int $targetViews): void {
+        $this->store->createCampaignReturnId(new Campaign(
             $this->campaignKey,
             '',
             '',
             '',
             $activeSince,
             $activeUntil,
-            999);
-    }
-
-    private function setupCampaignTargetViews(?int $targetViews) {
-        $this->calendar->stubCurrentDate('2000-01-15T00:00:00');
-        $this->store->createIfNotExists(
-            $this->campaignKey,
-            '',
-            '',
-            '',
-            '1970-01-01T00:00:00',
-            '2999-12-31T23:59:59',
-            $targetViews);
+            $targetViews));
     }
 }
