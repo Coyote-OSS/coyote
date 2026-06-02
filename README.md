@@ -73,22 +73,11 @@ Skonfiguruj IDE by łączyło się do istniejącego kontenera, a nie tworzyło n
 
 #### IDE od JetBrains
 
-Jeśli korzystasz z PhpStorm, konieczne może być ustawienie zmiennej środowiskowej:
+Jeśli korzystasz z PhpStorm, konieczne jest ustawienie mapowania ścieżek. W "Ustawienia" > "PHP" > "Servers", stwórz nowy serwer:
 
-```bash
-# from /bin/bash
-export PHP_IDE_CONFIG="serverName=your_server_name"
-```
-```cmd
-REM from cmd.exe
-set PHP_IDE_CONFIG="serverName=your_server_name"
-```
-```ps
-# from powershell.exe
-$env:PHP_IDE_CONFIG = 'serverName=your_server_name'
-```
-
-Nazwa `your_server_name` powinna odpowiadać nazwie serwera w sekcji "path mappings".
+- Nazwa: `coyote`
+- Host: `localhost`
+- Ścieżka zdalna `/var/www/`
 
 ### Praca z CSS oraz JS
 
