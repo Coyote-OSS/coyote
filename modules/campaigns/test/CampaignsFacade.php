@@ -2,6 +2,7 @@
 namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns;
+use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignBanner;
 
 readonly class CampaignsFacade {
@@ -44,14 +45,14 @@ readonly class CampaignsFacade {
         ?string $since = null,
         ?string $until = null,
     ): void {
-        $this->store->createIfNotExists(
+        $this->store->createCampaignReturnId(new Campaign(
             $campaignKey ?? '',
             $sidebarBanner ?? '',
             $horizontalBanner ?? '',
             $redirectUrl ?? '',
             $since ?? '1970-01-01T00:00:00',
             $until ?? '2999-12-31T23:59:59',
-            999);
+            999));
     }
 
     /**

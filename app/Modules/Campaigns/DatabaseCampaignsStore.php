@@ -7,8 +7,8 @@ use Modules\Campaigns;
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
 
-class DatabaseCampaignsStore extends CampaignsStore {
-    public function __construct(private readonly Database\Connection $connection) {}
+readonly class DatabaseCampaignsStore implements CampaignsStore {
+    public function __construct(private Database\Connection $connection) {}
 
     /**
      * @return Eloquent\Campaign[]

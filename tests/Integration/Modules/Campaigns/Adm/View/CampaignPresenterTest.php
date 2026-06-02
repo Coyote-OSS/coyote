@@ -2,6 +2,7 @@
 namespace Tests\Integration\Modules\Campaigns\Adm\View;
 
 use Coyote\Modules\Campaigns\Adm\View\CampaignPresenter;
+use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignService;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -83,13 +84,13 @@ class CampaignPresenterTest extends TestCase {
         ?string $activeSince,
         ?string $activeUntil,
     ): void {
-        $this->store->createIfNotExists(
+        $this->store->createCampaignReturnId(new Campaign(
             $campaignKey,
             '',
             '',
             '',
             $activeSince,
             $activeUntil,
-            999);
+            999));
     }
 }

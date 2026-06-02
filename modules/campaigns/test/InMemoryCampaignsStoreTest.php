@@ -1,6 +1,7 @@
 <?php
 namespace Test\Modules\Campaigns;
 
+use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -18,31 +19,49 @@ class InMemoryCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function didNotExistInitially(): void {
-        $existed = $this->store->createIfNotExists('new-campaign', '', '', '', null, null, null);
-        $this->assertFalse($existed);
+        $this->assertNotNull($this->create('new-campaign'));
     }
 
     #[Test]
     public function existedWhenCreatedDuplicateCampaign(): void {
-        $this->store->createIfNotExists('new-campaign', '', '', '', null, null, null);
-        $existed = $this->store->createIfNotExists('new-campaign', '', '', '', null, null, null);
+        $this->create('new-campaign');
+        $existed = $this->create('new-campaign');
         $this->assertTrue($existed);
     }
 
     #[Test]
     public function didNotExistWhenCampaignKeyDiffers(): void {
-        $this->store->createIfNotExists('old-campaign', '', '', '', null, null, null);
-        $existed = $this->store->createIfNotExists('new-campaign', '', '', '', null, null, null);
+        $this->create('old-campaign');
+        $existed = $this->create('new-campaign');
         $this->assertFalse($existed);
     }
 
     #[Test]
     public function listCampaigns(): void {
-        $this->store->createIfNotExists('key', 'sidebar', 'horizontal', 'redirect', null, null, null);
+        $this->store->createCampaignReturnId(new Campaign(
+            'key',
+            'sidebar',
+            'horizontal',
+            'redirect',
+            null,
+            null,
+            null));
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
         $this->assertEquals('sidebar', $campaign->sidebarBanner);
         $this->assertEquals('horizontal', $campaign->horizontalBanner);
         $this->assertEquals('redirect', $campaign->redirectUrl);
+    }
+
+    private function create(string $campaignKey): bool {
+        $createdId = $this->store->createCampaignReturnId(new Campaign(
+            $campaignKey,
+            '',
+            '',
+            '',
+            null,
+            null,
+            null));
+        return $createdId === null;
     }
 }

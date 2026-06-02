@@ -2,6 +2,7 @@
 namespace Tests\Integration\Modules\Campaigns;
 
 use Coyote\Modules\Campaigns\CampaignsController;
+use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -28,14 +29,14 @@ class CampaignsControllerTest extends TestCase {
     }
 
     private function addCampaign(string $campaignKey, string $redirectUrl): void {
-        $this->instance()->createIfNotExists(
+        $this->instance()->createCampaignReturnId(new Campaign(
             $campaignKey,
             '',
             '',
             $redirectUrl,
             null,
             null,
-            null);
+            null));
     }
 
     private function instance(): CampaignsStore {
