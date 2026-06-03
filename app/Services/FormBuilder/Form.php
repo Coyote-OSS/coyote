@@ -2,8 +2,7 @@
 
 namespace Coyote\Services\FormBuilder;
 
-abstract class Form extends FormRequest implements FormInterface
-{
+abstract class Form extends FormRequest implements FormInterface {
     use CreateFieldTrait, RenderTrait;
 
     const GET = 'GET';
@@ -18,7 +17,7 @@ abstract class Form extends FormRequest implements FormInterface
      * @var array
      */
     public $attr = [
-        'method' => self::POST
+        'method' => self::POST,
     ];
 
     /**
@@ -44,8 +43,7 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * Form constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->events = new FormEvents($this);
     }
 
@@ -57,8 +55,7 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function rebuildForm()
-    {
+    public function rebuildForm() {
         $this->fields = [];
         $this->buildForm();
     }
@@ -68,8 +65,7 @@ abstract class Form extends FormRequest implements FormInterface
      * @param \Closure $listener
      * @return $this
      */
-    public function addEventListener($name, \Closure $listener)
-    {
+    public function addEventListener($name, \Closure $listener) {
         $this->events->addListener($name, $listener);
 
         return $this;
@@ -78,8 +74,7 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function add($name, $type, array $options = [])
-    {
+    public function add($name, $type, array $options = []) {
         $this->fields[$name] = $this->makeField($name, $type, $this, $options);
 
         return $this;
@@ -88,8 +83,7 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function remove($name)
-    {
+    public function remove($name) {
         unset($this->fields[$name]);
 
         return $this;
@@ -98,8 +92,7 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function addAfter($after, $name, $type, array $options = [])
-    {
+    public function addAfter($after, $name, $type, array $options = []) {
         $offset = array_search($after, array_keys($this->fields));
 
         $beforeFields = array_slice($this->fields, 0, $offset + 1);
@@ -117,16 +110,14 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function getMethod()
-    {
+    public function getMethod() {
         return $this->attr['method'];
     }
 
     /**
      * @inheritdoc
      */
-    public function setMethod($method)
-    {
+    public function setMethod($method) {
         $this->attr['method'] = $method;
 
         return $this;
@@ -135,16 +126,14 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function getUrl()
-    {
+    public function getUrl() {
         return $this->attr['url'];
     }
 
     /**
      * @inheritdoc
      */
-    public function setUrl($url)
-    {
+    public function setUrl($url) {
         $this->attr['url'] = $url;
 
         return $this;
@@ -153,16 +142,14 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function getAttr()
-    {
+    public function getAttr() {
         return $this->attr;
     }
 
     /**
      * @inheritdoc
      */
-    public function setAttr($attr)
-    {
+    public function setAttr($attr) {
         // user want's to set attributes BUT maybe he does not want to override url attribute?
         $only = array_only($this->attr, ['url', 'method']);
 
@@ -174,16 +161,14 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function getData()
-    {
+    public function getData() {
         return $this->data;
     }
 
     /**
      * @inheritdoc
      */
-    public function setData($data, $rebuildForm = true)
-    {
+    public function setData($data, $rebuildForm = true) {
         $this->data = $data;
 
         if ($rebuildForm && !empty($this->fields)) {
@@ -196,8 +181,7 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function setOptions(array $options = [])
-    {
+    public function setOptions(array $options = []) {
         foreach ($options as $key => $values) {
             $methodName = 'set' . ucfirst(camel_case($key));
 
@@ -212,53 +196,51 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function errors()
-    {
+    public function errors() {
         return $this->request->session()->get('errors');
     }
 
     /**
      * @inheritdoc
      */
-    public function getField($field)
-    {
+    public function getField($field) {
         return $this->fields[$field] ?? null;
     }
 
     /**
      * @inheritdoc
      */
-    public function get($field)
-    {
+    public function get($field) {
         return $this->getField($field);
+    }
+
+    public function getValue($field) {
+        return $this->getField($field)->getValue();
     }
 
     /**
      * @inheritdoc
      */
-    public function getFields()
-    {
+    public function getFields() {
         return $this->fields;
     }
 
     /**
      * @inheritdoc
      */
-    public function render()
-    {
+    public function render() {
         $this->events->dispatch(FormEvents::PRE_RENDER);
 
         return $this->view($this->getViewPath($this->getTemplate()), [
-            'form' => $this,
-            'fields' => $this->fields
+            'form'   => $this,
+            'fields' => $this->fields,
         ])->render();
     }
 
     /**
      * @inheritdoc
      */
-    public function renderForm()
-    {
+    public function renderForm() {
         $this->events->dispatch(FormEvents::PRE_RENDER);
 
         return $this->view($this->getWidgetPath(), ['form' => $this])->render();
@@ -267,8 +249,7 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function all()
-    {
+    public function all() {
         $values = [];
 
         foreach ($this->fields as $field) {
@@ -281,32 +262,28 @@ abstract class Form extends FormRequest implements FormInterface
     /**
      * @inheritdoc
      */
-    public function toJson()
-    {
+    public function toJson() {
         return json_encode($this->all());
     }
 
     /**
      * @inheritdoc
      */
-    public function isSubmitted()
-    {
+    public function isSubmitted() {
         return $this->request->method() === $this->getMethod();
     }
 
     /**
      * @return string
      */
-    protected function getWidgetName()
-    {
+    protected function getWidgetName() {
         return 'form_widget';
     }
 
     /**
      * Set up the validation rules
      */
-    protected function setupRules()
-    {
+    protected function setupRules() {
         $this->rules = (new Rules($this))->getRules();
     }
 
@@ -314,8 +291,7 @@ abstract class Form extends FormRequest implements FormInterface
      * @param $name
      * @return bool
      */
-    public function __isset($name)
-    {
+    public function __isset($name) {
         return isset($this->fields[$name]);
     }
 
@@ -323,8 +299,7 @@ abstract class Form extends FormRequest implements FormInterface
      * @param $name
      * @return mixed|null
      */
-    public function __get($name)
-    {
+    public function __get($name) {
         return $this->getField($name);
     }
 }

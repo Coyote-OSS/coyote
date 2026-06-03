@@ -11,6 +11,7 @@ use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Coyote\Services\FormBuilder\Form;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Modules\Campaigns;
 
 class CampaignsController extends BaseController {
     public function __construct() {
@@ -49,18 +50,29 @@ class CampaignsController extends BaseController {
         return $this->view('adm.campaigns.save')->with('form', $this->getForm($campaign));
     }
 
-    public function save(Campaign $campaign): RedirectResponse {
+    public function save(Campaign $campaign, Campaigns\CampaignsStore $store): RedirectResponse {
         $form = $this->getForm($campaign);
         $form->validate();
-        $campaign->fill($form->all());
-        try {
-            $campaign->save();
-        } catch (\Throwable) {
-            abort(400); // Duplicate campaign key
+        $campaignModel = new Campaigns\Campaign(
+            $form->getValue('campaign_key'),
+            $form->getValue('sidebar'),
+            $form->getValue('horizontal'),
+            $form->getValue('redirect_url'),
+            $form->getValue('active_since'),
+            $form->getValue('active_until'),
+            $form->getValue('target_views'));
+        if ($campaign->exists) {
+            $store->updateCampaign($campaign->id, $campaignModel);
+            $campaignId = $campaign->id;
+        } else {
+            $campaignId = $store->createCampaignReturnId($campaignModel);
+            if ($campaignId === null) {
+                abort(400);
+            }
         }
         return redirect()
-            ->route('adm.campaigns.show', [$campaign->id])
-            ->header('X-Campaign-Id', $campaign->id)
+            ->route('adm.campaigns.show', [$campaignId])
+            ->header('X-Campaign-Id', $campaignId)
             ->with('success', 'Zmiany zostały zapisane.');
     }
 
