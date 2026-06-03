@@ -71,8 +71,8 @@ class DatabaseCampaignsStoreTest extends TestCase {
             999));
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
-        $this->assertEquals('sidebar', $campaign->sidebarBanner);
-        $this->assertEquals('horizontal', $campaign->horizontalBanner);
+        $this->assertEquals('sidebar', $campaign->sidebarBanner());
+        $this->assertEquals('horizontal', $campaign->horizontalBanner());
         $this->assertEquals('redirect', $campaign->redirectUrl);
         $this->assertEquals('2222-02-02 22:22:22', $campaign->activeSince);
         $this->assertEquals('3333-03-03 03:33:33', $campaign->activeUntil);
@@ -91,8 +91,8 @@ class DatabaseCampaignsStoreTest extends TestCase {
             999));
         $campaign = $this->store->findCampaign('campaign-key');
         $this->assertEquals('campaign-key', $campaign->campaignKey);
-        $this->assertEquals('sidebar', $campaign->sidebarBanner);
-        $this->assertEquals('horizontal', $campaign->horizontalBanner);
+        $this->assertEquals('sidebar', $campaign->sidebarBanner());
+        $this->assertEquals('horizontal', $campaign->horizontalBanner());
         $this->assertEquals('redirect', $campaign->redirectUrl);
         $this->assertEquals('2222-02-02 22:22:22', $campaign->activeSince);
         $this->assertEquals('3333-03-03 03:33:33', $campaign->activeUntil);

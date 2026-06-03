@@ -30,11 +30,11 @@ readonly class CampaignService {
         $horizontals = [];
         foreach ($this->listActiveCampaigns() as $campaign) {
             $sidebars[$campaign->campaignKey] = new CampaignBanner(
-                $campaign->sidebarBanner,
+                $campaign->sidebarBanner(),
                 $campaign->campaignKey,
                 'sidebar');
             $horizontals[$campaign->campaignKey] = new CampaignBanner(
-                $campaign->horizontalBanner,
+                $campaign->horizontalBanner(),
                 $campaign->campaignKey,
                 'horizontal');
         }

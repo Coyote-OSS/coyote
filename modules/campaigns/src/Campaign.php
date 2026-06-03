@@ -11,4 +11,12 @@ readonly class Campaign {
         public ?string $activeUntil,
         public ?int    $targetViews,
     ) {}
+
+    public function horizontalBanner(): string {
+        return $this->horizontalBanner;
+    }
+
+    public function sidebarBanner(): string {
+        return $this->sidebarBanner;
+    }
 }
