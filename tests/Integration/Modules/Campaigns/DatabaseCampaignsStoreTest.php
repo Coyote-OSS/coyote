@@ -68,7 +68,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
             'redirect',
             '2222-02-02T22:22:22',
             '3333-03-03T03:33:33',
-            999));
+            999, []));
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
         $this->assertEquals('sidebar', $campaign->sidebarBanner());
@@ -88,7 +88,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
             'redirect',
             '2222-02-02T22:22:22',
             '3333-03-03T03:33:33',
-            999));
+            999, []));
         $campaign = $this->store->findCampaign('campaign-key');
         $this->assertEquals('campaign-key', $campaign->campaignKey);
         $this->assertEquals('sidebar', $campaign->sidebarBanner());
@@ -241,7 +241,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
             '',
             $activeSince,
             $activeUntil,
-            $targetViews));
+            $targetViews, []));
     }
 
     #[Test]
@@ -281,7 +281,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
             'redirect-url',
             '2000-01-01',
             '2000-01-01',
-            20,
+            20, [],
         ));
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'campaign_key' => 'campaign-key',
@@ -303,7 +303,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
             'redirect-url',
             null,
             null,
-            null,
+            null, [],
         ));
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'campaign_key' => 'campaign-key',
@@ -318,7 +318,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
     }
 
     private function campaignRedirectUrl(string $campaignKey, string $redirectUrl): Campaigns\Campaign {
-        return new Campaigns\Campaign($campaignKey, '', '', $redirectUrl, null, null, null);
+        return new Campaigns\Campaign($campaignKey, '', '', $redirectUrl, null, null, null, []);
     }
 
     #[Test]
@@ -331,7 +331,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
             'old-redirect-url',
             '1970-01-01',
             '1970-01-01',
-            5,
+            5, [],
         ));
         // when
         $this->store->updateCampaign($campaignId, new Campaigns\Campaign(
@@ -341,7 +341,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
             'new-redirect-url',
             '2011-11-11',
             '2012-12-12',
-            66));
+            66, []));
         // then
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'campaign_key' => 'old-key',

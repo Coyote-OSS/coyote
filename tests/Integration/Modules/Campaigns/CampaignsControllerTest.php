@@ -36,7 +36,7 @@ class CampaignsControllerTest extends TestCase {
             $redirectUrl,
             null,
             null,
-            null));
+            null, []));
     }
 
     private function instance(): CampaignsStore {

@@ -32,7 +32,7 @@ class CampaignsPersistanceTest extends TestCase {
             '',
             '2000-01-01T00:00:00',
             '2000-01-03T00:00:00',
-            999));
+            999, []));
         $banners = $this->campaigns->campaignBanners();
         $this->assertEquals('stored', $banners->sidebar->campaignKey);
         $this->assertEquals('sidebar', $banners->sidebar->bannerUrl);
@@ -53,6 +53,6 @@ class CampaignsPersistanceTest extends TestCase {
             $redirectUrl,
             null,
             null,
-            null));
+            null, []));
     }
 }

@@ -169,6 +169,6 @@ class CampaignsActiveTest extends TestCase {
             '',
             $activeSince,
             $activeUntil,
-            $targetViews));
+            $targetViews, []));
     }
 }

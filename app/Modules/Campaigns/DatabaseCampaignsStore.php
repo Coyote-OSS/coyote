@@ -96,7 +96,8 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             redirectUrl:$campaign->redirect_url,
             activeSince:$campaign->active_since,
             activeUntil:$campaign->active_until,
-            targetViews:$campaign->target_views);
+            targetViews:$campaign->target_views,
+            variants:[]);
     }
 
     public function createCampaignReturnId(Campaign $campaign): ?int {

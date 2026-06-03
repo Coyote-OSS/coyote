@@ -91,6 +91,6 @@ class CampaignPresenterTest extends TestCase {
             '',
             $activeSince,
             $activeUntil,
-            999));
+            999, []));
     }
 }

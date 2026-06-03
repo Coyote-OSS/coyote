@@ -45,7 +45,7 @@ class InMemoryCampaignsStoreTest extends TestCase {
             'redirect',
             null,
             null,
-            null));
+            null, []));
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
         $this->assertEquals('sidebar', $campaign->sidebarBanner());
@@ -61,7 +61,7 @@ class InMemoryCampaignsStoreTest extends TestCase {
             '',
             null,
             null,
-            null));
+            null, []));
         return $createdId === null;
     }
 }
