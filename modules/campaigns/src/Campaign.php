@@ -3,6 +3,29 @@ namespace Modules\Campaigns;
 
 readonly class Campaign {
     /**
+     * @deprecated
+     */
+    public static function create(
+        string  $campaignKey,
+        string  $sidebarBanner,
+        string  $horizontalBanner,
+        string  $redirectUrl,
+        ?string $activeSince,
+        ?string $activeUntil,
+        ?int    $targetViews,
+    ): self {
+        return new self(
+            $campaignKey,
+            $sidebarBanner,
+            $horizontalBanner,
+            $redirectUrl,
+            $activeSince,
+            $activeUntil,
+            $targetViews,
+            []);
+    }
+
+    /**
      * @param CampaignVariant[] $variants
      */
     public function __construct(

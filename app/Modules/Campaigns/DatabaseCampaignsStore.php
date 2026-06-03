@@ -89,15 +89,14 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
     }
 
     private function parseRow(object $campaign): Campaign {
-        return new Campaign(
+        return Campaign::create(
             campaignKey:$campaign->campaign_key,
             sidebarBanner:$campaign->sidebar,
             horizontalBanner:$campaign->horizontal,
             redirectUrl:$campaign->redirect_url,
             activeSince:$campaign->active_since,
             activeUntil:$campaign->active_until,
-            targetViews:$campaign->target_views,
-            variants:[]);
+            targetViews:$campaign->target_views);
     }
 
     public function createCampaignReturnId(Campaign $campaign): ?int {

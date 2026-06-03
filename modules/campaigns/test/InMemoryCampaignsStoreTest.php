@@ -38,14 +38,14 @@ class InMemoryCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function listCampaigns(): void {
-        $this->store->createCampaignReturnId(new Campaign(
+        $this->store->createCampaignReturnId(Campaign::create(
             'key',
             'sidebar',
             'horizontal',
             'redirect',
             null,
             null,
-            null, []));
+            null));
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
         $this->assertEquals('sidebar', $campaign->sidebarBanner());
@@ -54,14 +54,14 @@ class InMemoryCampaignsStoreTest extends TestCase {
     }
 
     private function create(string $campaignKey): bool {
-        $createdId = $this->store->createCampaignReturnId(new Campaign(
+        $createdId = $this->store->createCampaignReturnId(Campaign::create(
             $campaignKey,
             '',
             '',
             '',
             null,
             null,
-            null, []));
+            null));
         return $createdId === null;
     }
 }

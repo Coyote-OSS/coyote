@@ -61,14 +61,14 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function listCampaigns(): void {
-        $this->store->createCampaignReturnId(new Campaign(
+        $this->store->createCampaignReturnId(Campaign::create(
             'key',
             'sidebar',
             'horizontal',
             'redirect',
             '2222-02-02T22:22:22',
             '3333-03-03T03:33:33',
-            999, []));
+            999));
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
         $this->assertEquals('sidebar', $campaign->sidebarBanner());
@@ -81,14 +81,14 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function findCampaign_returnsCampaignObject(): void {
-        $this->store->createCampaignReturnId(new Campaign(
+        $this->store->createCampaignReturnId(Campaign::create(
             'campaign-key',
             'sidebar',
             'horizontal',
             'redirect',
             '2222-02-02T22:22:22',
             '3333-03-03T03:33:33',
-            999, []));
+            999));
         $campaign = $this->store->findCampaign('campaign-key');
         $this->assertEquals('campaign-key', $campaign->campaignKey);
         $this->assertEquals('sidebar', $campaign->sidebarBanner());
@@ -234,14 +234,14 @@ class DatabaseCampaignsStoreTest extends TestCase {
     }
 
     private function createCampaignReturnId(string $campaignKey, string $activeSince, string $activeUntil, ?int $targetViews): ?int {
-        return $this->store->createCampaignReturnId(new Campaign(
+        return $this->store->createCampaignReturnId(Campaign::create(
             $campaignKey,
             '',
             '',
             '',
             $activeSince,
             $activeUntil,
-            $targetViews, []));
+            $targetViews));
     }
 
     #[Test]
@@ -274,14 +274,14 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function createCampaignWithFields(): void {
-        $this->store->createCampaignReturnId(new Campaigns\Campaign(
+        $this->store->createCampaignReturnId(Campaigns\Campaign::create(
             'campaign-key',
             'sidebar-banner',
             'horizontal-banner',
             'redirect-url',
             '2000-01-01',
             '2000-01-01',
-            20, [],
+            20,
         ));
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'campaign_key' => 'campaign-key',
@@ -296,15 +296,14 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function createCampaignWithOptionalFields(): void {
-        $this->store->createCampaignReturnId(new Campaigns\Campaign(
+        $this->store->createCampaignReturnId(Campaigns\Campaign::create(
             'campaign-key',
             'sidebar-banner',
             'horizontal-banner',
             'redirect-url',
             null,
             null,
-            null, [],
-        ));
+            null));
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'campaign_key' => 'campaign-key',
             'active_since' => null,
@@ -318,30 +317,29 @@ class DatabaseCampaignsStoreTest extends TestCase {
     }
 
     private function campaignRedirectUrl(string $campaignKey, string $redirectUrl): Campaigns\Campaign {
-        return new Campaigns\Campaign($campaignKey, '', '', $redirectUrl, null, null, null, []);
+        return Campaigns\Campaign::create($campaignKey, '', '', $redirectUrl, null, null, null);
     }
 
     #[Test]
     public function updateCampaignFields(): void {
         // given
-        $campaignId = $this->store->createCampaignReturnId(new Campaigns\Campaign(
+        $campaignId = $this->store->createCampaignReturnId(Campaigns\Campaign::create(
             'old-key',
             'old-sidebar',
             'old-horizontal',
             'old-redirect-url',
             '1970-01-01',
             '1970-01-01',
-            5, [],
-        ));
+            5));
         // when
-        $this->store->updateCampaign($campaignId, new Campaigns\Campaign(
+        $this->store->updateCampaign($campaignId, Campaigns\Campaign::create(
             'new-key',
             'new-sidebar',
             'new-horizontal',
             'new-redirect-url',
             '2011-11-11',
             '2012-12-12',
-            66, []));
+            66));
         // then
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'campaign_key' => 'old-key',

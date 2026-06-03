@@ -84,13 +84,13 @@ class CampaignPresenterTest extends TestCase {
         ?string $activeSince,
         ?string $activeUntil,
     ): void {
-        $this->store->createCampaignReturnId(new Campaign(
+        $this->store->createCampaignReturnId(Campaign::create(
             $campaignKey,
             '',
             '',
             '',
             $activeSince,
             $activeUntil,
-            999, []));
+            999));
     }
 }

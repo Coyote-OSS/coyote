@@ -53,14 +53,14 @@ class CampaignsController extends BaseController {
     public function save(Campaign $campaign, Campaigns\CampaignsStore $store): RedirectResponse {
         $form = $this->getForm($campaign);
         $form->validate();
-        $campaignModel = new Campaigns\Campaign(
+        $campaignModel = Campaigns\Campaign::create(
             $form->getValue('campaign_key'),
             $form->getValue('sidebar'),
             $form->getValue('horizontal'),
             $form->getValue('redirect_url'),
             $form->getValue('active_since'),
             $form->getValue('active_until'),
-            $form->getValue('target_views'), []);
+            $form->getValue('target_views'));
         if ($campaign->exists) {
             $store->updateCampaign($campaign->id, $campaignModel);
             $campaignId = $campaign->id;

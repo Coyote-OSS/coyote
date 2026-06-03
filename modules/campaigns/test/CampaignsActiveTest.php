@@ -162,13 +162,13 @@ class CampaignsActiveTest extends TestCase {
     }
 
     private function createCampaign(?string $activeSince, ?string $activeUntil, ?int $targetViews): void {
-        $this->store->createCampaignReturnId(new Campaign(
+        $this->store->createCampaignReturnId(Campaign::create(
             $this->campaignKey,
             '',
             '',
             '',
             $activeSince,
             $activeUntil,
-            $targetViews, []));
+            $targetViews));
     }
 }

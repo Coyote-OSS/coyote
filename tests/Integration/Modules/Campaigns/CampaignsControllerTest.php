@@ -29,14 +29,14 @@ class CampaignsControllerTest extends TestCase {
     }
 
     private function addCampaign(string $campaignKey, string $redirectUrl): void {
-        $this->instance()->createCampaignReturnId(new Campaign(
+        $this->instance()->createCampaignReturnId(Campaign::create(
             $campaignKey,
             '',
             '',
             $redirectUrl,
             null,
             null,
-            null, []));
+            null));
     }
 
     private function instance(): CampaignsStore {
