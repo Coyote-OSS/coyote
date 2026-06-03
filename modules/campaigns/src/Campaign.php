@@ -22,7 +22,10 @@ readonly class Campaign {
             $activeSince,
             $activeUntil,
             $targetViews,
-            []);
+            [
+                new CampaignVariant($sidebarBanner, 'sidebar'),
+                new CampaignVariant($horizontalBanner, 'horizontal'),
+            ]);
     }
 
     /**
@@ -36,7 +39,7 @@ readonly class Campaign {
         public ?string $activeSince,
         public ?string $activeUntil,
         public ?int    $targetViews,
-        private array  $variants,
+        public array   $variants,
     ) {}
 
     public function horizontalBanner(): string {
