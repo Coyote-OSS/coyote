@@ -16,8 +16,6 @@ readonly class Campaign {
     ): self {
         return new self(
             $campaignKey,
-            $sidebarBanner,
-            $horizontalBanner,
             $redirectUrl,
             $activeSince,
             $activeUntil,
@@ -33,8 +31,6 @@ readonly class Campaign {
      */
     public function __construct(
         public string  $campaignKey,
-        public string  $sidebarBanner,
-        public string  $horizontalBanner,
         public string  $redirectUrl,
         public ?string $activeSince,
         public ?string $activeUntil,
@@ -43,10 +39,12 @@ readonly class Campaign {
     ) {}
 
     public function horizontalBanner(): string {
-        return $this->horizontalBanner;
+        [$s, $horizontal] = $this->variants;
+        return $horizontal->bannerUrl;
     }
 
     public function sidebarBanner(): string {
-        return $this->sidebarBanner;
+        [$sidebar, $h] = $this->variants;
+        return $sidebar->bannerUrl;
     }
 }

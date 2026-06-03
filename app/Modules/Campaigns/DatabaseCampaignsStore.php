@@ -119,8 +119,8 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
 
     private function campaignRow(Campaign $campaign): array {
         return [
-            'sidebar'      => $campaign->sidebarBanner,
-            'horizontal'   => $campaign->horizontalBanner,
+            'sidebar'      => $campaign->sidebarBanner(),
+            'horizontal'   => $campaign->horizontalBanner(),
             'redirect_url' => $campaign->redirectUrl,
             'active_since' => $campaign->activeSince,
             'active_until' => $campaign->activeUntil,
