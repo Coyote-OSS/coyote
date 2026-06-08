@@ -1,7 +1,7 @@
 {% extends 'adm.base' %}
 {% block title %}Edycja kampanii {{ parent() }}{% endblock %}
 
-{% from 'adm.campaigns.campaignBannerCard' import campaignBannerCard %}
+{% import 'adm.multiacc.components.twig' as components %}
 
 {% block container %}
   <div class="card">
@@ -84,20 +84,24 @@
     </div>
   </div>
 
-  {{ campaignBannerCard(title:'Baner poziomy', banner:bannerHorizontal, imgClass:'banner-horizontal') }}
-  {{ campaignBannerCard(title:'Baner boczny', banner:bannerSidebar, imgClass:'banner-sidebar') }}
+  <div class="card">
+    <div class="card-header">
+      {{ icon('campaignBanner') }}
+      Warianty
+    </div>
+
+    {{ components.table('Ta kartoteka delikwenta na razie nie dotyczy żadnego konta użytkownika.', campaign.banners, [
+      { key: 'type', label: 'Typ', icon: 'campaignBannerType', style: 'code' },
+      { key: 'stats.views', label: 'Wyświetlenia', icon: 'campaignViews' },
+      { key: 'stats.clicks', label: 'Kliknięcia', icon: 'campaignClicks' },
+      { key: 'stats.ctr', label: 'CTR', icon: 'campaignCtr', default: 'nie wyświetlono'},
+      { key: 'imageUrl', label: 'Banner', labelIcon: 'campaignBanner', style: 'image', styleClass:'max-h-4' },
+    ]) }}
+  </div>
 
   <style>
-    .banner-horizontal {
-      max-width: 256px;
-      min-height: 48px;
-      min-width: 144px;
-    }
-
-    .banner-sidebar {
-      max-width: 144px;
-      min-width: 100px;
-      min-height: 100px;
+    .max-h-4 {
+      max-height: 28px;
     }
   </style>
 {% endblock %}

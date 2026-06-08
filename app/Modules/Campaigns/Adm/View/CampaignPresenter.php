@@ -17,11 +17,17 @@ readonly class CampaignPresenter {
     }
 
     public function horizontalViewModel(string $campaignKey, string $imageUrl): BannerViewModel {
-        return new BannerViewModel($imageUrl, $this->horizontalStats($campaignKey));
+        return new BannerViewModel(
+            $imageUrl,
+            $this->horizontalStats($campaignKey),
+            'horizontal');
     }
 
     public function sidebarViewModel(string $campaignKey, string $imageUrl): BannerViewModel {
-        return new BannerViewModel($imageUrl, $this->sidebarStats($campaignKey));
+        return new BannerViewModel(
+            $imageUrl,
+            $this->sidebarStats($campaignKey),
+            'sidebar');
     }
 
     private function horizontalStats(string $campaignKey): CampaignStats {

@@ -65,6 +65,8 @@ readonly class FontAwesomePro {
             'campaignStatusActive'                      => 'fa-light fa-circle-check',
             'campaignStatusInactive'                    => 'fa-light fa-circle-xmark',
             'campaignDateRange'                         => 'fa-light fa-calendar',
+            'campaignBanner'                            => 'fa-light fa-image',
+            'campaignBannerType'                        => 'fa-light fa-ruler-combined',
 
             // microblog
             'microblogNew'                              => 'fa-light fa-plus',

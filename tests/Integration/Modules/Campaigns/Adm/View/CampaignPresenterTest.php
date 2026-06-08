@@ -79,6 +79,18 @@ class CampaignPresenterTest extends TestCase {
         $this->assertTrue($this->presenter->campaignStatus('campaign')->active());
     }
 
+    #[Test]
+    public function typeHorizontal(): void {
+        $this->assertSame('horizontal',
+            $this->presenter->horizontalViewModel('', '')->type);
+    }
+
+    #[Test]
+    public function typeSidebar(): void {
+        $this->assertSame('sidebar',
+            $this->presenter->sidebarViewModel('', '')->type);
+    }
+
     private function stubCampaignActiveRange(
         string  $campaignKey,
         ?string $activeSince,

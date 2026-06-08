@@ -14,28 +14,53 @@
   </div>
 {% endmacro %}
 
+{% macro get_nested_attribute(object, attributes) %}{% apply spaceless %}
+  {% set attributes = attributes|split('.') %}
+  {% set value = object %}
+  {% for attribute in attributes %}
+    {% set value = attribute(value, attribute|trim) is defined
+      ? attribute(value, attribute|trim)
+      : null %}
+  {% endfor %}
+  {{ value }}
+{% endapply %}
+{% endmacro %}
+
 {% macro table(emptyText, items, fields) %}
   {% if items is not empty %}
     <table class="table table-striped mb-0">
       <thead>
-        <tr>
-          {% for field in fields %}
-            <th style="white-space:nowrap;">{{ field.label }}</th>
-          {% endfor %}
-        </tr>
+      <tr>
+        {% for field in fields %}
+          <th style="white-space:nowrap;">
+            {{ field.labelIcon ? icon(field.labelIcon) }}
+            {{ field.label }}
+          </th>
+        {% endfor %}
+      </tr>
       </thead>
       <tbody>
-        {% for item in items %}
-          <tr>
-            {% for field in fields %}
-              {% if field.wrap %}
-                <td>{{ attribute(item, field.key) }}</td>
+      {% for item in items %}
+        <tr>
+          {% for field in fields %}
+            {% set value = _self.get_nested_attribute(item, field.key) %}
+            <td style="{{ field.wrap ? 'white-space:nowrap;' }}">
+              {% if not value %}
+                <span class="text-muted">{{ field.default }}</span>
               {% else %}
-                <td style="white-space:nowrap;">{{ attribute(item, field.key) }}</td>
+                {{ field.icon ? icon(field.icon) }}
+                {% if field.style == 'image' %}
+                  <img class="{{ field.styleClass }}" src="{{ value }}" alt="{{ field.label }}">
+                {% elseif field.style == 'code' %}
+                  <code>{{ value }}</code>
+                {% else %}
+                  {{ value }}
+                {% endif %}
               {% endif %}
-            {% endfor %}
-          </tr>
-        {% endfor %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
       </tbody>
     </table>
   {% else %}

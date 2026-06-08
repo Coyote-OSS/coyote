@@ -5,5 +5,6 @@ readonly class BannerViewModel {
     public function __construct(
         public string        $imageUrl,
         public CampaignStats $stats,
+        public string        $type,
     ) {}
 }

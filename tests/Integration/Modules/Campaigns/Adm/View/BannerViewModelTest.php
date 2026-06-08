@@ -31,7 +31,7 @@ class BannerViewModelTest extends TestCase {
     }
 
     private function ctr(int $views, int $clicks): ?string {
-        $viewModel = new BannerViewModel('', new CampaignStats($views, $clicks));
+        $viewModel = new BannerViewModel('', new CampaignStats($views, $clicks), '');
         return $viewModel->stats->ctr();
     }
 }

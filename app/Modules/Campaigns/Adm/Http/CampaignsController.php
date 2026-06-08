@@ -30,7 +30,7 @@ class CampaignsController extends BaseController {
 
     public function show(Campaign $campaign, CampaignPresenter $presenter): View {
         return $this->view('adm.campaigns.show', [
-            'campaign'         => new CampaignViewModel(
+            'campaign' => new CampaignViewModel(
                 $campaign->campaign_key,
                 $campaign->redirect_url,
                 route('adm.campaigns.save', [$campaign->id]),
@@ -39,9 +39,11 @@ class CampaignsController extends BaseController {
                 $presenter->campaignStatus($campaign->campaign_key),
                 $campaign->active_since,
                 $campaign->active_until,
-                $campaign->target_views),
-            'bannerHorizontal' => $presenter->horizontalViewModel($campaign->campaign_key, $campaign->horizontal),
-            'bannerSidebar'    => $presenter->sidebarViewModel($campaign->campaign_key, $campaign->sidebar),
+                $campaign->target_views,
+                [
+                    $presenter->horizontalViewModel($campaign->campaign_key, $campaign->horizontal),
+                    $presenter->sidebarViewModel($campaign->campaign_key, $campaign->sidebar),
+                ]),
         ]);
     }
 
