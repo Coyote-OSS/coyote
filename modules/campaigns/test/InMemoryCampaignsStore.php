@@ -72,4 +72,8 @@ class InMemoryCampaignsStore implements CampaignsStore {
     public function createVariant(int $campaignId, string $imageUrl, string $type): bool {
         throw new \Exception('Not implemented');
     }
+
+    public function findCampaignById(int $campaignId): ?Campaign {
+        throw new \Exception('Not implemented');
+    }
 }

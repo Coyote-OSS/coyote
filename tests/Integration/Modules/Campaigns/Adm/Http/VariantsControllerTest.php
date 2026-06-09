@@ -5,7 +5,6 @@ use Coyote\Modules\Campaigns\Adm;
 use Coyote\Modules\Campaigns\DatabaseCampaignsStore;
 use Illuminate\Testing\TestResponse;
 use Modules\Campaigns\Campaign;
-use Modules\Campaigns\CampaignVariant;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -154,13 +153,10 @@ class VariantsControllerTest extends TestCase {
     private function createCampaign(): int {
         /** @var DatabaseCampaignsStore $store */
         $store = $this->laravel->app->make(DatabaseCampaignsStore::class);
-        return $store->createCampaignReturnId(new Campaign(
+        return $store->createCampaignReturnId(Campaign::create(
             'campaign',
-            '', null, null, null,
-            [
-                new CampaignVariant('', ''), // TODO remove these after they're temporary as long 
-                new CampaignVariant('', ''), // as campaigns have constant number of banners
-            ],
+            '', '', '',
+            null, null, null,
         ));
     }
 

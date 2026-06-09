@@ -387,4 +387,26 @@ class DatabaseCampaignsStoreTest extends TestCase {
             'redirect_url' => 'original-url',
         ]);
     }
+
+    #[Test]
+    public function findCampaignIncludesVariants(): void {
+        $campaignId = $this->store->createCampaignReturnId($this->exampleCampaign());
+        $this->store->createVariant($campaignId, 'image.png', 'horizontal');
+        $campaign = $this->store->findCampaignById($campaignId);
+        [$variant] = $campaign->variants;
+        $this->assertSame('horizontal', $variant->bannerType);
+        $this->assertSame('image.png', $variant->bannerUrl);
+    }
+
+    #[Test]
+    public function findCampaignWithoutVariants(): void {
+        $campaignId = $this->store->createCampaignReturnId($this->exampleCampaign());
+        $this->assertEmpty($this->store->findCampaignById($campaignId)->variants);
+    }
+
+    private function exampleCampaign(): Campaign {
+        return Campaign::create(
+            '', '', '', '', null, null, null,
+        );
+    }
 }

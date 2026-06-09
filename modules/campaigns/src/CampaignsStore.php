@@ -2,6 +2,9 @@
 namespace Modules\Campaigns;
 
 interface CampaignsStore {
+    /**
+     * @deprecated
+     */
     public function findCampaign(string $campaignKey): ?Campaign;
 
     /**
@@ -24,4 +27,6 @@ interface CampaignsStore {
     public function updateCampaign(int $campaignId, Campaign $campaign): bool;
 
     public function createVariant(int $campaignId, string $imageUrl, string $type): bool;
+
+    public function findCampaignById(int $campaignId): ?Campaign;
 }

@@ -6,12 +6,13 @@ use Illuminate\Database\Query;
 use Modules\Campaigns;
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
+use Modules\Campaigns\CampaignVariant;
 
 readonly class DatabaseCampaignsStore implements CampaignsStore {
     public function __construct(private Database\Connection $connection) {}
 
     /**
-     * @return Eloquent\Campaign[]
+     * @return Campaign[]
      */
     public function listCampaigns(): array {
         return $this->table()->get()->map($this->parseRow(...))->all();
@@ -84,12 +85,43 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
         return [$row->active_since, $row->active_until];
     }
 
+    /**
+     * @deprecated
+     */
     public function findCampaign(string $campaignKey): ?Campaign {
         $campaign = $this->table()->where('campaign_key', $campaignKey)->first();
         if ($campaign === null) {
             return null;
         }
         return $this->parseRow($campaign);
+    }
+
+    public function findCampaignById(int $campaignId): ?Campaign {
+        $rows = $this->table()
+            ->leftJoin('module_campaign_variants', 'module_campaign_variants.campaign_id', '=', 'module_campaigns.id')
+            ->where('module_campaigns.id', $campaignId)
+            ->select(
+                'module_campaigns.*',
+                'module_campaign_variants.id as variant_id',
+                'module_campaign_variants.image_url',
+                'module_campaign_variants.type',
+            )
+            ->get();
+        if ($rows->isEmpty()) {
+            return null;
+        }
+        $campaign = $rows->first();
+        return new Campaign(
+            $campaign->campaign_key,
+            $campaign->redirect_url,
+            $campaign->active_since,
+            $campaign->active_until,
+            $campaign->target_views,
+            $rows
+                ->filter(fn($row) => $row->variant_id !== null)
+                ->map(fn($row) => new CampaignVariant($row->image_url, $row->type))
+                ->all(),
+        );
     }
 
     private function parseRow(object $campaign): Campaign {
