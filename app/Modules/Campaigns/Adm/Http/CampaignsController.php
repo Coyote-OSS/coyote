@@ -41,7 +41,7 @@ class CampaignsController extends BaseController {
                 $campaign->active_since,
                 $campaign->active_until,
                 $campaign->target_views,
-                $presenter->bannerViewModels($campaign->campaign_key)),
+                $presenter->bannerViewModelsById($campaign->id)),
         ]);
     }
 

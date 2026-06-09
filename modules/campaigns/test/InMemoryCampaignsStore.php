@@ -9,6 +9,8 @@ class InMemoryCampaignsStore implements CampaignsStore {
     private array $clicks = ['horizontal' => 0, 'sidebar' => 0];
     /** @var Campaign[] */
     private array $campaigns = [];
+    /** @var Campaign[] */
+    private array $campaignsById = [];
 
     /**
      * @return Campaign[]
@@ -59,10 +61,16 @@ class InMemoryCampaignsStore implements CampaignsStore {
         return $this->campaigns[$campaignKey] ?? null;
     }
 
+    public function findCampaignById(int $campaignId): ?Campaign {
+        return $this->campaignsById[$campaignId] ?? null;
+    }
+
     public function createCampaignReturnId(Campaign $campaign): ?int {
+        $newId = \count($this->campaignsById) + 1;
         $existed = \array_key_exists($campaign->campaignKey, $this->campaigns);
         $this->campaigns[$campaign->campaignKey] = $campaign;
-        return $existed ? null : 1;
+        $this->campaignsById[$newId] = $campaign;
+        return $existed ? null : $newId;
     }
 
     public function updateCampaign(int $campaignId, Campaign $campaign): bool {
@@ -70,10 +78,6 @@ class InMemoryCampaignsStore implements CampaignsStore {
     }
 
     public function createVariant(int $campaignId, string $imageUrl, string $type): bool {
-        throw new \Exception('Not implemented');
-    }
-
-    public function findCampaignById(int $campaignId): ?Campaign {
         throw new \Exception('Not implemented');
     }
 }

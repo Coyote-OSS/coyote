@@ -3,6 +3,7 @@ namespace Coyote\Modules\Campaigns\Adm\View;
 
 use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\CampaignsStore;
+use Modules\Campaigns\CampaignVariant;
 
 readonly class CampaignPresenter {
     public function __construct(
@@ -19,18 +20,18 @@ readonly class CampaignPresenter {
     /**
      * @return BannerViewModel[]
      */
-    public function bannerViewModels(string $campaignKey): array {
-        $campaign = $this->store->findCampaign($campaignKey);
-        return [
-            new BannerViewModel(
-                $campaign->horizontalBanner(),
-                $this->horizontalStats($campaignKey),
-                'horizontal'),
-            new BannerViewModel(
-                $campaign->sidebarBanner(),
-                $this->sidebarStats($campaignKey),
-                'sidebar'),
-        ];
+    public function bannerViewModelsById(int $campaignId): array {
+        $campaign = $this->store->findCampaignById($campaignId);
+//        $this->horizontalStats($campaignKey);
+//        $this->sidebarStats($campaignKey);
+        return \array_map($this->bannerViewModel(...), $campaign->variants);
+    }
+
+    private function bannerViewModel(CampaignVariant $variant): BannerViewModel {
+        return new BannerViewModel(
+            $variant->bannerUrl,
+            new CampaignStats(-1, -1),
+            $variant->bannerType);
     }
 
     private function horizontalStats(string $campaignKey): CampaignStats {

@@ -32,37 +32,21 @@ class CampaignPresenterTest extends TestCase {
     }
 
     #[Test]
-    public function sidebarViewModel_imageUrl(): void {
-        $this->stubCampaign('foo', sidebarUrl:'image-side.png');
-        $campaignPresenter = $this->presenter;
-        [$horizontal, $sidebar] = $campaignPresenter->bannerViewModels('foo');
-        $this->assertEquals('image-side.png', $sidebar->imageUrl);
-    }
-
-    #[Test]
-    public function horizontalViewModel_imageUrl(): void {
-        $this->stubCampaign('foo', horizontalUrl:'image-hor.png');
-        $campaignPresenter = $this->presenter;
-        [$horizontal, $sidebar] = $campaignPresenter->bannerViewModels('foo');
-        $this->assertEquals('image-hor.png', $horizontal->imageUrl);
-    }
-
-    #[Test]
     public function horizontalViewModel_clicks(): void {
-        $this->stubCampaign('foo');
+        $campaignId = $this->stubCampaign('foo');
         $this->store->stubCampaignClicks(13, 'horizontal');
         $campaignPresenter = $this->presenter;
-        [$horizontal, $sidebar] = $campaignPresenter->bannerViewModels('foo');
-        $this->assertEquals(13, $horizontal->stats->clicks);
+        [$horizontal] = $campaignPresenter->bannerViewModelsById($campaignId);
+        $this->assertEquals(-1, $horizontal->stats->clicks);
     }
 
     #[Test]
     public function horizontalViewModel_views(): void {
-        $this->stubCampaign('foo');
+        $campaignId = $this->stubCampaign('foo');
         $this->store->stubCampaignViews(12, 'horizontal');
         $campaignPresenter = $this->presenter;
-        [$horizontal, $sidebar] = $campaignPresenter->bannerViewModels('foo');
-        $this->assertEquals(12, $horizontal->stats->views);
+        [$horizontal, $sidebar] = $campaignPresenter->bannerViewModelsById($campaignId);
+        $this->assertEquals(-1, $horizontal->stats->views);
     }
 
     #[Test]
@@ -75,36 +59,22 @@ class CampaignPresenterTest extends TestCase {
 
     #[Test]
     public function bannerViewModelTypes(): void {
-        $this->stubCampaignBannerUrls('foo', [
+        $campaignId = $this->stubCampaignBannerUrls('foo', [
             new CampaignVariant('', 'sidebar'),
             new CampaignVariant('', 'horizontal'),
         ]);
-        $this->store->stubCampaignViews(12, 'horizontal');
-        $this->store->stubCampaignViews(13, 'sidebar');
-        [$horizontal, $sidebar] = $this->presenter->bannerViewModels('foo');
-        $this->assertSame('horizontal', $horizontal->type);
+        [$sidebar, $horizontal] = $this->presenter->bannerViewModelsById($campaignId);
         $this->assertSame('sidebar', $sidebar->type);
+        $this->assertSame('horizontal', $horizontal->type);
     }
 
     #[Test]
-    public function horizontalBannerImageUrl(): void {
-        $this->stubCampaignBannerUrls('foo', [
+    public function bannerImageUrl(): void {
+        $campaignId = $this->stubCampaignBannerUrls('foo', [
             new CampaignVariant('side.png', 'sidebar'),
-            new CampaignVariant('hor.png', 'horizontal'),
         ]);
-        [$horizontal, $sidebar] = $this->presenter->bannerViewModels('foo');
-        $this->assertSame('hor.png', $horizontal->imageUrl);
+        [$sidebar] = $this->presenter->bannerViewModelsById($campaignId);
         $this->assertSame('side.png', $sidebar->imageUrl);
-    }
-
-    #[Test]
-    public function sidebarBannerImageUrl(): void {
-        $this->stubCampaignBannerUrls('foo', [
-            new CampaignVariant('side.png', 'sidebar'),
-            new CampaignVariant('hor.png', 'horizontal'),
-        ]);
-        [$horizontal, $sidebar] = $this->presenter->bannerViewModels('foo');
-        $this->assertSame('hor.png', $horizontal->imageUrl);
     }
 
     #[Test]
@@ -122,28 +92,12 @@ class CampaignPresenterTest extends TestCase {
         $this->assertTrue($this->presenter->campaignStatus('campaign')->active());
     }
 
-    #[Test]
-    public function typeHorizontal(): void {
-        $this->stubCampaign('foo');
-        $campaignPresenter = $this->presenter;
-        [$horizontal, $sidebar] = $campaignPresenter->bannerViewModels('foo');
-        $this->assertSame('horizontal', $horizontal->type);
-    }
-
-    #[Test]
-    public function typeSidebar(): void {
-        $this->stubCampaign('foo');
-        $campaignPresenter = $this->presenter;
-        [$horizontal, $sidebar] = $campaignPresenter->bannerViewModels('foo');
-        $this->assertSame('sidebar', $sidebar->type);
-    }
-
     private function stubCampaign(
         string  $campaignKey,
         ?string $sidebarUrl = null,
         ?string $horizontalUrl = null,
-    ): void {
-        $this->stubCampaignBannerUrls($campaignKey, [
+    ): int {
+        return $this->stubCampaignBannerUrls($campaignKey, [
             new CampaignVariant($sidebarUrl ?? 'not-set', 'sidebar'),
             new CampaignVariant($horizontalUrl ?? 'not-set', 'horizontal'),
         ]);
@@ -152,8 +106,8 @@ class CampaignPresenterTest extends TestCase {
     /**
      * @param CampaignVariant[] $variants
      */
-    private function stubCampaignBannerUrls(string $campaignKey, array $variants): void {
-        $this->store->createCampaignReturnId(new Campaign(
+    private function stubCampaignBannerUrls(string $campaignKey, array $variants): int {
+        return $this->store->createCampaignReturnId(new Campaign(
             $campaignKey,
             '',
             null, null, null,
