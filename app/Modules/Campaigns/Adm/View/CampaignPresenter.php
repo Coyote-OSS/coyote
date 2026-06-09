@@ -22,23 +22,15 @@ readonly class CampaignPresenter {
     public function bannerViewModels(string $campaignKey): array {
         $campaign = $this->store->findCampaign($campaignKey);
         return [
-            new BannerViewModel($campaign->horizontalBanner(), new CampaignStats(0, 0), 'horizontal'),
-            new BannerViewModel($campaign->sidebarBanner(), new CampaignStats(0, 0), 'sidebar'),
+            new BannerViewModel(
+                $campaign->horizontalBanner(),
+                $this->horizontalStats($campaignKey),
+                'horizontal'),
+            new BannerViewModel(
+                $campaign->sidebarBanner(),
+                $this->sidebarStats($campaignKey),
+                'sidebar'),
         ];
-    }
-
-    public function horizontalViewModel(string $campaignKey, string $imageUrl): BannerViewModel {
-        return new BannerViewModel(
-            $imageUrl,
-            $this->horizontalStats($campaignKey),
-            'horizontal');
-    }
-
-    public function sidebarViewModel(string $campaignKey, string $imageUrl): BannerViewModel {
-        return new BannerViewModel(
-            $imageUrl,
-            $this->sidebarStats($campaignKey),
-            'sidebar');
     }
 
     private function horizontalStats(string $campaignKey): CampaignStats {
