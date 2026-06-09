@@ -1,7 +1,9 @@
 <?php
 namespace Coyote\Modules\Campaigns\Eloquent;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -12,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $active_since
  * @property string $active_until
  * @property int $target_views
+ * @property CampaignVariant[]|Collection $variants
  */
 class Campaign extends Model {
     public $timestamps = false;
@@ -25,4 +28,8 @@ class Campaign extends Model {
         'active_until',
         'target_views',
     ];
+
+    public function variants(): HasMany {
+        return $this->hasMany(CampaignVariant::class, 'campaign_id');
+    }
 }

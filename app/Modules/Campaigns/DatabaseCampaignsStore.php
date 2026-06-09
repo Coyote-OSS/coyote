@@ -15,15 +15,7 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
      * @return Campaign[]
      */
     public function listCampaigns(): array {
-        return $this->table()->get()->map($this->parseRow(...))->all();
-    }
-
-    private function table(): Query\Builder {
-        return $this->connection->table('module_campaigns');
-    }
-
-    private function variants(): Query\Builder {
-        return $this->connection->table('module_campaign_variants');
+        return Eloquent\Campaign::all()->map($this->parseRow(...))->all();
     }
 
     public function campaignClickCount(string $campaignKey, string $bannerType): int {
@@ -53,7 +45,8 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
     }
 
     private function findCampaignId(string $campaignKey): int {
-        return $this->table()
+        return $this->connection
+            ->table('module_campaigns')
             ->where('campaign_key', $campaignKey)
             ->first('id')
             ?->id
@@ -76,7 +69,7 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
     }
 
     public function campaignActiveRange(string $campaignKey): array {
-        $row = $this->table()
+        $row = Eloquent\Campaign::query()
             ->where('campaign_key', $campaignKey)
             ->first(['active_since', 'active_until']);
         if ($row === null) {
@@ -89,42 +82,14 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
      * @deprecated
      */
     public function findCampaign(string $campaignKey): ?Campaign {
-        $campaign = $this->table()->where('campaign_key', $campaignKey)->first();
+        $campaign = Eloquent\Campaign::query()->where('campaign_key', $campaignKey)->first();
         if ($campaign === null) {
             return null;
         }
         return $this->parseRow($campaign);
     }
 
-    public function findCampaignById(int $campaignId): ?Campaign {
-        $rows = $this->table()
-            ->leftJoin('module_campaign_variants', 'module_campaign_variants.campaign_id', '=', 'module_campaigns.id')
-            ->where('module_campaigns.id', $campaignId)
-            ->select(
-                'module_campaigns.*',
-                'module_campaign_variants.id as variant_id',
-                'module_campaign_variants.image_url',
-                'module_campaign_variants.type',
-            )
-            ->get();
-        if ($rows->isEmpty()) {
-            return null;
-        }
-        $campaign = $rows->first();
-        return new Campaign(
-            $campaign->campaign_key,
-            $campaign->redirect_url,
-            $campaign->active_since,
-            $campaign->active_until,
-            $campaign->target_views,
-            $rows
-                ->filter(fn($row) => $row->variant_id !== null)
-                ->map(fn($row) => new CampaignVariant($row->image_url, $row->type))
-                ->all(),
-        );
-    }
-
-    private function parseRow(object $campaign): Campaign {
+    private function parseRow(Eloquent\Campaign $campaign): Campaign {
         return Campaign::create(
             campaignKey:$campaign->campaign_key,
             sidebarBanner:$campaign->sidebar,
@@ -135,20 +100,41 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             targetViews:$campaign->target_views);
     }
 
+    public function findCampaignById(int $campaignId): ?Campaign {
+        $model = Eloquent\Campaign::with('variants')->find($campaignId);
+        if ($model === null) {
+            return null;
+        }
+        return new Campaign(
+            $model->campaign_key,
+            $model->redirect_url,
+            $model->active_since,
+            $model->active_until,
+            $model->target_views,
+            $model->variants->map($this->parseVariant(...))->all(),
+        );
+    }
+
+    private function parseVariant(Eloquent\CampaignVariant $variant): CampaignVariant {
+        return new CampaignVariant($variant->image_url, $variant->type);
+    }
+
     public function createCampaignReturnId(Campaign $campaign): ?int {
         try {
-            return $this->table()->insertGetId([
-                'campaign_key' => $campaign->campaignKey,
-                ...$this->campaignRow($campaign),
-            ]);
+            return Eloquent\Campaign::query()
+                ->create([
+                    'campaign_key' => $campaign->campaignKey,
+                    ...$this->campaignRow($campaign),
+                ])
+                ->id;
         } catch (Database\UniqueConstraintViolationException) {
             return null;
         }
     }
 
     public function updateCampaign(int $campaignId, Campaign $campaign): bool {
-        $updated = $this->table()
-            ->where('id', $campaignId)
+        $updated = Eloquent\Campaign::query()
+            ->whereKey($campaignId)
             ->update($this->campaignRow($campaign));
         return $updated === 1;
     }
@@ -169,14 +155,11 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
         string $imageUrl,
         string $type,
     ): bool {
-        $campaignExists = Eloquent\Campaign::query()->whereKey($campaignId)->exists();
-        if ($campaignExists) {
-            $this->variants()->insert([
-                'campaign_id' => $campaignId,
-                'image_url'   => $imageUrl,
-                'type'        => $type,
-            ]);
+        $campaign = Eloquent\Campaign::query()->find($campaignId);
+        if ($campaign === null) {
+            return false;
         }
-        return $campaignExists;
+        $campaign->variants()->create(['image_url' => $imageUrl, 'type' => $type]);
+        return true;
     }
 }

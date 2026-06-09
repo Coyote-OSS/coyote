@@ -81,7 +81,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function findCampaign_returnsCampaignObject(): void {
-        $this->store->createCampaignReturnId(Campaign::create(
+        $campaignId = $this->store->createCampaignReturnId(Campaign::create(
             'campaign-key',
             'sidebar',
             'horizontal',
@@ -89,19 +89,19 @@ class DatabaseCampaignsStoreTest extends TestCase {
             '2222-02-02T22:22:22',
             '3333-03-03T03:33:33',
             999));
-        $campaign = $this->store->findCampaign('campaign-key');
+        $campaign = $this->store->findCampaignById($campaignId);
         $this->assertEquals('campaign-key', $campaign->campaignKey);
-        $this->assertEquals('sidebar', $campaign->sidebarBanner());
-        $this->assertEquals('horizontal', $campaign->horizontalBanner());
         $this->assertEquals('redirect', $campaign->redirectUrl);
         $this->assertEquals('2222-02-02 22:22:22', $campaign->activeSince);
         $this->assertEquals('3333-03-03 03:33:33', $campaign->activeUntil);
         $this->assertEquals(999, $campaign->targetViews);
+        $this->assertEquals([], $campaign->variants);
     }
 
     #[Test]
     public function findCampaign_returnsNull_ifNoSuchCampaign(): void {
-        $this->assertNull($this->store->findCampaign('no-such-campaign'));
+        $noSuchCampaignId = 9999;
+        $this->assertNull($this->store->findCampaignById($noSuchCampaignId));
     }
 
     #[Test]
