@@ -92,8 +92,8 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
     private function parseRow(Eloquent\Campaign $campaign): Campaign {
         return Campaign::create(
             campaignKey:$campaign->campaign_key,
-            sidebarBanner:$campaign->sidebar,
-            horizontalBanner:$campaign->horizontal,
+            sidebarBanner:'not-to-be-used-deprecated',
+            horizontalBanner:'not-to-be-used-deprecated',
             redirectUrl:$campaign->redirect_url,
             activeSince:$campaign->active_since,
             activeUntil:$campaign->active_until,
@@ -141,8 +141,8 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
 
     private function campaignRow(Campaign $campaign): array {
         return [
-            'sidebar'      => $campaign->sidebarBanner(),
-            'horizontal'   => $campaign->horizontalBanner(),
+            'sidebar'      => 'not-to-be-used-deprecated',
+            'horizontal'   => 'not-to-be-used-deprecated',
             'redirect_url' => $campaign->redirectUrl,
             'active_since' => $campaign->activeSince,
             'active_until' => $campaign->activeUntil,
@@ -150,11 +150,7 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
         ];
     }
 
-    public function createVariant(
-        int    $campaignId,
-        string $imageUrl,
-        string $type,
-    ): bool {
+    public function createVariant(int $campaignId, string $imageUrl, string $type): bool {
         $campaign = Eloquent\Campaign::query()->find($campaignId);
         if ($campaign === null) {
             return false;

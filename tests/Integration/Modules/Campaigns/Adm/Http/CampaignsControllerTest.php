@@ -116,8 +116,8 @@ class CampaignsControllerTest extends TestCase {
         return [
             'campaign_key' => $campaignKey ?? 'created-campaign',
             'redirect_url' => $redirectUrl ?? 'http://test',
-            'sidebar'      => 'image.png',
-            'horizontal'   => 'image.png',
+            'sidebar'      => 'not-to-be-used-deprecated',
+            'horizontal'   => 'not-to-be-used-deprecated',
             ...$includeActiveRange ? $this->exampleActiveRange() : [],
         ];
     }

@@ -55,8 +55,8 @@ class CampaignsController extends BaseController {
         $form->validate();
         $campaignModel = Campaigns\Campaign::create(
             $form->getValue('campaign_key'),
-            $form->getValue('sidebar'),
-            $form->getValue('horizontal'),
+            $form->getValue('sidebar') ?? 'not-to-be-used-deprecated',
+            $form->getValue('horizontal') ?? 'not-to-be-used-deprecated',
             $form->getValue('redirect_url'),
             $form->getValue('active_since'),
             $form->getValue('active_until'),

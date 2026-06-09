@@ -37,14 +37,4 @@ readonly class Campaign {
         public ?int    $targetViews,
         public array   $variants,
     ) {}
-
-    public function horizontalBanner(): string {
-        [$s, $horizontal] = $this->variants;
-        return $horizontal->bannerUrl;
-    }
-
-    public function sidebarBanner(): string {
-        [$sidebar, $h] = $this->variants;
-        return $sidebar->bannerUrl;
-    }
 }

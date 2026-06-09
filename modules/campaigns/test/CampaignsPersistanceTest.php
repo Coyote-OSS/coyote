@@ -3,6 +3,7 @@ namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignService;
+use Modules\Campaigns\CampaignVariant;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -25,16 +26,12 @@ class CampaignsPersistanceTest extends TestCase {
 
     #[Test]
     public function banners(): void {
-        $this->store->createCampaignReturnId(Campaign::create(
-            'stored',
-            'sidebar',
-            'horizontal',
-            '',
-            '2000-01-01T00:00:00',
-            '2000-01-03T00:00:00',
-            999));
+        $this->stubCampaignVariants('campaign-key', [
+            new CampaignVariant('sidebar', 'sidebar'),
+            new CampaignVariant('horizontal', 'horizontal'),
+        ]);
         $banners = $this->campaigns->campaignBanners();
-        $this->assertEquals('stored', $banners->sidebar->campaignKey);
+        $this->assertEquals('campaign-key', $banners->sidebar->campaignKey);
         $this->assertEquals('sidebar', $banners->sidebar->bannerUrl);
         $this->assertEquals('horizontal', $banners->horizontal[0]->bannerUrl);
     }
@@ -54,5 +51,15 @@ class CampaignsPersistanceTest extends TestCase {
             null,
             null,
             null));
+    }
+
+    private function stubCampaignVariants(string $campaignKey, array $variants): void {
+        $this->store->createCampaignReturnId(new Campaign(
+            $campaignKey,
+            '',
+            '2000-01-01T00:00:00',
+            '2000-01-03T00:00:00',
+            999,
+            $variants));
     }
 }

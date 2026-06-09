@@ -48,8 +48,6 @@ class InMemoryCampaignsStoreTest extends TestCase {
             null));
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
-        $this->assertEquals('sidebar', $campaign->sidebarBanner());
-        $this->assertEquals('horizontal', $campaign->horizontalBanner());
         $this->assertEquals('redirect', $campaign->redirectUrl);
     }
 

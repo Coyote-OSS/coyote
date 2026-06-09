@@ -26,21 +26,31 @@ readonly class CampaignService {
     }
 
     private function enabledCampaignBanners(): CampaignBanners {
-        $sidebars = [];
-        $horizontals = [];
-        foreach ($this->listActiveCampaigns() as $campaign) {
-            $sidebars[$campaign->campaignKey] = new CampaignBanner(
-                $campaign->sidebarBanner(),
-                $campaign->campaignKey,
-                'sidebar');
-            $horizontals[$campaign->campaignKey] = new CampaignBanner(
-                $campaign->horizontalBanner(),
-                $campaign->campaignKey,
-                'horizontal');
-        }
+        $activeCampaigns = [...$this->listActiveCampaigns()];
+        return $this->rotatedCampaignBanners(
+            $this->bannersOfType($activeCampaigns, 'horizontal'),
+            $this->bannersOfType($activeCampaigns, 'sidebar'));
+    }
+
+    private function rotatedCampaignBanners(array $horizontals, array $sidebars): CampaignBanners {
         return new CampaignBanners(
             $this->rotatedBanners($horizontals, 2),
             $this->rotatedBanners($sidebars, 1)[0] ?? null);
+    }
+
+    private function bannersOfType(array $campaigns, string $bannerType): array {
+        $banners = [];
+        foreach ($campaigns as $campaign) {
+            foreach ($campaign->variants as $variant) {
+                if ($variant->bannerType === $bannerType) {
+                    $banners[$campaign->campaignKey] = new CampaignBanner(
+                        $variant->bannerUrl,
+                        $campaign->campaignKey,
+                        $bannerType);
+                }
+            }
+        }
+        return $banners;
     }
 
     private function listActiveCampaigns(): iterable {

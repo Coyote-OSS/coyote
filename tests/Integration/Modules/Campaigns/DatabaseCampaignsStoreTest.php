@@ -8,6 +8,7 @@ use Illuminate\Database\Query;
 use Modules\Campaigns;
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignsStore;
+use Modules\Campaigns\CampaignVariant;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -71,8 +72,6 @@ class DatabaseCampaignsStoreTest extends TestCase {
             999));
         [$campaign] = $this->store->listCampaigns();
         $this->assertEquals('key', $campaign->campaignKey);
-        $this->assertEquals('sidebar', $campaign->sidebarBanner());
-        $this->assertEquals('horizontal', $campaign->horizontalBanner());
         $this->assertEquals('redirect', $campaign->redirectUrl);
         $this->assertEquals('2222-02-02 22:22:22', $campaign->activeSince);
         $this->assertEquals('3333-03-03 03:33:33', $campaign->activeUntil);
@@ -285,8 +284,8 @@ class DatabaseCampaignsStoreTest extends TestCase {
         ));
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'campaign_key' => 'campaign-key',
-            'sidebar'      => 'sidebar-banner',
-            'horizontal'   => 'horizontal-banner',
+            'sidebar'      => 'not-to-be-used-deprecated',
+            'horizontal'   => 'not-to-be-used-deprecated',
             'redirect_url' => 'redirect-url',
             'active_since' => '2000-01-01',
             'active_until' => '2000-01-01',
@@ -343,8 +342,8 @@ class DatabaseCampaignsStoreTest extends TestCase {
         // then
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'campaign_key' => 'old-key',
-            'sidebar'      => 'new-sidebar',
-            'horizontal'   => 'new-horizontal',
+            'sidebar'      => 'not-to-be-used-deprecated',
+            'horizontal'   => 'not-to-be-used-deprecated',
             'redirect_url' => 'new-redirect-url',
             'active_since' => '2011-11-11 00:00:00',
             'active_until' => '2012-12-12 00:00:00',
@@ -408,5 +407,29 @@ class DatabaseCampaignsStoreTest extends TestCase {
         return Campaign::create(
             '', '', '', '', null, null, null,
         );
+    }
+
+    #[Test]
+    public function storeMultipleVariantsForSidebar(): void {
+        $campaignId = $this->store->createCampaignReturnId($this->exampleCampaign());
+        $this->store->createVariant($campaignId, 'sidebar1.png', 'sidebar');
+        $this->store->createVariant($campaignId, 'sidebar2.png', 'sidebar');
+        $campaign = $this->store->findCampaignById($campaignId);
+        $this->assertEquals([
+            new CampaignVariant('sidebar1.png', 'sidebar'),
+            new CampaignVariant('sidebar2.png', 'sidebar'),
+        ], $campaign->variants);
+    }
+
+    #[Test]
+    public function storeMultipleVariantsForHorizontal(): void {
+        $campaignId = $this->store->createCampaignReturnId($this->exampleCampaign());
+        $this->store->createVariant($campaignId, 'horizontal1.png', 'horizontal');
+        $this->store->createVariant($campaignId, 'horizontal2.png', 'horizontal');
+        $campaign = $this->store->findCampaignById($campaignId);
+        $this->assertEquals([
+            new CampaignVariant('horizontal1.png', 'horizontal'),
+            new CampaignVariant('horizontal2.png', 'horizontal'),
+        ], $campaign->variants);
     }
 }
