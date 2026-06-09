@@ -21,6 +21,10 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
         return $this->connection->table('module_campaigns');
     }
 
+    private function variants(): Query\Builder {
+        return $this->connection->table('module_campaign_variants');
+    }
+
     public function campaignClickCount(string $campaignKey, string $bannerType): int {
         return $this->countCampaignEvents($campaignKey, $bannerType, 'click');
     }
@@ -126,5 +130,21 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             'active_until' => $campaign->activeUntil,
             'target_views' => $campaign->targetViews,
         ];
+    }
+
+    public function createVariant(
+        int    $campaignId,
+        string $imageUrl,
+        string $type,
+    ): bool {
+        $campaignExists = Eloquent\Campaign::query()->whereKey($campaignId)->exists();
+        if ($campaignExists) {
+            $this->variants()->insert([
+                'campaign_id' => $campaignId,
+                'image_url'   => $imageUrl,
+                'type'        => $type,
+            ]);
+        }
+        return $campaignExists;
     }
 }

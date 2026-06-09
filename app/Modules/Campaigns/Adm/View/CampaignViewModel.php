@@ -10,6 +10,7 @@ readonly class CampaignViewModel {
         public string         $redirectUrl,
         public string         $editHref,
         public string         $backHref,
+        public string         $createVariantHref,
         public CampaignStats  $stats,
         public CampaignStatus $status,
         public ?string        $dateSince,

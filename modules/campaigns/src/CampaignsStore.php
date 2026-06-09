@@ -22,4 +22,6 @@ interface CampaignsStore {
     public function createCampaignReturnId(Campaign $campaign): ?int;
 
     public function updateCampaign(int $campaignId, Campaign $campaign): bool;
+
+    public function createVariant(int $campaignId, string $imageUrl, string $type): bool;
 }

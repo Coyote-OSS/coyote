@@ -1,0 +1,14 @@
+{% extends 'adm.base' %}
+{% block title %}Wariant baneru kampanii {{ parent() }}{% endblock %}
+{% from 'adm.campaigns.imageUploaderCard' import imageUploaderCard %}
+
+{% block container %}
+  <div class="card">
+    <div class="card-header">
+      Wariant baneru kampanii:
+      <code>{{ campaignKey }}</code>
+    </div>
+    <div class="card-body">{{ form(form) }}</div>
+  </div>
+  {{ imageUploaderCard() }}
+{% endblock %}

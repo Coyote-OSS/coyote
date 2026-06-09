@@ -165,6 +165,7 @@ $this->group(
             $this->post('Campaigns/Save/{campaign?}', 'CampaignsController@save');
             $this->post('Campaigns/Delete/{campaign}', 'CampaignsController@delete')->name('campaigns.delete');
 
+            $this->get('Campaigns/{campaign}/Variants/Save', 'VariantsController@edit')->name('campaigns.variants.save');
             $this->post('Campaigns/{campaign}/Variants/Save', 'VariantsController@save');
         });
     },
