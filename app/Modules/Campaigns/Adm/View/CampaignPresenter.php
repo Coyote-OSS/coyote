@@ -16,6 +16,17 @@ readonly class CampaignPresenter {
         return $horizontal->concat($sidebar);
     }
 
+    /**
+     * @return BannerViewModel[]
+     */
+    public function bannerViewModels(string $campaignKey): array {
+        $campaign = $this->store->findCampaign($campaignKey);
+        return [
+            new BannerViewModel($campaign->horizontalBanner(), new CampaignStats(0, 0), 'horizontal'),
+            new BannerViewModel($campaign->sidebarBanner(), new CampaignStats(0, 0), 'sidebar'),
+        ];
+    }
+
     public function horizontalViewModel(string $campaignKey, string $imageUrl): BannerViewModel {
         return new BannerViewModel(
             $imageUrl,

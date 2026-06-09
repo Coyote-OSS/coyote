@@ -4,6 +4,7 @@ namespace Tests\Integration\Modules\Campaigns\Adm\View;
 use Coyote\Modules\Campaigns\Adm\View\CampaignPresenter;
 use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignService;
+use Modules\Campaigns\CampaignVariant;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -65,6 +66,39 @@ class CampaignPresenterTest extends TestCase {
     }
 
     #[Test]
+    public function bannerViewModelTypes(): void {
+        $this->stubCampaignBannerUrls('foo', [
+            new CampaignVariant('', 'sidebar'),
+            new CampaignVariant('', 'horizontal'),
+        ]);
+        $this->store->stubCampaignViews(12, 'horizontal');
+        $this->store->stubCampaignViews(13, 'sidebar');
+        [$horizontal, $sidebar] = $this->presenter->bannerViewModels('foo');
+        $this->assertSame('horizontal', $horizontal->type);
+        $this->assertSame('sidebar', $sidebar->type);
+    }
+
+    #[Test]
+    public function horizontalBannerImageUrl(): void {
+        $this->stubCampaignBannerUrls('foo', [
+            new CampaignVariant('side.png', 'sidebar'),
+            new CampaignVariant('hor.png', 'horizontal'),
+        ]);
+        [$horizontal, $sidebar] = $this->presenter->bannerViewModels('foo');
+        $this->assertSame('hor.png', $horizontal->imageUrl);
+        $this->assertSame('side.png', $sidebar->imageUrl);
+    }
+
+    #[Test]
+    public function sidebarBannerImageUrl(): void {
+        $this->stubCampaignBannerUrls('foo', [
+            new CampaignVariant('side.png', 'sidebar'),
+            new CampaignVariant('hor.png', 'horizontal'),
+        ]);
+        [$horizontal, $sidebar] = $this->presenter->bannerViewModels('foo');
+        $this->assertSame('hor.png', $horizontal->imageUrl);
+    }
+    #[Test]
     public function campaignClicks_isSumOfBannerClicks(): void {
         $this->store->stubCampaignClicks(11, 'horizontal');
         $this->store->stubCampaignClicks(12, 'sidebar');
@@ -89,6 +123,17 @@ class CampaignPresenterTest extends TestCase {
     public function typeSidebar(): void {
         $this->assertSame('sidebar',
             $this->presenter->sidebarViewModel('', '')->type);
+    }
+
+    /**
+     * @param CampaignVariant[] $variants
+     */
+    private function stubCampaignBannerUrls(string $campaignKey, array $variants): void {
+        $this->store->createCampaignReturnId(new Campaign(
+            $campaignKey,
+            '',
+            null, null, null,
+            $variants));
     }
 
     private function stubCampaignActiveRange(
