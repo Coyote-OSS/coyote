@@ -13,7 +13,7 @@ class CampaignsActiveTest extends TestCase {
     private CampaignService $campaigns;
     private InMemoryCampaignsStore $store;
     private TestCurrentDate $calendar;
-    private string $campaignKey;
+    private int|null $lastCampaignId = null;
 
     #[Before]
     public function initialize(): void {
@@ -24,7 +24,6 @@ class CampaignsActiveTest extends TestCase {
             new TestRotatingBanners(),
             $this->calendar,
             $this->store);
-        $this->campaignKey = 'campaign-key';
     }
 
     #[Test]
@@ -134,11 +133,11 @@ class CampaignsActiveTest extends TestCase {
     }
 
     private function assertCampaignActive(): void {
-        $this->assertSame('active', $this->campaigns->campaignStatus($this->campaignKey));
+        $this->assertSame('active', $this->campaigns->campaignStatus($this->lastCampaignId));
     }
 
     private function assertCampaignNotActive(string $status): void {
-        $this->assertSame($status, $this->campaigns->campaignStatus($this->campaignKey));
+        $this->assertSame($status, $this->campaigns->campaignStatus($this->lastCampaignId));
     }
 
     private function setupCampaign(bool $activeSince, bool $activeUntil, bool $hasTargetViews): void {
@@ -162,8 +161,8 @@ class CampaignsActiveTest extends TestCase {
     }
 
     private function createCampaign(?string $activeSince, ?string $activeUntil, ?int $targetViews): void {
-        $this->store->createCampaignReturnId(Campaign::create(
-            $this->campaignKey,
+        $this->lastCampaignId = $this->store->createCampaignReturnId(Campaign::create(
+            'campaign-key',
             '',
             '',
             '',

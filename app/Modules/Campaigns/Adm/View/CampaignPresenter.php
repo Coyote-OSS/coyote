@@ -48,7 +48,7 @@ readonly class CampaignPresenter {
             $this->store->campaignClickCount($campaignKey, $bannerType));
     }
 
-    public function campaignStatus(string $campaignKey): CampaignStatus {
-        return new CampaignStatus($this->campaigns->campaignStatus($campaignKey));
+    public function campaignStatus(int $campaignId): CampaignStatus {
+        return new CampaignStatus($this->campaigns->campaignStatus($campaignId));
     }
 }

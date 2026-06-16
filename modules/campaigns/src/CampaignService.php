@@ -84,8 +84,8 @@ readonly class CampaignService {
         throw new NoSuchCampaign('Failed to get campaign redirect url.');
     }
 
-    public function campaignStatus(string $campaignKey): string {
-        return $this->campaignObjectStatus($this->store->findCampaign($campaignKey));
+    public function campaignStatus(int $campaignId): string {
+        return $this->campaignObjectStatus($this->store->findCampaignById($campaignId));
     }
 
     private function isCampaignObjectActive(Campaign $campaign): bool {

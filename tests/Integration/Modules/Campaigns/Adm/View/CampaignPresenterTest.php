@@ -88,8 +88,8 @@ class CampaignPresenterTest extends TestCase {
     #[Test]
     public function campaignIsActive_whenBothSinceAndUntilAreSet(): void {
         $this->date->stubCurrentDate('2000-01-01T00:00:00');
-        $this->stubCampaignActiveRange('campaign', '1970', '2200');
-        $this->assertTrue($this->presenter->campaignStatus('campaign')->active());
+        $campaignId = $this->stubCampaignActiveRange('campaign', '1970', '2200');
+        $this->assertTrue($this->presenter->campaignStatus($campaignId)->active());
     }
 
     private function stubCampaign(
@@ -118,8 +118,8 @@ class CampaignPresenterTest extends TestCase {
         string  $campaignKey,
         ?string $activeSince,
         ?string $activeUntil,
-    ): void {
-        $this->store->createCampaignReturnId(Campaign::create(
+    ): int {
+        return $this->store->createCampaignReturnId(Campaign::create(
             $campaignKey,
             '',
             '',

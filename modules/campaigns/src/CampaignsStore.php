@@ -3,11 +3,6 @@ namespace Modules\Campaigns;
 
 interface CampaignsStore {
     /**
-     * @deprecated
-     */
-    public function findCampaign(string $campaignKey): ?Campaign;
-
-    /**
      * @return Campaign[]
      */
     public function listCampaigns(): array;

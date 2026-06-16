@@ -78,17 +78,6 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
         return [$row->active_since, $row->active_until];
     }
 
-    /**
-     * @deprecated
-     */
-    public function findCampaign(string $campaignKey): ?Campaign {
-        $campaign = Eloquent\Campaign::query()->where('campaign_key', $campaignKey)->first();
-        if ($campaign === null) {
-            return null;
-        }
-        return $this->parseRow($campaign);
-    }
-
     private function parseRow(Eloquent\Campaign $campaign): Campaign {
         return Campaign::create(
             campaignKey:$campaign->campaign_key,

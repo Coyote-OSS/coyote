@@ -50,15 +50,11 @@ class InMemoryCampaignsStore implements CampaignsStore {
     }
 
     public function campaignActiveRange(string $campaignKey): array {
-        $campaign = $this->findCampaign($campaignKey) ?? throw new \Exception();
+        $campaign = $this->campaigns[$campaignKey] ?? throw new \Exception();
         return [
             $campaign->activeSince,
             $campaign->activeUntil,
         ];
-    }
-
-    public function findCampaign(string $campaignKey): ?Campaign {
-        return $this->campaigns[$campaignKey] ?? null;
     }
 
     public function findCampaignById(int $campaignId): ?Campaign {
