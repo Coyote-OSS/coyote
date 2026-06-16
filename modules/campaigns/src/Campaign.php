@@ -37,4 +37,26 @@ readonly class Campaign {
         public ?int    $targetViews,
         public array   $variants,
     ) {}
+
+    /**
+     * @return CampaignBanner[]
+     */
+    public function bannersOfType(string $bannerType): array {
+        return \array_filter($this->banners(),
+            fn(CampaignBanner $banner) => $banner->bannerType === $bannerType);
+    }
+
+    /**
+     * @return CampaignBanner[]
+     */
+    private function banners(): array {
+        return \array_map($this->banner(...), $this->variants);
+    }
+
+    private function banner(CampaignVariant $variant): CampaignBanner {
+        return new CampaignBanner(
+            $variant->bannerUrl,
+            $this->campaignKey,
+            $variant->bannerType);
+    }
 }

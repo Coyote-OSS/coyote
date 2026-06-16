@@ -26,41 +26,45 @@ readonly class CampaignService {
     }
 
     private function enabledCampaignBanners(): CampaignBanners {
-        $activeCampaigns = [...$this->listActiveCampaigns()];
+        $activeCampaigns = $this->listActiveCampaigns();
         return $this->rotatedCampaignBanners(
             $this->bannersOfType($activeCampaigns, 'horizontal'),
             $this->bannersOfType($activeCampaigns, 'sidebar'));
     }
 
+    /**
+     * @param CampaignBanner[] $horizontals
+     * @param CampaignBanner[] $sidebars
+     */
     private function rotatedCampaignBanners(array $horizontals, array $sidebars): CampaignBanners {
         return new CampaignBanners(
             $this->rotatedBanners($horizontals, 2),
             $this->rotatedBanners($sidebars, 1)[0] ?? null);
     }
 
+    /**
+     * @param Campaign[] $campaigns
+     */
     private function bannersOfType(array $campaigns, string $bannerType): array {
         $banners = [];
         foreach ($campaigns as $campaign) {
-            foreach ($campaign->variants as $variant) {
-                if ($variant->bannerType === $bannerType) {
-                    $banners[$campaign->campaignKey] = new CampaignBanner(
-                        $variant->bannerUrl,
-                        $campaign->campaignKey,
-                        $bannerType);
-                }
+            foreach ($campaign->bannersOfType($bannerType) as $banner) {
+                $banners[$banner->campaignKey] = $banner;
             }
         }
         return $banners;
     }
 
+    /**
+     * @return Campaign[]
+     */
     private function listActiveCampaigns(): iterable {
-        foreach ($this->store->listCampaigns() as $campaign) {
-            if ($this->isCampaignObjectActive($campaign)) {
-                yield $campaign;
-            }
-        }
+        return \array_filter($this->store->listCampaigns(), $this->isCampaignObjectActive(...));
     }
 
+    /**
+     * @param CampaignBanner[] $banners
+     */
     private function rotatedBanners(array $banners, int $amount): array {
         $keys = \array_keys($banners);
         return \array_map(
