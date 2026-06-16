@@ -7,6 +7,7 @@ use Coyote\Modules\Campaigns\Adm\Ui\CampaignsForm;
 use Coyote\Modules\Campaigns\Adm\Ui\CampaignsGrid;
 use Coyote\Modules\Campaigns\Adm\View\CampaignPresenter;
 use Coyote\Modules\Campaigns\Adm\View\CampaignViewModel;
+use Coyote\Modules\Campaigns\Eloquent;
 use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Coyote\Services\FormBuilder\Form;
 use Illuminate\Http\RedirectResponse;
@@ -45,22 +46,21 @@ class CampaignsController extends BaseController {
         ]);
     }
 
-    public function edit(Campaign $campaign): View {
+    public function edit(Eloquent\Campaign $campaign): View {
         $this->breadcrumb->push('Edycja', route('adm.campaigns.save', ['campaign' => $campaign]));
         return $this->view('adm.campaigns.save')->with('form', $this->getForm($campaign));
     }
 
-    public function save(Campaign $campaign, Campaigns\CampaignsStore $store): RedirectResponse {
+    public function save(Eloquent\Campaign $campaign, Campaigns\CampaignsStore $store): RedirectResponse {
         $form = $this->getForm($campaign);
         $form->validate();
-        $campaignModel = Campaigns\Campaign::create(
+        $campaignModel = new Campaigns\Campaign(
             $form->getValue('campaign_key'),
-            $form->getValue('sidebar') ?? 'not-to-be-used-deprecated',
-            $form->getValue('horizontal') ?? 'not-to-be-used-deprecated',
             $form->getValue('redirect_url'),
             $form->getValue('active_since'),
             $form->getValue('active_until'),
-            $form->getValue('target_views'));
+            $form->getValue('target_views'),
+            []);
         if ($campaign->exists) {
             $store->updateCampaign($campaign->id, $campaignModel);
             $campaignId = $campaign->id;

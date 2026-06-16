@@ -29,14 +29,6 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
             ->add('target_views', 'number', [
                 'label' => 'Docelowa liczba wyświetleń',
                 'help'  => $targetRequired,
-            ])
-            ->add('horizontal', 'text', [
-                'label' => 'Baner poziomy (Banner/BannerXl)',
-                'help'  => 'Podaj adres URL grafiki reklamowej. Baner poziomy zostanie wyświetlony na stronie głównej oraz na stronie z wątkami.',
-            ])
-            ->add('sidebar', 'text', [
-                'label' => 'Baner boczny (Rectangle/RectangleXl)',
-                'help'  => 'Podaj adres URL grafiki reklamowej. Baner boczny zostanie wyświetlony przy reputacji użytkowników oraz w panelu bocznym na forum.',
             ]);
         $this->add('submit', 'submit_with_delete', [
             'label'             => 'Zapisz',

@@ -1,12 +1,9 @@
 {% extends 'adm.base' %}
 {% block title %}Edycja kampanii {{ parent() }}{% endblock %}
 
-{% from 'adm.campaigns.imageUploaderCard' import imageUploaderCard %}
-
 {% block container %}
   <div class="card">
     <div class="card-header">Kampania reklamowa</div>
     <div class="card-body">{{ form(form) }}</div>
   </div>
-  {{ imageUploaderCard() }}
 {% endblock %}
