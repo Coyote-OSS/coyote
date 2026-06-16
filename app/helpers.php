@@ -153,20 +153,12 @@ function array_except($array, $keys) {
     return Arr::except($array, $keys);
 }
 
-function array_first($array, ?callable $callback = null, $default = null) {
-    return Arr::first($array, $callback, $default);
-}
-
 function array_get($array, $key, $default = null) {
     return Arr::get($array, $key, $default);
 }
 
 function array_has($array, $keys) {
     return Arr::has($array, $keys);
-}
-
-function array_last($array, ?callable $callback = null, $default = null) {
-    return Arr::last($array, $callback, $default);
 }
 
 function array_only($array, $keys) {
