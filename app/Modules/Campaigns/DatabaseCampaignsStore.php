@@ -68,16 +68,6 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             ?? throw new Campaigns\NoSuchCampaign('No such campaign.');
     }
 
-    public function campaignActiveRange(string $campaignKey): array {
-        $row = Eloquent\Campaign::query()
-            ->where('campaign_key', $campaignKey)
-            ->first(['active_since', 'active_until']);
-        if ($row === null) {
-            throw new Campaigns\NoSuchCampaign('No such campaign.');
-        }
-        return [$row->active_since, $row->active_until];
-    }
-
     private function parseRow(Eloquent\Campaign $campaign): Campaign {
         return Campaign::create(
             campaignKey:$campaign->campaign_key,

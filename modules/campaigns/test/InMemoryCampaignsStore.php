@@ -49,14 +49,6 @@ class InMemoryCampaignsStore implements CampaignsStore {
         $this->clicks[$bannerType] = $clicks;
     }
 
-    public function campaignActiveRange(string $campaignKey): array {
-        $campaign = $this->campaigns[$campaignKey] ?? throw new \Exception();
-        return [
-            $campaign->activeSince,
-            $campaign->activeUntil,
-        ];
-    }
-
     public function findCampaign(int $campaignId): ?Campaign {
         return $this->campaignsById[$campaignId] ?? null;
     }
