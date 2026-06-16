@@ -15,17 +15,32 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
      * @return Campaign[]
      */
     public function listCampaigns(): array {
-        return Eloquent\Campaign::all()->map($this->parseRow(...))->all();
+        return Eloquent\Campaign::with('variants')
+            ->get()
+            ->map($this->parseCampaign(...))
+            ->all();
     }
 
-    private function parseRow(Eloquent\Campaign $campaign): Campaign {
+    public function findCampaign(int $campaignId): ?Campaign {
+        $campaign = Eloquent\Campaign::with('variants')->find($campaignId);
+        if ($campaign === null) {
+            return null;
+        }
+        return $this->parseCampaign($campaign);
+    }
+
+    private function parseCampaign(Eloquent\Campaign $campaign): Campaign {
         return new Campaign(
             $campaign->campaign_key,
             $campaign->redirect_url,
             $campaign->active_since,
             $campaign->active_until,
             $campaign->target_views,
-            []);
+            $campaign->variants->map($this->parseVariant(...))->all());
+    }
+
+    private function parseVariant(Eloquent\CampaignVariant $variant): CampaignVariant {
+        return new CampaignVariant($variant->image_url, $variant->type);
     }
 
     public function campaignClickCount(string $campaignKey, string $bannerType): int {
@@ -76,25 +91,6 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             ->first('clicks')
             ?->clicks
             ?? throw new Campaigns\NoSuchCampaign('No such campaign.');
-    }
-
-    public function findCampaign(int $campaignId): ?Campaign {
-        $model = Eloquent\Campaign::with('variants')->find($campaignId);
-        if ($model === null) {
-            return null;
-        }
-        return new Campaign(
-            $model->campaign_key,
-            $model->redirect_url,
-            $model->active_since,
-            $model->active_until,
-            $model->target_views,
-            $model->variants->map($this->parseVariant(...))->all(),
-        );
-    }
-
-    private function parseVariant(Eloquent\CampaignVariant $variant): CampaignVariant {
-        return new CampaignVariant($variant->image_url, $variant->type);
     }
 
     public function createCampaignReturnId(Campaign $campaign): ?int {

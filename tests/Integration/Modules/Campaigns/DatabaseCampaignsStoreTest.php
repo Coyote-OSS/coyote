@@ -417,4 +417,14 @@ class DatabaseCampaignsStoreTest extends TestCase {
             new CampaignVariant('horizontal2.png', 'horizontal'),
         ], $campaign->variants);
     }
+
+    #[Test]
+    public function listCampaignsWithVariants(): void {
+        $campaignId = $this->store->createCampaignReturnId($this->exampleCampaign());
+        $this->store->createVariant($campaignId, 'variant.png', 'horizontal');
+        [$campaign] = $this->store->listCampaigns();
+        $this->assertEquals([
+            new CampaignVariant('variant.png', 'horizontal'),
+        ], $campaign->variants);
+    }
 }
