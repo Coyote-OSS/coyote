@@ -2,12 +2,16 @@
 namespace Modules\Campaigns;
 
 readonly class CampaignService {
+    private CampaignBannerSelector $selector;
+
     public function __construct(
         private ForPriviligedUsers $users,
-        private ForRotatingBanners $rotate,
+        ForRotatingBanners         $rotate,
         private ForCurrentDate     $date,
         private CampaignsStore     $store,
-    ) {}
+    ) {
+        $this->selector = new CampaignBannerSelector($rotate);
+    }
 
     public function campaignBanners(): CampaignBanners {
         if ($this->isCampaignBannersDisabled()) {
@@ -26,55 +30,14 @@ readonly class CampaignService {
     }
 
     private function enabledCampaignBanners(): CampaignBanners {
-        $activeCampaigns = $this->listActiveCampaigns();
-        return $this->rotatedCampaignBanners(
-            $this->bannersOfType($activeCampaigns, 'horizontal'),
-            $this->bannersOfType($activeCampaigns, 'sidebar'));
-    }
-
-    /**
-     * @param CampaignBanner[] $horizontals
-     * @param CampaignBanner[] $sidebars
-     */
-    private function rotatedCampaignBanners(array $horizontals, array $sidebars): CampaignBanners {
-        return new CampaignBanners(
-            $this->rotatedBanners($horizontals, 2),
-            $this->rotatedBanners($sidebars, 1)[0] ?? null);
-    }
-
-    /**
-     * @param Campaign[] $campaigns
-     */
-    private function bannersOfType(array $campaigns, string $bannerType): array {
-        $banners = [];
-        foreach ($campaigns as $campaign) {
-            foreach ($campaign->bannersOfType($bannerType) as $banner) {
-                $banners[$banner->campaignKey] = $banner;
-            }
-        }
-        return $banners;
+        return $this->selector->select($this->listActiveCampaigns());
     }
 
     /**
      * @return Campaign[]
      */
-    private function listActiveCampaigns(): iterable {
+    private function listActiveCampaigns(): array {
         return \array_filter($this->store->listCampaigns(), $this->isCampaignObjectActive(...));
-    }
-
-    /**
-     * @param CampaignBanner[] $banners
-     */
-    private function rotatedBanners(array $banners, int $amount): array {
-        $keys = \array_keys($banners);
-        return \array_map(
-            fn($key) => $banners[$key],
-            $this->rotated($keys, $amount));
-    }
-
-    private function rotated(array $keys, int $amount): array {
-        return new BannerRotation()->rotatedBanners($keys, $amount,
-            $this->rotate->rotationSeed());
     }
 
     public function redirectUrl(string $campaignKey): string {
