@@ -1,5 +1,5 @@
 install: install-server install-client
-install-server: file-permission composer-install migration es-create seed es-index
+install-server: file-permission composer-install migrate es-create seed es-index
 install-client: yarn-install yarn-prod install-passport install-push
 
 up:
