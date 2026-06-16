@@ -18,6 +18,16 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
         return Eloquent\Campaign::all()->map($this->parseRow(...))->all();
     }
 
+    private function parseRow(Eloquent\Campaign $campaign): Campaign {
+        return new Campaign(
+            $campaign->campaign_key,
+            $campaign->redirect_url,
+            $campaign->active_since,
+            $campaign->active_until,
+            $campaign->target_views,
+            []);
+    }
+
     public function campaignClickCount(string $campaignKey, string $bannerType): int {
         return $this->countCampaignEvents($campaignKey, $bannerType, 'click');
     }
@@ -66,17 +76,6 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             ->first('clicks')
             ?->clicks
             ?? throw new Campaigns\NoSuchCampaign('No such campaign.');
-    }
-
-    private function parseRow(Eloquent\Campaign $campaign): Campaign {
-        return Campaign::create(
-            campaignKey:$campaign->campaign_key,
-            sidebarBanner:'not-to-be-used-deprecated',
-            horizontalBanner:'not-to-be-used-deprecated',
-            redirectUrl:$campaign->redirect_url,
-            activeSince:$campaign->active_since,
-            activeUntil:$campaign->active_until,
-            targetViews:$campaign->target_views);
     }
 
     public function findCampaign(int $campaignId): ?Campaign {
