@@ -89,7 +89,7 @@ readonly class DatabaseCampaignsStore implements CampaignsStore {
             targetViews:$campaign->target_views);
     }
 
-    public function findCampaignById(int $campaignId): ?Campaign {
+    public function findCampaign(int $campaignId): ?Campaign {
         $model = Eloquent\Campaign::with('variants')->find($campaignId);
         if ($model === null) {
             return null;

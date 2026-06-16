@@ -88,7 +88,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
             '2222-02-02T22:22:22',
             '3333-03-03T03:33:33',
             999));
-        $campaign = $this->store->findCampaignById($campaignId);
+        $campaign = $this->store->findCampaign($campaignId);
         $this->assertEquals('campaign-key', $campaign->campaignKey);
         $this->assertEquals('redirect', $campaign->redirectUrl);
         $this->assertEquals('2222-02-02 22:22:22', $campaign->activeSince);
@@ -100,7 +100,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
     #[Test]
     public function findCampaign_returnsNull_ifNoSuchCampaign(): void {
         $noSuchCampaignId = 9999;
-        $this->assertNull($this->store->findCampaignById($noSuchCampaignId));
+        $this->assertNull($this->store->findCampaign($noSuchCampaignId));
     }
 
     #[Test]
@@ -391,7 +391,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
     public function findCampaignIncludesVariants(): void {
         $campaignId = $this->store->createCampaignReturnId($this->exampleCampaign());
         $this->store->createVariant($campaignId, 'image.png', 'horizontal');
-        $campaign = $this->store->findCampaignById($campaignId);
+        $campaign = $this->store->findCampaign($campaignId);
         [$variant] = $campaign->variants;
         $this->assertSame('horizontal', $variant->bannerType);
         $this->assertSame('image.png', $variant->bannerUrl);
@@ -400,7 +400,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
     #[Test]
     public function findCampaignWithoutVariants(): void {
         $campaignId = $this->store->createCampaignReturnId($this->exampleCampaign());
-        $this->assertEmpty($this->store->findCampaignById($campaignId)->variants);
+        $this->assertEmpty($this->store->findCampaign($campaignId)->variants);
     }
 
     private function exampleCampaign(): Campaign {
@@ -414,7 +414,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
         $campaignId = $this->store->createCampaignReturnId($this->exampleCampaign());
         $this->store->createVariant($campaignId, 'sidebar1.png', 'sidebar');
         $this->store->createVariant($campaignId, 'sidebar2.png', 'sidebar');
-        $campaign = $this->store->findCampaignById($campaignId);
+        $campaign = $this->store->findCampaign($campaignId);
         $this->assertEquals([
             new CampaignVariant('sidebar1.png', 'sidebar'),
             new CampaignVariant('sidebar2.png', 'sidebar'),
@@ -426,7 +426,7 @@ class DatabaseCampaignsStoreTest extends TestCase {
         $campaignId = $this->store->createCampaignReturnId($this->exampleCampaign());
         $this->store->createVariant($campaignId, 'horizontal1.png', 'horizontal');
         $this->store->createVariant($campaignId, 'horizontal2.png', 'horizontal');
-        $campaign = $this->store->findCampaignById($campaignId);
+        $campaign = $this->store->findCampaign($campaignId);
         $this->assertEquals([
             new CampaignVariant('horizontal1.png', 'horizontal'),
             new CampaignVariant('horizontal2.png', 'horizontal'),

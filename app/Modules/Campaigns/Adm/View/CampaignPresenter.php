@@ -21,7 +21,7 @@ readonly class CampaignPresenter {
      * @return BannerViewModel[]
      */
     public function bannerViewModelsById(int $campaignId): array {
-        $campaign = $this->store->findCampaignById($campaignId);
+        $campaign = $this->store->findCampaign($campaignId);
 //        $this->horizontalStats($campaignKey);
 //        $this->sidebarStats($campaignKey);
         return \array_map($this->bannerViewModel(...), $campaign->variants);

@@ -23,5 +23,5 @@ interface CampaignsStore {
 
     public function createVariant(int $campaignId, string $imageUrl, string $type): bool;
 
-    public function findCampaignById(int $campaignId): ?Campaign;
+    public function findCampaign(int $campaignId): ?Campaign;
 }

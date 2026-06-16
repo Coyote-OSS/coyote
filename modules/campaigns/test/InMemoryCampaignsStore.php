@@ -57,7 +57,7 @@ class InMemoryCampaignsStore implements CampaignsStore {
         ];
     }
 
-    public function findCampaignById(int $campaignId): ?Campaign {
+    public function findCampaign(int $campaignId): ?Campaign {
         return $this->campaignsById[$campaignId] ?? null;
     }
 

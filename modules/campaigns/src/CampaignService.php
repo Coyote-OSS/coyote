@@ -85,7 +85,7 @@ readonly class CampaignService {
     }
 
     public function campaignStatus(int $campaignId): string {
-        return $this->campaignObjectStatus($this->store->findCampaignById($campaignId));
+        return $this->campaignObjectStatus($this->store->findCampaign($campaignId));
     }
 
     private function isCampaignObjectActive(Campaign $campaign): bool {
