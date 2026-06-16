@@ -1,13 +1,13 @@
-FROM php:8.4.2-fpm-bookworm as backend
+FROM php:8.5.7-fpm-trixie AS backend
 
 LABEL maintainer="4programmers.net <support@4programmers.net>"
 
 WORKDIR /var/www
 
 RUN curl -sS https://deb.nodesource.com/setup_20.x | bash -
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /etc/apt/keyrings/yarn-archive-keyring.gpg > /dev/null
+RUN echo "deb [signed-by=/etc/apt/keyrings/yarn-archive-keyring.gpg] https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 RUN apt-get update -yqq && apt-get install -y \
     gnupg \
@@ -33,7 +33,7 @@ RUN apt-get update -yqq && apt-get install -y \
     yarn
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp \
-    && docker-php-ext-install -j$(nproc) pgsql gd soap pdo_pgsql mbstring zip opcache iconv gmp
+    && docker-php-ext-install -j$(nproc) pgsql gd soap pdo_pgsql mbstring zip iconv gmp
 
 RUN pecl install xdebug redis && docker-php-ext-enable redis
 
@@ -46,9 +46,9 @@ RUN echo Europe/Warsaw >/etc/timezone && \
 ARG UID=1000
 ARG GID=1000
 
-ENV php_conf /usr/local/etc/php-fpm.conf
-ENV fpm_conf /usr/local/etc/php-fpm.d/www.conf
-ENV php_vars /usr/local/etc/php/conf.d/docker-vars.ini
+ENV php_conf=/usr/local/etc/php-fpm.conf
+ENV fpm_conf=/usr/local/etc/php-fpm.d/www.conf
+ENV php_vars=/usr/local/etc/php/conf.d/docker-vars.ini
 
 RUN groupadd -g ${GID} nginx
 RUN useradd -u ${UID} -m -g nginx nginx
