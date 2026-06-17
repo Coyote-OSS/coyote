@@ -1,32 +1,24 @@
-<?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
-         backupGlobals="false"
-         backupStaticProperties="false"
-         bootstrap="vendor/autoload.php"
-         colors="true"
-         processIsolation="false"
-         executionOrder="random"
-         stopOnFailure="false">
-    <testsuites>
-        <testsuite name="Legacy">
-            <directory suffix="Test.php">./tests/Legacy/IntegrationOld/</directory>
-            <directory suffix="Test.php">./tests/Legacy/IntegrationNew/</directory>
-        </testsuite>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit/</directory>
-        </testsuite>
-      <testsuite name="Campaigns">
-        <directory suffix="Test.php">./modules/campaigns/test/</directory>
-        <directory suffix="Test.php">./tests/Integration/Modules/Campaigns/</directory>
-      </testsuite>
-    </testsuites>
-    <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="APP_DEBUG" value="false"/>
-        <env name="BCRYPT_ROUNDS" value="4"/>
-        <env name="MAIL_DRIVER" value="log"/>
-        <env name="QUEUE_CONNECTION" value="sync"/>
-        <env name="AWS_URL" value="http://nginx/uploads/"/>
-    </php>
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php">
+  <testsuites>
+    <testsuite name="Legacy">
+      <directory suffix="Test.php">./tests/Legacy/IntegrationOld/</directory>
+      <directory suffix="Test.php">./tests/Legacy/IntegrationNew/</directory>
+    </testsuite>
+    <testsuite name="Unit">
+      <directory suffix="Test.php">./tests/Unit/</directory>
+    </testsuite>
+    <testsuite name="Campaigns">
+      <directory suffix="Test.php">./modules/campaigns/test/</directory>
+      <directory suffix="Test.php">./tests/Integration/Modules/Campaigns/</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <env name="APP_ENV" value="testing"/>
+    <env name="APP_DEBUG" value="false"/>
+    <env name="BCRYPT_ROUNDS" value="4"/>
+    <env name="MAIL_DRIVER" value="log"/>
+    <env name="QUEUE_CONNECTION" value="sync"/>
+    <env name="AWS_URL" value="http://nginx/uploads/"/>
+  </php>
 </phpunit>
