@@ -73,7 +73,7 @@ class VariantsControllerTest extends TestCase {
         $response = $this->httpCreate($this->createCampaign(), $this->exampleVariantNoImage());
         // then the request is rejected
         $response->assertSessionHasErrors([
-            'image_url' => 'Pole image url jest wymagane.',
+            'image_url' => 'Grafika baneru jest wymagana.',
         ]);
     }
 

@@ -15,11 +15,6 @@ class VariantsForm extends Form implements ValidatesWhenSubmitted {
             'value' => $campaign?->campaign_key,
             'help'  => 'Klucz kampanii do której dodawany jest wariant.',
         ]);
-        $this->add('image_url', 'text', [
-            'label' => 'Grafika baneru',
-            'rules' => 'required|url|max:255',
-            'help'  => 'Podaj adres URL grafiki reklamowej. Skorzystaj z hostowania obrazów poniżej.',
-        ]);
         $this->add('type', 'select', [
             'label'   => 'Rodzaj baneru',
             'choices' => [
@@ -30,6 +25,11 @@ class VariantsForm extends Form implements ValidatesWhenSubmitted {
             'help'    => 'Baner poziomy zostanie wyświetlony na stronie głównej oraz na stronie z wątkami. '
                 . 'Baner sidebar zostanie wyświetlony w sidebarze.',
         ]);
+        $this->add('image_url', 'text', [
+            'label' => 'Grafika baneru',
+            'rules' => 'required|url|max:255',
+            'help'  => 'Podaj adres URL grafiki reklamowej. Skorzystaj z hostowania obrazów poniżej.',
+        ]);
         $this->add('submit', 'submit', [
             'label' => 'Zapisz',
             'attr'  => ['data-submit-state' => 'Zapisywanie...'],
@@ -38,11 +38,7 @@ class VariantsForm extends Form implements ValidatesWhenSubmitted {
 
     public function messages(): array {
         return [
-//            'campaign_key.required' => 'Klucz kampanii jest wymagany.',
-//            'sidebar.required'      => 'Grafika baneru bocznego jest wymagana.',
-//            'horizontal.required'   => 'Grafika baneru poziomego jest wymagana.',
-//            'redirect_url.required' => 'Adres przekierowania jest wymagany.',
-//            'campaign_key.unique'   => 'Już istnieje kampania z tym kluczem.',
+            'image_url.required' => 'Grafika baneru jest wymagana.',
         ];
     }
 }
