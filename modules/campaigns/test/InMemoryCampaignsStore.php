@@ -2,70 +2,110 @@
 namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns\Campaign;
+use Modules\Campaigns\CampaignPayload;
 use Modules\Campaigns\CampaignsStore;
+use Modules\Campaigns\CampaignVariant;
+use Modules\Campaigns\VariantPayload;
 
 class InMemoryCampaignsStore implements CampaignsStore {
-    private array $views = ['horizontal' => 0, 'sidebar' => 0];
-    private array $clicks = ['horizontal' => 0, 'sidebar' => 0];
-    /** @var Campaign[] */
-    private array $campaigns = [];
-    /** @var Campaign[] */
-    private array $campaignsById = [];
+    /** @var int[] */
+    private array $campaignIds = [];
+    /** @var CampaignPayload[] */
+    private array $campaignPayloads = [];
+    /** @var int[][] */
+    private array $campaignVariants = [];
+    /** @var VariantPayload[] */
+    private array $variantPayloads = [];
+    /** @var int[] */
+    private array $variantViews = [];
+    /** @var int[] */
+    private array $variantClicks = [];
+    private int $campaignIdSeq = 1;
+    private int $variantIdSeq = 1;
 
-    /**
-     * @return Campaign[]
-     */
+    public function createCampaign(CampaignPayload $payload): int {
+        $newCampaignId = $this->campaignIdSeq++;
+        $this->campaignIds[] = $newCampaignId;
+        $this->campaignPayloads[$newCampaignId] = $payload;
+        $this->campaignVariants[$newCampaignId] = [];
+        return $newCampaignId;
+    }
+
     public function listCampaigns(): array {
-        return \array_values($this->campaigns);
-    }
-
-    public function campaignViewCount(string $campaignKey, string $bannerType): int {
-        return $this->views[$bannerType] ?? throw new \Exception();
-    }
-
-    public function campaignClickCount(string $campaignKey, string $bannerType): int {
-        return $this->clicks[$bannerType] ?? throw new \Exception();
-    }
-
-    public function campaignView(string $campaignKey, string $bannerType): void {
-        throw new \Exception();
-    }
-
-    public function campaignClick(string $campaignKey, string $bannerType): void {
-        throw new \Exception();
-    }
-
-    public function stubCampaignViews(int $views, string $bannerType): void {
-        if (!array_key_exists($bannerType, $this->views)) {
-            throw new \Exception();
-        }
-        $this->views[$bannerType] = $views;
-    }
-
-    public function stubCampaignClicks(int $clicks, string $bannerType): void {
-        if (!array_key_exists($bannerType, $this->clicks)) {
-            throw new \Exception();
-        }
-        $this->clicks[$bannerType] = $clicks;
+        return \array_values(\array_map($this->campaignObject(...), $this->campaignIds));
     }
 
     public function findCampaign(int $campaignId): ?Campaign {
-        return $this->campaignsById[$campaignId] ?? null;
+        if ($this->campaignExists($campaignId)) {
+            return $this->campaignObject($campaignId);
+        }
+        return null;
     }
 
-    public function createCampaignReturnId(Campaign $campaign): ?int {
-        $newId = \count($this->campaignsById) + 1;
-        $existed = \array_key_exists($campaign->campaignKey, $this->campaigns);
-        $this->campaigns[$campaign->campaignKey] = $campaign;
-        $this->campaignsById[$newId] = $campaign;
-        return $existed ? null : $newId;
+    private function campaignObject(int $campaignId): Campaign {
+        return new Campaign(
+            $campaignId,
+            $this->campaignPayloads[$campaignId],
+            $this->campaignVariants($campaignId));
     }
 
-    public function updateCampaign(int $campaignId, Campaign $campaign): bool {
-        throw new \Exception();
+    private function campaignVariants(int $campaignId): array {
+        return \array_map(
+            $this->campaignVariant(...),
+            $this->campaignVariants[$campaignId]);
     }
 
-    public function createVariant(int $campaignId, string $imageUrl, string $type): bool {
-        throw new \Exception('Not implemented');
+    private function campaignVariant(int $variantId): CampaignVariant {
+        return new CampaignVariant(
+            $variantId,
+            $this->variantViews[$variantId],
+            $this->variantClicks[$variantId],
+            $this->variantPayloads[$variantId]);
+    }
+
+    public function updateCampaign(int $campaignId, CampaignPayload $payload): bool {
+        if ($this->campaignExists($campaignId)) {
+            $this->campaignPayloads[$campaignId] = $payload;
+            return true;
+        }
+        return false;
+    }
+
+    public function createVariant(int $campaignId, VariantPayload $payload): ?int {
+        if (!$this->campaignExists($campaignId)) {
+            return null;
+        }
+        $newVariantId = $this->variantIdSeq++;
+        $this->campaignVariants[$campaignId][] = $newVariantId;
+        $this->variantClicks[$newVariantId] = 0;
+        $this->variantViews[$newVariantId] = 0;
+        $this->variantPayloads[$newVariantId] = $payload;
+        return $newVariantId;
+    }
+
+    public function viewVariant(int $variantId): void {
+        $this->variantViews[$variantId]++;
+    }
+
+    public function clickVariant(int $variantId): void {
+        $this->variantClicks[$variantId]++;
+    }
+
+    private function campaignExists(int $campaignId): bool {
+        return \in_array($campaignId, $this->campaignIds);
+    }
+
+    public function findCampaignRedirectUrl(int $variantId): ?string {
+        foreach ($this->listCampaigns() as $campaign) {
+            if ($this->campaignHasVariant($campaign, $variantId)) {
+                return $campaign->payload->redirectUrl;
+            }
+        }
+        return null;
+    }
+
+    private function campaignHasVariant(Campaign $campaign, int $variantId): bool {
+        return array_any($campaign->variants,
+            fn(CampaignVariant $variant) => $variant->id === $variantId);
     }
 }

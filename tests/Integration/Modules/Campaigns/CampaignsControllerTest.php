@@ -2,8 +2,9 @@
 namespace Tests\Integration\Modules\Campaigns;
 
 use Coyote\Modules\Campaigns\CampaignsController;
-use Modules\Campaigns\Campaign;
+use Modules\Campaigns\CampaignPayload;
 use Modules\Campaigns\CampaignsStore;
+use Modules\Campaigns\VariantPayload;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -15,28 +16,31 @@ class CampaignsControllerTest extends TestCase {
 
     #[Test]
     public function redirectsToHomepage_forNoSuchCampaign(): void {
+        $noSuchVariantId = 999_888_777;
         $this->laravel
-            ->get('/campaigns/no-such-campaign/banner')
-            ->assertRedirect('/');
+            ->get("/campaigns/$noSuchVariantId")
+            ->assertNotFound();
     }
 
     #[Test]
     public function redirectToCampaignRedirectUrl(): void {
-        $this->addCampaign('campaign-key', '/redirect-url');
+        $variantId = $this->addCampaign('campaign-key', '/redirect-url');
         $this->laravel
-            ->get('/campaigns/campaign-key/banner')
+            ->get("/campaigns/$variantId")
             ->assertRedirect('/redirect-url');
     }
 
-    private function addCampaign(string $campaignKey, string $redirectUrl): void {
-        $this->instance()->createCampaignReturnId(Campaign::create(
+    private function addCampaign(string $campaignKey, string $redirectUrl): int {
+        $store = $this->instance();
+        $campaignId = $store->createCampaign(new CampaignPayload(
             $campaignKey,
-            '',
-            '',
             $redirectUrl,
             null,
             null,
             null));
+        return $store->createVariant($campaignId, new VariantPayload(
+            'horizontal', 'image.png',
+        ));
     }
 
     private function instance(): CampaignsStore {

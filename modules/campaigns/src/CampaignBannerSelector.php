@@ -36,8 +36,14 @@ readonly class CampaignBannerSelector {
     private function bannersOfType(array $campaigns, string $bannerType): array {
         $banners = [];
         foreach ($campaigns as $campaign) {
-            foreach ($campaign->bannersOfType($bannerType) as $banner) {
-                $banners[$campaign->campaignKey][] = $banner;
+            foreach ($campaign->variants as $variant) {
+                if ($variant->payload->bannerType === $bannerType) {
+                    $banners[$campaign->id][] = new CampaignBanner(
+                        $variant->payload->imageUrl,
+                        $campaign->id,
+                        $variant->payload->bannerType,
+                        $variant->id);
+                }
             }
         }
         return \array_values($banners);

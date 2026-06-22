@@ -28,33 +28,34 @@ class CampaignsRedirectUrlsTest extends TestCase {
 
     #[Test]
     public function redirectUrl(): void {
-        $this->facade->addCampaign(campaignKey:'campaign', redirectUrl:'http://redirect-url');
-        $redirectUrl = $this->campaigns->redirectUrl('campaign');
+        $campaignId = $this->facade->addCampaign(campaignKey:'campaign', redirectUrl:'http://redirect-url');
+        $redirectUrl = $this->campaigns->redirectUrl($campaignId);
         $this->assertEquals('http://redirect-url', $redirectUrl);
     }
 
     #[Test]
     public function sidebarCampaignKey(): void {
         $this->date->stubCurrentDate('2000-01-02');
-        $this->facade->addCampaign(campaignKey:'campaignKey', since:'2000-01-01', until:'2000-01-03');
-        $this->assertEquals('campaignKey',
+        $campaignId = $this->facade->addCampaign(campaignKey:'campaignKey', since:'2000-01-01', until:'2000-01-03');
+        $this->assertEquals("$campaignId",
             $this->campaigns->campaignBanners()->sidebar->campaignKey);
     }
 
     #[Test]
     public function missingCampaign(): void {
         $this->expectException(NoSuchCampaign::class);
-        $this->expectExceptionMessage('Failed');
-        $this->campaigns->redirectUrl('missing');
+        $this->expectExceptionMessage('Failed to get campaign redirect url.');
+        $noSuchCampaignId = 999;
+        $this->campaigns->redirectUrl($noSuchCampaignId);
     }
 
     #[Test]
     public function doNotIncludeInactiveCampaigns(): void {
         $this->date->stubCurrentDate('2000-01-02');
-        $this->facade->addCampaign(campaignKey:'inactive', since:'2100-01-01', until:'2100-01-01');
-        $this->facade->addCampaign(campaignKey:'active', since:'2000-01-01', until:'2000-01-03');
+        $inactiveId = $this->facade->addCampaign(campaignKey:'inactive', since:'2100-01-01', until:'2100-01-01');
+        $activeId = $this->facade->addCampaign(campaignKey:'active', since:'2000-01-01', until:'2000-01-03');
         $campaignBanners = $this->campaigns->campaignBanners()->horizontal;
-        $this->assertCampaignKeys(['active'], $campaignBanners);
+        $this->assertCampaignKeys(["$activeId"], $campaignBanners);
     }
 
     private function assertCampaignKeys(

@@ -6,5 +6,6 @@ readonly class CampaignBanner {
         public string $bannerUrl,
         public string $campaignKey,
         public string $bannerType,
+        public int    $variantId,
     ) {}
 }

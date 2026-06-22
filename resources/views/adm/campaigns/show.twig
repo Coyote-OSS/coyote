@@ -8,11 +8,11 @@
     <div class="card-header d-flex justify-content-between align-items-center">
       <span class="me-auto">
         {{ icon('campaign') }}
-        Kampania reklamowa
+        Kampania reklamowa: {{ campaign.name }}
       </span>
       <a class="ms-2 btn btn-sm btn-secondary" href="{{ campaign.backHref }}">
         {{ icon('genericBack') }}
-        Wróc
+        Wróć
       </a>
       <a class="ms-2 btn btn-sm btn-secondary" href="{{ campaign.editHref }}">
         {{ icon('genericEdit') }}
@@ -21,17 +21,6 @@
     </div>
 
     <div class="list-group list-group-flush">
-      <div class="list-group-item">
-        <div class="d-flex justify-content-between align-items-center">
-          <span>
-            {{ icon('genericLink') }}
-            <b>Klucz reklamy</b>: <code>{{ campaign.key }}</code>
-          </span>
-          <span class="text-muted d-none d-lg-block">
-            Klucz używany do identyfikacji reklamy i kliknięć.
-          </span>
-        </div>
-      </div>
       <div class="list-group-item d-flex">
         <span>
           {{ icon(campaign.status.active ? 'campaignStatusActive' : 'campaignStatusInactive') }}

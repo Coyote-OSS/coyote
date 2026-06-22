@@ -4,6 +4,7 @@ namespace Coyote\Modules\Campaigns;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\Campaigns;
+use Modules\Campaigns\CampaignsStore;
 use Psr\Clock\ClockInterface;
 use Symfony;
 
@@ -22,8 +23,8 @@ class CampaignsServiceProvider extends ServiceProvider {
             TimeRotatingBanners::class);
 
         $this->app->bind(
-            Campaigns\CampaignsStore::class,
-            DatabaseCampaignsStore::class);
+            CampaignsStore::class,
+            EloquentCampaignsStore::class);
 
         $this->app->bind(
             Campaigns\ForCurrentDate::class,
@@ -33,6 +34,6 @@ class CampaignsServiceProvider extends ServiceProvider {
     }
 
     private function registerRoutes(Router $router): void {
-        $router->get('/campaigns/{campaignKey}/{bannerType}', [CampaignsController::class, 'click']);
+        $router->get('/campaigns/{variantId}', [CampaignsController::class, 'click']);
     }
 }

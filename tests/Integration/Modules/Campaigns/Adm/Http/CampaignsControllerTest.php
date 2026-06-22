@@ -56,20 +56,10 @@ class CampaignsControllerTest extends TestCase {
         $this->httpCreate($this->exampleCampaign(campaignKey:'optional-range', includeActiveRange:false));
         // then the campaign is persisted without active range
         $this->laravel->assertSeeInDatabase('module_campaigns', [
-            'campaign_key' => 'optional-range',
+            'name'         => 'optional-range',
             'active_since' => null,
             'active_until' => null,
         ]);
-    }
-
-    #[Test]
-    public function failToCreateDuplicateCampaign(): void {
-        // given a campaign already exists
-        $this->httpCreate($this->exampleCampaign('duplicate'));
-        // when I attempt to create a campaign with a duplicate campaign key
-        $response = $this->httpCreate($this->exampleCampaign('duplicate'));
-        // then the request is rejected
-        $response->assertBadRequest();
     }
 
     #[Test]
@@ -80,7 +70,7 @@ class CampaignsControllerTest extends TestCase {
         $this->httpUpdate($campaignId, $this->exampleCampaign('updated', redirectUrl:'http://new'));
         // then the campaign is updated
         $this->laravel->assertSeeInDatabase('module_campaigns', [
-            'campaign_key' => 'updated',
+            'name'         => 'updated',
             'redirect_url' => 'http://new',
         ]);
     }
@@ -114,7 +104,7 @@ class CampaignsControllerTest extends TestCase {
         ?string $redirectUrl = null,
     ): array {
         return [
-            'campaign_key' => $campaignKey ?? 'created-campaign',
+            'name'         => $campaignKey,
             'redirect_url' => $redirectUrl ?? 'http://test',
             'sidebar'      => 'not-to-be-used-deprecated',
             'horizontal'   => 'not-to-be-used-deprecated',

@@ -2,9 +2,9 @@
 namespace Adm\Http;
 
 use Coyote\Modules\Campaigns\Adm;
-use Coyote\Modules\Campaigns\DatabaseCampaignsStore;
+use Coyote\Modules\Campaigns\EloquentCampaignsStore;
 use Illuminate\Testing\TestResponse;
-use Modules\Campaigns\Campaign;
+use Modules\Campaigns\CampaignPayload;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -151,13 +151,9 @@ class VariantsControllerTest extends TestCase {
     }
 
     private function createCampaign(): int {
-        /** @var DatabaseCampaignsStore $store */
-        $store = $this->laravel->app->make(DatabaseCampaignsStore::class);
-        return $store->createCampaignReturnId(Campaign::create(
-            'campaign',
-            '', '', '',
-            null, null, null,
-        ));
+        /** @var EloquentCampaignsStore $store */
+        $store = $this->laravel->app->make(EloquentCampaignsStore::class);
+        return $store->createCampaign(new CampaignPayload('campaign', '', null, null, null));
     }
 
     private function exampleVariant(

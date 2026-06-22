@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $active_since
  * @property string $active_until
  * @property int $target_views
+ * @property string $name
  * @property CampaignVariant[]|Collection $variants
  */
 class Campaign extends Model {
@@ -27,6 +28,7 @@ class Campaign extends Model {
         'active_since',
         'active_until',
         'target_views',
+        'name',
     ];
 
     public function variants(): HasMany {

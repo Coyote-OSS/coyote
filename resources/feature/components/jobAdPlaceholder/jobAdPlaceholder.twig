@@ -1,7 +1,7 @@
 {% macro jobAdPlaceholder(banners, size) %}
   {% if size == 'sidebar' and banners.sidebar %}
     <div class="job-ad-placeholder {{ size }}">
-      <a href="/campaigns/{{ banners.sidebar.campaignKey }}/sidebar" target="_blank">
+      <a href="/campaigns/{{ banners.sidebar.variantId }}" target="_blank">
         <img src="{{ banners.sidebar.bannerUrl }}"/>
       </a>
     </div>
@@ -11,7 +11,7 @@
       <div class="row g-2 justify-content-center">
         {% for horizontal in banners.horizontal %}
           <div class="col-12 col-lg-6">
-            <a href="/campaigns/{{ horizontal.campaignKey }}/horizontal" target="_blank">
+            <a href="/campaigns/{{ horizontal.variantId }}" target="_blank">
               <img src="{{ horizontal.bannerUrl }}"/>
             </a>
           </div>

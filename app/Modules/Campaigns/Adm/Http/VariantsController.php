@@ -7,6 +7,7 @@ use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Modules\Campaigns\CampaignsStore;
+use Modules\Campaigns\VariantPayload;
 
 class VariantsController extends BaseController {
     public function __construct() {
@@ -17,19 +18,19 @@ class VariantsController extends BaseController {
 
     public function edit(Campaign $campaign): View {
         return $this->view('adm.campaigns.variants.save', [
-            'campaignKey' => $campaign->campaign_key,
-            'form'        => $this->createForm(VariantsForm::class, $campaign),
+            'campaignName' => $campaign->name,
+            'form'         => $this->createForm(VariantsForm::class),
         ]);
     }
 
     public function save(int $campaign, CampaignsStore $store): RedirectResponse {
         $form = $this->createForm(VariantsForm::class);
         $form->validate();
-        $created = $store->createVariant(
-            $campaign,
+        $variantId = $store->createVariant($campaign, new VariantPayload(
+            $form->getField('type'),
             $form->getField('image_url'),
-            $form->getField('type'));
-        if ($created) {
+        ));
+        if ($variantId !== null) {
             return redirect()
                 ->route('adm.campaigns.show', [$campaign])
                 ->with('success', 'Wariant kampanii został dodany.');

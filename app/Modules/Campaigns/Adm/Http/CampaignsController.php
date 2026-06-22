@@ -5,7 +5,9 @@ use Boduch\Grid\Source\EloquentSource;
 use Coyote\Http\Controllers\Adm\BaseController;
 use Coyote\Modules\Campaigns\Adm\Ui\CampaignsForm;
 use Coyote\Modules\Campaigns\Adm\Ui\CampaignsGrid;
-use Coyote\Modules\Campaigns\Adm\View\CampaignPresenter;
+use Coyote\Modules\Campaigns\Adm\View\BannerViewModel;
+use Coyote\Modules\Campaigns\Adm\View\CampaignStats;
+use Coyote\Modules\Campaigns\Adm\View\CampaignStatus;
 use Coyote\Modules\Campaigns\Adm\View\CampaignViewModel;
 use Coyote\Modules\Campaigns\Eloquent;
 use Coyote\Modules\Campaigns\Eloquent\Campaign;
@@ -29,20 +31,29 @@ class CampaignsController extends BaseController {
         ]);
     }
 
-    public function show(Campaign $campaign, CampaignPresenter $presenter): View {
+    public function show(
+        Campaign                  $campaign,
+        Campaigns\CampaignService $service,
+        Campaigns\CampaignsStore  $store,
+    ): View {
         return $this->view('adm.campaigns.show', [
             'campaign' => new CampaignViewModel(
-                $campaign->campaign_key,
+                $campaign->name,
                 $campaign->redirect_url,
                 route('adm.campaigns.save', [$campaign->id]),
                 route('adm.campaigns'),
                 route('adm.campaigns.variants.save', [$campaign->id]),
-                $presenter->campaignStats($campaign->campaign_key),
-                $presenter->campaignStatus($campaign->id),
+                new CampaignStats(-1, -1),
+                new CampaignStatus($service->campaignStatus($campaign->id)),
                 $campaign->active_since,
                 $campaign->active_until,
                 $campaign->target_views,
-                $presenter->bannerViewModelsById($campaign->id)),
+                \array_map(
+                    fn(Campaigns\CampaignVariant $variant) => new BannerViewModel(
+                        $variant->payload->imageUrl,
+                        new CampaignStats($variant->views, $variant->clicks),
+                        $variant->payload->bannerType),
+                    $store->findCampaign($campaign->id)->variants)),
         ]);
     }
 
@@ -54,21 +65,17 @@ class CampaignsController extends BaseController {
     public function save(Eloquent\Campaign $campaign, Campaigns\CampaignsStore $store): RedirectResponse {
         $form = $this->getForm($campaign);
         $form->validate();
-        $campaignModel = new Campaigns\Campaign(
-            $form->getValue('campaign_key'),
+        $campaignModel = new Campaigns\CampaignPayload(
+            $form->getValue('name'),
             $form->getValue('redirect_url'),
             $form->getValue('active_since'),
             $form->getValue('active_until'),
-            $form->getValue('target_views'),
-            []);
+            $form->getValue('target_views'));
         if ($campaign->exists) {
             $store->updateCampaign($campaign->id, $campaignModel);
             $campaignId = $campaign->id;
         } else {
-            $campaignId = $store->createCampaignReturnId($campaignModel);
-            if ($campaignId === null) {
-                abort(400);
-            }
+            $campaignId = $store->createCampaign($campaignModel);
         }
         return redirect()
             ->route('adm.campaigns.show', [$campaignId])

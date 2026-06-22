@@ -3,7 +3,6 @@ namespace Coyote\Modules\Campaigns\Adm\Ui;
 
 use Boduch\Grid\Components\EditButton;
 use Boduch\Grid\Components\ShowButton;
-use Boduch\Grid\Decorators\CodeText;
 use Boduch\Grid\Decorators\LongText;
 use Boduch\Grid\Order;
 use Coyote\Domain\Html;
@@ -24,10 +23,9 @@ class CampaignsGrid extends Grid {
                     return link_to_route('adm.campaigns.show', $row->id, [$row->id]);
                 },
             ])
-            ->addColumn('campaign_key', [
-                'title'      => 'Klucz',
-                'sortable'   => true,
-                'decorators' => [new CodeText()],
+            ->addColumn('name', [
+                'title'    => 'Nazwa kampanii',
+                'sortable' => true,
             ])
             ->addColumn('redirect_url', [
                 'title'      => 'URL przekierowania',
@@ -37,12 +35,8 @@ class CampaignsGrid extends Grid {
                 'title'  => 'Aktywna',
                 'render' => fn(Campaign $campaign) => $this->campaignActiveCell($campaigns, $campaign),
             ])
-            ->addRowAction(new ShowButton(function (Campaign $row) {
-                return route('adm.campaigns.show', [$row->id]);
-            }))
-            ->addRowAction(new EditButton(function (Campaign $row) {
-                return route('adm.campaigns.save', [$row->id]);
-            }));
+            ->addRowAction(new ShowButton(fn(Campaign $row) => route('adm.campaigns.show', [$row->id])))
+            ->addRowAction(new EditButton(fn(Campaign $row) => route('adm.campaigns.save', [$row->id])));
     }
 
     private function campaignsService(): CampaignService {

@@ -1,8 +1,9 @@
 <?php
 namespace Test\Modules\Campaigns;
 
-use Modules\Campaigns\Campaign;
+use Modules\Campaigns\CampaignPayload;
 use Modules\Campaigns\CampaignService;
+use Modules\Campaigns\VariantPayload;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -52,7 +53,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign with target of 2 views
         $this->setupCampaignTargetViews(2);
         // when the campaign is viewed 0 times
-        $this->store->stubCampaignViews(0, 'horizontal');
+        $this->stubCampaignViews(0, 'horizontal');
         // then the campaign is active
         $this->assertCampaignActive();
     }
@@ -62,7 +63,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign without target views
         $this->setupCampaignTargetViews(null);
         // when the campaign is viewed 0 times
-        $this->store->stubCampaignViews(0, 'horizontal');
+        $this->stubCampaignViews(0, 'horizontal');
         // then the campaign is active
         $this->assertCampaignActive();
     }
@@ -72,7 +73,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign without target views
         $this->setupCampaignTargetViews(null);
         // when the campaign is viewed 2 times
-        $this->store->stubCampaignViews(2, 'horizontal');
+        $this->stubCampaignViews(2, 'horizontal');
         // then the campaign is active
         $this->assertCampaignActive();
     }
@@ -82,7 +83,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign with target of 2 views
         $this->setupCampaignTargetViews(2);
         // when the campaign is viewed 3 times
-        $this->store->stubCampaignViews(3, 'horizontal');
+        $this->stubCampaignViews(3, 'horizontal');
         // then the campaign is not active
         $this->assertCampaignNotActive('target-reached');
     }
@@ -92,7 +93,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign with target of 2 views
         $this->setupCampaignTargetViews(2);
         // when the campaign is viewed 3 times
-        $this->store->stubCampaignViews(3, 'sidebar');
+        $this->stubCampaignViews(3, 'sidebar');
         // then the campaign is not active
         $this->assertCampaignNotActive('target-reached');
     }
@@ -102,8 +103,8 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign with target of 2 views
         $this->setupCampaignTargetViews(7);
         // when the campaign is viewed 3 times
-        $this->store->stubCampaignViews(4, 'sidebar');
-        $this->store->stubCampaignViews(4, 'horizontal');
+        $this->stubCampaignViews(4, 'sidebar');
+        $this->stubCampaignViews(4, 'horizontal');
         // then the campaign is not active
         $this->assertCampaignNotActive('target-reached');
     }
@@ -161,13 +162,25 @@ class CampaignsActiveTest extends TestCase {
     }
 
     private function createCampaign(?string $activeSince, ?string $activeUntil, ?int $targetViews): void {
-        $this->lastCampaignId = $this->store->createCampaignReturnId(Campaign::create(
-            'campaign-key',
-            '',
-            '',
+        $this->lastCampaignId = $this->store->createCampaign(new CampaignPayload(
+            'campaign-name',
             '',
             $activeSince,
             $activeUntil,
             $targetViews));
+        $this->assertNotNull($this->store->createVariant($this->lastCampaignId, new VariantPayload('sidebar', '')));
+        $this->assertNotNull($this->store->createVariant($this->lastCampaignId, new VariantPayload('horizontal', '')));
+    }
+
+    public function stubCampaignViews(int $views, string $bannerType): void {
+        foreach ($this->store->listCampaigns() as $campaign) {
+            foreach ($campaign->variants as $variant) {
+                if ($bannerType === $variant->payload->bannerType) {
+                    foreach (range(1, $views) as $_) {
+                        $this->store->viewVariant($variant->id);
+                    }
+                }
+            }
+        }
     }
 }

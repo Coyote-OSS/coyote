@@ -2,9 +2,8 @@
 namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns;
-use Modules\Campaigns\Campaign;
 use Modules\Campaigns\CampaignBanner;
-use Modules\Campaigns\CampaignVariant;
+use PHPUnit\Framework\Assert;
 
 readonly class CampaignsFacade {
     public function __construct(
@@ -45,17 +44,23 @@ readonly class CampaignsFacade {
         ?string $redirectUrl = null,
         ?string $since = null,
         ?string $until = null,
-    ): void {
-        $this->store->createCampaignReturnId(new Campaign(
+    ): int {
+        $campaignId = $this->store->createCampaign(new Campaigns\CampaignPayload(
             $campaignKey ?? '',
             $redirectUrl ?? '',
             $since ?? '1970-01-01T00:00:00',
             $until ?? '2999-12-31T23:59:59',
-            999,
-            [
-                new CampaignVariant($sidebarBanner ?? '', 'sidebar'),
-                new CampaignVariant($horizontalBanner ?? '', 'horizontal'),
-            ]));
+            999));
+        $this->createVariant($campaignId, $sidebarBanner, 'sidebar');
+        $this->createVariant($campaignId, $horizontalBanner, 'horizontal');
+        return $campaignId;
+    }
+
+    private function createVariant(int $campaignId, ?string $banner, string $bannerType): void {
+        Assert::assertNotNull($this->store->createVariant($campaignId,
+            new Campaigns\VariantPayload(
+                $bannerType,
+                $banner ?? '')));
     }
 
     /**

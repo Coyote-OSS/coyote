@@ -40,13 +40,16 @@ readonly class CampaignService {
         return \array_filter($this->store->listCampaigns(), $this->isCampaignObjectActive(...));
     }
 
-    public function redirectUrl(string $campaignKey): string {
+    /**
+     * @deprecated
+     */
+    public function redirectUrl(int $campaignId): string {
         $redirectUrls = [];
         foreach ($this->store->listCampaigns() as $campaign) {
-            $redirectUrls[$campaign->campaignKey] = $campaign->redirectUrl;
+            $redirectUrls[$campaign->id] = $campaign->payload->redirectUrl;
         }
-        if (\array_key_exists($campaignKey, $redirectUrls)) {
-            return $redirectUrls[$campaignKey];
+        if (\array_key_exists($campaignId, $redirectUrls)) {
+            return $redirectUrls[$campaignId];
         }
         throw new NoSuchCampaign('Failed to get campaign redirect url.');
     }
@@ -60,35 +63,41 @@ readonly class CampaignService {
     }
 
     private function campaignObjectStatus(Campaign $campaign): string {
-        if (!$this->hasTarget($campaign)) {
+        return $this->campaignPayloadStatus(
+            $campaign->payload,
+            $this->campaignTotalViewCount($campaign));
+    }
+
+    private function campaignPayloadStatus(CampaignPayload $payload, int $campaignTotalViewCount): string {
+        if (!$this->hasTarget($payload)) {
             return 'misconfigured';
         }
-        if ($campaign->targetViews !== null) {
-            if ($campaign->targetViews < $this->campaignTotalViewCount($campaign)) {
+        if ($payload->activeBelowViews !== null) {
+            if ($payload->activeBelowViews < $campaignTotalViewCount) {
                 return 'target-reached';
             }
         }
-        if ($campaign->activeSince !== null) {
-            if (!$this->date->hasStarted($campaign->activeSince)) {
+        if ($payload->activeSinceDate !== null) {
+            if (!$this->date->hasStarted($payload->activeSinceDate)) {
                 return 'not-started';
             }
         }
-        if ($campaign->activeUntil !== null) {
-            if (!$this->date->hasNotFinished($campaign->activeUntil)) {
+        if ($payload->activeUntilDate !== null) {
+            if (!$this->date->hasNotFinished($payload->activeUntilDate)) {
                 return 'finished';
             }
         }
         return 'active';
     }
 
-    private function campaignTotalViewCount(Campaign $campaign): int {
-        return $this->store->campaignViewCount($campaign->campaignKey, 'horizontal')
-            + $this->store->campaignViewCount($campaign->campaignKey, 'sidebar');
+    private function hasTarget(CampaignPayload $campaign): bool {
+        $hasViewTarget = $campaign->activeBelowViews !== null;
+        $hasDateTarget = $campaign->activeUntilDate !== null;
+        return $hasViewTarget || $hasDateTarget;
     }
 
-    private function hasTarget(Campaign $campaign): bool {
-        $hasViewTarget = $campaign->targetViews !== null;
-        $hasDateTarget = $campaign->activeUntil !== null;
-        return $hasViewTarget || $hasDateTarget;
+    private function campaignTotalViewCount(Campaign $campaign): int {
+        return \array_reduce($campaign->variants,
+            fn(int $sum, CampaignVariant $variant) => $variant->views + $sum, 0);
     }
 }

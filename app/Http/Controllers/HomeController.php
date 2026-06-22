@@ -44,7 +44,7 @@ class HomeController extends Controller {
 
         $campaignBanners = $campaigns->campaignBanners();
         foreach ($campaignBanners->all() as $banner) {
-            $store->campaignView($banner->campaignKey, $banner->bannerType);
+            $store->viewVariant($banner->variantId);
         }
 
         return $this->view('home', [

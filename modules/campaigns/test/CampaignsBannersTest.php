@@ -95,41 +95,41 @@ class CampaignsBannersTest extends TestCase {
 
     #[Test]
     public function sidebarCampaignKeyForRedirectUrl(): void {
-        $this->facade->addCampaign(campaignKey:'campaignKey');
-        $this->assertEquals('campaignKey', $this->facade->getSidebarCampaignKey());
+        $campaignId = $this->facade->addCampaign(campaignKey:'campaignKey');
+        $this->assertEquals($campaignId, $this->facade->getSidebarCampaignKey());
     }
 
     #[Test]
     public function sidebarCampaignKeyRotates(): void {
-        $this->facade->addCampaign(campaignKey:'first');
-        $this->facade->addCampaign(campaignKey:'second');
-        $this->assertEquals('first', $this->facade->getSidebarCampaignKey());
+        $first = $this->facade->addCampaign(campaignKey:'first');
+        $second = $this->facade->addCampaign(campaignKey:'second');
+        $this->assertEquals($first, $this->facade->getSidebarCampaignKey());
         $this->rotateBanners->rotate();
-        $this->assertEquals('second', $this->facade->getSidebarCampaignKey());
+        $this->assertEquals($second, $this->facade->getSidebarCampaignKey());
     }
 
     #[Test]
     public function givenThreeCampaigns_firstTwoAreAvailable(): void {
-        $this->facade->addCampaign(campaignKey:'first');
-        $this->facade->addCampaign(campaignKey:'second');
-        $this->facade->addCampaign(campaignKey:'third');
-        $this->assertSame(['first', 'second'], $this->facade->getHorizontalCampaignKeys());
+        $first = $this->facade->addCampaign(campaignKey:'first');
+        $second = $this->facade->addCampaign(campaignKey:'second');
+        $third = $this->facade->addCampaign(campaignKey:'third');
+        $this->assertSame(["$first", "$second"], $this->facade->getHorizontalCampaignKeys());
     }
 
     #[Test]
     public function givenThreeCampaigns_afterRotation_lastTwoAreAvailable(): void {
-        $this->facade->addCampaign(campaignKey:'first');
-        $this->facade->addCampaign(campaignKey:'second');
-        $this->facade->addCampaign(campaignKey:'third');
+        $first = $this->facade->addCampaign(campaignKey:'first');
+        $second = $this->facade->addCampaign(campaignKey:'second');
+        $third = $this->facade->addCampaign(campaignKey:'third');
         $this->rotateBanners->rotate();
-        $this->assertSame(['second', 'third'], $this->facade->getHorizontalCampaignKeys());
+        $this->assertSame(["$second", "$third"], $this->facade->getHorizontalCampaignKeys());
     }
 
     #[Test]
     public function horizontalBannerContainsRedirectUrl(): void {
-        $this->facade->addCampaign(campaignKey:'first-key');
-        $this->facade->addCampaign(campaignKey:'second-key');
-        $this->assertEquals(['first-key', 'second-key'],
+        $first = $this->facade->addCampaign(campaignKey:'first-key');
+        $second = $this->facade->addCampaign(campaignKey:'second-key');
+        $this->assertEquals(["$first", "$second"],
             $this->facade->getHorizontalCampaignKeys());
     }
 

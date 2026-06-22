@@ -6,7 +6,7 @@ readonly class CampaignViewModel {
      * @param BannerViewModel[] $banners
      */
     public function __construct(
-        public string         $key,
+        public string         $name,
         public string         $redirectUrl,
         public string         $editHref,
         public string         $backHref,

@@ -9,7 +9,7 @@ trait Application
 {
     var ?Laravel\TestCase $laravel = null;
 
-    #[Before]
+    #[Before(30)]
     function initializeLaravel(): void
     {
         $this->laravel = StaticLaravel::get($this);

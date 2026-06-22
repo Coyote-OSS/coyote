@@ -8,11 +8,9 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
     public function buildForm(): void {
         $targetRequired = 'Jedno z pól "Aktywna do" lub "Docelowa liczba wyświetleń" jest konieczna do aktywowania kampanii.';
         $this
-            ->add('campaign_key', 'text', [
-                'label' => 'Klucz kampanii',
-                'rules' => ['required', 'string', 'min:2', 'max:32'],
-                'help'  => 'Klucz kampanii musi być unikalny (e.g. <code>mobileViking</code>, <code>myDevil</code>).',
-                'attr'  => $this->campaignKeyAttributes(),
+            ->add('name', 'text', [
+                'label' => 'Nazwa kampanii',
+                'help'  => 'Opcjonalna nazwa kampanii. Zastąpiła klucz kampanii i nie musi być unikatowa, pełni funkcję opisową.',
             ])
             ->add('redirect_url', 'text', [
                 'label' => 'URL przekierowania',
@@ -48,16 +46,5 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
             'redirect_url.required' => 'Adres przekierowania jest wymagany.',
             'campaign_key.unique'   => 'Już istnieje kampania z tym kluczem.',
         ];
-    }
-
-    private function campaignKeyAttributes(): array {
-        return $this->canEditCampaignKey() ? [] : ['readonly' => 'readonly'];
-    }
-
-    private function canEditCampaignKey(): bool {
-        if ($this->data === null) {
-            return true;
-        }
-        return $this->data->campaign_key === null;
     }
 }
