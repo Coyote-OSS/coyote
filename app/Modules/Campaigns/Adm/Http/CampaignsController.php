@@ -32,28 +32,29 @@ class CampaignsController extends BaseController {
     }
 
     public function show(
-        Campaign                       $campaign,
+        int                            $campaignId,
         Campaigns\CampaignService      $service,
         Campaigns\Store\CampaignsStore $store,
     ): View {
+        $campaign = $store->findCampaign($campaignId);
         return $this->view('adm.campaigns.show', [
             'campaign' => new CampaignViewModel(
-                $campaign->name,
-                $campaign->redirect_url,
-                route('adm.campaigns.save', [$campaign->id]),
+                $campaign->payload->name,
+                $campaign->payload->redirectUrl,
+                route('adm.campaigns.save', [$campaignId]),
                 route('adm.campaigns'),
-                route('adm.campaigns.variants.save', [$campaign->id]),
+                route('adm.campaigns.variants.save', [$campaignId]),
                 new CampaignStats(-1, -1),
-                new CampaignStatus($service->campaignStatus($campaign->id)),
-                $campaign->active_since,
-                $campaign->active_until,
-                $campaign->target_views,
+                new CampaignStatus($service->campaignStatus($campaignId)),
+                $campaign->payload->activeSinceDate,
+                $campaign->payload->activeUntilDate,
+                $campaign->payload->activeBelowViews,
                 \array_map(
                     fn(Campaigns\Store\CampaignVariant $variant) => new BannerViewModel(
                         $variant->payload->imageUrl,
                         new CampaignStats($variant->views, $variant->clicks),
                         $variant->payload->bannerType),
-                    $store->findCampaign($campaign->id)->variants)),
+                    $campaign->variants)),
         ]);
     }
 
