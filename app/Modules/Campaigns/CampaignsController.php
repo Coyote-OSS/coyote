@@ -6,7 +6,7 @@ use Illuminate\Routing\Controller;
 use Modules\Campaigns;
 
 class CampaignsController extends Controller {
-    public function __construct(private readonly Campaigns\CampaignsStore $store) {}
+    public function __construct(private readonly Campaigns\Store\CampaignsStore $store) {}
 
     public function click(int $variantId): RedirectResponse {
         $redirectUrl = $this->store->findCampaignRedirectUrl($variantId);

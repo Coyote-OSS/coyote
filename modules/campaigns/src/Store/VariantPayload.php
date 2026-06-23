@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Campaigns;
+namespace Modules\Campaigns\Store;
 
 readonly class VariantPayload {
     public function __construct(

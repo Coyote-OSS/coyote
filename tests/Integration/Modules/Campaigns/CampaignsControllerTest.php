@@ -2,9 +2,9 @@
 namespace Tests\Integration\Modules\Campaigns;
 
 use Coyote\Modules\Campaigns\CampaignsController;
-use Modules\Campaigns\CampaignPayload;
-use Modules\Campaigns\CampaignsStore;
-use Modules\Campaigns\VariantPayload;
+use Modules\Campaigns\Store\CampaignPayload;
+use Modules\Campaigns\Store\CampaignsStore;
+use Modules\Campaigns\Store\VariantPayload;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

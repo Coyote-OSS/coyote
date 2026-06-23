@@ -4,7 +4,7 @@ namespace Coyote\Modules\Campaigns;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\Campaigns;
-use Modules\Campaigns\CampaignsStore;
+use Modules\Campaigns\Store\CampaignsStore;
 use Psr\Clock\ClockInterface;
 use Symfony;
 

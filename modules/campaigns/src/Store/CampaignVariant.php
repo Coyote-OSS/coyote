@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Campaigns;
+namespace Modules\Campaigns\Store;
 
 readonly class CampaignVariant {
     public function __construct(

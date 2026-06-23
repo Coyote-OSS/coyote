@@ -7,8 +7,8 @@ use PHPUnit\Framework\Assert;
 
 readonly class CampaignsFacade {
     public function __construct(
-        private Campaigns\CampaignService $campaigns,
-        private Campaigns\CampaignsStore  $store,
+        private Campaigns\CampaignService      $campaigns,
+        private Campaigns\Store\CampaignsStore $store,
     ) {}
 
     /**
@@ -45,7 +45,7 @@ readonly class CampaignsFacade {
         ?string $since = null,
         ?string $until = null,
     ): int {
-        $campaignId = $this->store->createCampaign(new Campaigns\CampaignPayload(
+        $campaignId = $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
             $campaignKey ?? '',
             $redirectUrl ?? '',
             $since ?? '1970-01-01T00:00:00',
@@ -58,7 +58,7 @@ readonly class CampaignsFacade {
 
     private function createVariant(int $campaignId, ?string $banner, string $bannerType): void {
         Assert::assertNotNull($this->store->createVariant($campaignId,
-            new Campaigns\VariantPayload(
+            new Campaigns\Store\VariantPayload(
                 $bannerType,
                 $banner ?? '')));
     }

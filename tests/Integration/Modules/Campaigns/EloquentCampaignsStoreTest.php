@@ -6,13 +6,13 @@ use Illuminate\Database;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use Modules\Campaigns;
-use Modules\Campaigns\CampaignsStore;
-use Modules\Campaigns\VariantPayload;
+use Modules\Campaigns\Store\CampaignsStore;
+use Modules\Campaigns\Store\VariantPayload;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Test\Modules\Campaigns\CampaignStoreContractTests;
+use Test\Modules\Campaigns\Store\CampaignStoreContractTests;
 use Tests\Legacy\IntegrationNew\BaseFixture\Server;
 
 #[CoversClass(EloquentCampaignsStore::class)]
@@ -32,7 +32,7 @@ class EloquentCampaignsStoreTest extends TestCase {
 
     #[Test]
     public function insertsCampaignWithPayload(): void {
-        $this->store->createCampaign(new Campaigns\CampaignPayload(
+        $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
             'campaign-name', 'redirect-url', '2011-01-01', '2022-02-02', 42,
         ));
         $this->laravel->assertSeeInDatabase('module_campaigns', [

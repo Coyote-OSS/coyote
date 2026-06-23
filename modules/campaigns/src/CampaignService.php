@@ -1,6 +1,11 @@
 <?php
 namespace Modules\Campaigns;
 
+use Modules\Campaigns\Store\Campaign;
+use Modules\Campaigns\Store\CampaignPayload;
+use Modules\Campaigns\Store\CampaignsStore;
+use Modules\Campaigns\Store\CampaignVariant;
+
 readonly class CampaignService {
     private CampaignBannerSelector $selector;
 

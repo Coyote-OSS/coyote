@@ -1,6 +1,8 @@
 <?php
 namespace Modules\Campaigns;
 
+use Modules\Campaigns\Store\Campaign;
+
 readonly class CampaignBannerSelector {
     private ProportionalInterleaver $interleaver;
     private SlidingWindow $window;

@@ -1,11 +1,11 @@
 <?php
-namespace Test\Modules\Campaigns;
+namespace Test\Modules\Campaigns\Store;
 
-use Modules\Campaigns\Campaign;
-use Modules\Campaigns\CampaignPayload;
-use Modules\Campaigns\CampaignsStore;
-use Modules\Campaigns\CampaignVariant;
-use Modules\Campaigns\VariantPayload;
+use Modules\Campaigns\Store\Campaign;
+use Modules\Campaigns\Store\CampaignPayload;
+use Modules\Campaigns\Store\CampaignsStore;
+use Modules\Campaigns\Store\CampaignVariant;
+use Modules\Campaigns\Store\VariantPayload;
 
 class InMemoryCampaignsStore implements CampaignsStore {
     /** @var int[] */

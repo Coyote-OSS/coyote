@@ -4,7 +4,7 @@ namespace Adm\Http;
 use Coyote\Modules\Campaigns\Adm;
 use Coyote\Modules\Campaigns\EloquentCampaignsStore;
 use Illuminate\Testing\TestResponse;
-use Modules\Campaigns\CampaignPayload;
+use Modules\Campaigns\Store\CampaignPayload;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;

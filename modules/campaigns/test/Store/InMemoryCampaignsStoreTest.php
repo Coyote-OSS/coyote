@@ -1,7 +1,7 @@
 <?php
-namespace Test\Modules\Campaigns;
+namespace Test\Modules\Campaigns\Store;
 
-use Modules\Campaigns\CampaignsStore;
+use Modules\Campaigns\Store\CampaignsStore;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

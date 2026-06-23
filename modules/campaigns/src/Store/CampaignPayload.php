@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Campaigns;
+namespace Modules\Campaigns\Store;
 
 readonly class CampaignPayload {
     public function __construct(

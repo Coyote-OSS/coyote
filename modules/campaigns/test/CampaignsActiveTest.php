@@ -1,13 +1,14 @@
 <?php
 namespace Test\Modules\Campaigns;
 
-use Modules\Campaigns\CampaignPayload;
 use Modules\Campaigns\CampaignService;
-use Modules\Campaigns\VariantPayload;
+use Modules\Campaigns\Store\CampaignPayload;
+use Modules\Campaigns\Store\VariantPayload;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Test\Modules\Campaigns\Store\InMemoryCampaignsStore;
 
 #[CoversClass(CampaignService::class)]
 class CampaignsActiveTest extends TestCase {

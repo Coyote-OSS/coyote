@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Campaigns;
+namespace Modules\Campaigns\Store;
 
 interface CampaignsStore {
     public function createCampaign(CampaignPayload $payload): int;

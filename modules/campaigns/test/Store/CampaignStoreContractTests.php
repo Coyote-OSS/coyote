@@ -1,9 +1,9 @@
 <?php
-namespace Test\Modules\Campaigns;
+namespace Test\Modules\Campaigns\Store;
 
-use Modules\Campaigns\CampaignPayload;
-use Modules\Campaigns\CampaignsStore;
-use Modules\Campaigns\VariantPayload;
+use Modules\Campaigns\Store\CampaignPayload;
+use Modules\Campaigns\Store\CampaignsStore;
+use Modules\Campaigns\Store\VariantPayload;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;

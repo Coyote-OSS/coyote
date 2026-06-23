@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Test\Modules\Campaigns\Store\InMemoryCampaignsStore;
 
 #[CoversClass(CampaignService::class)]
 class CampaignsRedirectUrlsTest extends TestCase {

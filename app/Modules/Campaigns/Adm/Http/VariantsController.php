@@ -6,8 +6,8 @@ use Coyote\Modules\Campaigns\Adm\Ui\VariantsForm;
 use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Modules\Campaigns\CampaignsStore;
-use Modules\Campaigns\VariantPayload;
+use Modules\Campaigns\Store\CampaignsStore;
+use Modules\Campaigns\Store\VariantPayload;
 
 class VariantsController extends BaseController {
     public function __construct() {

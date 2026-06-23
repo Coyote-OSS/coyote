@@ -32,9 +32,9 @@ class CampaignsController extends BaseController {
     }
 
     public function show(
-        Campaign                  $campaign,
-        Campaigns\CampaignService $service,
-        Campaigns\CampaignsStore  $store,
+        Campaign                       $campaign,
+        Campaigns\CampaignService      $service,
+        Campaigns\Store\CampaignsStore $store,
     ): View {
         return $this->view('adm.campaigns.show', [
             'campaign' => new CampaignViewModel(
@@ -49,7 +49,7 @@ class CampaignsController extends BaseController {
                 $campaign->active_until,
                 $campaign->target_views,
                 \array_map(
-                    fn(Campaigns\CampaignVariant $variant) => new BannerViewModel(
+                    fn(Campaigns\Store\CampaignVariant $variant) => new BannerViewModel(
                         $variant->payload->imageUrl,
                         new CampaignStats($variant->views, $variant->clicks),
                         $variant->payload->bannerType),
@@ -62,10 +62,10 @@ class CampaignsController extends BaseController {
         return $this->view('adm.campaigns.save')->with('form', $this->getForm($campaign));
     }
 
-    public function save(Eloquent\Campaign $campaign, Campaigns\CampaignsStore $store): RedirectResponse {
+    public function save(Eloquent\Campaign $campaign, Campaigns\Store\CampaignsStore $store): RedirectResponse {
         $form = $this->getForm($campaign);
         $form->validate();
-        $campaignModel = new Campaigns\CampaignPayload(
+        $campaignModel = new Campaigns\Store\CampaignPayload(
             $form->getValue('name'),
             $form->getValue('redirect_url'),
             $form->getValue('active_since'),
