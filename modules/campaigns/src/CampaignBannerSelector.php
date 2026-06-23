@@ -17,7 +17,7 @@ readonly class CampaignBannerSelector {
     public function select(array $campaigns): CampaignBanners {
         return new CampaignBanners(
             $this->campaignBanners($campaigns, 'horizontal', 2),
-            $this->campaignBanners($campaigns, 'sidebar', 1)[0]);
+            $this->campaignBanners($campaigns, 'sidebar', 1)[0] ?? null);
     }
 
     /**
