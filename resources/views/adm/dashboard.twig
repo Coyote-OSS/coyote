@@ -18,36 +18,6 @@
     </ul>
   </div>
 
-  {% if cohortCanAccess %}
-    <div class="card">
-      <div class="card-header">Analiza kohortowa</div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <div class="d-flex justify-content-between align-items-center">
-            <span>
-              {{ icon('adminTickMark') }}
-              <span>Dane kohortowe z: <code>{{ cohortByStream.downloadDate }}</code> (na podstawie dziennika zdarzeń)</span>
-            </span>
-            <a href="{{ cohortByStream.downloadUrl }}" class="btn btn-sm btn-secondary" target="_blank">
-              Pobierz
-            </a>
-          </div>
-        </li>
-        <li class="list-group-item">
-          <div class="d-flex justify-content-between align-items-center">
-            <span>
-              {{ icon('adminTickMark') }}
-              <span>Dane kohortowe z: <code>{{ cohortByView.downloadDate }}</code> (na podstawie wyświetleń podstron)</span>
-            </span>
-            <a href="{{ cohortByView.downloadUrl }}" class="btn btn-sm btn-secondary" target="_blank">
-              Pobierz
-            </a>
-          </div>
-        </li>
-      </ul>
-    </div>
-  {% endif %}
-
   <ul class="nav nav-pills mb-3 justify-content-end">
     <li class="nav-item" role="presentation">
       <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#pills-days-activity" type="button">ostatnie 30 dni</button>
@@ -57,9 +27,6 @@
     </li>
     <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-months-activity" type="button">ostatnie 30 miesięcy</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-years-activity" type="button">ostatnie 30 lat</button>
     </li>
   </ul>
   <div class="tab-content" id="pills-tabContent">
@@ -72,9 +39,6 @@
     <div class="tab-pane" id="pills-months-activity">
       {{ activityChartMonths }}
     </div>
-    <div class="tab-pane" id="pills-years-activity">
-      {{ activityChartYears }}
-    </div>
   </div>
   <ul class="nav nav-pills mb-3 justify-content-end">
     <li class="nav-item" role="presentation">
@@ -83,9 +47,6 @@
     <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-months" type="button">ostatnie 30 miesięcy</button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-years" type="button">ostatnie 30 lat</button>
-    </li>
   </ul>
   <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane show active" id="pills-weeks">
@@ -93,9 +54,6 @@
     </div>
     <div class="tab-pane" id="pills-months">
       {{ registrationsChartMonths }}
-    </div>
-    <div class="tab-pane" id="pills-years">
-      {{ registrationsChartYears }}
     </div>
   </div>
 
@@ -109,9 +67,6 @@
     <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-months-leave" type="button">ostatnie 30 miesięcy</button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-years-leave" type="button">ostatnie 30 lat</button>
-    </li>
   </ul>
   <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane" id="pills-days-leave">
@@ -122,9 +77,6 @@
     </div>
     <div class="tab-pane" id="pills-months-leave">
       {{ postsCreatedChartMonths }}
-    </div>
-    <div class="tab-pane" id="pills-years-leave">
-      {{ postsCreatedChartYears }}
     </div>
   </div>
 
@@ -138,9 +90,6 @@
     <li class="nav-item" role="presentation">
       <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-months-jobs" type="button">ostatnie 30 miesięcy</button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-years-jobs" type="button">ostatnie 30 lat</button>
-    </li>
   </ul>
   <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane" id="pills-days-jobs">
@@ -151,9 +100,6 @@
     </div>
     <div class="tab-pane" id="pills-months-jobs">
       {{ jobsCreatedChartMonths }}
-    </div>
-    <div class="tab-pane" id="pills-years-jobs">
-      {{ jobsCreatedChartYears }}
     </div>
   </div>
 {% endblock %}

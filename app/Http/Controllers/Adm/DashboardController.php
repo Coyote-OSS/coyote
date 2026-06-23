@@ -47,32 +47,18 @@ class DashboardController extends BaseController {
 
             'registrationsChartWeeks'  => $this->historyChartHtml($userRegistrations, Period::Week),
             'registrationsChartMonths' => $this->historyChartHtml($userRegistrations, Period::Month),
-            'registrationsChartYears'  => $this->historyChartHtml($userRegistrations, Period::Year),
 
             'postsCreatedChartDays'   => $this->historyChartHtml($postCreated, Period::Day),
             'postsCreatedChartWeeks'  => $this->historyChartHtml($postCreated, Period::Week),
             'postsCreatedChartMonths' => $this->historyChartHtml($postCreated, Period::Month),
-            'postsCreatedChartYears'  => $this->historyChartHtml($postCreated, Period::Year),
 
             'jobsCreatedChartDays'   => $this->historyChartHtml($jobsCreated, Period::Day),
             'jobsCreatedChartWeeks'  => $this->historyChartHtml($jobsCreated, Period::Week),
             'jobsCreatedChartMonths' => $this->historyChartHtml($jobsCreated, Period::Month),
-            'jobsCreatedChartYears'  => $this->historyChartHtml($jobsCreated, Period::Year),
 
             'activityChartDays'   => $this->historyChartHtml($activity, Period::Day),
             'activityChartWeeks'  => $this->historyChartHtml($activity, Period::Week),
             'activityChartMonths' => $this->historyChartHtml($activity, Period::Month),
-            'activityChartYears'  => $this->historyChartHtml($activity, Period::Year),
-
-            'cohortCanAccess' => $this->user()->can('adm-payment'),
-            'cohortByStream'  => [
-                'downloadUrl'  => route('adm.cohort.download', ['by' => 'stream']),
-                'downloadDate' => date('Y-m-d'),
-            ],
-            'cohortByView'    => [
-                'downloadUrl'  => route('adm.cohort.download', ['by' => 'view']),
-                'downloadDate' => date('Y-m-d'),
-            ],
         ]);
     }
 
