@@ -94,8 +94,9 @@ class HomeController extends \Coyote\Http\Controllers\Controller
         $this->job->pushCriteria(new IncludeSubscribers($this->userId));
         $jobs = [];
         if (count($source)) {
+            /** @var Collection $premium */
             $premium = $result->getAggregationHits('premium_listing', true);
-            $premium = array_first($premium); // only one premium at the top
+            $premium = array_first($premium->toArray()); // only one premium at the top
             if ($premium) {
                 $source->prepend($premium);
             }
