@@ -37,6 +37,9 @@ class CampaignsController extends BaseController {
         Campaigns\Store\CampaignsStore $store,
     ): View {
         $campaign = $store->findCampaign($campaignId);
+        if ($campaign === null) {
+            abort(404);
+        }
         return $this->view('adm.campaigns.show', [
             'campaign' => new CampaignViewModel(
                 $campaign->payload->name,
@@ -44,7 +47,7 @@ class CampaignsController extends BaseController {
                 route('adm.campaigns.save', [$campaignId]),
                 route('adm.campaigns'),
                 route('adm.campaigns.variants.save', [$campaignId]),
-                new CampaignStats(-1, -1),
+                $this->campaignStats($campaign),
                 new CampaignStatus($service->campaignStatus($campaignId)),
                 $campaign->payload->activeSinceDate,
                 $campaign->payload->activeUntilDate,
@@ -56,6 +59,16 @@ class CampaignsController extends BaseController {
                         $variant->payload->bannerType),
                     $campaign->variants)),
         ]);
+    }
+
+    private function campaignStats(Campaigns\Store\Campaign $campaign): CampaignStats {
+        $views = 0;
+        $clicks = 0;
+        foreach ($campaign->variants as $variant) {
+            $views += $variant->views;
+            $clicks += $variant->clicks;
+        }
+        return new CampaignStats($views, $clicks);
     }
 
     public function edit(Eloquent\Campaign $campaign): View {
