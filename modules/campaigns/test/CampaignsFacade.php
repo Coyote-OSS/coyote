@@ -37,30 +37,42 @@ readonly class CampaignsFacade {
         return $this->sidebarBanner()->campaignKey;
     }
 
+    /**
+     * @deprecated
+     */
     public function addCampaign(
         ?string $sidebarBanner = null,
         ?string $horizontalBanner = null,
-        ?string $campaignKey = null,
+        ?string $name = null,
         ?string $redirectUrl = null,
         ?string $since = null,
         ?string $until = null,
     ): int {
-        $campaignId = $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
-            $campaignKey ?? '',
-            $redirectUrl ?? '',
-            $since ?? '1970-01-01T00:00:00',
-            $until ?? '2999-12-31T23:59:59',
-            999));
+        $campaignId = $this->createCampaign($name, $redirectUrl, $since, $until);
         $this->createVariant($campaignId, $sidebarBanner, 'sidebar');
         $this->createVariant($campaignId, $horizontalBanner, 'horizontal');
         return $campaignId;
     }
 
-    private function createVariant(int $campaignId, ?string $banner, string $bannerType): void {
+    public function createCampaign(
+        ?string $name = null,
+        ?string $redirectUrl = null,
+        ?string $since = null,
+        ?string $until = null,
+    ): int {
+        return $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
+            $name ?? '',
+            $redirectUrl ?? '',
+            $since ?? '1970-01-01T00:00:00',
+            $until ?? '2999-12-31T23:59:59',
+            999));
+    }
+
+    public function createVariant(int $campaignId, ?string $banner, string $bannerType): void {
         Assert::assertNotNull($this->store->createVariant($campaignId,
             new Campaigns\Store\VariantPayload(
                 $bannerType,
-                $banner ?? '')));
+                $banner ?? 'example-variant-image-url')));
     }
 
     /**

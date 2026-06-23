@@ -55,8 +55,8 @@ class CampaignsBannersTest extends TestCase {
 
     #[Test]
     public function horizontalBannersAreSequential(): void {
-        $this->facade->addCampaign(campaignKey:'first');
-        $this->facade->addCampaign(campaignKey:'second');
+        $this->facade->addCampaign(name:'first');
+        $this->facade->addCampaign(name:'second');
         $this->assertArrayKeys([0, 1], $this->facade->getHorizontalBannerUrls());;
     }
 
@@ -80,15 +80,15 @@ class CampaignsBannersTest extends TestCase {
 
     #[Test]
     public function twoHorizontalBanners(): void {
-        $this->facade->addCampaign(horizontalBanner:'foo.png', campaignKey:'key-1');
-        $this->facade->addCampaign(horizontalBanner:'bar.png', campaignKey:'key-2');
+        $this->facade->addCampaign(horizontalBanner:'foo.png', name:'key-1');
+        $this->facade->addCampaign(horizontalBanner:'bar.png', name:'key-2');
         $this->assertEquals(['foo.png', 'bar.png'], $this->facade->getHorizontalBannerUrls());
     }
 
     #[Test]
     public function sidebarBannerRotates(): void {
-        $this->facade->addCampaign(sidebarBanner:'first.png', campaignKey:'key-1');
-        $this->facade->addCampaign(sidebarBanner:'second.png', campaignKey:'key-2');
+        $this->facade->addCampaign(sidebarBanner:'first.png', name:'key-1');
+        $this->facade->addCampaign(sidebarBanner:'second.png', name:'key-2');
         $this->assertEquals('first.png', $this->facade->getSidebarBannerUrl());
         $this->rotateBanners->rotate();
         $this->assertEquals('second.png', $this->facade->getSidebarBannerUrl());
@@ -96,14 +96,14 @@ class CampaignsBannersTest extends TestCase {
 
     #[Test]
     public function sidebarCampaignKeyForRedirectUrl(): void {
-        $campaignId = $this->facade->addCampaign(campaignKey:'campaignKey');
+        $campaignId = $this->facade->addCampaign(name:'campaignKey');
         $this->assertEquals($campaignId, $this->facade->getSidebarCampaignKey());
     }
 
     #[Test]
     public function sidebarCampaignKeyRotates(): void {
-        $first = $this->facade->addCampaign(campaignKey:'first');
-        $second = $this->facade->addCampaign(campaignKey:'second');
+        $first = $this->facade->addCampaign(name:'first');
+        $second = $this->facade->addCampaign(name:'second');
         $this->assertEquals($first, $this->facade->getSidebarCampaignKey());
         $this->rotateBanners->rotate();
         $this->assertEquals($second, $this->facade->getSidebarCampaignKey());
@@ -111,25 +111,25 @@ class CampaignsBannersTest extends TestCase {
 
     #[Test]
     public function givenThreeCampaigns_firstTwoAreAvailable(): void {
-        $first = $this->facade->addCampaign(campaignKey:'first');
-        $second = $this->facade->addCampaign(campaignKey:'second');
-        $third = $this->facade->addCampaign(campaignKey:'third');
+        $first = $this->facade->addCampaign(name:'first');
+        $second = $this->facade->addCampaign(name:'second');
+        $third = $this->facade->addCampaign(name:'third');
         $this->assertSame(["$first", "$second"], $this->facade->getHorizontalCampaignKeys());
     }
 
     #[Test]
     public function givenThreeCampaigns_afterRotation_lastTwoAreAvailable(): void {
-        $first = $this->facade->addCampaign(campaignKey:'first');
-        $second = $this->facade->addCampaign(campaignKey:'second');
-        $third = $this->facade->addCampaign(campaignKey:'third');
+        $first = $this->facade->addCampaign(name:'first');
+        $second = $this->facade->addCampaign(name:'second');
+        $third = $this->facade->addCampaign(name:'third');
         $this->rotateBanners->rotate();
         $this->assertSame(["$second", "$third"], $this->facade->getHorizontalCampaignKeys());
     }
 
     #[Test]
     public function horizontalBannerContainsRedirectUrl(): void {
-        $first = $this->facade->addCampaign(campaignKey:'first-key');
-        $second = $this->facade->addCampaign(campaignKey:'second-key');
+        $first = $this->facade->addCampaign(name:'first-key');
+        $second = $this->facade->addCampaign(name:'second-key');
         $this->assertEquals(["$first", "$second"],
             $this->facade->getHorizontalCampaignKeys());
     }
@@ -144,6 +144,15 @@ class CampaignsBannersTest extends TestCase {
     public function horizontalBannerType(): void {
         $this->facade->addCampaign();
         $this->assertEquals('horizontal', $this->facade->horizontalBanners()[0]->bannerType);
+    }
+
+    #[Test]
+    public function givenCampaign_withTwoVariants_oneVariantIsAvailable(): void {
+        $campaignId = $this->facade->createCampaign();
+        $this->facade->createVariant($campaignId, 'first.png', 'horizontal');
+        $this->facade->createVariant($campaignId, 'second.png', 'horizontal');
+        $this->facade->createVariant($campaignId, 'third.png', 'horizontal');
+        $this->assertSame(['first.png'], $this->facade->getHorizontalBannerUrls());
     }
 
     private function assertArrayKeys(array $expectedKeys, array $actualArray): void {

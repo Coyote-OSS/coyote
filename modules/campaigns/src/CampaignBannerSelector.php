@@ -2,13 +2,12 @@
 namespace Modules\Campaigns;
 
 use Modules\Campaigns\Store\Campaign;
+use Modules\Campaigns\Store\CampaignVariant;
 
 readonly class CampaignBannerSelector {
-    private ProportionalInterleaver $interleaver;
     private SlidingWindow $window;
 
     public function __construct(private ForRotatingBanners $rotate) {
-        $this->interleaver = new ProportionalInterleaver();
         $this->window = new SlidingWindow();
     }
 
@@ -16,49 +15,57 @@ readonly class CampaignBannerSelector {
      * @param Campaign[] $campaigns
      */
     public function select(array $campaigns): CampaignBanners {
-        return $this->rotatedCampaignBanners(
-            $this->bannersOfType($campaigns, 'horizontal'),
-            $this->bannersOfType($campaigns, 'sidebar'));
-    }
-
-    /**
-     * @param CampaignBanner[][] $horizontals
-     * @param CampaignBanner[][] $sidebars
-     */
-    private function rotatedCampaignBanners(array $horizontals, array $sidebars): CampaignBanners {
         return new CampaignBanners(
-            $this->rotatedBanners($horizontals, 2),
-            $this->rotatedBanners($sidebars, 1)[0] ?? null);
+            $this->campaignBanners($campaigns, 'horizontal', 2),
+            $this->campaignBanners($campaigns, 'sidebar', 1)[0]);
     }
 
     /**
      * @param Campaign[] $campaigns
-     * @return CampaignBanner[][]
      */
-    private function bannersOfType(array $campaigns, string $bannerType): array {
-        $banners = [];
-        foreach ($campaigns as $campaign) {
-            foreach ($campaign->variants as $variant) {
-                if ($variant->payload->bannerType === $bannerType) {
-                    $banners[$campaign->id][] = new CampaignBanner(
-                        $variant->payload->imageUrl,
-                        $campaign->id,
-                        $variant->payload->bannerType,
-                        $variant->id);
-                }
-            }
-        }
-        return \array_values($banners);
+    private function campaignBanners(array $campaigns, string $bannerType, int $amount): array {
+        $bannerCampaigns = $this->campaignsWithVariantsOfType($campaigns, $bannerType);
+        $pickedCampaigns = $this->pick($bannerCampaigns, $amount);
+        return \array_map(
+            fn(Campaign $campaign) => $this->pickedBanner($campaign, $bannerType),
+            $pickedCampaigns);
+    }
+
+    private function pickedBanner(Campaign $campaign, string $bannerType): CampaignBanner {
+        $variants = $this->variantsOfType($campaign, $bannerType);
+        /** @var CampaignVariant $variant */
+        $variant = $this->pick($variants, 1)[0];
+        return new CampaignBanner(
+            $variant->payload->imageUrl,
+            $campaign->id,
+            $variant->payload->bannerType,
+            $variant->id);
     }
 
     /**
-     * @param CampaignBanner[][] $banners
-     * @return CampaignBanner[]
+     * @return CampaignVariant[]
      */
-    private function rotatedBanners(array $banners, int $amount): array {
-        return $this->window->slide(
-            $this->interleaver->interleave($banners),
-            $amount,
-            $this->rotate->rotationSeed());
+    private function variantsOfType(Campaign $campaign, string $bannerType): array {
+        return \array_values(array_filter(
+            $campaign->variants,
+            fn(CampaignVariant $variant) => $variant->payload->bannerType === $bannerType));
+    }
+
+    private function pick(array $values, int $amount): array {
+        return $this->window->slide($values, $amount, $this->rotate->rotationSeed());
+    }
+
+    /**
+     * @param Campaign[] $campaigns
+     * @return Campaign[]
+     */
+    private function campaignsWithVariantsOfType(array $campaigns, string $bannerType): array {
+        return \array_values(\array_filter($campaigns,
+            fn(Campaign $campaign): bool => $this->campaignHasVariant($campaign, $bannerType)));
+    }
+
+    public function campaignHasVariant(Campaign $campaign, string $bannerType): bool {
+        return \array_any($campaign->variants,
+            fn(CampaignVariant $variant) => $variant->payload->bannerType === $bannerType);
     }
 }
