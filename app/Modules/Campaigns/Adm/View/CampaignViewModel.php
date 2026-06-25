@@ -3,7 +3,7 @@ namespace Coyote\Modules\Campaigns\Adm\View;
 
 readonly class CampaignViewModel {
     /**
-     * @param BannerViewModel[] $banners
+     * @param VariantViewModel[] $variants
      */
     public function __construct(
         public string         $name,
@@ -16,6 +16,6 @@ readonly class CampaignViewModel {
         public ?string        $dateSince,
         public ?string        $dateUntil,
         public ?int           $targetViews,
-        public array          $banners,
+        public array          $variants,
     ) {}
 }
