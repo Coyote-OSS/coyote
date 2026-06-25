@@ -49,7 +49,7 @@ class EloquentCampaignsStoreTest extends TestCase {
     public function insertsCampaignVariantWithPayload(): void {
         $campaignId = $this->createCampaign();
         $variantId = $this->store->createVariant($campaignId, new VariantPayload(
-            VariantType::Horizontal,
+            VariantType::Standard,
             'image-url',
         ));
         $this->laravel->assertSeeInDatabase('module_campaign_variants', [

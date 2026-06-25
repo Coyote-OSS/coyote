@@ -273,7 +273,7 @@ trait CampaignStoreContractTests {
         // then variant is found with payload
         [$variant] = $this->store->findCampaign($campaignId)->variants;
         $variantPayload = $variant->payload;
-        Assert::assertSame(VariantType::Horizontal, $variantPayload->type);
+        Assert::assertSame(VariantType::Standard, $variantPayload->type);
         Assert::assertSame('image-url', $variantPayload->imageUrl);
     }
 

@@ -14,9 +14,10 @@ readonly class VariantPayload {
 
     private static function variantType(string $bannerType): VariantType {
         return match ($bannerType) {
-            'horizontal' => VariantType::Horizontal,
-            'sidebar'    => VariantType::Sidebar,
-            default      => throw new Exception(),
+            'horizontal'  => VariantType::Standard,
+            'sidebar'     => VariantType::Sidebar,
+            'leaderboard' => VariantType::LeaderBoard,
+            default       => throw new Exception(),
         };
     }
 
@@ -24,14 +25,4 @@ readonly class VariantPayload {
         public VariantType $type,
         public string      $imageUrl,
     ) {}
-
-    /**
-     * @deprecated
-     */
-    public function bannerType(): string {
-        return match ($this->type) {
-            VariantType::Horizontal => 'horizontal',
-            VariantType::Sidebar    => 'sidebar',
-        };
-    }
 }

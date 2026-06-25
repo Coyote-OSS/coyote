@@ -39,7 +39,7 @@ class CampaignsControllerTest extends TestCase {
             null,
             null,
             null));
-        return $store->createVariant($campaignId, new VariantPayload(VariantType::Horizontal, 'image.png'));
+        return $store->createVariant($campaignId, new VariantPayload(VariantType::Standard, 'image.png'));
     }
 
     private function instance(): CampaignsStore {
