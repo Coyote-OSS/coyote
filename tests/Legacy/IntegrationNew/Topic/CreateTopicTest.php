@@ -7,18 +7,16 @@ use Tests\Legacy\IntegrationNew\BaseFixture\Forum;
 use Tests\Legacy\IntegrationNew\BaseFixture\Server;
 use Tests\Legacy\IntegrationNew\BaseFixture\Server\Laravel;
 
-class CreateTopicTest extends TestCase
-{
+class CreateTopicTest extends TestCase {
     use Laravel\Application;
     use Laravel\Transactional;
     use Server\Http;
     use Forum\Models;
 
     #[Test]
-    public function createsTopic_asNewUser(): void
-    {
+    public function createsTopic_asNewUser(): void {
         $this->loginAsUser();
-        $response = $this->laravel->post('/Forum/Newbie/Submit', [
+        $response = $this->laravel->post('/Forum/Java/Submit', [
             'title' => 'One two three',
             'text'  => 'content',
         ]);
@@ -28,8 +26,7 @@ class CreateTopicTest extends TestCase
         ]);
     }
 
-    private function loginAsUser(): void
-    {
-        $this->server->loginById($this->driver->newUserReturnId());
+    private function loginAsUser(): void {
+        $this->server->loginById($this->driver->newUserReturnId(emailConfirmed:true));
     }
 }

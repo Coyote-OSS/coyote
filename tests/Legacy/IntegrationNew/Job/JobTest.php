@@ -1,28 +1,22 @@
 <?php
 namespace Tests\Legacy\IntegrationNew\Job;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\Legacy\IntegrationNew\BaseFixture\Server;
 
-class Test extends TestCase
-{
+class JobTest extends TestCase {
     use Server\Http;
 
-    /**
-     * @test
-     */
-    public function salaryArray()
-    {
+    #[Test]
+    public function salaryArray() {
         $this->laravel
             ->get('/Praca?salary[]=1')
             ->assertSuccessful();
     }
 
-    /**
-     * @test
-     */
-    public function salaryNonInteger()
-    {
+    #[Test]
+    public function salaryNonInteger() {
         $this->laravel
             ->get('/Praca?salary=foo')
             ->assertSuccessful();

@@ -1,31 +1,25 @@
 <?php
 namespace Tests\Legacy\IntegrationNew\Seo\JobBoard;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\Legacy\IntegrationNew\Seo;
 
-class Test extends TestCase
-{
+class JobBoardTest extends TestCase {
     use Seo\Meta\Fixture\MetaCanonical;
 
-    public function test()
-    {
+    #[Test]
+    public function test() {
         $this->assertCanonical('/Praca/Technologia/java', '/Praca');
     }
 
-    /**
-     * @test
-     */
-    public function anyTag()
-    {
+    #[Test]
+    public function anyTag() {
         $this->assertCanonical('/Praca/Technologia/kotlin', '/Praca');
     }
 
-    /**
-     * @test
-     */
-    public function pagination()
-    {
+    #[Test]
+    public function pagination() {
         $this->assertCanonical('/Praca/Technologia/java?page=2', '/Praca?page=2');
     }
 }
