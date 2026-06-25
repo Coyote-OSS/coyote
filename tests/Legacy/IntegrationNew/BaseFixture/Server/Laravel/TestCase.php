@@ -11,8 +11,7 @@ use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithSession;
 use Symfony\Component\HttpFoundation;
 
-class TestCase extends \Illuminate\Foundation\Testing\TestCase
-{
+class TestCase extends \Illuminate\Foundation\Testing\TestCase {
     use OverridesSymfonyRequest;
     use InteractsWithDatabase;
     use InteractsWithSession;
@@ -20,26 +19,17 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     /** @var Application */
     public $app;
     /** @var callable */
-    private $beforeBoot;
+    public $beforeBoot;
 
-    public function __construct(string $name, callable $beforeBoot)
-    {
-        parent::__construct($name);
-        $this->beforeBoot = $beforeBoot;
-    }
-
-    public function setUp(): void
-    {
+    public function setUp(): void {
         parent::setUp();
     }
 
-    public function tearDown(): void
-    {
+    public function tearDown(): void {
         parent::tearDown();
     }
 
-    public function createApplication(): Application
-    {
+    public function createApplication(): Application {
         /** @var Application $app */
         $app = require __DIR__ . '/../../../../../../bootstrap/app.php';
         ($this->beforeBoot)($app);
@@ -50,48 +40,40 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         return $app;
     }
 
-    private function beforeBoot(Application $app): void
-    {
+    private function beforeBoot(Application $app): void {
         $app->afterBootstrapping(LoadConfiguration::class, $this->disableSentry(...));
     }
 
-    private function disableSentry(Application $app): void
-    {
+    private function disableSentry(Application $app): void {
         /** @var Repository $config */
         $config = $app[Config\Repository::class];
         $config->set('sentry.dsn', '');
     }
 
-    protected function prepareUrlForRequest($uri): string
-    {
+    protected function prepareUrlForRequest($uri): string {
         return $uri;
     }
 
-    protected function mapSymfonyRequest(string $uri, HttpFoundation\Request $request): HttpFoundation\Request
-    {
+    protected function mapSymfonyRequest(string $uri, HttpFoundation\Request $request): HttpFoundation\Request {
         if (\str_ends_with($uri, '?')) {
             $request->server->set('REQUEST_URI', $request->server->get('REQUEST_URI') . '?');
         }
         return $request;
     }
 
-    public function assertSeeInDatabase(string $table, array $data): void
-    {
+    public function assertSeeInDatabase(string $table, array $data): void {
         $this->assertDatabaseHas($table, $data);
     }
 
-    public function assertDatabaseRecordNotExists(string $table, array $data): void
-    {
+    public function assertDatabaseRecordNotExists(string $table, array $data): void {
         $this->assertDatabaseMissing($table, $data);
     }
 
-    public function databaseTable(string $table): Builder
-    {
+    public function databaseTable(string $table): Builder {
         return $this->getConnection(null, $table)->table($table);
     }
 
-    public function resolve(string $className): object
-    {
+    public function resolve(string $className): object {
         return $this->app->get($className);
     }
 }
