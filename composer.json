@@ -18,7 +18,6 @@
     "ext-json": "*",
     "ext-libxml": "*",
     "ext-simplexml": "*",
-    "barryvdh/laravel-debugbar": "^v3.6",
     "ddeboer/vatin": "^2.2",
     "doctrine/dbal": "^3.0",
     "elasticsearch/elasticsearch": "~v7.17.2",
