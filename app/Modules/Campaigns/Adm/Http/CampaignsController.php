@@ -5,10 +5,10 @@ use Boduch\Grid\Source\EloquentSource;
 use Coyote\Http\Controllers\Adm\BaseController;
 use Coyote\Modules\Campaigns\Adm\Ui\CampaignsForm;
 use Coyote\Modules\Campaigns\Adm\Ui\CampaignsGrid;
-use Coyote\Modules\Campaigns\Adm\View\VariantViewModel;
 use Coyote\Modules\Campaigns\Adm\View\CampaignStats;
 use Coyote\Modules\Campaigns\Adm\View\CampaignStatus;
 use Coyote\Modules\Campaigns\Adm\View\CampaignViewModel;
+use Coyote\Modules\Campaigns\Adm\View\VariantViewModel;
 use Coyote\Modules\Campaigns\Eloquent;
 use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Coyote\Services\FormBuilder\Form;
@@ -56,7 +56,7 @@ class CampaignsController extends BaseController {
                     fn(Campaigns\Store\CampaignVariant $variant) => new VariantViewModel(
                         $variant->payload->imageUrl,
                         new CampaignStats($variant->views, $variant->clicks),
-                        $variant->payload->bannerType),
+                        $variant->payload->type),
                     $campaign->variants)),
         ]);
     }

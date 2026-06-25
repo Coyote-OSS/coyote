@@ -4,6 +4,7 @@ namespace Test\Modules\Campaigns\Store;
 use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\VariantPayload;
+use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
@@ -268,11 +269,11 @@ trait CampaignStoreContractTests {
         // given a campaign
         $campaignId = $this->createCampaign();
         // when variant is created with payload
-        $this->store->createVariant($campaignId, new VariantPayload('banner-type', 'image-url'));
+        $this->store->createVariant($campaignId, VariantPayload::from('horizontal', 'image-url'));
         // then variant is found with payload
         [$variant] = $this->store->findCampaign($campaignId)->variants;
         $variantPayload = $variant->payload;
-        Assert::assertSame('banner-type', $variantPayload->bannerType);
+        Assert::assertSame(VariantType::Horizontal, $variantPayload->type);
         Assert::assertSame('image-url', $variantPayload->imageUrl);
     }
 
@@ -326,6 +327,6 @@ trait CampaignStoreContractTests {
     }
 
     private function exampleVariantPayload(): VariantPayload {
-        return new VariantPayload('example-banner-type', 'example-image-url');
+        return VariantPayload::from('horizontal', 'example-image-url');
     }
 }

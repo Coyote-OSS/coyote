@@ -5,6 +5,7 @@ use Coyote\Modules\Campaigns\CampaignsController;
 use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\VariantPayload;
+use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -38,9 +39,7 @@ class CampaignsControllerTest extends TestCase {
             null,
             null,
             null));
-        return $store->createVariant($campaignId, new VariantPayload(
-            'horizontal', 'image.png',
-        ));
+        return $store->createVariant($campaignId, new VariantPayload(VariantType::Horizontal, 'image.png'));
     }
 
     private function instance(): CampaignsStore {

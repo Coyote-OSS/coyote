@@ -26,7 +26,7 @@ class VariantsController extends BaseController {
     public function save(int $campaign, CampaignsStore $store): RedirectResponse {
         $form = $this->createForm(VariantsForm::class);
         $form->validate();
-        $variantId = $store->createVariant($campaign, new VariantPayload(
+        $variantId = $store->createVariant($campaign, VariantPayload::from(
             $form->getField('type'),
             $form->getField('image_url'),
         ));
