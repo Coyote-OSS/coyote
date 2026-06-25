@@ -1,6 +1,8 @@
 <?php
 namespace Coyote\Modules\Campaigns;
 
+use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
+use Coyote\Modules\Campaigns\User\CampaignsController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\Campaigns;
@@ -34,6 +36,8 @@ class CampaignsServiceProvider extends ServiceProvider {
     }
 
     private function registerRoutes(Router $router): void {
-        $router->get('/campaigns/{variantId}', [CampaignsController::class, 'click']);
+        $router
+            ->get('/campaigns/{variantId}', [CampaignsController::class, 'click'])
+            ->name('campaigns.click');
     }
 }

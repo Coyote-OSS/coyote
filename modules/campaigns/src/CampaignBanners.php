@@ -1,6 +1,8 @@
 <?php
 namespace Modules\Campaigns;
 
+use Modules\Campaigns\Store\CampaignsStore;
+
 readonly class CampaignBanners {
     /**
      * @param CampaignBanner[] $horizontal
@@ -10,13 +12,12 @@ readonly class CampaignBanners {
         public ?CampaignBanner $sidebar,
     ) {}
 
-    /**
-     * @return CampaignBanner[]
-     */
-    public function all(): array {
-        if ($this->sidebar === null) {
-            return $this->horizontal;
+    public function visitVariants(CampaignsStore $store): void {
+        if ($this->sidebar) {
+            $store->viewVariant($this->sidebar->variantId);
         }
-        return [...$this->horizontal, $this->sidebar];
+        foreach ($this->horizontal as $banner) {
+            $store->viewVariant($banner->variantId);
+        }
     }
 }

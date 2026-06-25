@@ -68,7 +68,8 @@
       "Coyote\\": "app/",
       "Database\\Seeders\\": "database/seeders/",
       "Neon2\\": "neon2/app/src/",
-      "Modules\\Campaigns\\": "modules/campaigns/src"
+      "Modules\\Campaigns\\": "modules/campaigns/src",
+      "View\\Modules\\Campaigns\\": "resources/modules/Campaigns/"
     },
     "files": [
       "app/helpers.php",

@@ -9,6 +9,7 @@ use Coyote\Http\Resources\FlagResource;
 use Coyote\Http\Resources\PollResource;
 use Coyote\Http\Resources\PostCollection;
 use Coyote\Http\Resources\TopicResource;
+use Coyote\Modules\Campaigns\User\CampaignPresenter;
 use Coyote\Post;
 use Coyote\Repositories\Criteria\Post\WithSubscribers;
 use Coyote\Repositories\Criteria\Post\WithTrashedInfo;
@@ -36,6 +37,7 @@ class TopicController extends BaseController {
         Topic                          $topic,
         Campaigns\CampaignService      $campaigns,
         Campaigns\Store\CampaignsStore $store,
+        CampaignPresenter              $presenter,
     ): Collection|View|array {
         if (!$this->visibleDespiteIncognitoUser($topic)) {
             abort(404);
@@ -165,9 +167,7 @@ class TopicController extends BaseController {
         $post = array_first($posts['data']);
 
         $campaignBanners = $campaigns->campaignBanners();
-        foreach ($campaignBanners->all() as $banner) {
-            $store->viewVariant($banner->variantId);
-        }
+        $campaignBanners->visitVariants($store);
 
         return $this
             ->view('forum.topic', [
@@ -192,7 +192,7 @@ class TopicController extends BaseController {
                 'flags'                   => $this->flags($forum),
                 'schema_topic'            => $this->discussionForumPosting($topic, $post['html']),
                 'topic_ads'               => $this->userIncludeAds(),
-                'campaign_banners_topic'  => $campaignBanners,
+                'campaign_banners_topic'  => $presenter->bannerSet($campaignBanners),
             ]);
     }
 

@@ -1,0 +1,22 @@
+{% macro campaignBanner(placeholder_size, bannerSet) %}
+  <div class="campaign-banner">
+    {% if placeholder_size == 'sidebar' and bannerSet.sidebar %}
+      {{ _self.bannerImage(bannerSet.sidebar) }}
+    {% endif %}
+    {% if placeholder_size == 'horizontal' and bannerSet.horizontal %}
+      <div class="row g-2 justify-content-center">
+        {% for banner in bannerSet.horizontal %}
+          <div class="col-12 col-lg-6">
+            {{ _self.bannerImage(banner) }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro bannerImage(banner) %}
+  <a href="{{ banner.redirectUrl }}" target="_blank">
+    <img src="{{ banner.imageUrl }}"/>
+  </a>
+{% endmacro %}

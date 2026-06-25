@@ -7,6 +7,7 @@ use Coyote\Http\Resources\Api\MicroblogResource;
 use Coyote\Http\Resources\FlagResource;
 use Coyote\Http\Resources\MicroblogCollection;
 use Coyote\Microblog;
+use Coyote\Modules\Campaigns\User\CampaignPresenter;
 use Coyote\Repositories\Criteria\Forum\OnlyThoseWithAccess as OnlyThoseForumsWithAccess;
 use Coyote\Repositories\Criteria\Forum\SkipHiddenCategories;
 use Coyote\Repositories\Criteria\SkipIncognitoUsers;
@@ -36,6 +37,7 @@ class HomeController extends Controller {
     public function index(
         Campaigns\CampaignService      $campaigns,
         Campaigns\Store\CampaignsStore $store,
+        CampaignPresenter              $presenter,
     ): View {
         $cache = app(Cache\Repository::class);
         $this->topic->pushCriteria(new OnlyThoseTopicsWithAccess());
@@ -43,9 +45,7 @@ class HomeController extends Controller {
         $date = new DiscreetDate(date('Y-m-d H:i:s'));
 
         $campaignBanners = $campaigns->campaignBanners();
-        foreach ($campaignBanners->all() as $banner) {
-            $store->viewVariant($banner->variantId);
-        }
+        $campaignBanners->visitVariants($store);
 
         return $this->view('home', [
             'flags'                 => $this->flags(),
@@ -64,7 +64,7 @@ class HomeController extends Controller {
             'homepageMembers'       => $this->members(),
             'settings'              => $this->getSettings(),
             'home_ads'              => $this->userIncludeAds(),
-            'campaign_banners_home' => $campaignBanners,
+            'campaign_banners_home' => $presenter->bannerSet($campaignBanners),
         ]);
     }
 

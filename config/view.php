@@ -13,10 +13,12 @@ return [
     |
     */
 
-    'paths'    => [
+    'paths' => [
         realpath(base_path('resources/views')),
-        realpath(base_path('resources/feature/components'))
+        realpath(base_path('resources/feature/components')),
+        realpath(base_path('resources/modules')),
     ],
+
     /*
     |--------------------------------------------------------------------------
     | Compiled View Path
