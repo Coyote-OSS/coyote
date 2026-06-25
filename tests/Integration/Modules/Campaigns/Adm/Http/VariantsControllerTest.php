@@ -1,5 +1,5 @@
 <?php
-namespace Adm\Http;
+namespace Tests\Integration\Modules\Campaigns\Adm\Http;
 
 use Coyote\Modules\Campaigns\Adm;
 use Coyote\Modules\Campaigns\EloquentCampaignsStore;
