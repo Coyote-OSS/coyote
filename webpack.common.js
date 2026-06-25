@@ -134,7 +134,6 @@ module.exports = {
     app: './js/app.js',
     legacy: './js/legacy.js',
     forum: './js/pages/forum.ts',
-    chat: './js2/chat/chat.ts',
     wiki: './js/pages/wiki.js',
     job: './js/pages/job.js',
   },
