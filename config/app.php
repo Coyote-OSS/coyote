@@ -177,8 +177,6 @@ return [
         // z baza danych)
         TwigBridge\ServiceProvider::class,
 
-        // Profiler aplikacji (to musi byc w tym miejscu)
-        Barryvdh\Debugbar\ServiceProvider::class,
         Coyote\Providers\ImageServiceProvider::class,
 
         /*
