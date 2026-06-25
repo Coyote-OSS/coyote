@@ -5,6 +5,9 @@ use Modules\Campaigns;
 use Modules\Campaigns\CampaignBanner;
 use PHPUnit\Framework\Assert;
 
+/**
+ * @deprecated
+ */
 readonly class CampaignsFacade {
     public function __construct(
         private Campaigns\CampaignService      $campaigns,
@@ -20,8 +23,13 @@ readonly class CampaignsFacade {
             $this->horizontalBanners());
     }
 
+    public function getSidebarBannerUrl(): ?string {
+        return $this->sidebarBanner()->bannerUrl;
+    }
+
     /**
      * @return string[]
+     * @deprecated
      */
     public function getHorizontalCampaignKeys(): array {
         return \array_map(
@@ -29,10 +37,9 @@ readonly class CampaignsFacade {
             $this->horizontalBanners());
     }
 
-    public function getSidebarBannerUrl(): ?string {
-        return $this->sidebarBanner()->bannerUrl;
-    }
-
+    /**
+     * @deprecated
+     */
     public function getSidebarCampaignKey(): ?string {
         return $this->sidebarBanner()->campaignKey;
     }

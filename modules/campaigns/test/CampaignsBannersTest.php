@@ -12,18 +12,23 @@ use Test\Modules\Campaigns\Store\InMemoryCampaignsStore;
 class CampaignsBannersTest extends TestCase {
     private TestPrivilegedUsers $privilegedUsers;
     private TestRotatingBanners $rotateBanners;
+    /** @deprecated */
     private CampaignsFacade $facade;
+    private TestCurrentDate $date;
+    private CampaignService $campaigns;
 
     #[Before]
     public function initialize(): void {
         $this->privilegedUsers = new TestPrivilegedUsers();
         $this->rotateBanners = new TestRotatingBanners();
+        $this->date = new TestCurrentDate('2000-01-01T00:00:00');
         $store = new InMemoryCampaignsStore();
-        $this->facade = new CampaignsFacade(new CampaignService(
+        $this->campaigns = new CampaignService(
             $this->privilegedUsers,
             $this->rotateBanners,
-            new TestCurrentDate('2000-01-01T00:00:00'),
-            $store), $store);
+            $this->date,
+            $store);
+        $this->facade = new CampaignsFacade($this->campaigns, $store);
     }
 
     #[Test]
@@ -153,6 +158,24 @@ class CampaignsBannersTest extends TestCase {
         $this->facade->createVariant($campaignId, 'second.png', 'horizontal');
         $this->facade->createVariant($campaignId, 'third.png', 'horizontal');
         $this->assertSame(['first.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function doNotIncludeInactiveCampaigns(): void {
+        $this->date->stubCurrentDate('2000-01-02');
+        $inactiveId = $this->facade->addCampaign(name:'inactive', since:'2100-01-01', until:'2100-01-01');
+        $activeId = $this->facade->addCampaign(name:'active', since:'2000-01-01', until:'2000-01-03');
+        $campaignBanners = $this->campaigns->campaignBanners()->horizontal;
+        $this->assertCampaignKeys(["$activeId"], $campaignBanners);
+    }
+
+    private function assertCampaignKeys(
+        array $expectedCampaignKeys,
+        array $actualCampaignBanners,
+    ): void {
+        $this->assertSame(
+            $expectedCampaignKeys,
+            array_map(fn($banner) => $banner->campaignKey, $actualCampaignBanners));
     }
 
     private function assertArrayKeys(array $expectedKeys, array $actualArray): void {
