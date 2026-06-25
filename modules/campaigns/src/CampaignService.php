@@ -45,20 +45,6 @@ readonly class CampaignService {
         return \array_filter($this->store->listCampaigns(), $this->isCampaignObjectActive(...));
     }
 
-    /**
-     * @deprecated
-     */
-    public function redirectUrl(int $campaignId): string {
-        $redirectUrls = [];
-        foreach ($this->store->listCampaigns() as $campaign) {
-            $redirectUrls[$campaign->id] = $campaign->payload->redirectUrl;
-        }
-        if (\array_key_exists($campaignId, $redirectUrls)) {
-            return $redirectUrls[$campaignId];
-        }
-        throw new NoSuchCampaign('Failed to get campaign redirect url.');
-    }
-
     public function campaignStatus(int $campaignId): string {
         return $this->campaignObjectStatus($this->store->findCampaign($campaignId));
     }
