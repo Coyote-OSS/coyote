@@ -12,10 +12,7 @@ use Coyote\Services\Parser\Parsers\Smilies;
 
 class SigFactory extends AbstractFactory {
     public function parse(string $text): string {
-        start_measure('parsing', get_class($this));
-
         $parser = new CompositeParser();
-
         $text = $this->parseAndCache($text, function () use ($parser): CompositeParser {
             $markdown = new SimpleMarkdown(
                 $this->container[UserRepositoryInterface::class],
@@ -27,17 +24,12 @@ class SigFactory extends AbstractFactory {
                 ['b', 'strong', 'i', 'em', 'del', 'a[href|title|data-user-id|class]', 'code', 'br'],
                 hostname:$this->linkHostname()));
             $parser->attach(new Censore($this->container[WordRepositoryInterface::class]));
-
             return $parser;
         });
-
         if ($this->smiliesAllowed()) {
             $parser->attach(new Smilies());
             $text = $parser->parse($text);
         }
-
-        stop_measure('parsing');
-
         return $text;
     }
 }

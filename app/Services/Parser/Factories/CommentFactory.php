@@ -14,14 +14,13 @@ use Illuminate\Container\Container;
 
 class CommentFactory extends AbstractFactory {
     public function __construct(
-        Container   $container,
-        private int $userId) {
+        Container            $container,
+        private readonly int $userId,
+    ) {
         parent::__construct($container);
     }
 
     public function parse(string $text): string {
-        start_measure('parsing', get_class($this));
-
         $this->cache->setId(class_basename($this) . $this->userId);
 
         $parser = new CompositeParser();
@@ -43,14 +42,10 @@ class CommentFactory extends AbstractFactory {
 
             return $parser;
         });
-
         if ($this->smiliesAllowed()) {
             $parser->attach(new Smilies());
             $text = $parser->parse($text);
         }
-
-        stop_measure('parsing');
-
         return $text;
     }
 }
