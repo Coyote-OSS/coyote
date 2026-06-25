@@ -2,6 +2,7 @@
 namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns\CampaignService;
+use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -142,21 +143,21 @@ class CampaignsBannersTest extends TestCase {
     #[Test]
     public function sidebarBannerType(): void {
         $this->facade->addCampaign();
-        $this->assertEquals('sidebar', $this->facade->sidebarBanner()->bannerType);
+        $this->assertEquals(VariantType::Sidebar, $this->facade->sidebarBanner()->type);
     }
 
     #[Test]
     public function horizontalBannerType(): void {
         $this->facade->addCampaign();
-        $this->assertEquals('horizontal', $this->facade->horizontalBanners()[0]->bannerType);
+        $this->assertEquals(VariantType::Horizontal, $this->facade->horizontalBanners()[0]->type);
     }
 
     #[Test]
-    public function givenCampaign_withTwoVariants_oneVariantIsAvailable(): void {
+    public function givenCampaign_withThreeVariants_oneVariantIsAvailable(): void {
         $campaignId = $this->facade->createCampaign();
-        $this->facade->createVariant($campaignId, 'first.png', 'horizontal');
-        $this->facade->createVariant($campaignId, 'second.png', 'horizontal');
-        $this->facade->createVariant($campaignId, 'third.png', 'horizontal');
+        $this->facade->createVariant($campaignId, 'first.png', VariantType::Horizontal);
+        $this->facade->createVariant($campaignId, 'second.png', VariantType::Horizontal);
+        $this->facade->createVariant($campaignId, 'third.png', VariantType::Horizontal);
         $this->assertSame(['first.png'], $this->facade->getHorizontalBannerUrls());
     }
 

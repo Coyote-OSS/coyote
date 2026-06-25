@@ -8,6 +8,7 @@ use Illuminate\Database\Query\Builder;
 use Modules\Campaigns;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\VariantPayload;
+use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -47,12 +48,15 @@ class EloquentCampaignsStoreTest extends TestCase {
     #[Test]
     public function insertsCampaignVariantWithPayload(): void {
         $campaignId = $this->createCampaign();
-        $variantId = $this->store->createVariant($campaignId, new VariantPayload('banner-type', 'image-url'));
+        $variantId = $this->store->createVariant($campaignId, new VariantPayload(
+            VariantType::Horizontal,
+            'image-url',
+        ));
         $this->laravel->assertSeeInDatabase('module_campaign_variants', [
             'id'          => $variantId,
             'campaign_id' => $campaignId,
             'image_url'   => 'image-url',
-            'type'        => 'banner-type',
+            'type'        => 'horizontal',
         ]);
     }
 

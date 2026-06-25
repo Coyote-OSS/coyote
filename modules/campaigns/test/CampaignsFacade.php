@@ -56,8 +56,8 @@ readonly class CampaignsFacade {
         ?string $until = null,
     ): int {
         $campaignId = $this->createCampaign($name, $redirectUrl, $since, $until);
-        $this->createVariant($campaignId, $sidebarBanner, 'sidebar');
-        $this->createVariant($campaignId, $horizontalBanner, 'horizontal');
+        $this->createVariant($campaignId, $horizontalBanner, Campaigns\VariantType::Horizontal);
+        $this->createVariant($campaignId, $sidebarBanner, Campaigns\VariantType::Sidebar);
         return $campaignId;
     }
 
@@ -75,10 +75,10 @@ readonly class CampaignsFacade {
             999));
     }
 
-    public function createVariant(int $campaignId, ?string $banner, string $bannerType): void {
+    public function createVariant(int $campaignId, ?string $banner, Campaigns\VariantType $type): void {
         Assert::assertNotNull($this->store->createVariant($campaignId,
             new Campaigns\Store\VariantPayload(
-                $bannerType,
+                $type,
                 $banner ?? 'example-variant-image-url')));
     }
 

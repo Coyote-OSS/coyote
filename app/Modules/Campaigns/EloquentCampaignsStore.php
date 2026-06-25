@@ -6,6 +6,7 @@ use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\CampaignVariant;
 use Modules\Campaigns\Store\VariantPayload;
+use Modules\Campaigns\VariantType;
 
 class EloquentCampaignsStore implements CampaignsStore {
     public function createCampaign(CampaignPayload $payload): int {
@@ -35,7 +36,7 @@ class EloquentCampaignsStore implements CampaignsStore {
         /** @var Eloquent\CampaignVariant $variant */
         $variant = $campaign->variants()->create([
             'image_url' => $payload->imageUrl,
-            'type'      => $payload->bannerType,
+            'type'      => $this->serializeVariantType($payload),
             'views'     => 0,
             'clicks'    => 0,
         ]);
@@ -81,7 +82,7 @@ class EloquentCampaignsStore implements CampaignsStore {
             $variant->id,
             $variant->views,
             $variant->clicks,
-            new VariantPayload($variant->type, $variant->image_url));
+            new VariantPayload($this->deserializeVariantType($variant), $variant->image_url));
     }
 
     public function viewVariant(int $variantId): void {
@@ -95,5 +96,19 @@ class EloquentCampaignsStore implements CampaignsStore {
     public function findCampaignRedirectUrl(int $variantId): ?string {
         $variant = Eloquent\CampaignVariant::query()->find($variantId);
         return $variant?->campaign->redirect_url;
+    }
+
+    private function serializeVariantType(VariantPayload $payload): string {
+        return match ($payload->type) {
+            VariantType::Horizontal => 'horizontal',
+            VariantType::Sidebar    => 'sidebar',
+        };
+    }
+
+    private function deserializeVariantType(Eloquent\CampaignVariant $variant): VariantType {
+        return match ($variant->type) {
+            'horizontal' => VariantType::Horizontal,
+            'sidebar'    => VariantType::Sidebar,
+        };
     }
 }

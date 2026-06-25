@@ -1,26 +1,33 @@
 <?php
 namespace Coyote\Modules\Campaigns\Adm\View;
 
+use Modules\Campaigns\VariantType;
+
 readonly class VariantViewModel {
     public function __construct(
         public string        $imageUrl,
         public CampaignStats $stats,
-        public string        $bannerType,
+        private VariantType  $type,
     ) {}
 
+    public function bannerType(): string {
+        return match ($this->type) {
+            VariantType::Horizontal => 'horizontal',
+            VariantType::Sidebar    => 'sidebar',
+        };
+    }
+
     public function bannerTypeTitle(): string {
-        return match ($this->bannerType) {
-            'horizontal' => 'Banner',
-            'sidebar'    => 'Rectangle',
-            default      => throw new \Exception()
+        return match ($this->type) {
+            VariantType::Horizontal => 'Banner',
+            VariantType::Sidebar    => 'Rectangle',
         };
     }
 
     public function expectedDimension(): string {
-        return match ($this->bannerType) {
-            'horizontal' => '728 × 90',
-            'sidebar'    => '300 × 250',
-            default      => throw new \Exception()
+        return match ($this->type) {
+            VariantType::Horizontal => '728 × 90',
+            VariantType::Sidebar    => '300 × 250',
         };
     }
 }

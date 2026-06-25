@@ -16,39 +16,39 @@ readonly class CampaignBannerSelector {
      */
     public function select(array $campaigns): CampaignBanners {
         return new CampaignBanners(
-            $this->campaignBanners($campaigns, 'horizontal', 2),
-            $this->campaignBanners($campaigns, 'sidebar', 1)[0] ?? null);
+            $this->campaignBanners($campaigns, VariantType::Horizontal, 2),
+            $this->campaignBanners($campaigns, VariantType::Sidebar, 1)[0] ?? null);
     }
 
     /**
      * @param Campaign[] $campaigns
      */
-    private function campaignBanners(array $campaigns, string $bannerType, int $amount): array {
-        $bannerCampaigns = $this->campaignsWithVariantsOfType($campaigns, $bannerType);
+    private function campaignBanners(array $campaigns, VariantType $type, int $amount): array {
+        $bannerCampaigns = $this->campaignsWithVariantsOfType($campaigns, $type);
         $pickedCampaigns = $this->pick($bannerCampaigns, $amount);
         return \array_map(
-            fn(Campaign $campaign) => $this->pickedBanner($campaign, $bannerType),
+            fn(Campaign $campaign) => $this->pickedBanner($campaign, $type),
             $pickedCampaigns);
     }
 
-    private function pickedBanner(Campaign $campaign, string $bannerType): CampaignBanner {
-        $variants = $this->variantsOfType($campaign, $bannerType);
+    private function pickedBanner(Campaign $campaign, VariantType $type): CampaignBanner {
+        $variants = $this->variantsOfType($campaign, $type);
         /** @var CampaignVariant $variant */
         $variant = $this->pick($variants, 1)[0];
         return new CampaignBanner(
             $variant->payload->imageUrl,
             $campaign->id,
-            $variant->payload->bannerType,
+            $variant->payload->type,
             $variant->id);
     }
 
     /**
      * @return CampaignVariant[]
      */
-    private function variantsOfType(Campaign $campaign, string $bannerType): array {
+    private function variantsOfType(Campaign $campaign, VariantType $type): array {
         return \array_values(array_filter(
             $campaign->variants,
-            fn(CampaignVariant $variant) => $variant->payload->bannerType === $bannerType));
+            fn(CampaignVariant $variant) => $variant->payload->type === $type));
     }
 
     private function pick(array $values, int $amount): array {
@@ -59,13 +59,13 @@ readonly class CampaignBannerSelector {
      * @param Campaign[] $campaigns
      * @return Campaign[]
      */
-    private function campaignsWithVariantsOfType(array $campaigns, string $bannerType): array {
+    private function campaignsWithVariantsOfType(array $campaigns, VariantType $type): array {
         return \array_values(\array_filter($campaigns,
-            fn(Campaign $campaign): bool => $this->campaignHasVariant($campaign, $bannerType)));
+            fn(Campaign $campaign): bool => $this->campaignHasVariant($campaign, $type)));
     }
 
-    public function campaignHasVariant(Campaign $campaign, string $bannerType): bool {
+    private function campaignHasVariant(Campaign $campaign, VariantType $type): bool {
         return \array_any($campaign->variants,
-            fn(CampaignVariant $variant) => $variant->payload->bannerType === $bannerType);
+            fn(CampaignVariant $variant) => $variant->payload->type === $type);
     }
 }

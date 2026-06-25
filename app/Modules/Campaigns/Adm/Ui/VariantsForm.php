@@ -7,17 +7,17 @@ use Coyote\Services\FormBuilder\ValidatesWhenSubmitted;
 class VariantsForm extends Form implements ValidatesWhenSubmitted {
     public function buildForm(): void {
         $this->add('type', 'select', [
-            'label'   => 'Rodzaj baneru',
+            'label'   => 'Wymiary wariantu',
             'choices' => [
-                'horizontal' => 'Poziomy',
-                'sidebar'    => 'Panel boczny',
+                'horizontal' => 'Banner (728 × 90)',
+                'sidebar'    => 'Rectangle (300 × 250)',
             ],
             'rules'   => 'required|in:horizontal,sidebar',
             'help'    => 'Baner poziomy zostanie wyświetlony na stronie głównej oraz na stronie z wątkami. '
                 . 'Baner sidebar zostanie wyświetlony w sidebarze.',
         ]);
         $this->add('image_url', 'text', [
-            'label' => 'Grafika baneru',
+            'label' => 'Grafika wariantu',
             'rules' => 'required|url|max:255',
             'help'  => 'Podaj adres URL grafiki reklamowej. Skorzystaj z hostowania obrazów poniżej.',
         ]);
