@@ -41,7 +41,7 @@ class Kernel extends Foundation\Http\Kernel
             StartSession::class,
             Middleware\SetupGuestCookie::class,
             ShareErrorsFromSession::class,
-            Middleware\VerifyCsrfToken::class,
+            Middleware\PreventRequestForgery::class,
             SubstituteBindings::class,
             Middleware\DefaultBindings::class,
             Middleware\FirewallBlacklist::class,
