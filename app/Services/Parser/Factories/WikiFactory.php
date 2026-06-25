@@ -12,12 +12,9 @@ use Coyote\Services\Parser\Parsers\Prism;
 use Coyote\Services\Parser\Parsers\Purifier;
 use Coyote\Services\Parser\Parsers\Template;
 
-class WikiFactory extends AbstractFactory
-{
-    public function parse(string $text): string
-    {
-        start_measure('parsing', 'Parsing wiki...');
-        $text = $this->parseAndCache($text, function () {
+class WikiFactory extends AbstractFactory {
+    public function parse(string $text): string {
+        return $this->parseAndCache($text, function () {
             $parser = new CompositeParser();
             $parser->attach(new Template($this->container[WikiRepositoryInterface::class]));
             $parser->attach(new Markdown(
@@ -30,7 +27,5 @@ class WikiFactory extends AbstractFactory
             $parser->attach(new Prism());
             return $parser;
         });
-        stop_measure('parsing');
-        return $text;
     }
 }

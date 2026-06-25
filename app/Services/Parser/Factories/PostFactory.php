@@ -13,11 +13,8 @@ use Coyote\Services\Parser\Parsers\Purifier;
 use Coyote\Services\Parser\Parsers\Smilies;
 use Coyote\Services\Parser\Parsers\UnicodeEmojiSvg;
 
-class PostFactory extends AbstractFactory
-{
-    public function parse(string $text): string
-    {
-        start_measure('parsing', 'Parsing post...');
+class PostFactory extends AbstractFactory {
+    public function parse(string $text): string {
         $parser = new CompositeParser();
         $text = $this->parseAndCache($text, function () use ($parser) {
             $parser->attach(new Markdown(
@@ -25,7 +22,7 @@ class PostFactory extends AbstractFactory
                 $this->container[PageRepositoryInterface::class],
                 request()->getHost()));
             $parser->attach(new Latex());
-            $parser->attach(new Purifier(null, $this->videoAllowed(),$this->linkHostname()));
+            $parser->attach(new Purifier(null, $this->videoAllowed(), $this->linkHostname()));
             $parser->attach(new Censore($this->container[WordRepositoryInterface::class]));
             $parser->attach(new Prism());
             $parser->attach(new UnicodeEmojiSvg());
@@ -35,7 +32,6 @@ class PostFactory extends AbstractFactory
             $parser->attach(new Smilies());
             $text = $parser->parse($text);
         }
-        stop_measure('parsing');
         return $text;
     }
 }

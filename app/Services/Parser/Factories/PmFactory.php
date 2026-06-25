@@ -9,12 +9,8 @@ use Coyote\Services\Parser\Parsers\Prism;
 use Coyote\Services\Parser\Parsers\Purifier;
 use Coyote\Services\Parser\Parsers\Smilies;
 
-class PmFactory extends AbstractFactory
-{
-    public function parse(string $text): string
-    {
-        start_measure('parsing', 'Parsing private message...');
-
+class PmFactory extends AbstractFactory {
+    public function parse(string $text): string {
         $parser = new CompositeParser();
         $parser->attach(new Markdown(
             $this->container[UserRepositoryInterface::class],
@@ -25,9 +21,6 @@ class PmFactory extends AbstractFactory
         if ($this->smiliesAllowed()) {
             $parser->attach(new Smilies());
         }
-        $text = $parser->parse($text);
-        stop_measure('parsing');
-
-        return $text;
+        return $parser->parse($text);
     }
 }
