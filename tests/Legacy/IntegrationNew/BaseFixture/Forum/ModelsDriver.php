@@ -28,9 +28,12 @@ readonly class ModelsDriver {
         ?string $photoUrl = null,
         ?bool   $deleted = false,
         ?string $visitedAt = null,
+        ?bool   $emailConfirmed = false,
     ): int {
-        $user = $this->models->newUserReturn(name:$name,
+        $user = $this->models->newUserReturn(
+            name:$name,
             photoUrl:$photoUrl,
+            emailConfirmed:$emailConfirmed,
             deleted:$deleted,
             createdAt:'1970-01-01T00:00:00',
             visitedAt:$visitedAt);

@@ -1,47 +1,35 @@
 <?php
 namespace Tests\Legacy\IntegrationNew\Seo\Microblog;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\Legacy\IntegrationNew\BaseFixture;
 use Tests\Legacy\IntegrationNew\Seo;
 
-class Test extends TestCase
-{
+class MicroblogTest extends TestCase {
     use BaseFixture\Forum\Models;
     use Seo\Microblog\Fixture\Assertion;
     use Seo\Meta\Fixture\MetaCanonical;
     use Seo\Meta\Fixture\Assertion;
 
-    /**
-     * @test
-     */
-    public function paginationNoCanonical()
-    {
+    #[Test]
+    public function paginationNoCanonical() {
         $this->assertCanonicalNotPresent('/Mikroblogi');
     }
 
-    /**
-     * @test
-     */
-    public function microblogSelfCanonical()
-    {
+    #[Test]
+    public function microblogSelfCanonical() {
         $id = $this->driver->newMicroblogReturnId();
         $this->assertSelfCanonical("/Mikroblogi/View/$id");
     }
 
-    /**
-     * @test
-     */
-    public function pagination()
-    {
+    #[Test]
+    public function pagination() {
         $this->assertCrawlable('/Mikroblogi');
     }
 
-    /**
-     * @test
-     */
-    public function microblogIndexable()
-    {
+    #[Test]
+    public function microblogIndexable() {
         $id = $this->driver->newMicroblogReturnId();
         $this->assertIndexable("/Mikroblogi/View/$id");
     }

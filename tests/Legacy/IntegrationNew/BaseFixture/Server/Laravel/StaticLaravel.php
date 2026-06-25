@@ -52,7 +52,7 @@ class StaticLaravel {
 
     private static function beforeBoot(\PHPUnit\Framework\TestCase $testCase, Application $app): void {
         /**
-         * In order to polymorphically call {@see Test::beforeBoot},
+         * In order to polymorphically call {@see LinkTest::beforeBoot},
          * there would have to be a feature in PhpUnit which allows
          * to call a "register" method before setting up laravel
          * application.
