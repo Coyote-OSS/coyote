@@ -149,15 +149,15 @@ class CampaignsBannersTest extends TestCase {
     #[Test]
     public function horizontalBannerType(): void {
         $this->facade->addCampaign();
-        $this->assertEquals(VariantType::Horizontal, $this->facade->horizontalBanners()[0]->type);
+        $this->assertEquals(VariantType::Standard, $this->facade->horizontalBanners()[0]->type);
     }
 
     #[Test]
     public function givenCampaign_withThreeVariants_oneVariantIsAvailable(): void {
         $campaignId = $this->facade->createCampaign();
-        $this->facade->createVariant($campaignId, 'first.png', VariantType::Horizontal);
-        $this->facade->createVariant($campaignId, 'second.png', VariantType::Horizontal);
-        $this->facade->createVariant($campaignId, 'third.png', VariantType::Horizontal);
+        $this->facade->createVariant($campaignId, 'first.png', VariantType::Standard);
+        $this->facade->createVariant($campaignId, 'second.png', VariantType::Standard);
+        $this->facade->createVariant($campaignId, 'third.png', VariantType::Standard);
         $this->assertSame(['first.png'], $this->facade->getHorizontalBannerUrls());
     }
 

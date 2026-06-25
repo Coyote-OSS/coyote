@@ -19,17 +19,16 @@ class VariantsController extends BaseController {
     public function edit(Campaign $campaign): View {
         return $this->view('adm.campaigns.variants.save', [
             'campaignName' => $campaign->name,
-            'form'         => $this->createForm(VariantsForm::class),
+            'form'         => $this->variantForm(),
         ]);
     }
 
     public function save(int $campaign, CampaignsStore $store): RedirectResponse {
-        $form = $this->createForm(VariantsForm::class);
+        $form = $this->variantForm();
         $form->validate();
-        $variantId = $store->createVariant($campaign, VariantPayload::from(
-            $form->getField('type'),
-            $form->getField('image_url'),
-        ));
+        $variantId = $store->createVariant($campaign, new VariantPayload(
+            $form->variantType(),
+            $form->getField('image_url')));
         if ($variantId !== null) {
             return redirect()
                 ->route('adm.campaigns.show', [$campaign])
@@ -37,5 +36,11 @@ class VariantsController extends BaseController {
         } else {
             abort(422);
         }
+    }
+
+    private function variantForm(): VariantsForm {
+        /** @var VariantsForm $form */
+        $form = $this->createForm(VariantsForm::class);
+        return $form;
     }
 }

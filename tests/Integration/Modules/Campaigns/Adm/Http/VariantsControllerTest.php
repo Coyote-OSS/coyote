@@ -5,6 +5,7 @@ use Coyote\Modules\Campaigns\Adm;
 use Coyote\Modules\Campaigns\EloquentCampaignsStore;
 use Illuminate\Testing\TestResponse;
 use Modules\Campaigns\Store\CampaignPayload;
+use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -81,7 +82,7 @@ class VariantsControllerTest extends TestCase {
     public function createVariant_withTypeHorizontal(): void {
         $campaignId = $this->createCampaign();
         // when I create a variant with type horizontal
-        $this->httpCreate($campaignId, $this->exampleVariant(type:'horizontal'));
+        $this->httpCreate($campaignId, $this->exampleVariant(type:VariantType::Standard));
         // then the variant type is persisted
         $this->laravel->assertSeeInDatabase('module_campaign_variants', [
             'campaign_id' => $campaignId,
@@ -92,7 +93,7 @@ class VariantsControllerTest extends TestCase {
     #[Test]
     public function createVariant_withTypeSidebar(): void {
         // when I create a variant with type sidebar
-        $this->httpCreate($this->createCampaign(), $this->exampleVariant(type:'sidebar'));
+        $this->httpCreate($this->createCampaign(), $this->exampleVariant(type:VariantType::Sidebar));
         // then the variant type is persisted
         $this->laravel->assertSeeInDatabase('module_campaign_variants', [
             'type' => 'sidebar',
@@ -102,7 +103,7 @@ class VariantsControllerTest extends TestCase {
     #[Test]
     public function failToCreateVariant_withInvalidType(): void {
         // when I create a variant with an invalid type
-        $response = $this->httpCreate($this->createCampaign(), $this->exampleVariant(type:'invalid'));
+        $response = $this->httpCreate($this->createCampaign(), $this->exampleVariant(typeInvalid:true));
         // then the request is rejected
         $response->assertSessionHasErrors([
             'type' => 'The selected type is invalid.',
@@ -157,13 +158,25 @@ class VariantsControllerTest extends TestCase {
     }
 
     private function exampleVariant(
-        ?string $imageUrl = null,
-        ?string $type = null,
+        ?string      $imageUrl = null,
+        ?VariantType $type = null,
+        ?bool        $typeInvalid = null,
     ): array {
         return [
             'image_url' => $imageUrl ?? 'http://image.png',
-            'type'      => $type ?? 'horizontal',
+            'type'      => $this->exampleVariantType($type, $typeInvalid ?? false),
         ];
+    }
+
+    private function exampleVariantType(VariantType|null $type, bool $invalid): string {
+        if ($invalid) {
+            return 'invalid';
+        }
+        return match ($type) {
+            VariantType::Standard, null => 'upload-standard',
+            VariantType::Sidebar        => 'upload-sidebar',
+            VariantType::LeaderBoard    => 'upload-leaderboard',
+        };
     }
 
     private function exampleVariantNoImage(): array {

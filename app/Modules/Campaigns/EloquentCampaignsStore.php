@@ -100,15 +100,17 @@ class EloquentCampaignsStore implements CampaignsStore {
 
     private function serializeVariantType(VariantPayload $payload): string {
         return match ($payload->type) {
-            VariantType::Horizontal => 'horizontal',
-            VariantType::Sidebar    => 'sidebar',
+            VariantType::Standard    => 'horizontal',
+            VariantType::Sidebar     => 'sidebar',
+            VariantType::LeaderBoard => 'leaderboard',
         };
     }
 
     private function deserializeVariantType(Eloquent\CampaignVariant $variant): VariantType {
         return match ($variant->type) {
-            'horizontal' => VariantType::Horizontal,
-            'sidebar'    => VariantType::Sidebar,
+            'horizontal'  => VariantType::Standard,
+            'sidebar'     => VariantType::Sidebar,
+            'leaderboard' => VariantType::LeaderBoard,
         };
     }
 }
