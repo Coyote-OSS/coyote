@@ -33,7 +33,7 @@ class VariantViewModelTest extends TestCase {
 
     #[Test]
     public function bannerTypeTitle_horizontal(): void {
-        $this->assertSame('Banner', $this->type(VariantType::Horizontal)->bannerTypeTitle());
+        $this->assertSame('Banner', $this->type(VariantType::Standard)->bannerTypeTitle());
     }
 
     #[Test]
@@ -43,7 +43,7 @@ class VariantViewModelTest extends TestCase {
 
     #[Test]
     public function expectedDimension_horizontal(): void {
-        $this->assertSame('728 × 90', $this->type(VariantType::Horizontal)->expectedDimension());
+        $this->assertSame('728 × 90', $this->type(VariantType::Standard)->expectedDimension());
     }
 
     #[Test]
@@ -52,17 +52,17 @@ class VariantViewModelTest extends TestCase {
     }
 
     #[Test]
-    public function bannerType_horizontal(): void {
-        $this->assertSame('horizontal', $this->type(VariantType::Horizontal)->bannerType());
+    public function bannerTypeTitle_leaderboard(): void {
+        $this->assertSame('LeaderBoard', $this->type(VariantType::LeaderBoard)->bannerTypeTitle());
     }
 
     #[Test]
-    public function bannerType_sidebar(): void {
-        $this->assertSame('sidebar', $this->type(VariantType::Sidebar)->bannerType());
+    public function expectedDimension_leaderboard(): void {
+        $this->assertSame('1140 × 90', $this->type(VariantType::LeaderBoard)->expectedDimension());
     }
 
     private function ctr(int $views, int $clicks): ?string {
-        $viewModel = new VariantViewModel('', new CampaignStats($views, $clicks), VariantType::Horizontal);
+        $viewModel = new VariantViewModel('', new CampaignStats($views, $clicks), VariantType::Standard);
         return $viewModel->stats->ctr();
     }
 

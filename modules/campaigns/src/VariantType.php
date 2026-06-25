@@ -2,6 +2,7 @@
 namespace Modules\Campaigns;
 
 enum VariantType {
-    case Horizontal;
+    case Standard;
     case Sidebar;
+    case LeaderBoard;
 }

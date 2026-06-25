@@ -11,8 +11,9 @@ readonly class CampaignBanner {
 
     public function bannerType(): string {
         return match ($this->type) {
-            VariantType::Horizontal => 'horizontal',
-            VariantType::Sidebar    => 'sidebar',
+            VariantType::Standard    => 'horizontal',
+            VariantType::Sidebar     => 'sidebar',
+            VariantType::LeaderBoard => 'leaderboard',
         };
     }
 }
