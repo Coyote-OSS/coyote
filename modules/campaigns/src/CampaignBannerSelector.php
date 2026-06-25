@@ -42,7 +42,7 @@ readonly class CampaignBannerSelector {
     }
 
     private function pickedBanner(Campaign $campaign, VariantType $type): CampaignBanner {
-        $variants = $this->variantsOfType($campaign, $type);
+        $variants = $campaign->variantsOfType($type);
         return $this->banner($campaign, $this->pick($variants, 1)[0]);
     }
 
@@ -52,15 +52,6 @@ readonly class CampaignBannerSelector {
             $campaign->id,
             $variant->payload->type,
             $variant->id);
-    }
-
-    /**
-     * @return CampaignVariant[]
-     */
-    private function variantsOfType(Campaign $campaign, VariantType $type): array {
-        return \array_values(array_filter(
-            $campaign->variants,
-            fn(CampaignVariant $variant) => $variant->payload->type === $type));
     }
 
     private function pick(array $values, int $amount): array {
