@@ -5,6 +5,7 @@ use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Coyote\Modules\Campaigns\Provided\AuthPriviligedUsers;
 use Coyote\Modules\Campaigns\Provided\CarbonCurrentDate;
 use Coyote\Modules\Campaigns\Provided\TimeRotatingBanners;
+use Coyote\Modules\Campaigns\User\Http\CampaignsController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\Campaigns;
