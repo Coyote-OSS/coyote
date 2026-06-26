@@ -1,5 +1,5 @@
 <?php
-namespace Coyote\Modules\Campaigns;
+namespace Coyote\Modules\Campaigns\User\Http;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;

@@ -1,7 +1,7 @@
 <?php
-namespace Tests\Integration\Modules\Campaigns;
+namespace Tests\Integration\Modules\Campaigns\User\Http;
 
-use Coyote\Modules\Campaigns\CampaignsController;
+use Coyote\Modules\Campaigns\User\Http\CampaignsController;
 use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\VariantPayload;
