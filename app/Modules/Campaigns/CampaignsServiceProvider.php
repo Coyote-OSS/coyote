@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Modules\Campaigns;
 
+use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\Campaigns;
