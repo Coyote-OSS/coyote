@@ -1,8 +1,8 @@
 <?php
-namespace Tests\Integration\Modules\Campaigns;
+namespace Provided;
 
 use Carbon\Carbon;
-use Coyote\Modules\Campaigns\CarbonCurrentDate;
+use Coyote\Modules\Campaigns\Provided\CarbonCurrentDate;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony;
 
 #[CoversClass(CarbonCurrentDate::class)]
-class CarbonCampaignsCalendarTest extends TestCase {
+class CarbonCurrentDateTest extends TestCase {
     private CarbonCurrentDate $calendar;
     private $decemberLast = '1999-12-31T00:00:00';
     private $januaryFirst = '2000-01-01T00:00:00';

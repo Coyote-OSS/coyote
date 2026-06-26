@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Integration\Modules\Campaigns;
+namespace Provided;
 
 use DateTimeImmutable;
 use Psr\Clock\ClockInterface;

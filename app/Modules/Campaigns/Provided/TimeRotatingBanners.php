@@ -1,5 +1,5 @@
 <?php
-namespace Coyote\Modules\Campaigns;
+namespace Coyote\Modules\Campaigns\Provided;
 
 use Modules\Campaigns\ForRotatingBanners;
 use Psr\Clock\ClockInterface;
