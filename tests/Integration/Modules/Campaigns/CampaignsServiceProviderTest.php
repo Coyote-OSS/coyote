@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Integration\Modules\Campaigns;
 
-use Coyote\Modules\Campaigns\AuthPriviligedUsers;
 use Coyote\Modules\Campaigns\CampaignsServiceProvider;
-use Coyote\Modules\Campaigns\TimeRotatingBanners;
+use Coyote\Modules\Campaigns\Provided\AuthPriviligedUsers;
+use Coyote\Modules\Campaigns\Provided\TimeRotatingBanners;
 use Modules\Campaigns\ForPriviligedUsers;
 use Modules\Campaigns\ForRotatingBanners;
 use PHPUnit\Framework\Attributes\CoversClass;

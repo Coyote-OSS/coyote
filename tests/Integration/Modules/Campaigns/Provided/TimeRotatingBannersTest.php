@@ -1,7 +1,7 @@
 <?php
-namespace Tests\Integration\Modules\Campaigns;
+namespace Provided;
 
-use Coyote\Modules\Campaigns\TimeRotatingBanners;
+use Coyote\Modules\Campaigns\Provided\TimeRotatingBanners;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;

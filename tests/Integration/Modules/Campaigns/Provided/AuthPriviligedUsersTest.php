@@ -1,7 +1,7 @@
 <?php
-namespace Tests\Integration\Modules\Campaigns;
+namespace Provided;
 
-use Coyote\Modules\Campaigns\AuthPriviligedUsers;
+use Coyote\Modules\Campaigns\Provided\AuthPriviligedUsers;
 use Coyote\Reputation;
 use Coyote\User;
 use PHPUnit\Framework\Attributes\Before;

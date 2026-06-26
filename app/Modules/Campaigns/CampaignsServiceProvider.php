@@ -2,6 +2,9 @@
 namespace Coyote\Modules\Campaigns;
 
 use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
+use Coyote\Modules\Campaigns\Provided\AuthPriviligedUsers;
+use Coyote\Modules\Campaigns\Provided\CarbonCurrentDate;
+use Coyote\Modules\Campaigns\Provided\TimeRotatingBanners;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\Campaigns;

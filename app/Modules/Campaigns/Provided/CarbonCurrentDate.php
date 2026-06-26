@@ -1,5 +1,5 @@
 <?php
-namespace Coyote\Modules\Campaigns;
+namespace Coyote\Modules\Campaigns\Provided;
 
 use Carbon\Carbon;
 use Modules\Campaigns\ForCurrentDate;
