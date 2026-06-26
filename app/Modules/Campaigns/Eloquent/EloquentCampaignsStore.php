@@ -1,6 +1,7 @@
 <?php
-namespace Coyote\Modules\Campaigns;
+namespace Coyote\Modules\Campaigns\Eloquent;
 
+use Coyote\Modules\Campaigns\Eloquent;
 use Modules\Campaigns\Store\Campaign;
 use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\CampaignsStore;

@@ -1,7 +1,7 @@
 <?php
-namespace Tests\Integration\Modules\Campaigns;
+namespace Eloquent;
 
-use Coyote\Modules\Campaigns\EloquentCampaignsStore;
+use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Illuminate\Database;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;

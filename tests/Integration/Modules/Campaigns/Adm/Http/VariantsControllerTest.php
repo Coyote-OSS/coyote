@@ -2,7 +2,7 @@
 namespace Tests\Integration\Modules\Campaigns\Adm\Http;
 
 use Coyote\Modules\Campaigns\Adm;
-use Coyote\Modules\Campaigns\EloquentCampaignsStore;
+use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Illuminate\Testing\TestResponse;
 use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\VariantType;
