@@ -1,10 +1,10 @@
-{% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
+{% from 'campaignBanner.campaignBanner' import campaignBanner %}
 
 <aside class="sticky-aside p-4 neon-tile neon-rounded neon-forum-aside" id="sidebar" style="margin-bottom:16px;">
   {% block side_menu %}
   {% endblock %}
 
-  {{ jobAdPlaceholder(campaign_banners_topic, 'sidebar') }}
+  {{ campaignBanner(campaign_banners_topic, 'sidebar') }}
 
   {% if auth_check() %}
     <div id="js-tags" class="box mt-5">

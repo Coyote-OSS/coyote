@@ -12,14 +12,14 @@ class TwigMacroCampaignBannerTest extends TestCase {
     use Fixture\Ui\Twig;
 
     private string $campaignBanner = "
-        {% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
-        {{ jobAdPlaceholder(banners, size) }}
+        {% from 'campaignBanner.campaignBanner' import campaignBanner %}
+        {{ campaignBanner(banners, size) }}
     ";
 
     #[Test]
     public function rendersEmptyCampaignBannerContainer(): void {
         $banners = new CampaignBanners([], null);
-        $html = $this->jobAdPlaceholder('horizontal', $banners);
+        $html = $this->campaignBanner('horizontal', $banners);
         $this->assertNull($html->querySelector('.job-ad-placeholder'));
     }
 
@@ -30,7 +30,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
             campaignKey:'',
             type:VariantType::Sidebar,
             variantId:12));
-        $html = $this->jobAdPlaceholder('sidebar', $banners);
+        $html = $this->campaignBanner('sidebar', $banners);
         $this->assertSame('/campaigns/12',
             $html->querySelector('a')->getAttribute('href'));
         $this->assertSame('https://example.com/sidebar.jpg',
@@ -45,7 +45,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
             type:VariantType::Standard,
             variantId:13);
         $banners = new CampaignBanners([$campaignBanner], null);
-        $html = $this->jobAdPlaceholder('horizontal', $banners);
+        $html = $this->campaignBanner('horizontal', $banners);
         $this->assertSame('/campaigns/13',
             $html->querySelector('a')->getAttribute('href'));
         $this->assertSame('https://example.com/horizontal.jpg',
@@ -60,7 +60,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
             type:VariantType::Sidebar,
             variantId:12);
         $banners = new CampaignBanners([], $sidebar);
-        $html = $this->jobAdPlaceholder('horizontal', $banners);
+        $html = $this->campaignBanner('horizontal', $banners);
         $this->assertNull($html->querySelector('a'));
     }
 
@@ -72,11 +72,11 @@ class TwigMacroCampaignBannerTest extends TestCase {
             type:VariantType::Standard,
             variantId:12);
         $banners = new CampaignBanners([$bnanner], null);
-        $dom = $this->jobAdPlaceholder('sidebar', $banners);
+        $dom = $this->campaignBanner('sidebar', $banners);
         $this->assertNull($dom->querySelector('a'));
     }
 
-    private function jobAdPlaceholder(
+    private function campaignBanner(
         string          $size,
         CampaignBanners $banners,
     ): \Dom\HTMLDocument {

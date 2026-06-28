@@ -6,7 +6,7 @@
 {% import 'legacyComponents.forms' as forms %}
 {% import 'legacyComponents.modals' as modals %}
 {% from 'titleBanner.titleBanner' import titleBanner %}
-{% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
+{% from 'campaignBanner.campaignBanner' import campaignBanner %}
 
 {% block content %}
   {{ schema_topic }}
@@ -16,7 +16,7 @@
   </h1>
   <div class="mb-3">
     <!-- TODO remove margin if not enabled -->
-    {{ jobAdPlaceholder(campaign_banners_topic, 'horizontal') }}
+    {{ campaignBanner(campaign_banners_topic, 'horizontal') }}
   </div>
   <div class="neon-modern mb-3">
     {{ titleBanner(title: model.title, crumbs:breadcrumbs) }}
@@ -270,7 +270,7 @@
 
       <div class="mb-3">
         <!-- TODO remove margin if not enabled -->
-        {{ jobAdPlaceholder(campaign_banners_topic, 'horizontal') }}
+        {{ campaignBanner(campaign_banners_topic, 'horizontal') }}
       </div>
 
       <div class="page-pagination d-flex mb-3" v-if="is_mode_linear">

@@ -1,4 +1,4 @@
-{% macro jobAdPlaceholder(banners, size) %}
+{% macro campaignBanner(banners, size) %}
   {% if size == 'sidebar' and banners.sidebar %}
     <div class="job-ad-placeholder {{ size }}">
       <a href="/campaigns/{{ banners.sidebar.variantId }}" target="_blank">
