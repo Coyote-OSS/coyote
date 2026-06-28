@@ -1,22 +1,22 @@
-{% macro campaignBanner(banners, size) %}
-  {% if size == 'sidebar' and banners.sidebar %}
-    <div class="job-ad-placeholder {{ size }}">
-      <a href="/campaigns/{{ banners.sidebar.variantId }}" target="_blank">
-        <img src="{{ banners.sidebar.bannerUrl }}"/>
-      </a>
-    </div>
-  {% endif %}
-  {% if size == 'horizontal' and banners.horizontal %}
-    <div class="job-ad-placeholder {{ size }}">
+{% macro campaignBanner(placeholder_size, bannerSet) %}
+  <div class="campaign-banner">
+    {% if placeholder_size == 'sidebar' and bannerSet.sidebar %}
+      {{ _self.bannerImage(bannerSet.sidebar) }}
+    {% endif %}
+    {% if placeholder_size == 'horizontal' and bannerSet.horizontal %}
       <div class="row g-2 justify-content-center">
-        {% for horizontal in banners.horizontal %}
+        {% for banner in bannerSet.horizontal %}
           <div class="col-12 col-lg-6">
-            <a href="/campaigns/{{ horizontal.variantId }}" target="_blank">
-              <img src="{{ horizontal.bannerUrl }}"/>
-            </a>
+            {{ _self.bannerImage(banner) }}
           </div>
         {% endfor %}
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro bannerImage(banner) %}
+  <a href="{{ banner.redirectUrl }}" target="_blank">
+    <img src="{{ banner.imageUrl }}"/>
+  </a>
 {% endmacro %}

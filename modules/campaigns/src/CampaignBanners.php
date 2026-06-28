@@ -1,6 +1,9 @@
 <?php
 namespace Modules\Campaigns;
 
+/**
+ * @deprecated
+ */
 readonly class CampaignBanners {
     /**
      * @param CampaignBanner[] $horizontal

@@ -1,7 +1,6 @@
 @use "../../theme/theme" as theme;
 
-.job-ad-placeholder {
-  font-family: 'Inter Tight', sans-serif;
+.campaign-banner {
   border-radius: 8px;
   padding: 8px;
   font-size: 12px;
@@ -17,7 +16,7 @@
   @include theme.dark {
     border: 2px dashed #6c757d14;
   }
-  
+
   img {
     margin: 0 auto;
     max-width: 100%;

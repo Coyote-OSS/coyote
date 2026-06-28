@@ -4,7 +4,7 @@
   {% block side_menu %}
   {% endblock %}
 
-  {{ campaignBanner(campaign_banners_topic, 'sidebar') }}
+  {{ campaignBanner('sidebar', campaign_banners_topic) }}
 
   {% if auth_check() %}
     <div id="js-tags" class="box mt-5">
