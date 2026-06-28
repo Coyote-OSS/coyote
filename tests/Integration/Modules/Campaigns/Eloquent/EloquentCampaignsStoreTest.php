@@ -1,5 +1,5 @@
 <?php
-namespace Eloquent;
+namespace Tests\Integration\Modules\Campaigns\Eloquent;
 
 use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Illuminate\Database;
