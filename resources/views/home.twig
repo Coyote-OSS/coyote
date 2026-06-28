@@ -8,14 +8,14 @@
 {% from 'titleBanner.titleBanner' import titleBanner %}
 {% from 'membersRadar.membersRadar' import membersRadar %}
 {% from 'progressBar.progressBar' import progressBar %}
-{% from 'jobAdPlaceholder.jobAdPlaceholder' import jobAdPlaceholder %}
+{% from 'campaignBanner.campaignBanner' import campaignBanner %}
 
 {% block container %}
   {{ render_block('homepage_banner') }}
   <div class="row">
     <div class="col-12 mb-3">
       <!-- TODO remove margin if not enabled -->
-      {{ jobAdPlaceholder(campaign_banners_home, 'horizontal') }}
+      {{ campaignBanner(campaign_banners_home, 'horizontal') }}
     </div>
   </div>
   <div class="row neon-modern">
@@ -248,7 +248,7 @@
           </div>
         </section>
         <div class="mt-4">
-          {{ jobAdPlaceholder(campaign_banners_home, 'sidebar') }}
+          {{ campaignBanner(campaign_banners_home, 'sidebar') }}
         </div>
       </aside>
     </div>
