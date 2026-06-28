@@ -39,6 +39,8 @@ class CampaignsServiceProvider extends ServiceProvider {
     }
 
     private function registerRoutes(Router $router): void {
-        $router->get('/campaigns/{variantId}', [CampaignsController::class, 'click']);
+        $router
+            ->get('/campaigns/{variantId}', [CampaignsController::class, 'click'])
+            ->name('campaigns.click');
     }
 }
