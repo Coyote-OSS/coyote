@@ -196,12 +196,12 @@ class TopicController extends BaseController {
                     \array_map(
                         function (Campaigns\CampaignBanner $banner) {
                             return new Campaigns\New\CampaignBanner(
-                                "/campaigns/$banner->variantId",
+                                route('campaigns.click', [$banner->variantId]),
                                 $banner->bannerUrl);
                         },
                         $campaignBanners->horizontal),
                     new Campaigns\New\CampaignBanner(
-                        "/campaigns/{$campaignBanners->sidebar->variantId}",
+                        route('campaigns.click', [$campaignBanners->sidebar->variantId]),
                         $campaignBanners->sidebar->bannerUrl)),
             ]);
     }
