@@ -1,6 +1,9 @@
 <?php
 namespace Modules\Campaigns;
 
+/**
+ * @deprecated
+ */
 readonly class CampaignBanner {
     public function __construct(
         public string      $bannerUrl,

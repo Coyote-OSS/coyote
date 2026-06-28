@@ -64,7 +64,17 @@ class HomeController extends Controller {
             'homepageMembers'       => $this->members(),
             'settings'              => $this->getSettings(),
             'home_ads'              => $this->userIncludeAds(),
-            'campaign_banners_home' => $campaignBanners,
+            'campaign_banners_home' => new Campaigns\New\CampaignBannerSet(
+                \array_map(
+                    function (Campaigns\CampaignBanner $banner) {
+                        return new Campaigns\New\CampaignBanner(
+                            "/campaigns/$banner->variantId",
+                            $banner->bannerUrl);
+                    },
+                    $campaignBanners->horizontal),
+                new Campaigns\New\CampaignBanner(
+                    "/campaigns/{$campaignBanners->sidebar->variantId}",
+                    $campaignBanners->sidebar->bannerUrl)),
         ]);
     }
 

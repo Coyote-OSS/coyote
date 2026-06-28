@@ -1,9 +1,8 @@
 <?php
 namespace Tests\Integration\Modules\Campaigns\User\Ui;
 
-use Modules\Campaigns\CampaignBanner;
-use Modules\Campaigns\CampaignBanners;
-use Modules\Campaigns\VariantType;
+use Modules\Campaigns\New\CampaignBanner;
+use Modules\Campaigns\New\CampaignBannerSet;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\Integration\Fixture;
@@ -13,25 +12,24 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     private string $campaignBanner = "
         {% from 'campaignBanner.campaignBanner' import campaignBanner %}
-        {{ campaignBanner(banners, size) }}
+        {{ campaignBanner(placeholderType, bannerSet) }}
     ";
 
     #[Test]
     public function rendersEmptyCampaignBannerContainer(): void {
-        $banners = new CampaignBanners([], null);
-        $html = $this->campaignBanner('horizontal', $banners);
-        $this->assertNull($html->querySelector('.job-ad-placeholder'));
+        $bannerSet = new CampaignBannerSet([], null);
+        $html = $this->campaignBanner('horizontal', $bannerSet);
+        $this->assertNotNull($html->querySelector('.campaign-banner'));
     }
 
     #[Test]
     public function rendersSidebarBannerLinkAndImage(): void {
-        $banners = new CampaignBanners([], new CampaignBanner(
-            bannerUrl:'https://example.com/sidebar.jpg',
-            campaignKey:'',
-            type:VariantType::Sidebar,
-            variantId:12));
-        $html = $this->campaignBanner('sidebar', $banners);
-        $this->assertSame('/campaigns/12',
+        $bannerSet = new CampaignBannerSet([], new CampaignBanner(
+            redirectUrl:'https://example.com/sidebar',
+            imageUrl:'https://example.com/sidebar.jpg',
+        ));
+        $html = $this->campaignBanner('sidebar', $bannerSet);
+        $this->assertSame('https://example.com/sidebar',
             $html->querySelector('a')->getAttribute('href'));
         $this->assertSame('https://example.com/sidebar.jpg',
             $html->querySelector('img')->getAttribute('src'));
@@ -39,14 +37,12 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     #[Test]
     public function rendersHorizontalBannerLinkAndImage(): void {
-        $campaignBanner = new CampaignBanner(
-            bannerUrl:'https://example.com/horizontal.jpg',
-            campaignKey:'',
-            type:VariantType::Standard,
-            variantId:13);
-        $banners = new CampaignBanners([$campaignBanner], null);
-        $html = $this->campaignBanner('horizontal', $banners);
-        $this->assertSame('/campaigns/13',
+        $banner = new CampaignBanner(
+            redirectUrl:'https://example.com/horizontal',
+            imageUrl:'https://example.com/horizontal.jpg');
+        $bannerSet = new CampaignBannerSet([$banner], null);
+        $html = $this->campaignBanner('horizontal', $bannerSet);
+        $this->assertSame('https://example.com/horizontal',
             $html->querySelector('a')->getAttribute('href'));
         $this->assertSame('https://example.com/horizontal.jpg',
             $html->querySelector('img')->getAttribute('src'));
@@ -55,34 +51,30 @@ class TwigMacroCampaignBannerTest extends TestCase {
     #[Test]
     public function horizontalPlaceholderDoesNotRenderSidebar(): void {
         $sidebar = new CampaignBanner(
-            bannerUrl:'https://example.com/sidebar.jpg',
-            campaignKey:'',
-            type:VariantType::Sidebar,
-            variantId:12);
-        $banners = new CampaignBanners([], $sidebar);
-        $html = $this->campaignBanner('horizontal', $banners);
+            redirectUrl:'https://example.com/sidebar',
+            imageUrl:'https://example.com/sidebar.jpg');
+        $bannerSet = new CampaignBannerSet([], $sidebar);
+        $html = $this->campaignBanner('horizontal', $bannerSet);
         $this->assertNull($html->querySelector('a'));
     }
 
     #[Test]
     public function sidebarPlaceholderDoesNotRenderHorizontal(): void {
-        $bnanner = new CampaignBanner(
-            bannerUrl:'https://example.com/horizontal.jpg',
-            campaignKey:'',
-            type:VariantType::Standard,
-            variantId:12);
-        $banners = new CampaignBanners([$bnanner], null);
-        $dom = $this->campaignBanner('sidebar', $banners);
+        $banner = new CampaignBanner(
+            redirectUrl:'https://example.com/horizontal',
+            imageUrl:'https://example.com/horizontal.jpg');
+        $bannerSet = new CampaignBannerSet([$banner], null);
+        $dom = $this->campaignBanner('sidebar', $bannerSet);
         $this->assertNull($dom->querySelector('a'));
     }
 
     private function campaignBanner(
-        string          $size,
-        CampaignBanners $banners,
+        string            $placeholderType,
+        CampaignBannerSet $bannerSet,
     ): \Dom\HTMLDocument {
         return $this->renderTwigTemplate($this->campaignBanner, [
-            'banners' => $banners,
-            'size'    => $size,
+            'placeholderType' => $placeholderType,
+            'bannerSet'       => $bannerSet,
         ]);
     }
 }
