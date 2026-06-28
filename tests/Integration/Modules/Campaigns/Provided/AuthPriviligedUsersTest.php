@@ -1,5 +1,5 @@
 <?php
-namespace Provided;
+namespace Tests\Integration\Modules\Campaigns\Provided;
 
 use Coyote\Modules\Campaigns\Provided\AuthPriviligedUsers;
 use Coyote\Reputation;
