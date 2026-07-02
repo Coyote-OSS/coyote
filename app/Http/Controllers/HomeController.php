@@ -33,19 +33,14 @@ class HomeController extends Controller {
         parent::__construct();
     }
 
-    public function index(
-        Campaigns\CampaignService      $campaigns,
-        Campaigns\Store\CampaignsStore $store,
-    ): View {
+    public function index(Campaigns\ForPresentingBanners $presenter): View {
         $cache = app(Cache\Repository::class);
         $this->topic->pushCriteria(new OnlyThoseTopicsWithAccess());
         $this->topic->pushCriteria(new SkipHiddenCategories($this->userId));
         $date = new DiscreetDate(date('Y-m-d H:i:s'));
 
-        $campaignBanners = $campaigns->campaignBanners();
-        foreach ($campaignBanners->all() as $banner) {
-            $store->viewVariant($banner->variantId);
-        }
+        $bannerSet = $presenter->bannerSet();
+        $presenter->recordViews($bannerSet);
 
         return $this->view('home', [
             'flags'                 => $this->flags(),
@@ -64,17 +59,7 @@ class HomeController extends Controller {
             'homepageMembers'       => $this->members(),
             'settings'              => $this->getSettings(),
             'home_ads'              => $this->userIncludeAds(),
-            'campaign_banners_home' => new Campaigns\New\CampaignBannerSet(
-                \array_map(
-                    function (Campaigns\CampaignBanner $banner) {
-                        return new Campaigns\New\CampaignBanner(
-                            route('campaigns.click', [$banner->variantId]),
-                            $banner->bannerUrl);
-                    },
-                    $campaignBanners->horizontal),
-                new Campaigns\New\CampaignBanner(
-                    route('campaigns.click', [$campaignBanners->sidebar->variantId]),
-                    $campaignBanners->sidebar->bannerUrl)),
+            'campaign_banners_home' => $bannerSet,
         ]);
     }
 

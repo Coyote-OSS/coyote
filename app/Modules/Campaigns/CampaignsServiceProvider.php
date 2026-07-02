@@ -4,11 +4,15 @@ namespace Coyote\Modules\Campaigns;
 use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Coyote\Modules\Campaigns\Provided\AuthPriviligedUsers;
 use Coyote\Modules\Campaigns\Provided\CarbonCurrentDate;
+use Coyote\Modules\Campaigns\Provided\RouteRedirectUrls;
 use Coyote\Modules\Campaigns\Provided\TimeRotatingBanners;
 use Coyote\Modules\Campaigns\User\Http\CampaignsController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\Campaigns;
+use Modules\Campaigns\CampaignBannersPresenter;
+use Modules\Campaigns\ForPresentingBanners;
+use Modules\Campaigns\ForRedirectUrls;
 use Modules\Campaigns\Store\CampaignsStore;
 use Psr\Clock\ClockInterface;
 use Symfony;
@@ -34,6 +38,14 @@ class CampaignsServiceProvider extends ServiceProvider {
         $this->app->bind(
             Campaigns\ForCurrentDate::class,
             CarbonCurrentDate::class);
+
+        $this->app->bind(
+            ForRedirectUrls::class,
+            RouteRedirectUrls::class);
+
+        $this->app->bind(
+            ForPresentingBanners::class,
+            CampaignBannersPresenter::class);
 
         $this->registerRoutes($this->app->make(Router::class));
     }
