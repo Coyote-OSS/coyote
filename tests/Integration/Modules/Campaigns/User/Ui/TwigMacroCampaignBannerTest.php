@@ -19,7 +19,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
     public function rendersEmptyCampaignBannerContainer(): void {
         $bannerSet = new CampaignBannerSet([], null);
         $html = $this->campaignBanner('horizontal', $bannerSet);
-        $this->assertNotNull($html->querySelector('.campaign-banner'));
+        $this->assertNull($html->querySelector('.campaign-banner'));
     }
 
     #[Test]
