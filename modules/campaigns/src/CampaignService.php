@@ -69,8 +69,8 @@ readonly class CampaignService {
         if (!$this->hasTarget($payload)) {
             return 'misconfigured';
         }
-        if ($payload->activeBelowViews !== null) {
-            if ($payload->activeBelowViews < $campaignTotalViewCount) {
+        if ($payload->targetViews !== null) {
+            if ($campaignTotalViewCount >= $payload->targetViews) {
                 return 'target-reached';
             }
         }
@@ -88,7 +88,7 @@ readonly class CampaignService {
     }
 
     private function hasTarget(CampaignPayload $campaign): bool {
-        $hasViewTarget = $campaign->activeBelowViews !== null;
+        $hasViewTarget = $campaign->targetViews !== null;
         $hasDateTarget = $campaign->activeUntilDate !== null;
         return $hasViewTarget || $hasDateTarget;
     }

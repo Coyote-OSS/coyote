@@ -24,7 +24,7 @@ class EloquentCampaignsStore implements CampaignsStore {
             'redirect_url' => $payload->redirectUrl,
             'active_since' => $payload->activeSinceDate,
             'active_until' => $payload->activeUntilDate,
-            'target_views' => $payload->activeBelowViews,
+            'target_views' => $payload->targetViews,
             'name'         => $payload->name,
             'description'  => $payload->description,
         ];

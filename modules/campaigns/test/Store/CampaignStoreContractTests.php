@@ -89,7 +89,7 @@ trait CampaignStoreContractTests {
         Assert::assertSame('redirect', $campaignPayload->redirectUrl);
         Assert::assertSame('2001-01-01 00:00:00', $campaignPayload->activeSinceDate);
         Assert::assertSame('2002-02-02 00:00:00', $campaignPayload->activeUntilDate);
-        Assert::assertSame(42, $campaignPayload->activeBelowViews);
+        Assert::assertSame(42, $campaignPayload->targetViews);
         Assert::assertSame('description', $campaignPayload->description);
     }
 
@@ -105,7 +105,7 @@ trait CampaignStoreContractTests {
         Assert::assertNull($campaignPayload->name);
         Assert::assertNull($campaignPayload->activeSinceDate);
         Assert::assertNull($campaignPayload->activeUntilDate);
-        Assert::assertNull($campaignPayload->activeBelowViews);
+        Assert::assertNull($campaignPayload->targetViews);
     }
 
     #[Test]
@@ -125,7 +125,7 @@ trait CampaignStoreContractTests {
         Assert::assertSame('redirect', $campaignPayload->redirectUrl);
         Assert::assertSame('2001-01-01 00:00:00', $campaignPayload->activeSinceDate);
         Assert::assertSame('2002-02-02 00:00:00', $campaignPayload->activeUntilDate);
-        Assert::assertSame(42, $campaignPayload->activeBelowViews);
+        Assert::assertSame(42, $campaignPayload->targetViews);
         Assert::assertSame('description', $campaignPayload->description);
     }
 
