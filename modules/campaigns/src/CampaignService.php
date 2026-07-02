@@ -28,7 +28,8 @@ readonly class CampaignService {
 
     private function isCampaignBannersDisabled(): bool {
         return $this->users->userHasHighReputation()
-            || $this->users->userIsSponsor();
+            || $this->users->userIsSponsor()
+            || $this->users->userIsRobot();
     }
 
     private function disabledCampaignBanners(): CampaignBanners {
