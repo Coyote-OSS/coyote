@@ -44,6 +44,7 @@ class CampaignsController extends BaseController {
         return $this->view('adm.campaigns.show', [
             'campaign' => new CampaignViewModel(
                 $campaign->payload->name,
+                $campaign->payload->description,
                 $campaign->payload->redirectUrl,
                 route('adm.campaigns.save', [$campaignId]),
                 route('adm.campaigns'),
@@ -85,7 +86,7 @@ class CampaignsController extends BaseController {
             $form->getValue('active_since'),
             $form->getValue('active_until'),
             $form->getValue('target_views'),
-            null);
+            $form->getValue('description'));
         if ($campaign->exists) {
             $store->updateCampaign($campaign->id, $campaignModel);
             $campaignId = $campaign->id;

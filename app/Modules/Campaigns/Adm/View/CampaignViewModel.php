@@ -6,7 +6,8 @@ readonly class CampaignViewModel {
      * @param VariantViewModel[] $variants
      */
     public function __construct(
-        public string         $name,
+        public ?string        $name,
+        public ?string        $description,
         public string         $redirectUrl,
         public string         $editHref,
         public string         $backHref,
