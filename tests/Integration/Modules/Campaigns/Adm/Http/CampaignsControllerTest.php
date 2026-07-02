@@ -53,7 +53,7 @@ class CampaignsControllerTest extends TestCase {
     #[Test]
     public function creatingCampaign_allowsOptionalActiveRange(): void {
         // when I create a new camapgin without active range
-        $this->httpCreate($this->exampleCampaign(campaignKey:'optional-range', includeActiveRange:false));
+        $this->httpCreate($this->exampleCampaign(name:'optional-range', includeActiveRange:false));
         // then the campaign is persisted without active range
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'name'         => 'optional-range',
@@ -99,15 +99,16 @@ class CampaignsControllerTest extends TestCase {
     }
 
     private function exampleCampaign(
-        ?string $campaignKey = null,
+        ?string $name = null,
         ?bool   $includeActiveRange = true,
         ?string $redirectUrl = null,
     ): array {
         return [
-            'name'         => $campaignKey,
+            'name'         => $name,
             'redirect_url' => $redirectUrl ?? 'http://test',
             'sidebar'      => 'not-to-be-used-deprecated',
             'horizontal'   => 'not-to-be-used-deprecated',
+            'description'  => 'campaign-description',
             ...$includeActiveRange ? $this->exampleActiveRange() : [],
         ];
     }

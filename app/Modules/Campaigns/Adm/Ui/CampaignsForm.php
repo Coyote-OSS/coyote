@@ -27,6 +27,10 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
             ->add('target_views', 'number', [
                 'label' => 'Docelowa liczba wyświetleń',
                 'help'  => $targetRequired,
+            ])
+            ->add('description', 'textarea', [
+                'label' => 'Opis kampanii',
+                'help'  => 'Dodatkowe informacje na temat kampanii.',
             ]);
         $this->add('submit', 'submit_with_delete', [
             'label'             => 'Zapisz',

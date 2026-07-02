@@ -7,15 +7,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
- * @property string $campaign_key
  * @property string $redirect_url
- * @property string $sidebar
- * @property string $horizontal
- * @property string $active_since
- * @property string $active_until
- * @property int $target_views
- * @property string $name
- * @property ?string $description
+ * @property string|null $active_since
+ * @property string|null $active_until
+ * @property int|null $target_views
+ * @property string|null $name
+ * @property string|null $description
  * @property CampaignVariant[]|Collection $variants
  */
 class Campaign extends Model {
