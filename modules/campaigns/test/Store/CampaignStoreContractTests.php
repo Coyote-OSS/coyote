@@ -185,6 +185,7 @@ trait CampaignStoreContractTests {
         [$variant] = $this->store->findCampaign($campaignId)->variants;
         Assert::assertSame(0, $variant->views);
         Assert::assertSame(0, $variant->clicks);
+        Assert::assertSame(0, $variant->exposures);
     }
 
     #[Test]
@@ -206,6 +207,27 @@ trait CampaignStoreContractTests {
         // then variant views have increased
         [$variant] = $this->store->findCampaign($campaignId)->variants;
         Assert::assertSame(1, $variant->views);
+    }
+
+    #[Test]
+    #[TestDox('given no variants; when expose-variant; ignores')]
+    #[DoesNotPerformAssertions]
+    public function immerseVariant_ignores(): void {
+        $noSuchVariantId = 999;
+        $this->store->exposeVariant($noSuchVariantId);
+    }
+
+    #[Test]
+    #[TestDox('given a variant; when expose-variant; increases')]
+    public function givenVariant_immerseVariant_increasesVariantViews(): void {
+        // given a variant
+        $campaignId = $this->createCampaign();
+        $variantId = $this->createVariant($campaignId);
+        // when variant is exposed
+        $this->store->exposeVariant($variantId);
+        // then variant exposures have increased
+        [$variant] = $this->store->findCampaign($campaignId)->variants;
+        Assert::assertSame(1, $variant->exposures);
     }
 
     #[Test]
