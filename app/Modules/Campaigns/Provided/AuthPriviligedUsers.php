@@ -11,4 +11,9 @@ class AuthPriviligedUsers implements \Modules\Campaigns\ForPriviligedUsers {
     public function userIsSponsor(): bool {
         return auth()->user()?->is_sponsor ?? false;
     }
+
+    public function userIsRobot(): bool {
+        // return new Agent()->isRobot(request()->userAgent());
+        return false;
+    }
 }

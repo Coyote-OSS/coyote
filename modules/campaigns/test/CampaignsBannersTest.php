@@ -85,6 +85,15 @@ class CampaignsBannersTest extends TestCase {
     }
 
     #[Test]
+    public function noBanner_forPriviligedUser_dueToBeingRobot(): void {
+        $this->facade->addCampaign(sidebarBanner:'sidebar.png', horizontalBanner:'horizontal.png');
+        $this->privilegedUsers->setUserRobot(true);
+        $this->assertNull($this->facade->getSidebarBannerUrl());
+        $this->assertEmpty($this->facade->getHorizontalBannerUrls());
+        $this->assertNull($this->facade->getSidebarCampaignKey());
+    }
+
+    #[Test]
     public function twoHorizontalBanners(): void {
         $this->facade->addCampaign(horizontalBanner:'foo.png', name:'key-1');
         $this->facade->addCampaign(horizontalBanner:'bar.png', name:'key-2');
