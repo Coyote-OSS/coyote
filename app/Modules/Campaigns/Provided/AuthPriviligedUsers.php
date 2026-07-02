@@ -2,6 +2,7 @@
 namespace Coyote\Modules\Campaigns\Provided;
 
 use Coyote\Reputation;
+use Jenssegers\Agent\Agent;
 
 class AuthPriviligedUsers implements \Modules\Campaigns\ForPriviligedUsers {
     public function userHasHighReputation(): bool {
@@ -13,7 +14,6 @@ class AuthPriviligedUsers implements \Modules\Campaigns\ForPriviligedUsers {
     }
 
     public function userIsRobot(): bool {
-        // return new Agent()->isRobot(request()->userAgent());
-        return false;
+        return new Agent()->isRobot(request()->userAgent());
     }
 }
