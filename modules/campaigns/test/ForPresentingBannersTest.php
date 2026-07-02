@@ -1,11 +1,11 @@
 <?php
 namespace Test\Modules\Campaigns;
 
-use Modules\Campaigns\CampaignBanner;
-use Modules\Campaigns\CampaignBanners;
 use Modules\Campaigns\CampaignBannersPresenter;
 use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\ForPresentingBanners;
+use Modules\Campaigns\Internal\CampaignBanner;
+use Modules\Campaigns\Internal\CampaignBanners;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\Before;

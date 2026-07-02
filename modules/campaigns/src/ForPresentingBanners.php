@@ -1,8 +1,6 @@
 <?php
 namespace Modules\Campaigns;
 
-use Modules\Campaigns\New\CampaignBannerSet;
-
 interface ForPresentingBanners {
     public function bannerSet(): CampaignBannerSet;
 

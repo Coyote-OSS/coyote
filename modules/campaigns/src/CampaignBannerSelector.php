@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Campaigns;
 
+use Modules\Campaigns\Internal\CampaignBanner;
 use Modules\Campaigns\Store\Campaign;
 use Modules\Campaigns\Store\CampaignVariant;
 

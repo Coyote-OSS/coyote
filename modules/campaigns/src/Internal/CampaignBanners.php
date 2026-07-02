@@ -1,10 +1,12 @@
 <?php
-namespace Modules\Campaigns\New;
+namespace Modules\Campaigns\Internal;
 
-readonly class CampaignBannerSet {
+/**
+ * @deprecated
+ */
+readonly class CampaignBanners {
     /**
      * @param CampaignBanner[] $horizontal
-     * @param CampaignBanner|null $sidebar
      */
     public function __construct(
         public array           $horizontal,

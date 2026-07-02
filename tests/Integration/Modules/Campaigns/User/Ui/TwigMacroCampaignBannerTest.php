@@ -1,8 +1,8 @@
 <?php
 namespace Tests\Integration\Modules\Campaigns\User\Ui;
 
-use Modules\Campaigns\New\CampaignBanner;
-use Modules\Campaigns\New\CampaignBannerSet;
+use Modules\Campaigns\CampaignBanner;
+use Modules\Campaigns\CampaignBannerSet;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\Integration\Fixture;
