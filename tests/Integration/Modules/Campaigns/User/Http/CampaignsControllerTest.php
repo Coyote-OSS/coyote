@@ -4,6 +4,7 @@ namespace Tests\Integration\Modules\Campaigns\User\Http;
 use Coyote\Modules\Campaigns\User\Http\CampaignsController;
 use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\CampaignsStore;
+use Modules\Campaigns\Store\CampaignVariant;
 use Modules\Campaigns\Store\VariantPayload;
 use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -16,7 +17,7 @@ class CampaignsControllerTest extends TestCase {
     use Server\Laravel\Transactional;
 
     #[Test]
-    public function redirectsToHomepage_forNoSuchCampaign(): void {
+    public function clickVariant_returnNotFound_forNoSuchVariant(): void {
         $noSuchVariantId = 999_888_777;
         $this->laravel
             ->get("/campaigns/$noSuchVariantId")
@@ -24,23 +25,57 @@ class CampaignsControllerTest extends TestCase {
     }
 
     #[Test]
-    public function redirectToCampaignRedirectUrl(): void {
-        $variantId = $this->addCampaign('campaign-key', '/redirect-url');
+    public function clickVariant_redirect_toRedirectUrl(): void {
+        [$_, $variantId] = $this->addCampaignWithVariant('/redirect-url');
         $this->laravel
             ->get("/campaigns/$variantId")
             ->assertRedirect('/redirect-url');
     }
 
-    private function addCampaign(string $campaignKey, string $redirectUrl): int {
+    #[Test]
+    public function exposeVariant_returnNotFound_forNoSuchVariant(): void {
+        $noSuchVariantId = 999_888_777;
+        $this->laravel
+            ->get("/campaigns/$noSuchVariantId/expose")
+            ->assertNotFound();
+    }
+
+    #[Test]
+    public function exposeVariant_returnsSuccess(): void {
+        [$_, $variantId] = $this->addCampaignWithVariant('/redirect-url');
+        $this->laravel
+            ->get("/campaigns/$variantId/expose")
+            ->assertSuccessful();
+    }
+
+    #[Test]
+    public function clickVariant_record_variantClick(): void {
+        [$campaignId, $variantId] = $this->addCampaignWithVariant();
+        $this->laravel->get("/campaigns/$variantId");
+        $this->assertSame(1, $this->campaignVariant($campaignId)->clicks);
+    }
+
+    #[Test]
+    public function exposeVariant_record_variantExposure(): void {
+        [$campaignId, $variantId] = $this->addCampaignWithVariant();
+        $this->laravel->get("/campaigns/$variantId/expose");
+        $this->assertSame(1, $this->campaignVariant($campaignId)->exposures);
+    }
+
+    private function addCampaignWithVariant(?string $redirectUrl = null): array {
         $store = $this->instance();
-        $campaignId = $store->createCampaign(new CampaignPayload(
-            $campaignKey,
-            $redirectUrl,
-            null,
-            null,
-            null,
-            null));
-        return $store->createVariant($campaignId, new VariantPayload(VariantType::Standard, 'image.png'));
+        $campaignId = $store->createCampaign($this->exampleCampaign($redirectUrl));
+        $variantId = $store->createVariant($campaignId, new VariantPayload(VariantType::Standard, 'image.png'));
+        return [$campaignId, $variantId];
+    }
+
+    private function exampleCampaign(?string $redirectUrl): CampaignPayload {
+        return new CampaignPayload(null, $redirectUrl ?? '', null, null, null, null);
+    }
+
+    private function campaignVariant(mixed $campaignId): CampaignVariant {
+        [$variant] = $this->instance()->findCampaign($campaignId)->variants;
+        return $variant;
     }
 
     private function instance(): CampaignsStore {
