@@ -19,6 +19,6 @@
 
 {% macro bannerImage(banner) %}
   <a href="{{ banner.redirectUrl }}" target="_blank">
-    <img src="{{ banner.imageUrl }}"/>
+    <img src="{{ banner.imageUrl }}" data-variant-id="{{ banner.variantId }}"/>
   </a>
 {% endmacro %}
