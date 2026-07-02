@@ -103,7 +103,7 @@ class CampaignsActiveTest extends TestCase {
     #[Test]
     public function givenTotalViewsAboveTarget_campaignIsNotActive(): void {
         // given a campaign with target of 2 views
-        $this->setupCampaignTargetViews(7);
+        $this->setupCampaignTargetViews(8);
         // when the campaign is viewed 3 times
         $this->stubCampaignViews(4, VariantType::Sidebar);
         $this->stubCampaignViews(4, VariantType::Standard);
@@ -133,6 +133,12 @@ class CampaignsActiveTest extends TestCase {
     public function campaignWithoutUntilWithTarget_isNotActive(): void {
         $this->setupCampaign(activeSince:false, activeUntil:false, hasTargetViews:true);
         $this->assertCampaignActive();
+    }
+
+    #[Test]
+    public function campaignWithTargetZero_isNotActive(): void {
+        $this->setupCampaignTargetViews(0);
+        $this->assertCampaignNotActive('target-reached');
     }
 
     private function assertCampaignActive(): void {
@@ -179,7 +185,7 @@ class CampaignsActiveTest extends TestCase {
         foreach ($this->store->listCampaigns() as $campaign) {
             foreach ($campaign->variants as $variant) {
                 if ($type === $variant->payload->type) {
-                    foreach (range(1, $views) as $_) {
+                    for ($i = 0; $i < $views; $i++) {
                         $this->store->viewVariant($variant->id);
                     }
                 }

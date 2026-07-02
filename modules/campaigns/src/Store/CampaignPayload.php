@@ -7,7 +7,7 @@ readonly class CampaignPayload {
         public string  $redirectUrl,
         public ?string $activeSinceDate,
         public ?string $activeUntilDate,
-        public ?int    $activeBelowViews,
+        public ?int    $targetViews,
         public ?string $description,
     ) {}
 }

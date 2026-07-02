@@ -53,7 +53,7 @@ class CampaignsController extends BaseController {
                 new CampaignStatus($service->campaignStatus($campaignId)),
                 $campaign->payload->activeSinceDate,
                 $campaign->payload->activeUntilDate,
-                $campaign->payload->activeBelowViews,
+                $campaign->payload->targetViews,
                 $campaign->variants |> arrays::map(
                     fn(Campaigns\Store\CampaignVariant $variant) => new VariantViewModel(
                         $variant->payload->imageUrl,
