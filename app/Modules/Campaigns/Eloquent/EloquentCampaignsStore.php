@@ -41,6 +41,7 @@ class EloquentCampaignsStore implements CampaignsStore {
             'type'      => $this->serializeVariantType($payload),
             'views'     => 0,
             'clicks'    => 0,
+            'exposures' => 0,
         ]);
         return $variant->id;
     }
@@ -85,6 +86,7 @@ class EloquentCampaignsStore implements CampaignsStore {
             $variant->id,
             $variant->views,
             $variant->clicks,
+            $variant->exposures,
             new VariantPayload($this->deserializeVariantType($variant), $variant->image_url));
     }
 
@@ -94,6 +96,10 @@ class EloquentCampaignsStore implements CampaignsStore {
 
     public function clickVariant(int $variantId): void {
         Eloquent\CampaignVariant::query()->whereKey($variantId)->increment('clicks');
+    }
+
+    public function exposeVariant(int $variantId): void {
+        Eloquent\CampaignVariant::query()->whereKey($variantId)->increment('exposures');
     }
 
     public function findCampaignRedirectUrl(int $variantId): ?string {
