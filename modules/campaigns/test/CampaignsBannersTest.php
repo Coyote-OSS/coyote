@@ -1,6 +1,7 @@
 <?php
 namespace Test\Modules\Campaigns;
 
+use Libs\Arrays\arrays;
 use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\Before;
@@ -185,7 +186,7 @@ class CampaignsBannersTest extends TestCase {
     ): void {
         $this->assertSame(
             $expectedCampaignKeys,
-            array_map(fn($banner) => $banner->campaignKey, $actualCampaignBanners));
+            $actualCampaignBanners |> arrays::map(fn($banner) => $banner->campaignKey));
     }
 
     private function assertArrayKeys(array $expectedKeys, array $actualArray): void {

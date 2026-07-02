@@ -1,6 +1,7 @@
 <?php
 namespace Test\Modules\Campaigns\Store;
 
+use Libs\Arrays\arrays;
 use Modules\Campaigns\Store\Campaign;
 use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\CampaignsStore;
@@ -32,7 +33,9 @@ class InMemoryCampaignsStore implements CampaignsStore {
     }
 
     public function listCampaigns(): array {
-        return \array_values(\array_map($this->campaignObject(...), $this->campaignIds));
+        return $this->campaignIds
+                |> arrays::map($this->campaignObject(...))
+                |> arrays::values();
     }
 
     public function findCampaign(int $campaignId): ?Campaign {
@@ -50,9 +53,7 @@ class InMemoryCampaignsStore implements CampaignsStore {
     }
 
     private function campaignVariants(int $campaignId): array {
-        return \array_map(
-            $this->campaignVariant(...),
-            $this->campaignVariants[$campaignId]);
+        return $this->campaignVariants[$campaignId] |> arrays::map($this->campaignVariant(...));
     }
 
     private function campaignVariant(int $variantId): CampaignVariant {

@@ -14,6 +14,7 @@ use Coyote\Modules\Campaigns\Eloquent\Campaign;
 use Coyote\Services\FormBuilder\Form;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Libs\Arrays\arrays;
 use Modules\Campaigns;
 
 class CampaignsController extends BaseController {
@@ -52,12 +53,11 @@ class CampaignsController extends BaseController {
                 $campaign->payload->activeSinceDate,
                 $campaign->payload->activeUntilDate,
                 $campaign->payload->activeBelowViews,
-                \array_map(
+                $campaign->variants |> arrays::map(
                     fn(Campaigns\Store\CampaignVariant $variant) => new VariantViewModel(
                         $variant->payload->imageUrl,
                         new CampaignStats($variant->views, $variant->clicks),
-                        $variant->payload->type),
-                    $campaign->variants)),
+                        $variant->payload->type))),
         ]);
     }
 

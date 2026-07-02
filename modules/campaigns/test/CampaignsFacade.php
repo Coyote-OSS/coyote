@@ -1,6 +1,7 @@
 <?php
 namespace Test\Modules\Campaigns;
 
+use Libs\Arrays\arrays;
 use Modules\Campaigns;
 use Modules\Campaigns\Internal\CampaignBanner;
 use PHPUnit\Framework\Assert;
@@ -18,9 +19,7 @@ readonly class CampaignsFacade {
      * @return string[]
      */
     public function getHorizontalBannerUrls(): array {
-        return \array_map(
-            fn(CampaignBanner $banner): string => $banner->bannerUrl,
-            $this->horizontalBanners());
+        return $this->horizontalBanners() |> arrays::map(fn(CampaignBanner $banner): string => $banner->bannerUrl);
     }
 
     public function getSidebarBannerUrl(): ?string {
@@ -32,9 +31,7 @@ readonly class CampaignsFacade {
      * @deprecated
      */
     public function getHorizontalCampaignKeys(): array {
-        return \array_map(
-            fn(CampaignBanner $banner): string => $banner->campaignKey,
-            $this->horizontalBanners());
+        return $this->horizontalBanners() |> arrays::map(fn(CampaignBanner $banner): string => $banner->campaignKey);
     }
 
     /**
