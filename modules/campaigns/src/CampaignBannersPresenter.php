@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Campaigns;
 
-use Modules\Campaigns\New\CampaignBannerSet;
+use Modules\Campaigns\Internal\CampaignBanner;
 use Modules\Campaigns\Store\CampaignsStore;
 
 readonly class CampaignBannersPresenter implements ForPresentingBanners {
@@ -28,8 +28,8 @@ readonly class CampaignBannersPresenter implements ForPresentingBanners {
         }
     }
 
-    private function mapBanner(CampaignBanner $banner): New\CampaignBanner {
-        return new New\CampaignBanner(
+    private function mapBanner(CampaignBanner $banner): \Modules\Campaigns\CampaignBanner {
+        return new \Modules\Campaigns\CampaignBanner(
             $this->redirectUrls->redirectUrl($banner->variantId),
             $banner->bannerUrl,
             $banner->variantId);

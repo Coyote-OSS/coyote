@@ -2,7 +2,7 @@
 namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns;
-use Modules\Campaigns\CampaignBanner;
+use Modules\Campaigns\Internal\CampaignBanner;
 use PHPUnit\Framework\Assert;
 
 /**
