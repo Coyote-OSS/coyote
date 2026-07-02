@@ -16,4 +16,12 @@ class CampaignsController extends Controller {
         $this->store->clickVariant($variantId);
         return redirect()->to($redirectUrl);
     }
+
+    public function expose(int $variantId): void {
+        $redirectUrl = $this->store->findCampaignRedirectUrl($variantId);
+        if ($redirectUrl === null) {
+            abort(404);
+        }
+        $this->store->exposeVariant($variantId);
+    }
 }
