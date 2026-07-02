@@ -24,10 +24,9 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     #[Test]
     public function rendersSidebarBannerLinkAndImage(): void {
-        $bannerSet = new CampaignBannerSet([], new CampaignBanner(
-            redirectUrl:'https://example.com/sidebar',
-            imageUrl:'https://example.com/sidebar.jpg',
-        ));
+        $bannerSet = new CampaignBannerSet([], $this->banner(
+            'https://example.com/sidebar',
+            'https://example.com/sidebar.jpg'));
         $html = $this->campaignBanner('sidebar', $bannerSet);
         $this->assertSame('https://example.com/sidebar',
             $html->querySelector('a')->getAttribute('href'));
@@ -37,7 +36,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     #[Test]
     public function rendersHorizontalBannerLinkAndImage(): void {
-        $banner = new CampaignBanner(
+        $banner = $this->banner(
             redirectUrl:'https://example.com/horizontal',
             imageUrl:'https://example.com/horizontal.jpg');
         $bannerSet = new CampaignBannerSet([$banner], null);
@@ -50,7 +49,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     #[Test]
     public function horizontalPlaceholderDoesNotRenderSidebar(): void {
-        $sidebar = new CampaignBanner(
+        $sidebar = $this->banner(
             redirectUrl:'https://example.com/sidebar',
             imageUrl:'https://example.com/sidebar.jpg');
         $bannerSet = new CampaignBannerSet([], $sidebar);
@@ -60,7 +59,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     #[Test]
     public function sidebarPlaceholderDoesNotRenderHorizontal(): void {
-        $banner = new CampaignBanner(
+        $banner = $this->banner(
             redirectUrl:'https://example.com/horizontal',
             imageUrl:'https://example.com/horizontal.jpg');
         $bannerSet = new CampaignBannerSet([$banner], null);
@@ -76,5 +75,12 @@ class TwigMacroCampaignBannerTest extends TestCase {
             'placeholderType' => $placeholderType,
             'bannerSet'       => $bannerSet,
         ]);
+    }
+
+    private function banner(string $redirectUrl, string $imageUrl): CampaignBanner {
+        return new CampaignBanner(
+            redirectUrl:$redirectUrl,
+            imageUrl:$imageUrl,
+            variantId:0);
     }
 }

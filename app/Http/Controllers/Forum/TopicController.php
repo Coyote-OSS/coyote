@@ -34,8 +34,7 @@ class TopicController extends BaseController {
         Request                        $request,
         Forum                          $forum,
         Topic                          $topic,
-        Campaigns\CampaignService      $campaigns,
-        Campaigns\Store\CampaignsStore $store,
+        Campaigns\ForPresentingBanners $presenter,
     ): Collection|View|array {
         if (!$this->visibleDespiteIncognitoUser($topic)) {
             abort(404);
@@ -164,10 +163,8 @@ class TopicController extends BaseController {
 
         $post = array_first($posts['data']);
 
-        $campaignBanners = $campaigns->campaignBanners();
-        foreach ($campaignBanners->all() as $banner) {
-            $store->viewVariant($banner->variantId);
-        }
+        $bannerSet = $presenter->bannerSet();
+        $presenter->recordViews($bannerSet);
 
         return $this
             ->view('forum.topic', [
@@ -192,17 +189,7 @@ class TopicController extends BaseController {
                 'flags'                   => $this->flags($forum),
                 'schema_topic'            => $this->discussionForumPosting($topic, $post['html']),
                 'topic_ads'               => $this->userIncludeAds(),
-                'campaign_banners_topic'  => new Campaigns\New\CampaignBannerSet(
-                    \array_map(
-                        function (Campaigns\CampaignBanner $banner) {
-                            return new Campaigns\New\CampaignBanner(
-                                route('campaigns.click', [$banner->variantId]),
-                                $banner->bannerUrl);
-                        },
-                        $campaignBanners->horizontal),
-                    new Campaigns\New\CampaignBanner(
-                        route('campaigns.click', [$campaignBanners->sidebar->variantId]),
-                        $campaignBanners->sidebar->bannerUrl)),
+                'campaign_banners_topic'  => $bannerSet,
             ]);
     }
 
