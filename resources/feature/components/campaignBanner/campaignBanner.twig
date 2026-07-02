@@ -1,9 +1,11 @@
 {% macro campaignBanner(placeholder_size, bannerSet) %}
-  <div class="campaign-banner">
-    {% if placeholder_size == 'sidebar' and bannerSet.sidebar %}
+  {% if placeholder_size == 'sidebar' and bannerSet.sidebar %}
+    <div class="campaign-banner">
       {{ _self.bannerImage(bannerSet.sidebar) }}
-    {% endif %}
-    {% if placeholder_size == 'horizontal' and bannerSet.horizontal %}
+    </div>
+  {% endif %}
+  {% if placeholder_size == 'horizontal' and bannerSet.horizontal %}
+    <div class="campaign-banner">
       <div class="row g-2 justify-content-center">
         {% for banner in bannerSet.horizontal %}
           <div class="col-12 col-lg-6">
@@ -11,8 +13,8 @@
           </div>
         {% endfor %}
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 {% endmacro %}
 
 {% macro bannerImage(banner) %}
