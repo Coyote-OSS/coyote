@@ -57,7 +57,7 @@ class CampaignsController extends BaseController {
                 $campaign->variants |> arrays::map(
                     fn(Campaigns\Store\CampaignVariant $variant) => new VariantViewModel(
                         $variant->payload->imageUrl,
-                        new CampaignStats($variant->views, $variant->clicks),
+                        new CampaignStats($variant->views, $variant->clicks, $variant->exposures),
                         $variant->payload->type))),
         ]);
     }
@@ -65,11 +65,13 @@ class CampaignsController extends BaseController {
     private function campaignStats(Campaigns\Store\Campaign $campaign): CampaignStats {
         $views = 0;
         $clicks = 0;
+        $exposures = 0;
         foreach ($campaign->variants as $variant) {
             $views += $variant->views;
             $clicks += $variant->clicks;
+            $exposures += $variant->exposures;
         }
-        return new CampaignStats($views, $clicks);
+        return new CampaignStats($views, $clicks, $exposures);
     }
 
     public function edit(Eloquent\Campaign $campaign): View {

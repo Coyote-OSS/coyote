@@ -35,6 +35,17 @@ class TwigMacroCampaignBannerTest extends TestCase {
     }
 
     #[Test]
+    public function rendersSidebarBannerExposeUrlDataAttribute(): void {
+        $bannerSet = new CampaignBannerSet([], $this->banner(
+            '',
+            '',
+            exposeUrl:'https://example.com/sidebar/expose'));
+        $html = $this->campaignBanner('sidebar', $bannerSet);
+        $this->assertSame('https://example.com/sidebar/expose',
+            $html->querySelector('img')->getAttribute('data-expose-url'));
+    }
+
+    #[Test]
     public function rendersHorizontalBannerLinkAndImage(): void {
         $banner = $this->banner(
             redirectUrl:'https://example.com/horizontal',
@@ -49,20 +60,14 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     #[Test]
     public function horizontalPlaceholderDoesNotRenderSidebar(): void {
-        $sidebar = $this->banner(
-            redirectUrl:'https://example.com/sidebar',
-            imageUrl:'https://example.com/sidebar.jpg');
-        $bannerSet = new CampaignBannerSet([], $sidebar);
+        $bannerSet = new CampaignBannerSet([], $this->banner());
         $html = $this->campaignBanner('horizontal', $bannerSet);
         $this->assertNull($html->querySelector('a'));
     }
 
     #[Test]
     public function sidebarPlaceholderDoesNotRenderHorizontal(): void {
-        $banner = $this->banner(
-            redirectUrl:'https://example.com/horizontal',
-            imageUrl:'https://example.com/horizontal.jpg');
-        $bannerSet = new CampaignBannerSet([$banner], null);
+        $bannerSet = new CampaignBannerSet([$this->banner()], null);
         $dom = $this->campaignBanner('sidebar', $bannerSet);
         $this->assertNull($dom->querySelector('a'));
     }
@@ -77,10 +82,15 @@ class TwigMacroCampaignBannerTest extends TestCase {
         ]);
     }
 
-    private function banner(string $redirectUrl, string $imageUrl): CampaignBanner {
+    private function banner(
+        ?string $redirectUrl = null,
+        ?string $imageUrl = null,
+        ?string $exposeUrl = null,
+    ): CampaignBanner {
         return new CampaignBanner(
-            redirectUrl:$redirectUrl,
-            imageUrl:$imageUrl,
+            redirectUrl:$redirectUrl ?? '',
+            exposeUrl:$exposeUrl ?? '',
+            imageUrl:$imageUrl ?? '',
             variantId:0);
     }
 }

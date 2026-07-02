@@ -5,12 +5,14 @@ readonly class CampaignStats {
     public function __construct(
         public int $views,
         public int $clicks,
+        public int $exposures,
     ) {}
 
     public function concat(self $other): self {
         return new self(
             $this->views + $other->views,
-            $this->clicks + $other->clicks);
+            $this->clicks + $other->clicks,
+            $this->exposures + $other->exposures);
     }
 
     public function ctr(): ?string {

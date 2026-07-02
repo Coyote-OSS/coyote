@@ -58,7 +58,8 @@ readonly class FontAwesomePro {
 
             // campaigns
             'campaign'                                  => 'fa-light fa-bullhorn',
-            'campaignViews'                             => 'fa-light fa-eye',
+            'campaignViews'                             => 'fa-light fa-eye', // Change to fa-window, after FA update
+            'campaignExposures'                         => 'fa-solid fa-eye', // Change to fa-window, after FA update
             'campaignClicks'                            => 'fa-light fa-hand-pointer',
             'campaignCtr'                               => 'fa-light fa-chart-area',
             'campaignStatus'                            => 'fa-light fa-check',
