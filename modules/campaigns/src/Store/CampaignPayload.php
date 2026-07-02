@@ -8,5 +8,6 @@ readonly class CampaignPayload {
         public ?string $activeSinceDate,
         public ?string $activeUntilDate,
         public ?int    $activeBelowViews,
+        public ?string $description,
     ) {}
 }

@@ -26,6 +26,7 @@ class EloquentCampaignsStore implements CampaignsStore {
             'active_until' => $payload->activeUntilDate,
             'target_views' => $payload->activeBelowViews,
             'name'         => $payload->name,
+            'description'  => $payload->description,
         ];
     }
 
@@ -74,7 +75,8 @@ class EloquentCampaignsStore implements CampaignsStore {
                 $campaign->redirect_url,
                 $campaign->active_since,
                 $campaign->active_until,
-                $campaign->target_views),
+                $campaign->target_views,
+                $campaign->description),
             $campaign->variants->map($this->parseVariant(...))->all());
     }
 

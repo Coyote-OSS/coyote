@@ -38,6 +38,7 @@ class CampaignsControllerTest extends TestCase {
             $redirectUrl,
             null,
             null,
+            null,
             null));
         return $store->createVariant($campaignId, new VariantPayload(VariantType::Standard, 'image.png'));
     }

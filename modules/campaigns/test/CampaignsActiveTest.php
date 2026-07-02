@@ -4,7 +4,7 @@ namespace Test\Modules\Campaigns;
 use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\VariantPayload;
- use Modules\Campaigns\VariantType;
+use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -169,7 +169,8 @@ class CampaignsActiveTest extends TestCase {
             '',
             $activeSince,
             $activeUntil,
-            $targetViews));
+            $targetViews,
+            null));
         $this->assertNotNull($this->store->createVariant($this->lastCampaignId, VariantPayload::from('sidebar', '')));
         $this->assertNotNull($this->store->createVariant($this->lastCampaignId, VariantPayload::from('horizontal', '')));
     }
