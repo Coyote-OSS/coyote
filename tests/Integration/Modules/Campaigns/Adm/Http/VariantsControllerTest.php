@@ -154,7 +154,7 @@ class VariantsControllerTest extends TestCase {
     private function createCampaign(): int {
         /** @var EloquentCampaignsStore $store */
         $store = $this->laravel->app->make(EloquentCampaignsStore::class);
-        return $store->createCampaign(new CampaignPayload('campaign', '', null, null, null));
+        return $store->createCampaign(new CampaignPayload('campaign', '', null, null, null, null));
     }
 
     private function exampleVariant(

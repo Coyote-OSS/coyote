@@ -84,7 +84,8 @@ class CampaignsController extends BaseController {
             $form->getValue('redirect_url'),
             $form->getValue('active_since'),
             $form->getValue('active_until'),
-            $form->getValue('target_views'));
+            $form->getValue('target_views'),
+            null);
         if ($campaign->exists) {
             $store->updateCampaign($campaign->id, $campaignModel);
             $campaignId = $campaign->id;

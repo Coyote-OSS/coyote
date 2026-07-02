@@ -81,7 +81,7 @@ trait CampaignStoreContractTests {
     public function givenCampaign_create_findsCampaignPayload(): void {
         // when campaign is created with payload
         $campaignId = $this->store->createCampaign(new CampaignPayload(
-            'name', 'redirect', '2001-01-01 00:00:00', '2002-02-02 00:00:00', 42,
+            'name', 'redirect', '2001-01-01 00:00:00', '2002-02-02 00:00:00', 42, 'description',
         ));
         // then campaign is found with payload
         $campaignPayload = $this->store->findCampaign($campaignId)->payload;
@@ -90,6 +90,7 @@ trait CampaignStoreContractTests {
         Assert::assertSame('2001-01-01 00:00:00', $campaignPayload->activeSinceDate);
         Assert::assertSame('2002-02-02 00:00:00', $campaignPayload->activeUntilDate);
         Assert::assertSame(42, $campaignPayload->activeBelowViews);
+        Assert::assertSame('description', $campaignPayload->description);
     }
 
     #[Test]
@@ -97,7 +98,7 @@ trait CampaignStoreContractTests {
     public function givenCampaign_create_findsCampaignPayloadWithOptionalFields(): void {
         // when campaign is created with payload unset fields
         $campaignId = $this->store->createCampaign(new CampaignPayload(
-            null, '', null, null, null,
+            null, '', null, null, null, null,
         ));
         // then campaign is found with payload with unset fields
         $campaignPayload = $this->store->findCampaign($campaignId)->payload;
@@ -112,11 +113,11 @@ trait CampaignStoreContractTests {
     public function givenCampaign_update_updatesCampaign(): void {
         // given campaign has been created with payload
         $campaignId = $this->store->createCampaign(new CampaignPayload(
-            '', '', null, null, null,
+            '', '', null, null, null, null,
         ));
         // when campaign is updated with payload
         $this->store->updateCampaign($campaignId, new CampaignPayload(
-            'name', 'redirect', '2001-01-01 00:00:00', '2002-02-02 00:00:00', 42,
+            'name', 'redirect', '2001-01-01 00:00:00', '2002-02-02 00:00:00', 42, 'description',
         ));
         // then campaign is found with payload
         $campaignPayload = $this->store->findCampaign($campaignId)->payload;
@@ -125,6 +126,7 @@ trait CampaignStoreContractTests {
         Assert::assertSame('2001-01-01 00:00:00', $campaignPayload->activeSinceDate);
         Assert::assertSame('2002-02-02 00:00:00', $campaignPayload->activeUntilDate);
         Assert::assertSame(42, $campaignPayload->activeBelowViews);
+        Assert::assertSame('description', $campaignPayload->description);
     }
 
     #[Test]
@@ -323,7 +325,8 @@ trait CampaignStoreContractTests {
             $redirectUrl,
             '2111-01-01',
             '2222-02-02',
-            999_888_777);
+            999_888_777,
+            'example-description');
     }
 
     private function exampleVariantPayload(): VariantPayload {
