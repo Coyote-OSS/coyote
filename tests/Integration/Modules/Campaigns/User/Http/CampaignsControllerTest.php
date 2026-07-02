@@ -36,7 +36,7 @@ class CampaignsControllerTest extends TestCase {
     public function exposeVariant_returnNotFound_forNoSuchVariant(): void {
         $noSuchVariantId = 999_888_777;
         $this->laravel
-            ->get("/campaigns/$noSuchVariantId/expose")
+            ->post("/campaigns/$noSuchVariantId/expose")
             ->assertNotFound();
     }
 
@@ -44,7 +44,7 @@ class CampaignsControllerTest extends TestCase {
     public function exposeVariant_returnsSuccess(): void {
         [$_, $variantId] = $this->addCampaignWithVariant('/redirect-url');
         $this->laravel
-            ->get("/campaigns/$variantId/expose")
+            ->post("/campaigns/$variantId/expose")
             ->assertSuccessful();
     }
 
@@ -58,7 +58,7 @@ class CampaignsControllerTest extends TestCase {
     #[Test]
     public function exposeVariant_record_variantExposure(): void {
         [$campaignId, $variantId] = $this->addCampaignWithVariant();
-        $this->laravel->get("/campaigns/$variantId/expose");
+        $this->laravel->post("/campaigns/$variantId/expose");
         $this->assertSame(1, $this->campaignVariant($campaignId)->exposures);
     }
 

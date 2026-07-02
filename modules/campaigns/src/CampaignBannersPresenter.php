@@ -32,6 +32,7 @@ readonly class CampaignBannersPresenter implements ForPresentingBanners {
     private function mapBanner(CampaignBanner $banner): \Modules\Campaigns\CampaignBanner {
         return new \Modules\Campaigns\CampaignBanner(
             $this->redirectUrls->redirectUrl($banner->variantId),
+            $this->redirectUrls->exposeUrl($banner->variantId),
             $banner->bannerUrl,
             $banner->variantId);
     }

@@ -113,6 +113,18 @@ class ForPresentingBannersTest extends TestCase {
     }
 
     #[Test]
+    public function sidebarBannerExposeUrl(): void {
+        // arrange
+        $this->stubCampaignBanners(new CampaignBanners(
+            [],
+            $this->banner('side.png', variantId:7, type:VariantType::Sidebar)));
+        // act
+        $bannerSet = $this->presenter->bannerSet();
+        // assert
+        $this->assertSame('https://test-redirect/7/expose', $bannerSet->sidebar->exposeUrl);
+    }
+
+    #[Test]
     public function recordsNoViewsForEmptyBannerSet(): void {
         // arrange
         $this->stubCampaignBannersEmpty();

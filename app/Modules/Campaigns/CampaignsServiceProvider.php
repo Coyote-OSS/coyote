@@ -55,6 +55,7 @@ class CampaignsServiceProvider extends ServiceProvider {
             ->get('/campaigns/{variantId}', [CampaignsController::class, 'click'])
             ->name('campaigns.click');
         $router
-            ->get('/campaigns/{variantId}/expose', [CampaignsController::class, 'expose']);
+            ->post('/campaigns/{variantId}/expose', [CampaignsController::class, 'expose'])
+            ->name('campaigns.expose');
     }
 }
