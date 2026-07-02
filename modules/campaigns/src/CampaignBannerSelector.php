@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Campaigns;
 
+use Libs\Arrays\arrays;
 use Modules\Campaigns\Internal\CampaignBanner;
 use Modules\Campaigns\Store\Campaign;
 use Modules\Campaigns\Store\CampaignVariant;
@@ -27,19 +28,15 @@ readonly class CampaignBannerSelector {
      * @return Campaign[]
      */
     private function campaignsWithVariantsOfType(array $campaigns, VariantType $type): array {
-        return \array_values(\array_filter($campaigns,
-            fn(Campaign $campaign): bool => $this->campaignHasVariant($campaign, $type)));
+        return $campaigns |> arrays::filter(fn($campaign) => $this->campaignHasVariant($campaign, $type));
     }
 
     private function campaignHasVariant(Campaign $campaign, VariantType $type): bool {
-        return \array_any($campaign->variants,
-            fn(CampaignVariant $variant) => $variant->payload->type === $type);
+        return \array_any($campaign->variants, CampaignVariant::hasType($type));
     }
 
     private function pickedCampaignsPickedBanners(VariantType $type, array $pickedCampaigns): array {
-        return \array_map(
-            fn(Campaign $campaign) => $this->pickedBanner($campaign, $type),
-            $pickedCampaigns);
+        return $pickedCampaigns |> arrays::map(fn(Campaign $campaign) => $this->pickedBanner($campaign, $type));
     }
 
     private function pickedBanner(Campaign $campaign, VariantType $type): CampaignBanner {

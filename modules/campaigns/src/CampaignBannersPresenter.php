@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Campaigns;
 
+use Libs\Arrays\arrays;
 use Modules\Campaigns\Internal\CampaignBanner;
 use Modules\Campaigns\Store\CampaignsStore;
 
@@ -14,7 +15,7 @@ readonly class CampaignBannersPresenter implements ForPresentingBanners {
     public function bannerSet(): CampaignBannerSet {
         $banners = $this->service->campaignBanners();
         return new CampaignBannerSet(
-            \array_map($this->mapBanner(...), $banners->horizontal),
+            $banners->horizontal |> arrays::map($this->mapBanner(...)),
             $banners->sidebar !== null ? $this->mapBanner($banners->sidebar) : null,
         );
     }

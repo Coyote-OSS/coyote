@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Campaigns\Store;
 
+use Libs\Arrays\arrays;
 use Modules\Campaigns\VariantType;
 
 readonly class Campaign {
@@ -17,8 +18,6 @@ readonly class Campaign {
      * @return CampaignVariant[]
      */
     public function variantsOfType(VariantType $type): array {
-        return \array_values(array_filter(
-            $this->variants,
-            fn($variant) => $variant->payload->type === $type));
+        return $this->variants |> arrays::filter(CampaignVariant::hasType($type));
     }
 }

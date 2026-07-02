@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Campaigns;
 
+use Libs\Arrays\arrays;
 use Modules\Campaigns\Internal\CampaignBanners;
 use Modules\Campaigns\Store\Campaign;
 use Modules\Campaigns\Store\CampaignPayload;
@@ -47,7 +48,7 @@ readonly class CampaignService {
      * @return Campaign[]
      */
     private function listActiveCampaigns(): array {
-        return \array_filter($this->store->listCampaigns(), $this->isCampaignObjectActive(...));
+        return $this->store->listCampaigns() |> arrays::filter($this->isCampaignObjectActive(...));
     }
 
     public function campaignStatus(int $campaignId): string {
