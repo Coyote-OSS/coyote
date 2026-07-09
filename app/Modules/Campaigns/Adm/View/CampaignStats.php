@@ -16,10 +16,10 @@ readonly class CampaignStats {
     }
 
     public function ctr(): ?string {
-        if ($this->views === 0) {
+        if ($this->exposures === 0) {
             return null;
         }
-        return $this->percentage($this->clicks / $this->views);
+        return $this->percentage($this->clicks / $this->exposures);
     }
 
     private function percentage(float $rate): string {

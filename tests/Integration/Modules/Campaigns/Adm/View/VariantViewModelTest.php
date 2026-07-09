@@ -13,22 +13,22 @@ use PHPUnit\Framework\TestCase;
 class VariantViewModelTest extends TestCase {
     #[Test]
     public function emptyCtr(): void {
-        $this->assertNull($this->ctr(views:0, clicks:0));
+        $this->assertNull($this->ctr(exposures:0, clicks:0));
     }
 
     #[Test]
     public function zeroClicks(): void {
-        $this->assertSame('0.000%', $this->ctr(views:10, clicks:0));
+        $this->assertSame('0.000%', $this->ctr(exposures:10, clicks:0));
     }
 
     #[Test]
     public function halfByHalf(): void {
-        $this->assertSame('50.000%', $this->ctr(views:10, clicks:5));
+        $this->assertSame('50.000%', $this->ctr(exposures:10, clicks:5));
     }
 
     #[Test]
     public function roundToDecimalPlaces(): void {
-        $this->assertSame('16.667%', $this->ctr(views:6, clicks:1));
+        $this->assertSame('16.667%', $this->ctr(exposures:6, clicks:1));
     }
 
     #[Test]
@@ -61,8 +61,8 @@ class VariantViewModelTest extends TestCase {
         $this->assertSame('1140 × 90', $this->type(VariantType::LeaderBoard)->expectedDimension());
     }
 
-    private function ctr(int $views, int $clicks): ?string {
-        $viewModel = new VariantViewModel('', new CampaignStats($views, $clicks, 0), VariantType::Standard);
+    private function ctr(int $exposures, int $clicks): ?string {
+        $viewModel = new VariantViewModel('', new CampaignStats(0, $clicks, $exposures), VariantType::Standard);
         return $viewModel->stats->ctr();
     }
 
