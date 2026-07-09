@@ -55,15 +55,30 @@
           <span class="text-muted">nie wyświetlono</span>
         {% endif %}
       </div>
-      <div class="list-group-item">
-        {{ icon('campaignViews') }}
-        <b>Wyświetlenia:</b>
-        <code>{{ campaign.stats.views }}</code>
-        {% if campaign.targetViews %}
-          <span class="text-muted">
-            (docelowo: <code>{{ campaign.targetViews }}</code>)
-          </span>
-        {% endif %}
+      <div class="list-group-item d-flex">
+        <span>
+          {{ icon('campaignViews') }}
+          <b>Wyświetlenia:</b>
+          <code>{{ campaign.stats.views }}</code>
+          {% if campaign.targetViews %}
+            <span class="text-muted">
+              (docelowo: <code>{{ campaign.targetViews }}</code>)
+            </span>
+          {% endif %}
+        </span>
+        <span class="ms-auto text-muted">
+          {{ icon('genericInfo', {title: 'Wariant został wczytany przez urządzenie, wliczając w to: przeglądarkę użytkownika, scrapper, crawler, bot, etc.'}) }}
+        </span>
+      </div>
+      <div class="list-group-item d-flex">
+        <span>
+          {{ icon('campaignExposures') }}
+          <b>Ekspozycje:</b>
+          <code>{{ campaign.stats.exposures }}</code>
+        </span>
+        <span class="ms-auto text-muted">
+          {{ icon('genericInfo', {title: 'Grafika wariantu została pokazana w min. 50%, przez min. 1000ms w przeglądarce użytkownika. Maks. 1 raz na odświeżenie strony.'}) }}
+        </span>
       </div>
       <div class="list-group-item">
         {{ icon('campaignClicks') }}
@@ -101,8 +116,8 @@
       { key: 'expectedDimension', label: 'Rozmiar', labelIcon: 'campaignBannerDimensions' },
       { key: 'stats.ctr', label: 'CTR', labelIcon: 'campaignCtr', default: 'nie wyświetlono'},
       { key: 'stats.views', label: 'Wyświetlenia', labelIcon: 'campaignViews' },
-      { key: 'stats.clicks', label: 'Kliknięcia', labelIcon: 'campaignClicks' },
       { key: 'stats.exposures', label: 'Ekspozycje', labelIcon: 'campaignExposures' },
+      { key: 'stats.clicks', label: 'Kliknięcia', labelIcon: 'campaignClicks' },
       { key: 'imageUrl', label: 'Banner', labelIcon: 'campaignBanner', style: 'image', styleClass:'max-h-4' },
     ]) }}
   </div>
