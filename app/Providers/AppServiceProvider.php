@@ -23,12 +23,11 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Passport\Passport;
 use Symfony\Component\Mime\MimeTypes;
 
-class AppServiceProvider extends ServiceProvider
-{
-    public function boot(): void
-    {
+class AppServiceProvider extends ServiceProvider {
+    public function boot(): void {
         // force HTTPS according to cloudflare HTTP_X_FORWARDED_PROTO header
         $this->app['request']->server->set(
             'HTTPS',
@@ -79,6 +78,7 @@ class AppServiceProvider extends ServiceProvider
 
         Paginator::useBootstrap();
         MimeTypes::setDefault(new MimeTypes(['text/x-c++' => ['cpp']]));
+        Passport::$clientUuids = false;
     }
 
     /**
@@ -90,8 +90,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
+    public function register(): void {
         $this->app->singleton(Guest::class, function ($app) {
             $guest = new Guest($app['session.store']->get('guest_id'));
             $createdAt = $app['session.store']->get('created_at');
@@ -126,8 +125,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(OAuth::class, SocialiteOAuth::class);
     }
 
-    private function registerMacros()
-    {
+    private function registerMacros() {
         Collection::macro('flush', function () {
             $this->items = [];
         });
