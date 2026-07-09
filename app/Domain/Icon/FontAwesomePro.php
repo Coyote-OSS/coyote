@@ -34,6 +34,7 @@ readonly class FontAwesomePro {
             'genericCopy'                               => $genericCopy,
             'genericSave'                               => $genericSave,
             'genericBack'                               => $genericBack,
+            'genericInfo'                               => 'fa-light fa-info-circle',
 
             // registration
             'loginGoogle'                               => 'fa-brands fa-google',
