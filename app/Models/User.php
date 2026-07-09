@@ -13,9 +13,7 @@ use Coyote\Services\Media\Photo;
 use Coyote\User\Relation;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Contracts;
 use Illuminate\Database\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +27,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\RoutesNotifications;
 use Illuminate\Support;
 use Illuminate\Support\Collection;
+use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use NotificationChannels\WebPush\HasPushSubscriptions;
 use Ramsey\Uuid\Uuid;
@@ -95,7 +94,7 @@ use Ramsey\Uuid\Uuid;
  * @property UserPlanBundle[]|Eloquent\Collection $planBundles
  * @property Multiacc[]|Eloquent\Collection $multiaccs
  */
-class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract {
+class User extends Model implements Contracts\Auth\Authenticatable, Contracts\Auth\Access\Authorizable, Contracts\Auth\CanResetPassword, OAuthenticatable {
     use Authenticatable, Authorizable, CanResetPassword, RoutesNotifications, HasApiTokens, SoftDeletes, ExcludeBlocked, HasPushSubscriptions;
 
     protected $table = 'users';
