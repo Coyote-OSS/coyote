@@ -12,6 +12,9 @@ readonly class VariantPayload {
         return new VariantPayload(self::variantType($bannerType), $imageUrl);
     }
 
+    /**
+     * @deprecated
+     */
     private static function variantType(string $bannerType): VariantType {
         return match ($bannerType) {
             'horizontal'  => VariantType::Standard,
