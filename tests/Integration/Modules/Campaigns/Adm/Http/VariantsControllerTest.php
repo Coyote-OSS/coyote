@@ -31,7 +31,7 @@ class VariantsControllerTest extends TestCase {
         // given I don't have access to variants
         $this->loginUser();
         // when I attempt to create a new variant
-        $response = $this->httpCreate(1, []);
+        $response = $this->httpTryCreate(1, []);
         // then the request is rejected
         $response->assertForbidden();
     }
@@ -39,7 +39,7 @@ class VariantsControllerTest extends TestCase {
     #[Test]
     public function failToCreateVariant_withNoSuchCampaigns(): void {
         // when I attempt to create a variant in a non-existent campaign
-        $response = $this->httpCreate(9999, $this->exampleVariant());
+        $response = $this->httpTryCreate(9999, $this->exampleVariant());
         // then the request is rejected
         $response->assertUnprocessable();
     }
@@ -101,6 +101,22 @@ class VariantsControllerTest extends TestCase {
     }
 
     #[Test]
+    public function createVariant_withTypeXl(): void {
+        // given a campaign exists
+        $campaignId = $this->createCampaign();
+        // when I create variants with type xl
+        $this->httpCreate($campaignId, $this->exampleVariant(type:VariantType::StandardXl));
+        $this->httpCreate($campaignId, $this->exampleVariant(type:VariantType::SidebarXl));
+        $this->httpCreate($campaignId, $this->exampleVariant(type:VariantType::LeaderBoardXl));
+        // then the variant types are persisted
+        $this->laravel->assertSeeInDatabase('module_campaign_variants', [
+            ['type' => 'horizontal-xl'],
+            ['type' => 'sidebar-xl'],
+            ['type' => 'leaderboard-xl'],
+        ]);
+    }
+
+    #[Test]
     public function failToCreateVariant_withInvalidType(): void {
         // when I create a variant with an invalid type
         $response = $this->httpCreate($this->createCampaign(), $this->exampleVariant(typeInvalid:true));
@@ -139,6 +155,12 @@ class VariantsControllerTest extends TestCase {
     }
 
     private function httpCreate(int $campaignId, array $variant): TestResponse {
+        $response = $this->httpTryCreate($campaignId, $variant);
+        $response->assertRedirect(); // sucessfully created
+        return $response;
+    }
+
+    private function httpTryCreate(int $campaignId, array $variant): TestResponse {
         return $this->laravel->post("/Adm/Campaigns/$campaignId/Variants/Save", $variant);
     }
 
@@ -176,6 +198,9 @@ class VariantsControllerTest extends TestCase {
             VariantType::Standard, null => 'upload-standard',
             VariantType::Sidebar        => 'upload-sidebar',
             VariantType::LeaderBoard    => 'upload-leaderboard',
+            VariantType::StandardXl     => 'upload-standard-xl',
+            VariantType::SidebarXl      => 'upload-sidebar-xl',
+            VariantType::LeaderBoardXl  => 'upload-leaderboard-xl',
         };
     }
 

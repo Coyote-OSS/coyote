@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\Attributes\TestWith;
 
 trait CampaignStoreContractTests {
     private CampaignsStore $store;
@@ -299,6 +300,24 @@ trait CampaignStoreContractTests {
         $variantPayload = $variant->payload;
         Assert::assertSame(VariantType::Standard, $variantPayload->type);
         Assert::assertSame('image-url', $variantPayload->imageUrl);
+    }
+
+    #[Test]
+    #[TestDox('given a campaign; when create-variant; finds variant type')]
+    #[TestWith([VariantType::Standard])]
+    #[TestWith([VariantType::Sidebar])]
+    #[TestWith([VariantType::LeaderBoard])]
+    #[TestWith([VariantType::StandardXl])]
+    #[TestWith([VariantType::SidebarXl])]
+    #[TestWith([VariantType::LeaderBoardXl])]
+    public function givenCampaign_createVariant_findsVariantType(VariantType $type): void {
+        // given a campaign
+        $campaignId = $this->createCampaign();
+        // when variant is created with variant type
+        $this->store->createVariant($campaignId, new VariantPayload($type, 'url'));
+        // then variant is found with variant type
+        [$variant] = $this->store->findCampaign($campaignId)->variants;
+        Assert::assertSame($type, $variant->payload->type);
     }
 
     #[Test]
