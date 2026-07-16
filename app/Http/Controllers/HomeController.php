@@ -33,7 +33,7 @@ class HomeController extends Controller {
         parent::__construct();
     }
 
-    public function index(Campaigns\ForPresentingBanners $presenter): View {
+    public function index(Campaigns\ForCampaignBanners $presenter): View {
         $cache = app(Cache\Repository::class);
         $this->topic->pushCriteria(new OnlyThoseTopicsWithAccess());
         $this->topic->pushCriteria(new SkipHiddenCategories($this->userId));
