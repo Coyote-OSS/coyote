@@ -11,7 +11,7 @@ readonly class arrays {
     }
 
     public static function map(callable $mapper): callable {
-        return fn(array $array): array => \array_map($mapper, $array);
+        return fn(array $array): array => \array_map($mapper, $array, \array_keys($array));
     }
 
     public static function values(): callable {

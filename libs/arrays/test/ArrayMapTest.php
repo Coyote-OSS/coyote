@@ -18,6 +18,13 @@ class ArrayMapTest extends TestCase {
             [1, 2] |> arrays::map(fn($item) => $item * 5));
     }
 
+    #[Test]
+    public function mapItemsWithIndices(): void {
+        $this->assertArrayEquals(
+            [0, 1, 2],
+            ['a', 'b', 'c'] |> arrays::map(fn($_, int $index) => $index));
+    }
+
     private function assertArrayEmpty(array $actual): void {
         $this->assertArrayEquals([], $actual);
     }
