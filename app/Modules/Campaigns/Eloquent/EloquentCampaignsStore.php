@@ -27,6 +27,7 @@ class EloquentCampaignsStore implements CampaignsStore {
             'target_views' => $payload->targetViews,
             'name'         => $payload->name,
             'description'  => $payload->description,
+            'is_premium'   => $payload->isPremium,
         ];
     }
 
@@ -77,7 +78,8 @@ class EloquentCampaignsStore implements CampaignsStore {
                 $campaign->active_since,
                 $campaign->active_until,
                 $campaign->target_views,
-                $campaign->description),
+                $campaign->description,
+                $campaign->is_premium),
             $campaign->variants->map($this->parseVariant(...))->all());
     }
 

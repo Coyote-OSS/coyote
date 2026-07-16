@@ -63,6 +63,17 @@ class CampaignsControllerTest extends TestCase {
     }
 
     #[Test]
+    public function creatingCampaign_savesIsPremiumFlag(): void {
+        // when I create a campaign marked as premium
+        $this->httpCreate($this->exampleCampaign('premium-campaign', isPremium:true));
+        // then the campaign is persisted as premium
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'name'       => 'premium-campaign',
+            'is_premium' => true,
+        ]);
+    }
+
+    #[Test]
     public function updateCampaign(): void {
         // given a campaign already exists
         $campaignId = $this->httpCreateReturnId($this->exampleCampaign('updated', redirectUrl:'http://old'));
@@ -102,6 +113,7 @@ class CampaignsControllerTest extends TestCase {
         ?string $name = null,
         ?bool   $includeActiveRange = true,
         ?string $redirectUrl = null,
+        ?bool   $isPremium = false,
     ): array {
         return [
             'name'         => $name,
@@ -109,6 +121,7 @@ class CampaignsControllerTest extends TestCase {
             'sidebar'      => 'not-to-be-used-deprecated',
             'horizontal'   => 'not-to-be-used-deprecated',
             'description'  => 'campaign-description',
+            'is_premium'   => $isPremium,
             ...$includeActiveRange ? $this->exampleActiveRange() : [],
         ];
     }

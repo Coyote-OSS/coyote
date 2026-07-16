@@ -34,7 +34,7 @@ class EloquentCampaignsStoreTest extends TestCase {
     #[Test]
     public function insertsCampaignWithPayload(): void {
         $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
-            'campaign-name', 'redirect-url', '2011-01-01', '2022-02-02', 42, 'campaign-description',
+            'campaign-name', 'redirect-url', '2011-01-01', '2022-02-02', 42, 'campaign-description', true,
         ));
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'name'         => 'campaign-name',
@@ -43,6 +43,7 @@ class EloquentCampaignsStoreTest extends TestCase {
             'active_until' => '2022-02-02',
             'target_views' => 42,
             'description'  => 'campaign-description',
+            'is_premium'   => true,
         ]);
     }
 

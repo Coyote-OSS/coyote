@@ -12,6 +12,9 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
                 'label' => 'Nazwa kampanii',
                 'help'  => 'Opcjonalna nazwa kampanii. Zastąpiła klucz kampanii i nie musi być unikatowa, pełni funkcję opisową.',
             ])
+            ->add('is_premium', 'checkbox', [
+                'label' => 'Kampania premium',
+            ])
             ->add('redirect_url', 'text', [
                 'label' => 'URL przekierowania',
                 'rules' => 'required|url|max:255',
