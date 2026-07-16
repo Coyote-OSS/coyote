@@ -5,7 +5,7 @@ use Libs\Arrays\arrays;
 use Modules\Campaigns\Internal\CampaignBanner;
 use Modules\Campaigns\Store\CampaignsStore;
 
-readonly class CampaignBannersPresenter implements ForPresentingBanners {
+readonly class CampaignBannersFacade implements ForCampaignBanners {
     public function __construct(
         private CampaignService $service,
         private CampaignsStore  $store,

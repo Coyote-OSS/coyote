@@ -1,9 +1,9 @@
 <?php
 namespace Test\Modules\Campaigns;
 
-use Modules\Campaigns\CampaignBannersPresenter;
+use Modules\Campaigns\CampaignBannersFacade;
 use Modules\Campaigns\CampaignService;
-use Modules\Campaigns\ForPresentingBanners;
+use Modules\Campaigns\ForCampaignBanners;
 use Modules\Campaigns\Internal\CampaignBanner;
 use Modules\Campaigns\Internal\CampaignBanners;
 use Modules\Campaigns\Store\CampaignsStore;
@@ -14,10 +14,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ForPresentingBanners::class)]
-#[CoversClass(CampaignBannersPresenter::class)]
-class ForPresentingBannersTest extends TestCase {
-    private ForPresentingBanners $presenter;
+#[CoversClass(ForCampaignBanners::class)]
+#[CoversClass(CampaignBannersFacade::class)]
+class ForCampaignBannersTest extends TestCase {
+    private ForCampaignBanners $presenter;
     private CampaignService|MockObject $campaignService;
     private CampaignsStore|MockObject $campaignStore;
 
@@ -25,7 +25,7 @@ class ForPresentingBannersTest extends TestCase {
     public function initialize(): void {
         $this->campaignService = $this->createStub(CampaignService::class);
         $this->campaignStore = $this->createMock(CampaignsStore::class);
-        $this->presenter = new CampaignBannersPresenter(
+        $this->presenter = new CampaignBannersFacade(
             $this->campaignService,
             $this->campaignStore,
             new TestRedirectUrls("https://test-redirect"));

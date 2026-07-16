@@ -31,10 +31,10 @@ use Modules\Campaigns;
 
 class TopicController extends BaseController {
     public function index(
-        Request                        $request,
-        Forum                          $forum,
-        Topic                          $topic,
-        Campaigns\ForPresentingBanners $presenter,
+        Request                      $request,
+        Forum                        $forum,
+        Topic                        $topic,
+        Campaigns\ForCampaignBanners $presenter,
     ): Collection|View|array {
         if (!$this->visibleDespiteIncognitoUser($topic)) {
             abort(404);

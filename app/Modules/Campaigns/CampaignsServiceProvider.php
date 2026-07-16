@@ -10,8 +10,8 @@ use Coyote\Modules\Campaigns\User\Http\CampaignsController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\Campaigns;
-use Modules\Campaigns\CampaignBannersPresenter;
-use Modules\Campaigns\ForPresentingBanners;
+use Modules\Campaigns\CampaignBannersFacade;
+use Modules\Campaigns\ForCampaignBanners;
 use Modules\Campaigns\ForRedirectUrls;
 use Modules\Campaigns\Store\CampaignsStore;
 use Psr\Clock\ClockInterface;
@@ -44,8 +44,8 @@ class CampaignsServiceProvider extends ServiceProvider {
             RouteRedirectUrls::class);
 
         $this->app->bind(
-            ForPresentingBanners::class,
-            CampaignBannersPresenter::class);
+            ForCampaignBanners::class,
+            CampaignBannersFacade::class);
 
         $this->registerRoutes($this->app->make(Router::class));
     }
