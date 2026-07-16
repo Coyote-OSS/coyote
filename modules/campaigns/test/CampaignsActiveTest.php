@@ -176,7 +176,8 @@ class CampaignsActiveTest extends TestCase {
             $activeSince,
             $activeUntil,
             $targetViews,
-            null));
+            null,
+            false));
         $this->assertNotNull($this->store->createVariant($this->lastCampaignId, VariantPayload::from('sidebar', '')));
         $this->assertNotNull($this->store->createVariant($this->lastCampaignId, VariantPayload::from('horizontal', '')));
     }

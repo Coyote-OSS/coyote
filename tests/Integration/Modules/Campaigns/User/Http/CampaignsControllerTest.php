@@ -70,7 +70,7 @@ class CampaignsControllerTest extends TestCase {
     }
 
     private function exampleCampaign(?string $redirectUrl): CampaignPayload {
-        return new CampaignPayload(null, $redirectUrl ?? '', null, null, null, null);
+        return new CampaignPayload(null, $redirectUrl ?? '', null, null, null, null, false);
     }
 
     private function campaignVariant(mixed $campaignId): CampaignVariant {

@@ -44,6 +44,7 @@ class CampaignsController extends BaseController {
         return $this->view('adm.campaigns.show', [
             'campaign' => new CampaignViewModel(
                 $campaign->payload->name,
+                $campaign->payload->isPremium,
                 $campaign->payload->description,
                 $campaign->payload->redirectUrl,
                 route('adm.campaigns.save', [$campaignId]),
@@ -88,7 +89,8 @@ class CampaignsController extends BaseController {
             $form->getValue('active_since'),
             $form->getValue('active_until'),
             $form->getValue('target_views'),
-            $form->getValue('description'));
+            $form->getValue('description'),
+            (bool)$form->getValue('is_premium'));
         if ($campaign->exists) {
             $store->updateCampaign($campaign->id, $campaignModel);
             $campaignId = $campaign->id;

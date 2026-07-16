@@ -9,5 +9,6 @@ readonly class CampaignPayload {
         public ?string $activeUntilDate,
         public ?int    $targetViews,
         public ?string $description,
+        public bool    $isPremium,
     ) {}
 }

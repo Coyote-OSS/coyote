@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $target_views
  * @property string|null $name
  * @property string|null $description
+ * @property bool $is_premium
  * @property CampaignVariant[]|Collection $variants
  */
 class Campaign extends Model {
@@ -28,6 +29,7 @@ class Campaign extends Model {
         'target_views',
         'name',
         'description',
+        'is_premium',
     ];
 
     public function variants(): HasMany {

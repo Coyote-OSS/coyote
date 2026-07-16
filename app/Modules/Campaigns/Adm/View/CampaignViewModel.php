@@ -7,6 +7,7 @@ readonly class CampaignViewModel {
      */
     public function __construct(
         public ?string        $name,
+        public bool           $isPremium,
         public ?string        $description,
         public string         $redirectUrl,
         public string         $editHref,
