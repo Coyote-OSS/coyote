@@ -1,5 +1,5 @@
 <?php
-namespace Test\Modules\Campaigns;
+namespace Test\Modules\Campaigns\Fixture;
 
 use Modules\Campaigns\ForRedirectUrls;
 

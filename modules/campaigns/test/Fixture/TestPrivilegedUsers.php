@@ -1,5 +1,5 @@
 <?php
-namespace Test\Modules\Campaigns;
+namespace Test\Modules\Campaigns\Fixture;
 
 class TestPrivilegedUsers implements \Modules\Campaigns\ForPriviligedUsers {
     private bool $highReputation = false;
