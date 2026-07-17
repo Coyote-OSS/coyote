@@ -8,25 +8,25 @@ use PHPUnit\Framework\TestCase;
 use Test\Modules\Campaigns\Fixture\TestCurrentDate;
 
 #[CoversClass(TestCurrentDate::class)]
-class TestCalendarTest extends TestCase {
-    private TestCurrentDate $calendar;
+class TestCurrentDateTest extends TestCase {
+    private TestCurrentDate $currentDate;
 
     #[Before]
     public function initialize(): void {
-        $this->calendar = new TestCurrentDate();
+        $this->currentDate = new TestCurrentDate();
     }
 
     #[Test]
     public function failForUnsetStubbedDate_hasFinished(): void {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Failed to determine range active, current date not set.');
-        $this->calendar->hasNotFinished('', '');
+        $this->expectExceptionMessageIs('Failed to determine range active, current date not set.');
+        $this->currentDate->hasNotFinished('', '');
     }
 
     #[Test]
     public function failForUnsetStubbedDate_hasStarted(): void {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Failed to determine range active, current date not set.');
-        $this->calendar->hasStarted('', '');
+        $this->expectExceptionMessageIs('Failed to determine range active, current date not set.');
+        $this->currentDate->hasStarted('', '');
     }
 }
