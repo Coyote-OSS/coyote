@@ -9,6 +9,9 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Test\Modules\Campaigns\Fixture\TestCurrentDate;
+use Test\Modules\Campaigns\Fixture\TestPrivilegedUsers;
+use Test\Modules\Campaigns\Fixture\TestRotatingBanners;
 use Test\Modules\Campaigns\Store\InMemoryCampaignsStore;
 
 #[CoversClass(CampaignService::class)]

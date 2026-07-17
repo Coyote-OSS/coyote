@@ -5,6 +5,7 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Test\Modules\Campaigns\Fixture\TestCurrentDate;
 
 #[CoversClass(TestCurrentDate::class)]
 class TestCalendarTest extends TestCase {

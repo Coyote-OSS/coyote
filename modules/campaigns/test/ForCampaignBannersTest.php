@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Test\Modules\Campaigns\Fixture\TestRedirectUrls;
 
 #[CoversClass(ForCampaignBanners::class)]
 #[CoversClass(CampaignBannersFacade::class)]

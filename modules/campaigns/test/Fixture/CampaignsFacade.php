@@ -1,5 +1,5 @@
 <?php
-namespace Test\Modules\Campaigns;
+namespace Test\Modules\Campaigns\Fixture;
 
 use Libs\Arrays\arrays;
 use Modules\Campaigns;
