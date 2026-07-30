@@ -176,6 +176,87 @@ class CampaignsBannersTest extends TestCase {
     }
 
     #[Test]
+    public function premiumCampaign_withLeaderBoardXl_showsLeaderBoardXlInsteadOfHorizontal(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($campaignId, 'standard.png', VariantType::Standard);
+        $this->facade->createVariant($campaignId, 'leaderboard-xl.png', VariantType::LeaderBoardXl);
+        $this->assertEquals(['leaderboard-xl.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function premiumCampaign_withoutLeaderBoardXl_showsHorizontalAsUsual(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($campaignId, 'standard.png', VariantType::Standard);
+        $this->assertEquals(['standard.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function nonPremiumCampaign_withLeaderBoardXl_showsHorizontalAsUsual(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:false);
+        $this->facade->createVariant($campaignId, 'standard.png', VariantType::Standard);
+        $this->facade->createVariant($campaignId, 'leaderboard-xl.png', VariantType::LeaderBoardXl);
+        $this->assertEquals(['standard.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function premiumCampaign_withLeaderBoard_showsHorizontalAsUsual(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($campaignId, 'standard.png', VariantType::Standard);
+        $this->facade->createVariant($campaignId, 'leaderboard.png', VariantType::LeaderBoard);
+        $this->assertEquals(['standard.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function nonPremiumCampaign_withLeaderBoard_showsHorizontalAsUsual(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:false);
+        $this->facade->createVariant($campaignId, 'standard.png', VariantType::Standard);
+        $this->facade->createVariant($campaignId, 'leaderboard.png', VariantType::LeaderBoard);
+        $this->assertEquals(['standard.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function premiumCampaign_withBothLeaderBoardVariants_prefersLeaderBoardXl(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($campaignId, 'standard.png', VariantType::Standard);
+        $this->facade->createVariant($campaignId, 'leaderboard.png', VariantType::LeaderBoard);
+        $this->facade->createVariant($campaignId, 'leaderboard-xl.png', VariantType::LeaderBoardXl);
+        $this->assertEquals(['leaderboard-xl.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function leaderBoardXlPicked_excludesTheOtherHorizontalBanner(): void {
+        $leaderBoardId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($leaderBoardId, 'standard.png', VariantType::Standard);
+        $this->facade->createVariant($leaderBoardId, 'leaderboard-xl.png', VariantType::LeaderBoardXl);
+        $otherId = $this->facade->createCampaign();
+        $this->facade->createVariant($otherId, 'other.png', VariantType::Standard);
+        $this->assertEquals(['leaderboard-xl.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function standardCampaign_whenItsTurnComesBeforeLeaderBoard_isShownAloneAndLeaderBoardIsSkipped(): void {
+        $otherId = $this->facade->createCampaign();
+        $this->facade->createVariant($otherId, 'other.png', VariantType::Standard);
+        $leaderBoardId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($leaderBoardId, 'standard.png', VariantType::Standard);
+        $this->facade->createVariant($leaderBoardId, 'leaderboard-xl.png', VariantType::LeaderBoardXl);
+        $this->assertEquals(['other.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function leaderBoardCampaign_doesNotPermanentlyStarveOutOthers_theyTakeTurnsAcrossRotations(): void {
+        $leaderBoardId = $this->facade->createCampaign(name:'leader', isPremium:true);
+        $this->facade->createVariant($leaderBoardId, 'standard.png', VariantType::Standard);
+        $this->facade->createVariant($leaderBoardId, 'leaderboard-xl.png', VariantType::LeaderBoardXl);
+        $otherId = $this->facade->createCampaign(name:'other');
+        $this->facade->createVariant($otherId, 'other.png', VariantType::Standard);
+
+        $this->assertEquals(['leaderboard-xl.png'], $this->facade->getHorizontalBannerUrls());
+        $this->rotateBanners->rotate();
+        $this->assertEquals(['other.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
     public function doNotIncludeInactiveCampaigns(): void {
         $this->date->stubCurrentDate('2000-01-02');
         $inactiveId = $this->facade->addCampaign(name:'inactive', since:'2100-01-01', until:'2100-01-01');
