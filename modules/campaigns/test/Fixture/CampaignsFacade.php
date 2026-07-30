@@ -63,6 +63,7 @@ readonly class CampaignsFacade {
         ?string $redirectUrl = null,
         ?string $since = null,
         ?string $until = null,
+        bool    $isPremium = false,
     ): int {
         return $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
             $name ?? '',
@@ -71,7 +72,7 @@ readonly class CampaignsFacade {
             $until ?? '2999-12-31T23:59:59',
             999,
             null,
-            false));
+            $isPremium));
     }
 
     public function createVariant(int $campaignId, ?string $banner, Campaigns\VariantType $type): void {
