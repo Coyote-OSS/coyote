@@ -207,11 +207,21 @@ class CampaignsBannersTest extends TestCase {
     }
 
     #[Test]
-    public function nonPremiumCampaign_withLeaderBoard_showsHorizontalAsUsual(): void {
+    public function soleNonPremiumCampaign_withLeaderBoard_showsLeaderBoardInsteadOfHorizontal(): void {
         $campaignId = $this->facade->createCampaign(isPremium:false);
         $this->facade->createVariant($campaignId, 'standard.png', VariantType::Standard);
         $this->facade->createVariant($campaignId, 'leaderboard.png', VariantType::LeaderBoard);
-        $this->assertEquals(['standard.png'], $this->facade->getHorizontalBannerUrls());
+        $this->assertEquals(['leaderboard.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function nonSoleNonPremiumCampaign_withLeaderBoard_showsHorizontalAsUsual(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:false);
+        $this->facade->createVariant($campaignId, 'standard.png', VariantType::Standard);
+        $this->facade->createVariant($campaignId, 'leaderboard.png', VariantType::LeaderBoard);
+        $otherId = $this->facade->createCampaign();
+        $this->facade->createVariant($otherId, 'other.png', VariantType::Standard);
+        $this->assertEquals(['standard.png', 'other.png'], $this->facade->getHorizontalBannerUrls());
     }
 
     #[Test]

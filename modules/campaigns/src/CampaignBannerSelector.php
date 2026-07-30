@@ -20,7 +20,8 @@ readonly class CampaignBannerSelector {
     public function campaignBanners(array $campaigns, VariantType $type, int $amount): array {
         $bannerCampaigns = $this->campaignsWithVariantsOfType($campaigns, $type);
         $rotatedCampaigns = $this->rotatedCampaigns($bannerCampaigns);
-        return $this->fillSlots($type, $rotatedCampaigns, $amount);
+        $isSoleCampaign = \count($bannerCampaigns) === 1;
+        return $this->fillSlots($type, $rotatedCampaigns, $amount, $isSoleCampaign);
     }
 
     /**
@@ -32,14 +33,14 @@ readonly class CampaignBannerSelector {
      * @param Campaign[] $campaigns
      * @return CampaignBanner[]
      */
-    private function fillSlots(VariantType $type, array $campaigns, int $amount): array {
+    private function fillSlots(VariantType $type, array $campaigns, int $amount, bool $isSoleCampaign): array {
         $banners = [];
         $slotsAvailable = $amount;
         foreach ($campaigns as $campaign) {
             if ($slotsAvailable <= 0) {
                 break;
             }
-            $banner = $this->pickedBanner($campaign, $type);
+            $banner = $this->pickedBanner($campaign, $type, $isSoleCampaign);
             $width = $this->isLeaderBoardType($banner->type) ? $amount : 1;
             if ($width > $slotsAvailable) {
                 continue;
@@ -74,20 +75,26 @@ readonly class CampaignBannerSelector {
         return $this->window->slide($campaigns, \count($campaigns), $this->rotate->rotationSeed());
     }
 
-    private function pickedBanner(Campaign $campaign, VariantType $type): CampaignBanner {
-        $variants = $this->premiumLeaderBoardVariants($campaign, $type) ?? $campaign->variantsOfType($type);
+    private function pickedBanner(Campaign $campaign, VariantType $type, bool $isSoleCampaign): CampaignBanner {
+        $variants = $this->elevatedHorizontalVariants($campaign, $type, $isSoleCampaign) ?? $campaign->variantsOfType($type);
         return $this->banner($campaign, $this->pick($variants, 1)[0]);
     }
 
     /**
      * @return CampaignVariant[]|null
      */
-    private function premiumLeaderBoardVariants(Campaign $campaign, VariantType $type): ?array {
-        if ($type !== VariantType::Standard || !$campaign->payload->isPremium) {
+    private function elevatedHorizontalVariants(Campaign $campaign, VariantType $type, bool $isSoleCampaign): ?array {
+        if ($type !== VariantType::Standard) {
             return null;
         }
-        $variants = $campaign->variantsOfType(VariantType::LeaderBoardXl);
-        return $variants ?: null;
+        if ($campaign->payload->isPremium) {
+            $variants = $campaign->variantsOfType(VariantType::LeaderBoardXl);
+            return $variants ?: null;
+        } else if ($isSoleCampaign) {
+            $variants = $campaign->variantsOfType(VariantType::LeaderBoard);
+            return $variants ?: null;
+        }
+        return null;
     }
 
     private function banner(Campaign $campaign, CampaignVariant $variant): CampaignBanner {
