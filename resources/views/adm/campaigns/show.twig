@@ -63,10 +63,10 @@
         <span>
           {{ icon('campaignViews') }}
           <b>Wyświetlenia:</b>
-          <code>{{ campaign.stats.views }}</code>
+          {{ campaign.stats.views|number_format }}
           {% if campaign.targetViews %}
             <span class="text-muted">
-              (docelowo: <code>{{ campaign.targetViews }}</code>)
+              (docelowo: {{ campaign.targetViews|number_format }})
             </span>
           {% endif %}
         </span>
@@ -78,7 +78,7 @@
         <span>
           {{ icon('campaignExposures') }}
           <b>Ekspozycje:</b>
-          <code>{{ campaign.stats.exposures }}</code>
+          {{ campaign.stats.exposures|number_format }}
         </span>
         <span class="ms-auto text-muted">
           {{ icon('genericInfo', {title: 'Grafika wariantu została pokazana w min. 50%, przez min. 1000ms w przeglądarce użytkownika. Maks. 1 raz na odświeżenie strony.'}) }}
@@ -87,7 +87,7 @@
       <div class="list-group-item">
         {{ icon('campaignClicks') }}
         <b>Kliknięcia:</b>
-        <code>{{ campaign.stats.clicks }}</code>
+        {{ campaign.stats.clicks|number_format }}
       </div>
     </div>
   </div>
@@ -119,9 +119,9 @@
       { key: 'bannerTypeTitle', label: 'Typ', labelIcon: 'campaignBannerType' },
       { key: 'expectedDimension', label: 'Rozmiar', labelIcon: 'campaignBannerDimensions' },
       { key: 'stats.ctr', label: 'CTR', labelIcon: 'campaignCtr', default: 'nie wyświetlono'},
-      { key: 'stats.views', label: 'Wyświetlenia', labelIcon: 'campaignViews' },
-      { key: 'stats.exposures', label: 'Ekspozycje', labelIcon: 'campaignExposures' },
-      { key: 'stats.clicks', label: 'Kliknięcia', labelIcon: 'campaignClicks' },
+      { key: 'stats.views', label: 'Wyświetlenia', labelIcon: 'campaignViews', style: 'number' },
+      { key: 'stats.exposures', label: 'Ekspozycje', labelIcon: 'campaignExposures', style: 'number' },
+      { key: 'stats.clicks', label: 'Kliknięcia', labelIcon: 'campaignClicks', style: 'number' },
       { key: 'imageUrl', label: 'Banner', labelIcon: 'campaignBanner', style: 'image', styleClass:'max-h-4' },
     ]) }}
   </div>
