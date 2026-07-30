@@ -5,6 +5,7 @@ use Coyote\Http\Requests\AssetRequest;
 use Coyote\Models\Asset;
 use Coyote\Post;
 use Coyote\Services\Assets\Thumbnail;
+use Coyote\Services\Assets\UploadedFileStorage;
 use Coyote\Services\Assets\Url;
 use Coyote\Services\Media\Filters\Opg;
 use Fusonic\OpenGraph\Consumer;
@@ -18,10 +19,8 @@ use Illuminate\Database\Connection;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
-class AssetsController extends Controller
-{
-    public function opengraph(Request $request, Connection $db, Thumbnail $thumbnail)
-    {
+class AssetsController extends Controller {
+    public function opengraph(Request $request, Connection $db, Thumbnail $thumbnail) {
         $this->validate($request, [
             'url' => 'required|url',
         ]);
@@ -80,24 +79,12 @@ class AssetsController extends Controller
         return array_merge($asset->toArray(), ['url' => (string)Url::make($asset)]);
     }
 
-    public function upload(AssetRequest $request)
-    {
-        $uploadedFile = $request->file('asset');
-        $path = $uploadedFile->store($this->userId);
-
-        /** @var Asset $asset */
-        $asset = Asset::query()->create([
-            'name' => $uploadedFile->getClientOriginalName() === 'blob' ? $this->humanName($path) : $uploadedFile->getClientOriginalName(),
-            'path' => $path,
-            'size' => $uploadedFile->getSize(),
-            'mime' => $uploadedFile->getMimeType(),
-        ]);
-
-        return array_merge($asset->toArray(), ['url' => (string)Url::make($asset)]);
+    public function upload(AssetRequest $request, UploadedFileStorage $storage) {
+        [$asset, $url] = $storage->storeAndReturnAssetAndUrl($request->file('asset'), $this->userId);
+        return array_merge($asset->toArray(), ['url' => $url]);
     }
 
-    public function download(Filesystem $filesystem, Asset $asset, string $name = null)
-    {
+    public function download(Filesystem $filesystem, Asset $asset, string $name = null) {
         abort_if(!$asset->content, 404);
 
         if ($asset->content_type === Post::class) {
@@ -121,14 +108,12 @@ class AssetsController extends Controller
         return response()->make($filesystem->get($asset->path), 200, $headers);
     }
 
-    private function humanName(string $path): string
-    {
+    private function humanName(string $path): string {
         $extension = \pathInfo($path, \PATHINFO_EXTENSION);
         return 'screenshot-' . date('YmdHis') . '.' . \strToLower($extension);
     }
 
-    private function hasDomainOrReturn(ObjectBase $subject, string $originalUrl): string
-    {
+    private function hasDomainOrReturn(ObjectBase $subject, string $originalUrl): string {
         if ($subject->url === null) {
             return $originalUrl;
         }

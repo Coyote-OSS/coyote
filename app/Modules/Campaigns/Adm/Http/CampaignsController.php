@@ -49,7 +49,7 @@ class CampaignsController extends BaseController {
                 $campaign->payload->redirectUrl,
                 route('adm.campaigns.save', [$campaignId]),
                 route('adm.campaigns'),
-                route('adm.campaigns.variants.save', [$campaignId]),
+                route('adm.campaigns.variants.upload', [$campaignId]),
                 $this->campaignStats($campaign),
                 new CampaignStatus($service->campaignStatus($campaignId)),
                 $campaign->payload->activeSinceDate,

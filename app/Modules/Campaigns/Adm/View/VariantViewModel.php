@@ -20,15 +20,4 @@ readonly class VariantViewModel {
             VariantType::LeaderBoardXl => 'LeaderBoard XL',
         };
     }
-
-    public function expectedDimension(): string {
-        return match ($this->type) {
-            VariantType::Standard      => '728 × 90',
-            VariantType::Sidebar       => '300 × 250',
-            VariantType::LeaderBoard   => '1140 × 90',
-            VariantType::StandardXl    => '728 × 200',
-            VariantType::SidebarXl     => '300 × 600',
-            VariantType::LeaderBoardXl => '1140 × 200',
-        };
-    }
 }

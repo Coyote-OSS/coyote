@@ -109,20 +109,28 @@
         {{ icon('campaignBanner') }}
         Warianty
       </span>
-      <a class="ms-2 btn btn-sm btn-secondary" href="{{ campaign.createVariantHref }}">
-        {{ icon('genericAdd') }}
-        Dodaj
-      </a>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="{{ campaign.uploadVariantsHref }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-start">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="file" name="images[]" multiple accept="image/*" class="form-control" required>
+        <button type="submit" class="btn btn-secondary flex-shrink-0">
+          {{ icon('genericAdd') }}
+          Prześlij
+        </button>
+      </form>
+      <div class="form-text">
+        Typ i rozmiar wariantu zostaną wykryte automatycznie na podstawie wymiarów obrazu.
+      </div>
     </div>
 
     {{ components.table('Ta kampania na razie nie ma żadnych banerów.', campaign.variants, [
+      { key: 'imageUrl', label: 'Grafika', labelIcon: 'campaignBanner', style: 'image', styleClass:'max-h-4' },
       { key: 'bannerTypeTitle', label: 'Typ', labelIcon: 'campaignBannerType' },
-      { key: 'expectedDimension', label: 'Rozmiar', labelIcon: 'campaignBannerDimensions' },
-      { key: 'stats.ctr', label: 'CTR', labelIcon: 'campaignCtr', default: 'nie wyświetlono'},
       { key: 'stats.views', label: 'Wyświetlenia', labelIcon: 'campaignViews', style: 'number' },
       { key: 'stats.exposures', label: 'Ekspozycje', labelIcon: 'campaignExposures', style: 'number' },
       { key: 'stats.clicks', label: 'Kliknięcia', labelIcon: 'campaignClicks', style: 'number' },
-      { key: 'imageUrl', label: 'Banner', labelIcon: 'campaignBanner', style: 'image', styleClass:'max-h-4' },
+      { key: 'stats.ctr', label: 'CTR', labelIcon: 'campaignCtr', default: 'nie wyświetlono'},
     ]) }}
   </div>
 

@@ -3,9 +3,9 @@ namespace Tests\Integration\Modules\Campaigns\Adm\Http;
 
 use Coyote\Modules\Campaigns\Adm;
 use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\TestResponse;
 use Modules\Campaigns\Store\CampaignPayload;
-use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -27,63 +27,30 @@ class VariantsControllerTest extends TestCase {
     }
 
     #[Test]
-    public function creatingVariant_failsWithoutAuthorization(): void {
+    public function uploadingVariants_failsWithoutAuthorization(): void {
         // given I don't have access to variants
         $this->loginUser();
-        // when I attempt to create a new variant
-        $response = $this->httpTryCreate(1, []);
+        // when I attempt to upload a variant
+        $response = $this->httpTryUpload($this->createCampaign(), [$this->image(728, 90)]);
         // then the request is rejected
         $response->assertForbidden();
     }
 
     #[Test]
-    public function failToCreateVariant_withNoSuchCampaigns(): void {
-        // when I attempt to create a variant in a non-existent campaign
-        $response = $this->httpTryCreate(9999, $this->exampleVariant());
+    public function failToUpload_withNoSuchCampaign(): void {
+        // when I attempt to upload a variant to a non-existent campaign
+        $response = $this->httpTryUpload(9999, [$this->image(728, 90)]);
         // then the request is rejected
         $response->assertUnprocessable();
     }
 
     #[Test]
-    public function creatingVariant_savesVariantInDatabase(): void {
-        // given campaign exists
+    public function uploadingStandardSizedImage_createsVariantWithDetectedType(): void {
+        // given a campaign exists
         $campaignId = $this->createCampaign();
-        // when I create a new variant
-        $this->httpCreate($campaignId, $this->exampleVariant());
-        // then the variant is persisted
-        $this->laravel->assertSeeInDatabase('module_campaign_variants', [
-            'campaign_id' => $campaignId,
-        ]);
-    }
-
-    #[Test]
-    public function createVariant_withImageUrl(): void {
-        $campaignId = $this->createCampaign();
-        // when I create a variant with type horizontal
-        $this->httpCreate($campaignId, $this->exampleVariant(imageUrl:'http://banner.png'));
-        // then the variant type is persisted
-        $this->laravel->assertSeeInDatabase('module_campaign_variants', [
-            'campaign_id' => $campaignId,
-            'image_url'   => 'http://banner.png',
-        ]);
-    }
-
-    #[Test]
-    public function failToCreateVariant_withEmptyImageUrl(): void {
-        // when I create a new variant without image
-        $response = $this->httpCreate($this->createCampaign(), $this->exampleVariantNoImage());
-        // then the request is rejected
-        $response->assertSessionHasErrors([
-            'image_url' => 'Grafika baneru jest wymagana.',
-        ]);
-    }
-
-    #[Test]
-    public function createVariant_withTypeHorizontal(): void {
-        $campaignId = $this->createCampaign();
-        // when I create a variant with type horizontal
-        $this->httpCreate($campaignId, $this->exampleVariant(type:VariantType::Standard));
-        // then the variant type is persisted
+        // when I upload a 728x90 image
+        $this->httpUpload($campaignId, [$this->image(728, 90)]);
+        // then a "horizontal" (Standard) variant is persisted
         $this->laravel->assertSeeInDatabase('module_campaign_variants', [
             'campaign_id' => $campaignId,
             'type'        => 'horizontal',
@@ -91,77 +58,84 @@ class VariantsControllerTest extends TestCase {
     }
 
     #[Test]
-    public function createVariant_withTypeSidebar(): void {
-        // when I create a variant with type sidebar
-        $this->httpCreate($this->createCampaign(), $this->exampleVariant(type:VariantType::Sidebar));
-        // then the variant type is persisted
-        $this->laravel->assertSeeInDatabase('module_campaign_variants', [
-            'type' => 'sidebar',
-        ]);
-    }
-
-    #[Test]
-    public function createVariant_withTypeXl(): void {
+    public function uploadingLeaderBoardXlSizedImage_createsVariantWithDetectedType(): void {
         // given a campaign exists
         $campaignId = $this->createCampaign();
-        // when I create variants with type xl
-        $this->httpCreate($campaignId, $this->exampleVariant(type:VariantType::StandardXl));
-        $this->httpCreate($campaignId, $this->exampleVariant(type:VariantType::SidebarXl));
-        $this->httpCreate($campaignId, $this->exampleVariant(type:VariantType::LeaderBoardXl));
-        // then the variant types are persisted
+        // when I upload a 1140x200 image
+        $this->httpUpload($campaignId, [$this->image(1140, 200)]);
+        // then a "leaderboard-xl" variant is persisted
         $this->laravel->assertSeeInDatabase('module_campaign_variants', [
-            ['type' => 'horizontal-xl'],
-            ['type' => 'sidebar-xl'],
-            ['type' => 'leaderboard-xl'],
+            'campaign_id' => $campaignId,
+            'type'        => 'leaderboard-xl',
         ]);
     }
 
     #[Test]
-    public function failToCreateVariant_withInvalidType(): void {
-        // when I create a variant with an invalid type
-        $response = $this->httpCreate($this->createCampaign(), $this->exampleVariant(typeInvalid:true));
-        // then the request is rejected
-        $response->assertSessionHasErrors([
-            'type' => 'The selected type is invalid.',
-        ]);
-    }
-
-    #[Test]
-    public function failToCreateVariant_withoutType(): void {
-        // when I create a new variant without type
-        $response = $this->httpCreate($this->createCampaign(), $this->exampleVariantNoType());
-        // then the request is rejected
-        $response->assertSessionHasErrors([
-            'type' => 'Pole type jest wymagane.',
-        ]);
-    }
-
-    #[Test]
-    public function creatingVariant_redirectsToCampaignView(): void {
+    public function uploadingMultipleImages_createsMultipleVariants(): void {
+        // given a campaign exists
         $campaignId = $this->createCampaign();
-        // when the variant is created
-        $response = $this->httpCreate($campaignId, $this->exampleVariant());
+        // when I upload two differently-sized images in one request
+        $this->httpUpload($campaignId, [
+            $this->image(728, 90),
+            $this->image(300, 250),
+        ]);
+        // then both variants are persisted with their detected types
+        $this->laravel->assertSeeInDatabase('module_campaign_variants', [
+            ['campaign_id' => $campaignId, 'type' => 'horizontal'],
+            ['campaign_id' => $campaignId, 'type' => 'sidebar'],
+        ]);
+    }
+
+    #[Test]
+    public function uploadingUnsupportedSize_isSkipped_butOtherImagesStillSucceed(): void {
+        // given a campaign exists
+        $campaignId = $this->createCampaign();
+        // when I upload one valid and one unsupported-size image together
+        $response = $this->httpUpload($campaignId, [
+            $this->image(728, 90),
+            $this->image(500, 500),
+        ]);
+        // then the valid one is persisted
+        $this->laravel->assertSeeInDatabase('module_campaign_variants', [
+            'campaign_id' => $campaignId,
+            'type'        => 'horizontal',
+        ]);
+        // and a warning about the skipped file is flashed
+        $response->assertSessionHas('warning');
+    }
+
+    #[Test]
+    public function uploadingVariants_redirectsToCampaignView(): void {
+        $campaignId = $this->createCampaign();
+        // when the variants are uploaded
+        $response = $this->httpUpload($campaignId, [$this->image(728, 90)]);
         // then the response redirects to campaign view
         $response->assertRedirectToRoute('adm.campaigns.show', [$campaignId]);
     }
 
     #[Test]
-    public function routeAliasCreate(): void {
-        $this->assertRelativeUri('/Adm/Campaigns/12/Variants/Save', route('adm.campaigns.variants.save', [12]));
+    public function routeAliasUpload(): void {
+        $this->assertRelativeUri('/Adm/Campaigns/12/Variants/Upload', route('adm.campaigns.variants.upload', [12]));
     }
 
     private function assertRelativeUri(string $expected, string $actual): void {
         $this->assertSame('http://nginx' . $expected, $actual);
     }
 
-    private function httpCreate(int $campaignId, array $variant): TestResponse {
-        $response = $this->httpTryCreate($campaignId, $variant);
-        $response->assertRedirect(); // sucessfully created
+    private function httpUpload(int $campaignId, array $images): TestResponse {
+        $response = $this->httpTryUpload($campaignId, $images);
+        $response->assertRedirect(); // successfully processed
         return $response;
     }
 
-    private function httpTryCreate(int $campaignId, array $variant): TestResponse {
-        return $this->laravel->post("/Adm/Campaigns/$campaignId/Variants/Save", $variant);
+    private function httpTryUpload(int $campaignId, array $images): TestResponse {
+        return $this->laravel->post("/Adm/Campaigns/$campaignId/Variants/Upload", [
+            'images' => $images,
+        ]);
+    }
+
+    private function image(int $width, int $height): UploadedFile {
+        return UploadedFile::fake()->image('variant.png', $width, $height);
     }
 
     private function loginUser(): void {
@@ -177,44 +151,5 @@ class VariantsControllerTest extends TestCase {
         /** @var EloquentCampaignsStore $store */
         $store = $this->laravel->app->make(EloquentCampaignsStore::class);
         return $store->createCampaign(new CampaignPayload('campaign', '', null, null, null, null, false));
-    }
-
-    private function exampleVariant(
-        ?string      $imageUrl = null,
-        ?VariantType $type = null,
-        ?bool        $typeInvalid = null,
-    ): array {
-        return [
-            'image_url' => $imageUrl ?? 'http://image.png',
-            'type'      => $this->exampleVariantType($type, $typeInvalid ?? false),
-        ];
-    }
-
-    private function exampleVariantType(VariantType|null $type, bool $invalid): string {
-        if ($invalid) {
-            return 'invalid';
-        }
-        return match ($type) {
-            VariantType::Standard, null => 'upload-standard',
-            VariantType::Sidebar        => 'upload-sidebar',
-            VariantType::LeaderBoard    => 'upload-leaderboard',
-            VariantType::StandardXl     => 'upload-standard-xl',
-            VariantType::SidebarXl      => 'upload-sidebar-xl',
-            VariantType::LeaderBoardXl  => 'upload-leaderboard-xl',
-        };
-    }
-
-    private function exampleVariantNoImage(): array {
-        return [
-            ...$this->exampleVariant(),
-            'image_url' => '',
-        ];
-    }
-
-    private function exampleVariantNoType(): array {
-        return [
-            ...$this->exampleVariant(),
-            'type' => null,
-        ];
     }
 }

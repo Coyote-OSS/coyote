@@ -42,23 +42,8 @@ class VariantViewModelTest extends TestCase {
     }
 
     #[Test]
-    public function expectedDimension_horizontal(): void {
-        $this->assertSame('728 × 90', $this->type(VariantType::Standard)->expectedDimension());
-    }
-
-    #[Test]
-    public function expectedDimension_sidebar(): void {
-        $this->assertSame('300 × 250', $this->type(VariantType::Sidebar)->expectedDimension());
-    }
-
-    #[Test]
     public function bannerTypeTitle_leaderboard(): void {
         $this->assertSame('LeaderBoard', $this->type(VariantType::LeaderBoard)->bannerTypeTitle());
-    }
-
-    #[Test]
-    public function expectedDimension_leaderboard(): void {
-        $this->assertSame('1140 × 90', $this->type(VariantType::LeaderBoard)->expectedDimension());
     }
 
     private function ctr(int $exposures, int $clicks): ?string {
