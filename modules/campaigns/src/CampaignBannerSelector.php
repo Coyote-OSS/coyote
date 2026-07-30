@@ -64,7 +64,7 @@ readonly class CampaignBannerSelector {
     }
 
     private function campaignHasVariant(Campaign $campaign, VariantType $type): bool {
-        return \array_any($campaign->variants, CampaignVariant::hasType($type));
+        return \array_any($campaign->variants, CampaignVariant::hasEnabledType($type));
     }
 
     /**

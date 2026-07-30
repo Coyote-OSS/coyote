@@ -33,6 +33,8 @@ class Campaign extends Model {
     ];
 
     public function variants(): HasMany {
-        return $this->hasMany(CampaignVariant::class, 'campaign_id');
+        return $this
+            ->hasMany(CampaignVariant::class, 'campaign_id')
+            ->orderByDesc('id');
     }
 }

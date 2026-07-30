@@ -165,6 +165,7 @@ $this->group(
             $this->post('Campaigns/Delete/{campaign}', 'CampaignsController@delete')->name('campaigns.delete');
 
             $this->post('Campaigns/{campaign}/Variants/Upload', 'VariantsController@upload')->name('campaigns.variants.upload');
+            $this->post('Campaigns/{campaign}/Variants/{variant}/Toggle', 'VariantsController@toggle')->name('campaigns.variants.toggle');
         });
     },
 );

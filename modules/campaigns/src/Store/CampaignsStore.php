@@ -6,6 +6,8 @@ interface CampaignsStore {
 
     public function createVariant(int $campaignId, VariantPayload $payload): ?int;
 
+    public function setVariantEnabled(int $variantId, bool $enabled): void;
+
     public function updateCampaign(int $campaignId, CampaignPayload $payload): bool;
 
     public function findCampaign(int $campaignId): ?Campaign;

@@ -4,6 +4,7 @@ namespace Coyote\Modules\Campaigns\Adm\Http;
 use Coyote\Http\Controllers\Adm\BaseController;
 use Coyote\Services\Assets\UploadedFileStorage;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\VariantPayload;
@@ -43,6 +44,11 @@ class VariantsController extends BaseController {
             $response->with('warning', 'Pominięto: ' . \implode('; ', $skipped));
         }
         return $response;
+    }
+
+    public function toggle(int $campaign, int $variant, Request $request, CampaignsStore $store): RedirectResponse {
+        $store->setVariantEnabled($variant, $request->boolean('enabled'));
+        return redirect()->route('adm.campaigns.show', [$campaign]);
     }
 
     /**

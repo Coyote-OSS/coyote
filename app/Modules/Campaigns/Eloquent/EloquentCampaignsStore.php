@@ -43,8 +43,15 @@ class EloquentCampaignsStore implements CampaignsStore {
             'views'     => 0,
             'clicks'    => 0,
             'exposures' => 0,
+            'enabled'   => true,
         ]);
         return $variant->id;
+    }
+
+    public function setVariantEnabled(int $variantId, bool $enabled): void {
+        Eloquent\CampaignVariant::query()
+            ->whereKey($variantId)
+            ->update(['enabled' => $enabled]);
     }
 
     public function updateCampaign(int $campaignId, CampaignPayload $payload): bool {
@@ -89,7 +96,8 @@ class EloquentCampaignsStore implements CampaignsStore {
             $variant->views,
             $variant->clicks,
             $variant->exposures,
-            new VariantPayload($this->deserializeVariantType($variant), $variant->image_url));
+            new VariantPayload($this->deserializeVariantType($variant), $variant->image_url),
+            (bool)$variant->enabled);
     }
 
     public function viewVariant(int $variantId): void {
