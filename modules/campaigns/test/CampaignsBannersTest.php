@@ -275,6 +275,31 @@ class CampaignsBannersTest extends TestCase {
         $this->assertCampaignKeys(["$activeId"], $campaignBanners);
     }
 
+    #[Test]
+    public function variantIsEnabledByDefault(): void {
+        $campaignId = $this->facade->createCampaign();
+        $this->facade->createVariant($campaignId, 'enabled-by-default.png', VariantType::Standard);
+        $this->assertEquals(['enabled-by-default.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function disabledVariant_isNeverPicked(): void {
+        $campaignId = $this->facade->createCampaign();
+        $this->facade->createVariant($campaignId, 'disabled.png', VariantType::Standard, enabled:false);
+        $this->assertEquals([], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function givenEnabledAndDisabledVariant_disabledOneIsNeverPicked(): void {
+        $campaignId = $this->facade->createCampaign();
+        $this->facade->createVariant($campaignId, 'enabled.png', VariantType::Standard, enabled:true);
+        $this->facade->createVariant($campaignId, 'disabled.png', VariantType::Standard, enabled:false);
+        for ($i = 0; $i < 5; $i++) {
+            $this->assertEquals(['enabled.png'], $this->facade->getHorizontalBannerUrls());
+            $this->rotateBanners->rotate();
+        }
+    }
+
     private function assertCampaignKeys(
         array $expectedCampaignKeys,
         array $actualCampaignBanners,

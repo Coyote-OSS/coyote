@@ -131,7 +131,21 @@
       { key: 'stats.exposures', label: 'Ekspozycje', labelIcon: 'campaignExposures', style: 'number' },
       { key: 'stats.clicks', label: 'Kliknięcia', labelIcon: 'campaignClicks', style: 'number' },
       { key: 'stats.ctr', label: 'CTR', labelIcon: 'campaignCtr', default: 'nie wyświetlono'},
-    ]) }}
+      { label: 'Aktywny', style: 'rowActions' },
+    ], _self) }}
+
+    {% macro componentsTableRowActions_MagicValue(variant) %}
+      <form method="POST" action="{{ variant.toggleHref }}">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="enabled" value="{{ variant.enabled ? '0' : '1' }}">
+        <button
+            type="submit"
+            class="btn btn-sm btn-secondary"
+            title="{{ variant.enabled ? 'Wyłącz' : 'Włącz' }}">
+          {{ icon(variant.enabled ? 'campaignVariantEnabled' : 'campaignVariantDisabled') }}
+        </button>
+      </form>
+    {% endmacro %}
   </div>
 
   <style>

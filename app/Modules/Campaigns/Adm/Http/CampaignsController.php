@@ -59,6 +59,8 @@ class CampaignsController extends BaseController {
                     fn(Campaigns\Store\CampaignVariant $variant) => new VariantViewModel(
                         $variant->payload->imageUrl,
                         new CampaignStats($variant->views, $variant->clicks, $variant->exposures),
+                        $variant->enabled,
+                        route('adm.campaigns.variants.toggle', [$campaignId, $variant->id]),
                         $variant->payload->type))),
         ]);
     }

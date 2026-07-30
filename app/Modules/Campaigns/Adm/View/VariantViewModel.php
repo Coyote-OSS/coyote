@@ -7,6 +7,8 @@ readonly class VariantViewModel {
     public function __construct(
         public string        $imageUrl,
         public CampaignStats $stats,
+        public bool          $enabled,
+        public string        $toggleHref,
         private VariantType  $type,
     ) {}
 

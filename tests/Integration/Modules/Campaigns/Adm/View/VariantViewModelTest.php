@@ -47,11 +47,11 @@ class VariantViewModelTest extends TestCase {
     }
 
     private function ctr(int $exposures, int $clicks): ?string {
-        $viewModel = new VariantViewModel('', new CampaignStats(0, $clicks, $exposures), VariantType::Standard);
+        $viewModel = new VariantViewModel('', new CampaignStats(0, $clicks, $exposures), true, '', VariantType::Standard);
         return $viewModel->stats->ctr();
     }
 
     private function type(VariantType $type): VariantViewModel {
-        return new VariantViewModel('', new CampaignStats(-1, -1, -1), $type);
+        return new VariantViewModel('', new CampaignStats(-1, -1, -1), true, '', $type);
     }
 }

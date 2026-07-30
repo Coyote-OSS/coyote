@@ -18,6 +18,6 @@ readonly class Campaign {
      * @return CampaignVariant[]
      */
     public function variantsOfType(VariantType $type): array {
-        return $this->variants |> arrays::filter(CampaignVariant::hasType($type));
+        return $this->variants |> arrays::filter(CampaignVariant::hasEnabledType($type));
     }
 }

@@ -192,6 +192,36 @@ trait CampaignStoreContractTests {
     }
 
     #[Test]
+    #[TestDox('given a campaign; when create-variant; is enabled by default')]
+    public function givenCampaign_createVariant_isEnabledByDefault(): void {
+        $campaignId = $this->createCampaign();
+        $this->createVariant($campaignId);
+        [$variant] = $this->store->findCampaign($campaignId)->variants;
+        Assert::assertTrue($variant->enabled);
+    }
+
+    #[Test]
+    #[TestDox('given a variant; when set-variant-enabled false; disables variant')]
+    public function givenVariant_setVariantEnabledFalse_disablesVariant(): void {
+        $campaignId = $this->createCampaign();
+        $variantId = $this->createVariant($campaignId);
+        $this->store->setVariantEnabled($variantId, false);
+        [$variant] = $this->store->findCampaign($campaignId)->variants;
+        Assert::assertFalse($variant->enabled);
+    }
+
+    #[Test]
+    #[TestDox('given a disabled variant; when set-variant-enabled true; re-enables variant')]
+    public function givenDisabledVariant_setVariantEnabledTrue_reEnablesVariant(): void {
+        $campaignId = $this->createCampaign();
+        $variantId = $this->createVariant($campaignId);
+        $this->store->setVariantEnabled($variantId, false);
+        $this->store->setVariantEnabled($variantId, true);
+        [$variant] = $this->store->findCampaign($campaignId)->variants;
+        Assert::assertTrue($variant->enabled);
+    }
+
+    #[Test]
     #[TestDox('given no variants; when view-variant; ignores')]
     #[DoesNotPerformAssertions]
     public function viewVariant_ignores(): void {

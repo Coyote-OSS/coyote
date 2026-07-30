@@ -10,9 +10,10 @@ readonly class CampaignVariant {
         public int            $clicks,
         public int            $exposures,
         public VariantPayload $payload,
+        public bool           $enabled,
     ) {}
 
-    public static function hasType(VariantType $type): callable {
-        return fn(self $variant): bool => $variant->payload->type === $type;
+    public static function hasEnabledType(VariantType $type): callable {
+        return fn(self $variant): bool => $variant->enabled && $variant->payload->type === $type;
     }
 }

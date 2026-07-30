@@ -14,7 +14,7 @@
   </div>
 {% endmacro %}
 
-{% macro table(emptyText, items, fields) %}
+{% macro table(emptyText, items, fields, rowActionsTemplate) %}
   {% if items is not empty %}
     <table class="table table-striped mb-0">
       <thead>
@@ -31,20 +31,25 @@
       {% for item in items %}
         <tr>
           {% for field in fields %}
-            {% set value = nested_attribute(item, field.key) %}
             <td style="{{ field.wrap ? 'white-space:nowrap;' }}">
-              {% if value is null %}
-                <span class="text-muted">{{ field.default }}</span>
+              {% if field.style == 'rowActions' %}
+                {% import rowActionsTemplate as rowActionsRenderer %}
+                {{ rowActionsRenderer.componentsTableRowActions_MagicValue(item) }}
               {% else %}
-                {{ field.icon ? icon(field.icon) }}
-                {% if field.style == 'image' %}
-                  <img class="{{ field.styleClass }}" src="{{ value }}" alt="{{ field.label }}">
-                {% elseif field.style == 'code' %}
-                  <code>{{ value }}</code>
-                {% elseif field.style == 'number' %}
-                  {{ value|number_format }}
+                {% set value = nested_attribute(item, field.key) %}
+                {% if value is null %}
+                  <span class="text-muted">{{ field.default }}</span>
                 {% else %}
-                  {{ value }}
+                  {{ field.icon ? icon(field.icon) }}
+                  {% if field.style == 'image' %}
+                    <img class="{{ field.styleClass }}" src="{{ value }}" alt="{{ field.label }}">
+                  {% elseif field.style == 'code' %}
+                    <code>{{ value }}</code>
+                  {% elseif field.style == 'number' %}
+                    {{ value|number_format }}
+                  {% else %}
+                    {{ value }}
+                  {% endif %}
                 {% endif %}
               {% endif %}
             </td>

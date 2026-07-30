@@ -71,6 +71,8 @@ readonly class FontAwesomePro {
             'campaignBannerType'                        => 'fa-light fa-shapes',
             'campaignBannerDimensions'                  => 'fa-light fa-ruler-combined',
             'campaignPremium'                           => 'fa-solid fa-dollar-sign',
+            'campaignVariantEnabled'                    => 'fa-solid fa-toggle-on',
+            'campaignVariantDisabled'                   => 'fa-light fa-toggle-off',
 
             // microblog
             'microblogNew'                              => 'fa-light fa-plus',

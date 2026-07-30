@@ -75,11 +75,21 @@ readonly class CampaignsFacade {
             $isPremium));
     }
 
-    public function createVariant(int $campaignId, ?string $banner, Campaigns\VariantType $type): void {
-        Assert::assertNotNull($this->store->createVariant($campaignId,
-            new Campaigns\Store\VariantPayload(
-                $type,
-                $banner ?? 'example-variant-image-url')));
+    public function createVariant(
+        int                   $campaignId,
+        ?string               $banner,
+        Campaigns\VariantType $type,
+        bool                  $enabled = true,
+    ): void {
+        $variantId = $this->createEnabledVariant($campaignId, $type, $banner);
+        $this->store->setVariantEnabled($variantId, $enabled);
+    }
+
+    private function createEnabledVariant(int $campaignId, Campaigns\VariantType $type, ?string $banner): int {
+        $payload = new Campaigns\Store\VariantPayload($type, $banner ?? 'example-variant-image-url');
+        $variantId = $this->store->createVariant($campaignId, $payload);
+        Assert::assertNotNull($variantId);
+        return $variantId;
     }
 
     /**
