@@ -14,18 +14,6 @@
   </div>
 {% endmacro %}
 
-{% macro get_nested_attribute(object, attributes) %}{% apply spaceless %}
-  {% set attributes = attributes|split('.') %}
-  {% set value = object %}
-  {% for attribute in attributes %}
-    {% set value = attribute(value, attribute|trim) is defined
-      ? attribute(value, attribute|trim)
-      : null %}
-  {% endfor %}
-  {{ value }}
-{% endapply %}
-{% endmacro %}
-
 {% macro table(emptyText, items, fields) %}
   {% if items is not empty %}
     <table class="table table-striped mb-0">
@@ -43,9 +31,9 @@
       {% for item in items %}
         <tr>
           {% for field in fields %}
-            {% set value = _self.get_nested_attribute(item, field.key) %}
+            {% set value = nested_attribute(item, field.key) %}
             <td style="{{ field.wrap ? 'white-space:nowrap;' }}">
-              {% if not value %}
+              {% if value is null %}
                 <span class="text-muted">{{ field.default }}</span>
               {% else %}
                 {{ field.icon ? icon(field.icon) }}
@@ -53,6 +41,8 @@
                   <img class="{{ field.styleClass }}" src="{{ value }}" alt="{{ field.label }}">
                 {% elseif field.style == 'code' %}
                   <code>{{ value }}</code>
+                {% elseif field.style == 'number' %}
+                  {{ value|number_format }}
                 {% else %}
                   {{ value }}
                 {% endif %}
