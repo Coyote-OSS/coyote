@@ -70,6 +70,7 @@ readonly class FontAwesomePro {
             'campaignBanner'                            => 'fa-light fa-image',
             'campaignBannerType'                        => 'fa-light fa-shapes',
             'campaignBannerDimensions'                  => 'fa-light fa-ruler-combined',
+            'campaignPremium'                           => 'fa-solid fa-dollar-sign',
 
             // microblog
             'microblogNew'                              => 'fa-light fa-plus',

@@ -3,7 +3,6 @@ namespace Coyote\Modules\Campaigns\Adm\Ui;
 
 use Boduch\Grid\Components\EditButton;
 use Boduch\Grid\Components\ShowButton;
-use Boduch\Grid\Decorators\LongText;
 use Boduch\Grid\Order;
 use Coyote\Domain\Html;
 use Coyote\Domain\Icon\Icons;
@@ -18,18 +17,16 @@ class CampaignsGrid extends Grid {
             ->setDefaultOrder(new Order('id', 'desc'))
             ->addColumn('id', [
                 'title'     => 'ID',
-                'sortable'  => true,
                 'clickable' => function (Campaign $row) {
                     return link_to_route('adm.campaigns.show', $row->id, [$row->id]);
                 },
             ])
             ->addColumn('name', [
-                'title'    => 'Nazwa kampanii',
-                'sortable' => true,
+                'title' => 'Nazwa kampanii',
             ])
-            ->addColumn('redirect_url', [
-                'title'      => 'URL przekierowania',
-                'decorators' => [new LongText()],
+            ->addColumn('is_premium', [
+                'title'  => 'Rodzaj',
+                'render' => fn(Campaign $campaign) => $this->campaignPremiumCell($campaign),
             ])
             ->addColumn('is_active', [
                 'title'  => 'Aktywna',
@@ -48,6 +45,14 @@ class CampaignsGrid extends Grid {
         $icon = $this->icon($active ? 'campaignStatusActive' : 'campaignStatusInactive');
         $title = $active ? 'aktywna' : 'nie aktywna';
         return "$icon $title";
+    }
+
+    private function campaignPremiumCell(Campaign $campaign): string {
+        if ($campaign->is_premium) {
+            $icon = $this->icon('campaignPremium');
+            return "$icon Premium";
+        }
+        return '';
     }
 
     private function icon(string $iconName): Html {
