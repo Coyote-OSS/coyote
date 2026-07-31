@@ -24,6 +24,7 @@ readonly class ModelsDriver {
     public function newUserReturnId(
         ?string $name = null,
         ?string $permissionName = null,
+        ?array  $permissionNames = null,
         ?string $groupName = null,
         ?string $photoUrl = null,
         ?bool   $deleted = false,
@@ -39,6 +40,9 @@ readonly class ModelsDriver {
             visitedAt:$visitedAt);
         if ($permissionName) {
             $this->models->assignToGroupWithPermission($user, $permissionName);
+        }
+        if ($permissionNames) {
+            $this->models->assignToGroupWithPermissions($user, $permissionNames);
         }
         if ($groupName) {
             $this->models->assignToGroupWithNameReturnId($user, $groupName);
