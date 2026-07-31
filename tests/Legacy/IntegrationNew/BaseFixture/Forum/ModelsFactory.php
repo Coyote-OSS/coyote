@@ -10,6 +10,7 @@ use Coyote\Permission;
 use Coyote\Post;
 use Coyote\Topic;
 use Coyote\User;
+use Libs\Arrays\arrays;
 
 class ModelsFactory
 {
@@ -40,6 +41,15 @@ class ModelsFactory
     public function assignToGroupWithPermission(User $user, string $permissionName): void
     {
         $user->groups()->sync([$this->groupWithPermission($permissionName)->id]);
+    }
+
+    /**
+     * @param string[] $permissionNames
+     */
+    public function assignToGroupWithPermissions(User $user, array $permissionNames): void
+    {
+        $groupIds = $permissionNames |> arrays::map(fn(string $permissionName) => $this->groupWithPermission($permissionName)->id);
+        $user->groups()->sync($groupIds);
     }
 
     private function groupWithPermission(string $permissionName): Group

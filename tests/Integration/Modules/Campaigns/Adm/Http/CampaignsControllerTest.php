@@ -34,6 +34,17 @@ class CampaignsControllerTest extends TestCase {
     }
 
     #[Test]
+    public function accessingCampaigns_failsForAdminWithoutPaymentPermission(): void {
+        // given I have generic admin access but not the adm-payment permission that also gates campaigns
+        $this->server->loginById($this->models->newUserReturnId(permissionName:'adm-access'));
+        $this->laravel->withSession(['admin' => true]);
+        // when I attempt to view the campaigns list
+        $response = $this->laravel->get('/Adm/Campaigns');
+        // then the request is rejected
+        $response->assertForbidden();
+    }
+
+    #[Test]
     public function creatingCampaign_redirectsToTheCampaign(): void {
         // when I create a new campaign
         $response = $this->httpCreate($this->exampleCampaign());
@@ -101,7 +112,7 @@ class CampaignsControllerTest extends TestCase {
     }
 
     private function loginAdmin(): void {
-        $this->server->loginById($this->models->newUserReturnId(permissionName:'adm-access'));
+        $this->server->loginById($this->models->newUserReturnId(permissionNames:['adm-access', 'adm-payment']));
         $this->laravel->withSession(['admin' => true]);
     }
 

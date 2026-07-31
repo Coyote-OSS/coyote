@@ -143,7 +143,7 @@ class VariantsControllerTest extends TestCase {
     }
 
     private function loginAdmin(): void {
-        $this->server->loginById($this->models->newUserReturnId(permissionName:'adm-access'));
+        $this->server->loginById($this->models->newUserReturnId(permissionNames:['adm-access', 'adm-payment']));
         $this->laravel->withSession(['admin' => true]);
     }
 
