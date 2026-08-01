@@ -40,6 +40,7 @@ class Kernel extends Foundation\Http\Kernel
             AddQueuedCookiesToResponse::class,
             StartSession::class,
             Middleware\SetupGuestCookie::class,
+            Middleware\TrackCloudflareGeo::class,
             ShareErrorsFromSession::class,
             Middleware\PreventRequestForgery::class,
             SubstituteBindings::class,
