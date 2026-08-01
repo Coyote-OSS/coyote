@@ -126,6 +126,18 @@ class ForCampaignBannersTest extends TestCase {
     }
 
     #[Test]
+    public function sidebarBannerAdblockUrl(): void {
+        // arrange
+        $this->stubCampaignBanners(new CampaignBanners(
+            [],
+            $this->banner('side.png', variantId:7, type:VariantType::Sidebar)));
+        // act
+        $bannerSet = $this->presenter->bannerSet();
+        // assert
+        $this->assertSame('https://test-redirect/7/adblock', $bannerSet->sidebar->adblockUrl);
+    }
+
+    #[Test]
     public function recordsNoViewsForEmptyBannerSet(): void {
         // arrange
         $this->stubCampaignBannersEmpty();

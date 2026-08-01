@@ -24,4 +24,12 @@ class CampaignsController extends Controller {
         }
         $this->store->exposeVariant($variantId);
     }
+
+    public function adblock(int $variantId): void {
+        $redirectUrl = $this->store->findCampaignRedirectUrl($variantId);
+        if ($redirectUrl === null) {
+            abort(404);
+        }
+        $this->store->blockVariant($variantId);
+    }
 }

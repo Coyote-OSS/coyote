@@ -73,6 +73,7 @@ readonly class FontAwesomePro {
             'campaignPremium'                           => 'fa-solid fa-dollar-sign',
             'campaignVariantEnabled'                    => 'fa-solid fa-toggle-on',
             'campaignVariantDisabled'                   => 'fa-light fa-toggle-off',
+            'campaignBlocked'                           => 'fa-light fa-ban',
 
             // microblog
             'microblogNew'                              => 'fa-light fa-plus',

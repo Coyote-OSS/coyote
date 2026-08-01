@@ -23,6 +23,8 @@ class InMemoryCampaignsStore implements CampaignsStore {
     private array $variantClicks = [];
     /** @var int[] */
     private array $variantExposures = [];
+    /** @var int[] */
+    private array $variantBlocked = [];
     /** @var bool[] */
     private array $variantEnabled = [];
     private int $campaignIdSeq = 1;
@@ -66,6 +68,7 @@ class InMemoryCampaignsStore implements CampaignsStore {
             $this->variantViews[$variantId],
             $this->variantClicks[$variantId],
             $this->variantExposures[$variantId],
+            $this->variantBlocked[$variantId],
             $this->variantPayloads[$variantId],
             $this->variantEnabled[$variantId]);
     }
@@ -87,6 +90,7 @@ class InMemoryCampaignsStore implements CampaignsStore {
         $this->variantViews[$newVariantId] = 0;
         $this->variantClicks[$newVariantId] = 0;
         $this->variantExposures[$newVariantId] = 0;
+        $this->variantBlocked[$newVariantId] = 0;
         $this->variantPayloads[$newVariantId] = $payload;
         $this->variantEnabled[$newVariantId] = true;
         return $newVariantId;
@@ -106,6 +110,10 @@ class InMemoryCampaignsStore implements CampaignsStore {
 
     public function exposeVariant(int $variantId): void {
         $this->variantExposures[$variantId]++;
+    }
+
+    public function blockVariant(int $variantId): void {
+        $this->variantBlocked[$variantId]++;
     }
 
     private function campaignExists(int $campaignId): bool {

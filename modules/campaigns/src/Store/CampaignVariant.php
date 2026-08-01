@@ -9,6 +9,7 @@ readonly class CampaignVariant {
         public int            $views,
         public int            $clicks,
         public int            $exposures,
+        public int            $blocked,
         public VariantPayload $payload,
         public bool           $enabled,
     ) {}

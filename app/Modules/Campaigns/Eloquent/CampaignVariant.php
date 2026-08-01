@@ -13,13 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $views
  * @property int $clicks
  * @property int $exposures
+ * @property int $blocked
  * @property bool $enabled
  * @property Eloquent\Campaign $campaign
  */
 class CampaignVariant extends Model {
     public $timestamps = false;
     protected $table = 'module_campaign_variants';
-    protected $fillable = ['campaign_id', 'image_url', 'type', 'views', 'clicks', 'exposures', 'enabled'];
+    protected $fillable = ['campaign_id', 'image_url', 'type', 'views', 'clicks', 'exposures', 'blocked', 'enabled'];
 
     public function campaign(): BelongsTo {
         return $this->belongsTo(Eloquent\Campaign::class);

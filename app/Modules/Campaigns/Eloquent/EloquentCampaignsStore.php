@@ -43,6 +43,7 @@ class EloquentCampaignsStore implements CampaignsStore {
             'views'     => 0,
             'clicks'    => 0,
             'exposures' => 0,
+            'blocked'   => 0,
             'enabled'   => true,
         ]);
         return $variant->id;
@@ -96,8 +97,9 @@ class EloquentCampaignsStore implements CampaignsStore {
             $variant->views,
             $variant->clicks,
             $variant->exposures,
+            $variant->blocked,
             new VariantPayload($this->deserializeVariantType($variant), $variant->image_url),
-            (bool)$variant->enabled);
+            $variant->enabled);
     }
 
     public function viewVariant(int $variantId): void {
@@ -110,6 +112,10 @@ class EloquentCampaignsStore implements CampaignsStore {
 
     public function exposeVariant(int $variantId): void {
         Eloquent\CampaignVariant::query()->whereKey($variantId)->increment('exposures');
+    }
+
+    public function blockVariant(int $variantId): void {
+        Eloquent\CampaignVariant::query()->whereKey($variantId)->increment('blocked');
     }
 
     public function findCampaignRedirectUrl(int $variantId): ?string {

@@ -89,6 +89,16 @@
         <b>Kliknięcia:</b>
         {{ campaign.stats.clicks|number_format }}
       </div>
+      <div class="list-group-item d-flex">
+        <span>
+          {{ icon('campaignBlocked') }}
+          <b>Zablokowane:</b>
+          {{ campaign.stats.blocked|number_format }}
+        </span>
+        <span class="ms-auto text-muted">
+          {{ icon('genericInfo', {title: 'Baner nie został wyświetlony przez przeglądarkę użytkownika, prawdopodobnie z powodu blokady reklam.'}) }}
+        </span>
+      </div>
     </div>
   </div>
 
@@ -125,10 +135,11 @@
     </div>
 
     {{ components.table('Ta kampania na razie nie ma żadnych banerów.', campaign.variants, [
-      { key: 'imageUrl', label: 'Grafika', labelIcon: 'campaignBanner', style: 'image', styleClass:'max-h-4' },
+      { key: 'imageUrl', label: 'Grafika', labelIcon: 'campaignBanner', style: 'image', styleClass:'max-h-4 max-w-26' },
       { key: 'bannerTypeTitle', label: 'Typ', labelIcon: 'campaignBannerType' },
       { key: 'stats.views', label: 'Wyświetlenia', labelIcon: 'campaignViews', style: 'number' },
       { key: 'stats.exposures', label: 'Ekspozycje', labelIcon: 'campaignExposures', style: 'number' },
+      { key: 'stats.blocked', label: 'Zablokowane', labelIcon: 'campaignBlocked', style: 'number' },
       { key: 'stats.clicks', label: 'Kliknięcia', labelIcon: 'campaignClicks', style: 'number' },
       { key: 'stats.ctr', label: 'CTR', labelIcon: 'campaignCtr', default: 'nie wyświetlono'},
       { label: 'Aktywny', style: 'rowActions' },
@@ -151,6 +162,10 @@
   <style>
     .max-h-4 {
       max-height: 28px;
+    }
+
+    .max-w-26 {
+      max-width: 182px;
     }
   </style>
 {% endblock %}

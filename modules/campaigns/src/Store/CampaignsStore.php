@@ -23,5 +23,7 @@ interface CampaignsStore {
 
     public function clickVariant(int $variantId): void;
 
+    public function blockVariant(int $variantId): void;
+
     public function findCampaignRedirectUrl(int $variantId): ?string;
 }
