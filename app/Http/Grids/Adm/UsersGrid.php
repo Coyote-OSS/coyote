@@ -71,7 +71,10 @@ class UsersGrid extends Grid {
     }
 
     private function userEmailHtml(string $email): string {
-        [$username, $domain] = \explode('@', $email);
+        if (!\str_contains($email, '@')) {
+            return \htmlSpecialChars($email);
+        }
+        [$username, $domain] = \explode('@', $email, 2);
         $color = $this->emailCssColor($email);
         $title = $this->emailCategoryTitle($email);
         return "$username@<span title='$title' style='color:$color;'>$domain</span>";
