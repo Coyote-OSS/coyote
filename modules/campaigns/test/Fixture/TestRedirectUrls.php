@@ -13,4 +13,8 @@ readonly class TestRedirectUrls implements ForRedirectUrls {
     public function exposeUrl(int $variantId): string {
         return "$this->baseUrl/$variantId/expose";
     }
+
+    public function adblockUrl(int $variantId): string {
+        return "$this->baseUrl/$variantId/adblock";
+    }
 }

@@ -33,6 +33,7 @@ readonly class CampaignBannersFacade implements ForCampaignBanners {
         return new \Modules\Campaigns\CampaignBanner(
             $this->redirectUrls->redirectUrl($banner->variantId),
             $this->redirectUrls->exposeUrl($banner->variantId),
+            $this->redirectUrls->adblockUrl($banner->variantId),
             $banner->bannerUrl,
             $banner->variantId);
     }

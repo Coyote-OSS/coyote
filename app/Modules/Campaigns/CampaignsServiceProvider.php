@@ -57,5 +57,8 @@ class CampaignsServiceProvider extends ServiceProvider {
         $router
             ->post('/campaigns/{variantId}/expose', [CampaignsController::class, 'expose'])
             ->name('campaigns.expose');
+        $router
+            ->post('/campaigns/{variantId}/adblock', [CampaignsController::class, 'adblock'])
+            ->name('campaigns.adblock');
     }
 }

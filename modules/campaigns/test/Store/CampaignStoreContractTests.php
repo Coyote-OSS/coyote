@@ -264,6 +264,27 @@ trait CampaignStoreContractTests {
     }
 
     #[Test]
+    #[TestDox('given no variants; when block-variant; ignores')]
+    #[DoesNotPerformAssertions]
+    public function blockVariant_ignores(): void {
+        $noSuchVariantId = 999;
+        $this->store->blockVariant($noSuchVariantId);
+    }
+
+    #[Test]
+    #[TestDox('given a variant; when block-variant; increases')]
+    public function givenVariant_blockVariant_increasesVariantBlocked(): void {
+        // given a variant
+        $campaignId = $this->createCampaign();
+        $variantId = $this->createVariant($campaignId);
+        // when variant is reported as blocked
+        $this->store->blockVariant($variantId);
+        // then variant blocked count has increased
+        [$variant] = $this->store->findCampaign($campaignId)->variants;
+        Assert::assertSame(1, $variant->blocked);
+    }
+
+    #[Test]
     #[TestDox('given a variant; when click-variant; increases')]
     public function givenVariant_clickVariant_increasesVariantClicks(): void {
         // given a variant

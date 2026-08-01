@@ -62,6 +62,29 @@ class CampaignsControllerTest extends TestCase {
         $this->assertSame(1, $this->campaignVariant($campaignId)->exposures);
     }
 
+    #[Test]
+    public function adblockVariant_returnNotFound_forNoSuchVariant(): void {
+        $noSuchVariantId = 999_888_777;
+        $this->laravel
+            ->post("/campaigns/$noSuchVariantId/adblock")
+            ->assertNotFound();
+    }
+
+    #[Test]
+    public function adblockVariant_returnsSuccess(): void {
+        [$_, $variantId] = $this->addCampaignWithVariant('/redirect-url');
+        $this->laravel
+            ->post("/campaigns/$variantId/adblock")
+            ->assertSuccessful();
+    }
+
+    #[Test]
+    public function adblockVariant_record_variantBlocked(): void {
+        [$campaignId, $variantId] = $this->addCampaignWithVariant();
+        $this->laravel->post("/campaigns/$variantId/adblock");
+        $this->assertSame(1, $this->campaignVariant($campaignId)->blocked);
+    }
+
     private function addCampaignWithVariant(?string $redirectUrl = null): array {
         $store = $this->instance();
         $campaignId = $store->createCampaign($this->exampleCampaign($redirectUrl));

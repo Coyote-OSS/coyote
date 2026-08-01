@@ -46,6 +46,17 @@ class TwigMacroCampaignBannerTest extends TestCase {
     }
 
     #[Test]
+    public function rendersSidebarBannerAdblockUrlDataAttribute(): void {
+        $bannerSet = new CampaignBannerSet([], $this->banner(
+            '',
+            '',
+            adblockUrl:'https://example.com/sidebar/adblock'));
+        $html = $this->campaignBanner('sidebar', $bannerSet);
+        $this->assertSame('https://example.com/sidebar/adblock',
+            $html->querySelector('img')->getAttribute('data-adblock-url'));
+    }
+
+    #[Test]
     public function rendersHorizontalBannerLinkAndImage(): void {
         $banner = $this->banner(
             redirectUrl:'https://example.com/horizontal',
@@ -86,10 +97,12 @@ class TwigMacroCampaignBannerTest extends TestCase {
         ?string $redirectUrl = null,
         ?string $imageUrl = null,
         ?string $exposeUrl = null,
+        ?string $adblockUrl = null,
     ): CampaignBanner {
         return new CampaignBanner(
             redirectUrl:$redirectUrl ?? '',
             exposeUrl:$exposeUrl ?? '',
+            adblockUrl:$adblockUrl ?? '',
             imageUrl:$imageUrl ?? '',
             variantId:0);
     }

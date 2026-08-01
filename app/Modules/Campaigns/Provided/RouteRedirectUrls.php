@@ -11,4 +11,8 @@ class RouteRedirectUrls implements ForRedirectUrls {
     public function exposeUrl(int $variantId): string {
         return route('campaigns.expose', [$variantId]);
     }
+
+    public function adblockUrl(int $variantId): string {
+        return route('campaigns.adblock', [$variantId]);
+    }
 }

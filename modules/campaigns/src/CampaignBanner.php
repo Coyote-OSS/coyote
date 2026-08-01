@@ -5,6 +5,7 @@ readonly class CampaignBanner {
     public function __construct(
         public string $redirectUrl,
         public string $exposeUrl,
+        public string $adblockUrl,
         public string $imageUrl,
         public int    $variantId,
     ) {}

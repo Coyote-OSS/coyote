@@ -58,7 +58,7 @@ class CampaignsController extends BaseController {
                 $campaign->variants |> arrays::map(
                     fn(Campaigns\Store\CampaignVariant $variant) => new VariantViewModel(
                         $variant->payload->imageUrl,
-                        new CampaignStats($variant->views, $variant->clicks, $variant->exposures),
+                        new CampaignStats($variant->views, $variant->clicks, $variant->exposures, $variant->blocked),
                         $variant->enabled,
                         route('adm.campaigns.variants.toggle', [$campaignId, $variant->id]),
                         $variant->payload->type))),
@@ -69,12 +69,14 @@ class CampaignsController extends BaseController {
         $views = 0;
         $clicks = 0;
         $exposures = 0;
+        $blocked = 0;
         foreach ($campaign->variants as $variant) {
             $views += $variant->views;
             $clicks += $variant->clicks;
             $exposures += $variant->exposures;
+            $blocked += $variant->blocked;
         }
-        return new CampaignStats($views, $clicks, $exposures);
+        return new CampaignStats($views, $clicks, $exposures, $blocked);
     }
 
     public function edit(Eloquent\Campaign $campaign): View {

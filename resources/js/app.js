@@ -23,6 +23,7 @@ import '../feature/post/copyButton';
 import '../feature/jobBoard/jobBoard';
 import '../feature/navigation/navigation';
 import '../feature/components/campaignBanner/exposure/main.ts';
+import '../feature/components/campaignBanner/adblockDetection/main.ts';
 
 Prism.highlightAll();
 
