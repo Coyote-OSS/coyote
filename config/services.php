@@ -59,14 +59,6 @@ return [
         'key'           => env('GOOGLE_MAPS_KEY', docker_secret('GOOGLE_MAPS_KEY_FILE'))
     ],
 
-    // Host and port to geo-ip.pl microservice to geocode IP and city name.
-    // ------------------------------------------------------------------------
-
-    'geo-ip' => [
-        'host'          => 'geo-ip.pl',
-        'port'          => ''
-    ],
-
     'paylane' => [
         'username'      => env('PAYLANE_USERNAME', docker_secret('PAYLANE_USERNAME_FILE')),
         'password'      => env('PAYLANE_PASSWORD', docker_secret('PAYLANE_PASSWORD_FILE')),

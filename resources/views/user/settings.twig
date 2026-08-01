@@ -74,4 +74,29 @@
     </div>
   </section>
   {{ form_close() }}
+
+  <h2>Wykryta lokalizacja</h2>
+  <section class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4"><strong>Na podstawie Cloudflare</strong></div>
+        <div class="col-md-8">
+          {% if cloudflareGeo %}
+            {{ cloudflareGeo.city|default('') }}
+            {% if cloudflareGeo.region %}, {{ cloudflareGeo.region }}{% endif %}
+            {% if cloudflareGeo.country_code %}({{ cloudflareGeo.country_code }}){% endif %}
+            {% if cloudflareGeo.latitude and cloudflareGeo.longitude %}
+              <span class="text-muted small">
+                &mdash; {{ cloudflareGeo.latitude }}, {{ cloudflareGeo.longitude }}
+              </span>
+            {% endif %}
+          {% else %}
+            <span class="text-muted">Brak danych</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <span class="d-none" id="cloudflare-headers">{{ cloudflareHeaders|json_encode|raw }}</span>
 {% endblock %}
