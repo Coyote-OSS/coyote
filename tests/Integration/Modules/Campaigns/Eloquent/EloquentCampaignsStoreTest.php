@@ -9,6 +9,8 @@ use Modules\Campaigns;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\VariantPayload;
 use Modules\Campaigns\VariantType;
+use Modules\Campaigns\Voivodeship;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -34,7 +36,9 @@ class EloquentCampaignsStoreTest extends TestCase {
     #[Test]
     public function insertsCampaignWithPayload(): void {
         $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
-            'campaign-name', 'redirect-url', '2011-01-01', '2022-02-02', 42, 'campaign-description', true,
+            'campaign-name', 'redirect-url', '2011-01-01', '2022-02-02',
+            42, 'campaign-description', true,
+            Voivodeship::Pomorskie,
         ));
         $this->laravel->assertSeeInDatabase('module_campaigns', [
             'name'         => 'campaign-name',
@@ -44,7 +48,20 @@ class EloquentCampaignsStoreTest extends TestCase {
             'target_views' => 42,
             'description'  => 'campaign-description',
             'is_premium'   => true,
+            'voivodeship'  => 'pomorskie',
         ]);
+    }
+
+    #[Test]
+    public function insertsAndFindsCampaignWithVoivodeship(): void {
+        $campaignId = $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
+            'campaign-name', 'redirect-url', null, null, null, null, false, Voivodeship::Lodzkie,
+        ));
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'id'          => $campaignId,
+            'voivodeship' => 'łódzkie',
+        ]);
+        Assert::assertSame(Voivodeship::Lodzkie, $this->store->findCampaign($campaignId)->payload->voivodeship);
     }
 
     #[Test]

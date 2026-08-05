@@ -1,8 +1,10 @@
 <?php
 namespace Coyote\Modules\Campaigns\Adm\Ui;
 
+use Coyote\Modules\Campaigns\Adm\VoivodeshipLabel;
 use Coyote\Services\FormBuilder\Form;
 use Coyote\Services\FormBuilder\ValidatesWhenSubmitted;
+use Modules\Campaigns\Voivodeship;
 
 class CampaignsForm extends Form implements ValidatesWhenSubmitted {
     public function buildForm(): void {
@@ -34,6 +36,13 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
             ->add('description', 'textarea', [
                 'label' => 'Opis kampanii',
                 'help'  => 'Dodatkowe informacje na temat kampanii.',
+            ])
+            ->add('voivodeship', 'select', [
+                'label'       => 'Województwo',
+                'help'        => 'Ogranicza wyświetlanie kampanii do użytkowników z wybranego województwa (na podstawie geolokalizacji Cloudflare).',
+                'choices'     => $this->voivodeshipChoices(),
+                'empty_value' => '-- każde województwo --',
+                'rules'       => 'nullable|string',
             ]);
         $this->add('submit', 'submit_with_delete', [
             'label'             => 'Zapisz',
@@ -53,5 +62,16 @@ class CampaignsForm extends Form implements ValidatesWhenSubmitted {
             'redirect_url.required' => 'Adres przekierowania jest wymagany.',
             'campaign_key.unique'   => 'Już istnieje kampania z tym kluczem.',
         ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function voivodeshipChoices(): array {
+        $choices = [];
+        foreach (Voivodeship::cases() as $case) {
+            $choices[$case->value] = new VoivodeshipLabel($case)->label();
+        }
+        return $choices;
     }
 }

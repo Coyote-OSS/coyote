@@ -72,7 +72,8 @@ readonly class CampaignsFacade {
             $until ?? '2999-12-31T23:59:59',
             999,
             null,
-            $isPremium));
+            $isPremium,
+            null));
     }
 
     public function createVariant(

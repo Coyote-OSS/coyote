@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $name
  * @property string|null $description
  * @property bool $is_premium
+ * @property string|null $voivodeship
  * @property CampaignVariant[]|Collection $variants
  */
 class Campaign extends Model {
@@ -30,6 +31,7 @@ class Campaign extends Model {
         'name',
         'description',
         'is_premium',
+        'voivodeship',
     ];
 
     public function variants(): HasMany {

@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Libs\Arrays\arrays;
 use Modules\Campaigns;
+use Modules\Campaigns\Voivodeship;
 
 class CampaignsController extends BaseController {
     public function __construct() {
@@ -55,6 +56,7 @@ class CampaignsController extends BaseController {
                 $campaign->payload->activeSinceDate,
                 $campaign->payload->activeUntilDate,
                 $campaign->payload->targetViews,
+                $campaign->payload->voivodeship,
                 $campaign->variants |> arrays::map(
                     fn(Campaigns\Store\CampaignVariant $variant) => new VariantViewModel(
                         $variant->payload->imageUrl,
@@ -94,7 +96,8 @@ class CampaignsController extends BaseController {
             $form->getValue('active_until'),
             $form->getValue('target_views'),
             $form->getValue('description'),
-            (bool)$form->getValue('is_premium'));
+            (bool)$form->getValue('is_premium'),
+            Voivodeship::tryFrom($form->getValue('voivodeship')));
         if ($campaign->exists) {
             $store->updateCampaign($campaign->id, $campaignModel);
             $campaignId = $campaign->id;
