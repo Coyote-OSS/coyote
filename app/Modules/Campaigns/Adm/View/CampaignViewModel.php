@@ -1,7 +1,12 @@
 <?php
 namespace Coyote\Modules\Campaigns\Adm\View;
 
+use Coyote\Modules\Campaigns\Adm\VoivodeshipLabel;
+use Modules\Campaigns\Voivodeship;
+
 readonly class CampaignViewModel {
+    private VoivodeshipLabel $voivodeship;
+
     /**
      * @param VariantViewModel[] $variants
      */
@@ -18,6 +23,13 @@ readonly class CampaignViewModel {
         public ?string        $dateSince,
         public ?string        $dateUntil,
         public ?int           $targetViews,
+        ?Voivodeship          $voivodeship,
         public array          $variants,
-    ) {}
+    ) {
+        $this->voivodeship = new VoivodeshipLabel($voivodeship);
+    }
+
+    public function voivodeship(): string {
+        return $this->voivodeship->label();
+    }
 }

@@ -51,6 +51,10 @@
         <b>Odnośnik reklamy</b>: {{ campaign.redirectUrl }}
       </div>
       <div class="list-group-item">
+        {{ icon('campaignVoivodeship') }}
+        <b>Województwo</b>: {{ campaign.voivodeship }}
+      </div>
+      <div class="list-group-item">
         {{ icon('campaignCtr') }}
         <b>CTR:</b>
         {% if campaign.stats.ctr %}

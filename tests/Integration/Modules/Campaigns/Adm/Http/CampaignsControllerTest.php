@@ -85,6 +85,17 @@ class CampaignsControllerTest extends TestCase {
     }
 
     #[Test]
+    public function creatingCampaign_savesVoivodeship(): void {
+        // when I create a campaign targeted at a voivodeship
+        $this->httpCreate($this->exampleCampaign('targeted-campaign', voivodeship:'łódzkie'));
+        // then the campaign is persisted with the voivodeship stored in polish lowercase
+        $this->laravel->assertSeeInDatabase('module_campaigns', [
+            'name'        => 'targeted-campaign',
+            'voivodeship' => 'łódzkie',
+        ]);
+    }
+
+    #[Test]
     public function updateCampaign(): void {
         // given a campaign already exists
         $campaignId = $this->httpCreateReturnId($this->exampleCampaign('updated', redirectUrl:'http://old'));
@@ -125,6 +136,7 @@ class CampaignsControllerTest extends TestCase {
         ?bool   $includeActiveRange = true,
         ?string $redirectUrl = null,
         ?bool   $isPremium = false,
+        ?string $voivodeship = null,
     ): array {
         return [
             'name'         => $name,
@@ -133,6 +145,7 @@ class CampaignsControllerTest extends TestCase {
             'horizontal'   => 'not-to-be-used-deprecated',
             'description'  => 'campaign-description',
             'is_premium'   => $isPremium,
+            'voivodeship'  => $voivodeship,
             ...$includeActiveRange ? $this->exampleActiveRange() : [],
         ];
     }

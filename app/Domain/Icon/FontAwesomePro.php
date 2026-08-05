@@ -17,6 +17,7 @@ readonly class FontAwesomePro {
         $genericCopy = 'fa-light fa-copy';
         $genericSave = $faTick;
         $genericBack = 'fa-light fa-arrow-left';
+        $genericLocation = 'fa-light fa-location-dot';
 
         return [
             // global
@@ -74,6 +75,7 @@ readonly class FontAwesomePro {
             'campaignVariantEnabled'                    => 'fa-solid fa-toggle-on',
             'campaignVariantDisabled'                   => 'fa-light fa-toggle-off',
             'campaignBlocked'                           => 'fa-light fa-ban',
+            'campaignVoivodeship'                       => $genericLocation,
 
             // microblog
             'microblogNew'                              => 'fa-light fa-plus',
@@ -367,7 +369,7 @@ readonly class FontAwesomePro {
             'profileMenuDropdown'                       => $genericDropdown,
             'profileUserBlock'                          => 'fa-light fa-lock',
             'profileUserUnblock'                        => 'fa-light fa-unlock',
-            'profileUserResidence'                      => 'fa-light fa-location-dot',
+            'profileUserResidence'                      => $genericLocation,
             'profileUserWebsite'                        => 'fa-light fa-globe',
             'profileUserGithub'                         => 'fa-brands fa-github',
             'profileUserLastVisitDate'                  => 'fa-light fa-right-to-bracket',
@@ -385,7 +387,7 @@ readonly class FontAwesomePro {
             'jobBoardFilterSalary'                      => 'fa-light fa-credit-card',
             'jobBoardPackageBenefit'                    => $faTick,
             'jobBoardSearch'                            => 'fa-light fa-magnifying-glass',
-            'jobBoardSearchLocation'                    => 'fa-light fa-location-dot',
+            'jobBoardSearchLocation'                    => $genericLocation,
             'jobBoardSubscribedOffers'                  => 'fa-light fa-heart',
             'jobBoardPricingPlanBulletPoint'            => 'fa-light fa-check',
             'jobBoardPricingPlanName'                   => 'fa-light fa-share-nodes',
@@ -411,7 +413,7 @@ readonly class FontAwesomePro {
             'jobOfferExpiresInDays'                     => 'fa-light fa-clock',
             'jobOfferFeaturePresent'                    => $faTick,
             'jobOfferFeatureMissing'                    => $faCross,
-            'jobOfferLocation'                          => 'fa-light fa-location-dot',
+            'jobOfferLocation'                          => $genericLocation,
             'jobOfferMoreLikeThis'                      => 'fa-light fa-star',
             'jobOfferNew'                               => 'fa-light fa-pencil',
             'jobOfferPaymentRequired'                   => 'fa-light fa-credit-card',
@@ -469,7 +471,7 @@ readonly class FontAwesomePro {
             'vCardUserFindPosts'                        => 'fa-light fa-magnifying-glass',
             'vCardUserPrivateMessage'                   => 'fa-light fa-envelope',
             'vCardUserShowInAdmin'                      => 'fa-light fa-eye',
-            'vCardUserResidence'                        => 'fa-light fa-location-dot',
+            'vCardUserResidence'                        => $genericLocation,
 
             // wiki
             'wikiAttachmentRemove'                      => 'fa-light fa-trash-can',

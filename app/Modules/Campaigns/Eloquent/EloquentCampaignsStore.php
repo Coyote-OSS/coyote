@@ -8,6 +8,7 @@ use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\CampaignVariant;
 use Modules\Campaigns\Store\VariantPayload;
 use Modules\Campaigns\VariantType;
+use Modules\Campaigns\Voivodeship;
 
 class EloquentCampaignsStore implements CampaignsStore {
     public function createCampaign(CampaignPayload $payload): int {
@@ -28,6 +29,7 @@ class EloquentCampaignsStore implements CampaignsStore {
             'name'         => $payload->name,
             'description'  => $payload->description,
             'is_premium'   => $payload->isPremium,
+            'voivodeship'  => $payload->voivodeship?->value,
         ];
     }
 
@@ -87,7 +89,8 @@ class EloquentCampaignsStore implements CampaignsStore {
                 $campaign->active_until,
                 $campaign->target_views,
                 $campaign->description,
-                $campaign->is_premium),
+                $campaign->is_premium,
+                $campaign->voivodeship !== null ? Voivodeship::from($campaign->voivodeship) : null),
             $campaign->variants->map($this->parseVariant(...))->all());
     }
 
