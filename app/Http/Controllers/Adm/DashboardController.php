@@ -49,6 +49,16 @@ class DashboardController extends BaseController {
             'postsCreatedChartDays'   => $this->historyChartHtml($postCreated, Period::Day),
             'jobsCreatedChartDays'    => $this->historyChartHtml($jobsCreated, Period::Day),
             'activityChartDays'       => $this->historyChartHtml($activity, Period::Day),
+
+            'cohortCanAccess' => $this->user()->can('adm-payment'),
+            'cohortByStream'  => [
+                'downloadUrl'  => route('adm.cohort.download', ['by' => 'stream']),
+                'downloadDate' => date('Y-m-d'),
+            ],
+            'cohortByView'    => [
+                'downloadUrl'  => route('adm.cohort.download', ['by' => 'view']),
+                'downloadDate' => date('Y-m-d'),
+            ],
         ]);
     }
 

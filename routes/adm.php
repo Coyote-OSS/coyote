@@ -156,6 +156,7 @@ $this->group(
         $this->post('Multiacc/{multiacc}/Include', 'MultiaccController@includeUserSave')->name('multiacc.includeUser.save');
 
         $this->get('Incognito', 'IncognitoController@index')->name('incognito.home');
+        $this->get('Cohort/Download', 'CohortController@download')->name('cohort.download');
 
         $this->group(['namespace' => '\Coyote\Modules\Campaigns\Adm\Http', 'middleware' => 'can:adm-payment'], function () {
             $this->get('Campaigns', 'CampaignsController@index')->name('campaigns');
