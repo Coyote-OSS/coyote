@@ -4,6 +4,7 @@ namespace Coyote\Modules\Campaigns;
 use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Coyote\Modules\Campaigns\Provided\AuthPriviligedUsers;
 use Coyote\Modules\Campaigns\Provided\CarbonCurrentDate;
+use Coyote\Modules\Campaigns\Provided\CloudflareVoivodeship;
 use Coyote\Modules\Campaigns\Provided\RouteRedirectUrls;
 use Coyote\Modules\Campaigns\Provided\TimeRotatingBanners;
 use Coyote\Modules\Campaigns\User\Http\CampaignsController;
@@ -42,6 +43,10 @@ class CampaignsServiceProvider extends ServiceProvider {
         $this->app->bind(
             ForRedirectUrls::class,
             RouteRedirectUrls::class);
+
+        $this->app->bind(
+            Campaigns\ForUserVoivodeship::class,
+            CloudflareVoivodeship::class);
 
         $this->app->bind(
             ForCampaignBanners::class,

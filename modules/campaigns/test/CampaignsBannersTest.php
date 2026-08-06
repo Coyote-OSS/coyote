@@ -4,6 +4,7 @@ namespace Test\Modules\Campaigns;
 use Libs\Arrays\arrays;
 use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\VariantType;
+use Modules\Campaigns\Voivodeship;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -12,6 +13,7 @@ use Test\Modules\Campaigns\Fixture\CampaignsFacade;
 use Test\Modules\Campaigns\Fixture\TestCurrentDate;
 use Test\Modules\Campaigns\Fixture\TestPrivilegedUsers;
 use Test\Modules\Campaigns\Fixture\TestRotatingBanners;
+use Test\Modules\Campaigns\Fixture\TestUserVoivodeship;
 use Test\Modules\Campaigns\Store\InMemoryCampaignsStore;
 
 #[CoversClass(CampaignService::class)]
@@ -21,6 +23,7 @@ class CampaignsBannersTest extends TestCase {
     /** @deprecated */
     private CampaignsFacade $facade;
     private TestCurrentDate $date;
+    private TestUserVoivodeship $userVoivodeship;
     private CampaignService $campaigns;
 
     #[Before]
@@ -28,12 +31,14 @@ class CampaignsBannersTest extends TestCase {
         $this->privilegedUsers = new TestPrivilegedUsers();
         $this->rotateBanners = new TestRotatingBanners();
         $this->date = new TestCurrentDate('2000-01-01T00:00:00');
+        $this->userVoivodeship = new TestUserVoivodeship();
         $store = new InMemoryCampaignsStore();
         $this->campaigns = new CampaignService(
             $this->privilegedUsers,
             $this->rotateBanners,
             $this->date,
-            $store);
+            $store,
+            $this->userVoivodeship);
         $this->facade = new CampaignsFacade($this->campaigns, $store);
     }
 
@@ -298,6 +303,37 @@ class CampaignsBannersTest extends TestCase {
             $this->assertEquals(['enabled.png'], $this->facade->getHorizontalBannerUrls());
             $this->rotateBanners->rotate();
         }
+    }
+
+    #[Test]
+    public function campaignWithoutVoivodeship_isShown_regardlessOfUserVoivodeship(): void {
+        $this->userVoivodeship->stubVoivodeship(null);
+        $this->facade->addCampaign(horizontalBanner:'unrestricted.png');
+        $this->assertEquals(['unrestricted.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function campaignWithVoivodeship_isShown_whenUserVoivodeshipMatches(): void {
+        $this->userVoivodeship->stubVoivodeship(Voivodeship::Mazowieckie);
+        $campaignId = $this->facade->createCampaign(voivodeship:Voivodeship::Mazowieckie);
+        $this->facade->createVariant($campaignId, 'matching.png', VariantType::Standard);
+        $this->assertEquals(['matching.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function campaignWithVoivodeship_isHidden_whenUserVoivodeshipDoesNotMatch(): void {
+        $this->userVoivodeship->stubVoivodeship(Voivodeship::Slaskie);
+        $campaignId = $this->facade->createCampaign(voivodeship:Voivodeship::Mazowieckie);
+        $this->facade->createVariant($campaignId, 'non-matching.png', VariantType::Standard);
+        $this->assertEmpty($this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function campaignWithVoivodeship_isHidden_whenUserVoivodeshipIsUnknown(): void {
+        $this->userVoivodeship->stubVoivodeship(null);
+        $campaignId = $this->facade->createCampaign(voivodeship:Voivodeship::Mazowieckie);
+        $this->facade->createVariant($campaignId, 'restricted.png', VariantType::Standard);
+        $this->assertEmpty($this->facade->getHorizontalBannerUrls());
     }
 
     private function assertCampaignKeys(

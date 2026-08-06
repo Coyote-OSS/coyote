@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Test\Modules\Campaigns\Fixture\TestCurrentDate;
 use Test\Modules\Campaigns\Fixture\TestPrivilegedUsers;
 use Test\Modules\Campaigns\Fixture\TestRotatingBanners;
+use Test\Modules\Campaigns\Fixture\TestUserVoivodeship;
 use Test\Modules\Campaigns\Store\InMemoryCampaignsStore;
 
 #[CoversClass(CampaignService::class)]
@@ -29,7 +30,8 @@ class CampaignsActiveTest extends TestCase {
             new TestPrivilegedUsers(),
             new TestRotatingBanners(),
             $this->calendar,
-            $this->store);
+            $this->store,
+            new TestUserVoivodeship());
     }
 
     #[Test]
