@@ -59,11 +59,12 @@ readonly class CampaignsFacade {
     }
 
     public function createCampaign(
-        ?string $name = null,
-        ?string $redirectUrl = null,
-        ?string $since = null,
-        ?string $until = null,
-        bool    $isPremium = false,
+        ?string                 $name = null,
+        ?string                 $redirectUrl = null,
+        ?string                 $since = null,
+        ?string                 $until = null,
+        bool                    $isPremium = false,
+        ?Campaigns\Voivodeship  $voivodeship = null,
     ): int {
         return $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
             $name ?? '',
@@ -73,7 +74,7 @@ readonly class CampaignsFacade {
             999,
             null,
             $isPremium,
-            null));
+            $voivodeship));
     }
 
     public function createVariant(

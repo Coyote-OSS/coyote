@@ -12,10 +12,11 @@ readonly class CampaignService {
     private CampaignBannerSelector $selector;
 
     public function __construct(
-        private ForPriviligedUsers $users,
-        ForRotatingBanners         $rotate,
-        private ForCurrentDate     $date,
-        private CampaignsStore     $store,
+        private ForPriviligedUsers   $users,
+        ForRotatingBanners           $rotate,
+        private ForCurrentDate       $date,
+        private CampaignsStore       $store,
+        private ForUserVoivodeship   $userVoivodeship,
     ) {
         $this->selector = new CampaignBannerSelector($rotate);
     }
@@ -48,7 +49,17 @@ readonly class CampaignService {
      * @return Campaign[]
      */
     private function listActiveCampaigns(): array {
-        return $this->store->listCampaigns() |> arrays::filter($this->isCampaignObjectActive(...));
+        return $this->store->listCampaigns()
+            |> arrays::filter($this->isCampaignObjectActive(...))
+            |> arrays::filter($this->isCampaignVisibleForVoivodeship(...));
+    }
+
+    private function isCampaignVisibleForVoivodeship(Campaign $campaign): bool {
+        $campaignVoivodeship = $campaign->payload->voivodeship;
+        if ($campaignVoivodeship === null) {
+            return true;
+        }
+        return $campaignVoivodeship === $this->userVoivodeship->currentUserVoivodeship();
     }
 
     public function campaignStatus(int $campaignId): string {
