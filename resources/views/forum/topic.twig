@@ -171,7 +171,9 @@
         {% if loop.index % 10 == 2 and job_offers is not empty %}
           <div class="card card-post d-flex flex-row flex-nowrap gap-3 p-3" style="overflow: hidden;">
             {% for jobOffer in job_offers %}
-              <div class="flex-shrink-0 border rounded p-3" style="height: 100px; min-width: 200px;">{{ jobOffer }}</div>
+              <a href="{{ jobOffer.url }}" class="d-block flex-shrink-0 border rounded p-3" style="height: 100px; min-width: 200px;">
+                {{ jobOffer.title }}
+              </a>
             {% endfor %}
           </div>
         {% endif %}
@@ -269,9 +271,9 @@
               @reply="reply"
           ></vue-post-wrapper>
           <div v-if="index % 10 === 1 && jobOffers.length > 0" class="card card-post d-flex flex-row flex-nowrap gap-3 p-3" style="overflow: hidden;">
-            <div v-for="jobOffer in jobOffers" :key="jobOffer" class="flex-shrink-0 border rounded p-3" style="height: 100px; min-width: 200px;">
-              ${ jobOffer }
-            </div>
+            <a v-for="jobOffer in jobOffers" :key="jobOffer.url" :href="jobOffer.url" class="d-block flex-shrink-0 border rounded p-3" style="height: 100px; min-width: 200px;">
+              ${ jobOffer.title }
+            </a>
           </div>
         </template>
       </template>

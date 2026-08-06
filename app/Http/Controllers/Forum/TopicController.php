@@ -9,6 +9,7 @@ use Coyote\Http\Resources\FlagResource;
 use Coyote\Http\Resources\PollResource;
 use Coyote\Http\Resources\PostCollection;
 use Coyote\Http\Resources\TopicResource;
+use Coyote\Job;
 use Coyote\Post;
 use Coyote\Repositories\Criteria\Post\WithSubscribers;
 use Coyote\Repositories\Criteria\Post\WithTrashedInfo;
@@ -182,7 +183,13 @@ class TopicController extends BaseController {
         $presenter->recordViews($bannerSet);
 
         $jobOffers = $request->has('preview')
-            ? $this->job->listJobOffers(null, null)->pluck('title')->toArray()
+            ? $this->job->listJobOffers(null, null)
+                ->shuffle()
+                ->map(fn(Job $job): array => [
+                    'title' => $job->title,
+                    'url'   => route('neon.jobOffer.show', [$job->slug, $job->id]),
+                ])
+                ->toArray()
             : [];
 
         return $this
