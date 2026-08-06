@@ -13,6 +13,11 @@ use Coyote\Post;
 use Coyote\Repositories\Criteria\Post\WithSubscribers;
 use Coyote\Repositories\Criteria\Post\WithTrashedInfo;
 use Coyote\Repositories\Criteria\WithTrashed;
+use Coyote\Repositories\Eloquent\ForumRepository;
+use Coyote\Repositories\Eloquent\JobRepository;
+use Coyote\Repositories\Eloquent\PostRepository;
+use Coyote\Repositories\Eloquent\TagRepository;
+use Coyote\Repositories\Eloquent\TopicRepository;
 use Coyote\Reputation;
 use Coyote\Services\Flags;
 use Coyote\Services\Forum\Tracker;
@@ -30,6 +35,16 @@ use Illuminate\View\View;
 use Modules\Campaigns;
 
 class TopicController extends BaseController {
+    public function __construct(
+        ForumRepository       $forum,
+        TopicRepository       $topic,
+        PostRepository        $post,
+        TagRepository         $tag,
+        private JobRepository $job,
+    ) {
+        parent::__construct($forum, $topic, $post, $tag);
+    }
+
     public function index(
         Request                      $request,
         Forum                        $forum,
@@ -166,10 +181,15 @@ class TopicController extends BaseController {
         $bannerSet = $presenter->bannerSet();
         $presenter->recordViews($bannerSet);
 
+        $jobOffers = $request->has('preview')
+            ? $this->job->listJobOffers(null, null)->pluck('title')->toArray()
+            : [];
+
         return $this
             ->view('forum.topic', [
                 'threadStartUrl'          => route('forum.topic', [$forum->slug, $topic->id, $topic->slug]),
                 'posts'                   => $posts,
+                'job_offers'              => $jobOffers,
                 'forum'                   => $forum,
                 'paginationCurrentPage'   => $paginate->currentPage(),
                 'paginationPerPage'       => $paginate->perPage(),

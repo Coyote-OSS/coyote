@@ -19,6 +19,7 @@ declare global {
     showStickyCheckbox: boolean;
     showDiscussModeSelect: boolean;
     reasons: string[];
+    jobOffers: string[];
     allForums: Models.Forum[];
     showCategoryName: boolean;
     groupStickyTopics: boolean;
