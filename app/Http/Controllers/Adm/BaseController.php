@@ -47,7 +47,6 @@ class BaseController extends Controller
             $menu->add('Zgłoszone treści', ['url' => route('adm.flag', ['filter' => 'is:reported report:open'])])->prepend($fa('far fa-flag fa-fw'));
             $menu->add('Bany', ['route' => 'adm.firewall'])->prepend($fa('fa-user-doctor fa-fw'));
             $menu->add('ShadowBan', ['url' => route('adm.incognito.home')])->prepend($fa('fal fa-user fa-fw'));
-            $menu->add('Kartoteka', ['url' => route('adm.multiacc.home')])->prepend($fa('fal fa-user fa-fw'));
             $menu->add('Aktywne sesje', ['route' => 'adm.sessions'])->prepend($fa('fa-light fa-wave-pulse fa-fw'));
             $menu->add('Dziennik zdarzeń', ['route' => 'adm.stream'])->prepend($fa('fa-newspaper fa-fw'));
             $menu->add('Cenzura', ['route' => 'adm.words'])->prepend($fa('fa-highlighter fa-fw'));
