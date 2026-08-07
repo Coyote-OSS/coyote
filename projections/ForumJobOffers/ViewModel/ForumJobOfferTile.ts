@@ -4,7 +4,7 @@ export interface ForumJobOfferTile {
   companyName: string;
   companyLogoUrl: string|null;
   jobOfferHref: string;
-  offerTitle: string;
+  jobOfferTitle: string;
   headerPills: string[];
   salary: string;
   technologyTags: Tag[];

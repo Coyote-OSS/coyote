@@ -168,54 +168,36 @@
             </div>
           </div>
         </div>
-        {% if loop.index % 10 == 2 and job_offers is not empty %}
+        {% if loop.index % 10 == 2 and forumJobOfferTiles is not empty %}
           <div class="card card-post d-flex flex-row flex-nowrap gap-3 p-3" style="overflow: hidden;">
-            {% for jobOffer in job_offers %}
-              <a href="{{ jobOffer.url }}" class="d-block text-decoration-none flex-shrink-0 border rounded p-3"
+            {% for jobOffer in forumJobOfferTiles %}
+              <a href="{{ jobOffer.jobOfferHref }}" class="d-block text-decoration-none flex-shrink-0 border rounded p-3"
                  style="min-height: 220px; min-width: 240px;">
                 <div class="d-flex align-items-center mb-2">
-                  {% if jobOffer.company.logo %}
-                    <img src="{{ jobOffer.company.logo }}" alt="{{ jobOffer.company.name }}"
+                  {% if jobOffer.companyLogoUrl %}
+                    <img src="{{ jobOffer.companyLogoUrl }}" alt="{{ jobOffer.companyName }}"
                          style="width: 32px; height: 32px; object-fit: contain;" class="me-2">
                   {% else %}
                     <div class="neon-placeholder d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
                       {{ icon('jobOfferMissingLogo') }}
                     </div>
                   {% endif %}
-                  <span>{{ jobOffer.title }}</span>
+                  <span>{{ jobOffer.jobOfferTitle }}</span>
                 </div>
-                <div class="mb-2">{{ jobOffer.company.name }}</div>
-                <div class="mb-2">
-                  {% if jobOffer.salary.from or jobOffer.salary.to %}
-                    {% if jobOffer.salary.from and jobOffer.salary.to %}
-                      {{ jobOffer.salary.from }} - {{ jobOffer.salary.to }}
-                    {% elseif jobOffer.salary.from %}
-                      od {{ jobOffer.salary.from }}
-                    {% else %}
-                      do {{ jobOffer.salary.to }}
-                    {% endif %}
-                    {{ jobOffer.salary.currency }}
-                    {{ jobOffer.salary.gross ? 'brutto' : 'netto' }}
-                    / {{ jobOffer.salary.rate }}
-                  {% else %}
-                    Wynagrodzenie nieujawnione
-                  {% endif %}
-                </div>
-                {% if jobOffer.cities is not empty or jobOffer.isRemote %}
+                <div class="mb-2">{{ jobOffer.companyName }}</div>
+                <div class="mb-2">{{ jobOffer.salary }}</div>
+                {% if jobOffer.headerPills is not empty %}
                   <div class="d-flex align-items-center flex-wrap gap-1 mb-2">
-                    {% if jobOffer.cities is not empty %}
-                      <span>{{ jobOffer.cities|join(', ') }}</span>
-                    {% endif %}
-                    {% if jobOffer.isRemote %}
-                      <span class="d-inline-flex align-items-center border rounded px-1">Remote</span>
-                    {% endif %}
+                    {% for pill in jobOffer.headerPills %}
+                      <span class="d-inline-flex align-items-center border rounded px-1">{{ pill }}</span>
+                    {% endfor %}
                   </div>
                 {% endif %}
                 <div class="d-flex flex-wrap gap-1">
-                  {% for tag in jobOffer.tags %}
+                  {% for tag in jobOffer.technologyTags %}
                     <span class="d-inline-flex align-items-center border rounded px-1">
-                      {% if tag.image %}
-                        <img src="{{ tag.image }}" style="width: 16px; height: 16px;" class="me-1">
+                      {% if tag.logoUrl %}
+                        <img src="{{ tag.logoUrl }}" style="width: 16px; height: 16px;" class="me-1">
                       {% endif %}
                       {{ tag.name }}
                     </span>
@@ -318,38 +300,27 @@
               :post="post"
               @reply="reply"
           ></vue-post-wrapper>
-          <div v-if="index % 10 === 1 && jobOffers.length > 0" class="card card-post d-flex flex-row flex-nowrap gap-3 p-3"
+          <div v-if="index % 10 === 1 && forumJobOfferTiles.length > 0" class="card card-post d-flex flex-row flex-nowrap gap-3 p-3"
                style="overflow: hidden;">
-            <a v-for="jobOffer in jobOffers" :key="jobOffer.url" :href="jobOffer.url"
+            <a v-for="tile in forumJobOfferTiles" :key="tile.jobOfferHref" :href="tile.jobOfferHref"
                class="d-block text-decoration-none flex-shrink-0 border rounded p-3" style="min-height: 220px; min-width: 240px;">
               <div class="d-flex align-items-center mb-2">
-                <img v-if="jobOffer.company.logo" :src="jobOffer.company.logo" :alt="jobOffer.company.name"
+                <img v-if="tile.companyLogoUrl" :src="tile.companyLogoUrl" :alt="tile.companyName"
                      style="width: 32px; height: 32px; object-fit: contain;" class="me-2">
                 <div v-else class="neon-placeholder d-flex align-items-center justify-content-center me-2"
                      style="width: 32px; height: 32px;">
                   <vue-icon name="jobOfferMissingLogo"></vue-icon>
                 </div>
-                <span>${ jobOffer.title }</span>
+                <span>${ tile.jobOfferTitle }</span>
               </div>
-              <div class="mb-2">${ jobOffer.company.name }</div>
-              <div class="mb-2">
-                <template v-if="jobOffer.salary.from || jobOffer.salary.to">
-                  <template v-if="jobOffer.salary.from && jobOffer.salary.to">${ jobOffer.salary.from } - ${ jobOffer.salary.to }</template>
-                  <template v-else-if="jobOffer.salary.from">od ${ jobOffer.salary.from }</template>
-                  <template v-else>do ${ jobOffer.salary.to }</template>
-                  ${ jobOffer.salary.currency }
-                  ${ jobOffer.salary.gross ? 'brutto' : 'netto' }
-                  / ${ jobOffer.salary.rate }
-                </template>
-                <template v-else>Wynagrodzenie nieujawnione</template>
-              </div>
-              <div v-if="jobOffer.cities.length > 0 || jobOffer.isRemote" class="d-flex align-items-center flex-wrap gap-1 mb-2">
-                <span v-if="jobOffer.cities.length > 0">${ jobOffer.cities.join(', ') }</span>
-                <span v-if="jobOffer.isRemote" class="d-inline-flex align-items-center border rounded px-1">Remote</span>
+              <div class="mb-2">${ tile.companyName }</div>
+              <div class="mb-2">${ tile.salary }</div>
+              <div v-if="tile.headerPills.length > 0" class="d-flex align-items-center flex-wrap gap-1 mb-2">
+                <span v-for="pill in tile.headerPills" :key="pill" class="d-inline-flex align-items-center border rounded px-1">${ pill }</span>
               </div>
               <div class="d-flex flex-wrap gap-1">
-                <span v-for="tag in jobOffer.tags" :key="tag.name" class="d-inline-flex align-items-center border rounded px-1">
-                  <img v-if="tag.image" :src="tag.image" style="width: 16px; height: 16px;" class="me-1">
+                <span v-for="tag in tile.technologyTags" :key="tag.name" class="d-inline-flex align-items-center border rounded px-1">
+                  <img v-if="tag.logoUrl" :src="tag.logoUrl" style="width: 16px; height: 16px;" class="me-1">
                   ${ tag.name }
                 </span>
               </div>
@@ -417,7 +388,7 @@
   </main>
 
   <script>
-    var jobOffers = {{ job_offers|json_encode|raw }};
+    var forumJobOfferTiles = {{ forumJobOfferTiles|json_encode|raw }};
     var pagination = {{ posts|json_encode|raw }};
     var topic = {{ topic|json_encode|raw }};
     var poll = {{ poll|json_encode|raw }};

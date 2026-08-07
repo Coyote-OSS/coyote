@@ -9,16 +9,11 @@ use Coyote\Http\Resources\FlagResource;
 use Coyote\Http\Resources\PollResource;
 use Coyote\Http\Resources\PostCollection;
 use Coyote\Http\Resources\TopicResource;
-use Coyote\Job;
 use Coyote\Post;
+use Coyote\Projections\ForumJobOffers\ForumJobOffersPresenter;
 use Coyote\Repositories\Criteria\Post\WithSubscribers;
 use Coyote\Repositories\Criteria\Post\WithTrashedInfo;
 use Coyote\Repositories\Criteria\WithTrashed;
-use Coyote\Repositories\Eloquent\ForumRepository;
-use Coyote\Repositories\Eloquent\JobRepository;
-use Coyote\Repositories\Eloquent\PostRepository;
-use Coyote\Repositories\Eloquent\TagRepository;
-use Coyote\Repositories\Eloquent\TopicRepository;
 use Coyote\Reputation;
 use Coyote\Services\Flags;
 use Coyote\Services\Forum\Tracker;
@@ -27,7 +22,6 @@ use Coyote\Services\Forum\TreeBuilder\JsonDecorator;
 use Coyote\Services\Forum\TreeBuilder\ListDecorator;
 use Coyote\Services\Parser\Extensions\Emoji;
 use Coyote\Services\UrlBuilder;
-use Coyote\Tag;
 use Coyote\Topic;
 use Coyote\User;
 use Illuminate\Contracts\Auth\Access\Gate;
@@ -37,21 +31,12 @@ use Illuminate\View\View;
 use Modules\Campaigns;
 
 class TopicController extends BaseController {
-    public function __construct(
-        ForumRepository       $forum,
-        TopicRepository       $topic,
-        PostRepository        $post,
-        TagRepository         $tag,
-        private JobRepository $job,
-    ) {
-        parent::__construct($forum, $topic, $post, $tag);
-    }
-
     public function index(
         Request                      $request,
         Forum                        $forum,
         Topic                        $topic,
         Campaigns\ForCampaignBanners $presenter,
+        ForumJobOffersPresenter      $jobOffersPresenter,
     ): Collection|View|array {
         if (!$this->visibleDespiteIncognitoUser($topic)) {
             abort(404);
@@ -177,47 +162,15 @@ class TopicController extends BaseController {
         }
 
         $topic->load('tags');
-
         $post = array_first($posts['data']);
-
         $bannerSet = $presenter->bannerSet();
         $presenter->recordViews($bannerSet);
-
-        $jobOffers = $request->has('preview')
-            ? $this->job->listJobOffers(null, null)
-                ->load(['firm', 'tags', 'currency', 'locations'])
-                ->shuffle()
-                ->map(fn(Job $job): array => [
-                    'title'    => $job->title,
-                    'url'      => route('neon.jobOffer.show', [$job->slug, $job->id]),
-                    'company'  => [
-                        'name' => $job->firm->name,
-                        'logo' => $job->firm->logo->getFilename() ? (string)$job->firm->logo->url() : null,
-                    ],
-                    'salary'   => [
-                        'from'     => $job->salary_from,
-                        'to'       => $job->salary_to,
-                        'currency' => $job->currency_symbol,
-                        'rate'     => $job->rate,
-                        'gross'    => $job->is_gross,
-                    ],
-                    'isRemote' => (bool)$job->is_remote,
-                    'cities'   => $job->locations->pluck('city')->filter()->values()->toArray(),
-                    'tags'     => $job->tags
-                        ->map(fn(Tag $tag): array => [
-                            'name'  => $tag->name,
-                            'image' => $tag->logo->getFilename() ? (string)$tag->logo->url() : null,
-                        ])
-                        ->toArray(),
-                ])
-                ->toArray()
-            : [];
 
         return $this
             ->view('forum.topic', [
                 'threadStartUrl'          => route('forum.topic', [$forum->slug, $topic->id, $topic->slug]),
                 'posts'                   => $posts,
-                'job_offers'              => $jobOffers,
+                'forumJobOfferTiles'      => $jobOffersPresenter->forumJobOffers(),
                 'forum'                   => $forum,
                 'paginationCurrentPage'   => $paginate->currentPage(),
                 'paginationPerPage'       => $paginate->perPage(),

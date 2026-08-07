@@ -12,6 +12,9 @@
       <directory suffix="Test.php">./modules/campaigns/test/</directory>
       <directory suffix="Test.php">./tests/Integration/Modules/Campaigns/</directory>
     </testsuite>
+    <testsuite name="Projections">
+      <directory suffix="Test.php">./tests/Integration/Projections/</directory>
+    </testsuite>
   </testsuites>
   <php>
     <env name="APP_ENV" value="testing"/>

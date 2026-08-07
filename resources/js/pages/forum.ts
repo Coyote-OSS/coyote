@@ -1,5 +1,6 @@
 import * as Models from "../types/models";
 import {createVueApp, createVueAppNotifications, setAxiosErrorVueNotification} from "../vue";
+import {ForumJobOfferTile} from "../../../projections/ForumJobOffers/ViewModel/ForumJobOfferTile";
 
 import VueForum from './forum/homepage';
 import VueLog from './forum/log';
@@ -19,7 +20,7 @@ declare global {
     showStickyCheckbox: boolean;
     showDiscussModeSelect: boolean;
     reasons: string[];
-    jobOffers: string[];
+    forumJobOfferTiles: ForumJobOfferTile[];
     allForums: Models.Forum[];
     showCategoryName: boolean;
     groupStickyTopics: boolean;

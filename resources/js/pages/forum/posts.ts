@@ -30,7 +30,7 @@ export default {
       undefinedPost: {text: '', html: '', assets: []},
       reasons: window.reasons,
       popularTags: window.popularTags,
-      jobOffers: window.jobOffers,
+      forumJobOfferTiles: window.forumJobOfferTiles,
       postFormHidden: false,
       editorRevealed: false,
     };
