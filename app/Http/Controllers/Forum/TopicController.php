@@ -27,6 +27,7 @@ use Coyote\Services\Forum\TreeBuilder\JsonDecorator;
 use Coyote\Services\Forum\TreeBuilder\ListDecorator;
 use Coyote\Services\Parser\Extensions\Emoji;
 use Coyote\Services\UrlBuilder;
+use Coyote\Tag;
 use Coyote\Topic;
 use Coyote\User;
 use Illuminate\Contracts\Auth\Access\Gate;
@@ -184,10 +185,28 @@ class TopicController extends BaseController {
 
         $jobOffers = $request->has('preview')
             ? $this->job->listJobOffers(null, null)
+                ->load(['firm', 'tags', 'currency'])
                 ->shuffle()
                 ->map(fn(Job $job): array => [
-                    'title' => $job->title,
-                    'url'   => route('neon.jobOffer.show', [$job->slug, $job->id]),
+                    'title'   => $job->title,
+                    'url'     => route('neon.jobOffer.show', [$job->slug, $job->id]),
+                    'company' => [
+                        'name' => $job->firm->name,
+                        'logo' => $job->firm->logo->getFilename() ? (string)$job->firm->logo->url() : null,
+                    ],
+                    'salary'  => [
+                        'from'     => $job->salary_from,
+                        'to'       => $job->salary_to,
+                        'currency' => $job->currency_symbol,
+                        'rate'     => $job->rate,
+                        'gross'    => $job->is_gross,
+                    ],
+                    'tags'    => $job->tags
+                        ->map(fn(Tag $tag): array => [
+                            'name'  => $tag->name,
+                            'image' => $tag->logo->getFilename() ? (string)$tag->logo->url() : null,
+                        ])
+                        ->toArray(),
                 ])
                 ->toArray()
             : [];

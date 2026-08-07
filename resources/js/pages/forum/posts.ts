@@ -3,6 +3,7 @@ import {mapGetters, mapState} from "vuex";
 import VueForm from "../../components/forum/form.vue";
 import VuePoll from "../../components/forum/poll.vue";
 import VuePostWrapper from "../../components/forum/post-wrapper.vue";
+import VueIcon from "../../components/icon";
 import VuePagination from "../../components/pagination.vue";
 import {PostCommentSaved, PostSaved, PostVoted, Subscriber} from "../../libs/live";
 import store from "../../store/index";
@@ -19,6 +20,7 @@ export default {
     'vue-form': VueForm,
     'vue-poll': VuePoll,
     'vue-pagination': VuePagination,
+    'vue-icon': VueIcon,
   },
   store,
   data() {

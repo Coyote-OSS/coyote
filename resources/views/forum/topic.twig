@@ -171,8 +171,44 @@
         {% if loop.index % 10 == 2 and job_offers is not empty %}
           <div class="card card-post d-flex flex-row flex-nowrap gap-3 p-3" style="overflow: hidden;">
             {% for jobOffer in job_offers %}
-              <a href="{{ jobOffer.url }}" class="d-block flex-shrink-0 border rounded p-3" style="height: 100px; min-width: 200px;">
-                {{ jobOffer.title }}
+              <a href="{{ jobOffer.url }}" class="d-block text-decoration-none flex-shrink-0 border rounded p-3" style="min-height: 220px; min-width: 240px;">
+                <div class="d-flex align-items-center mb-2">
+                  {% if jobOffer.company.logo %}
+                    <img src="{{ jobOffer.company.logo }}" alt="{{ jobOffer.company.name }}" style="width: 32px; height: 32px; object-fit: contain;" class="me-2">
+                  {% else %}
+                    <div class="neon-placeholder d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                      {{ icon('jobOfferMissingLogo') }}
+                    </div>
+                  {% endif %}
+                  <span>{{ jobOffer.title }}</span>
+                </div>
+                <div class="mb-2">{{ jobOffer.company.name }}</div>
+                <div class="mb-2">
+                  {% if jobOffer.salary.from or jobOffer.salary.to %}
+                    {% if jobOffer.salary.from and jobOffer.salary.to %}
+                      {{ jobOffer.salary.from }} - {{ jobOffer.salary.to }}
+                    {% elseif jobOffer.salary.from %}
+                      od {{ jobOffer.salary.from }}
+                    {% else %}
+                      do {{ jobOffer.salary.to }}
+                    {% endif %}
+                    {{ jobOffer.salary.currency }}
+                    {{ jobOffer.salary.gross ? 'brutto' : 'netto' }}
+                    / {{ jobOffer.salary.rate }}
+                  {% else %}
+                    Wynagrodzenie nieujawnione
+                  {% endif %}
+                </div>
+                <div class="d-flex flex-wrap gap-1">
+                  {% for tag in jobOffer.tags %}
+                    <span class="d-inline-flex align-items-center border rounded px-1">
+                      {% if tag.image %}
+                        <img src="{{ tag.image }}" style="width: 16px; height: 16px;" class="me-1">
+                      {% endif %}
+                      {{ tag.name }}
+                    </span>
+                  {% endfor %}
+                </div>
               </a>
             {% endfor %}
           </div>
@@ -271,8 +307,32 @@
               @reply="reply"
           ></vue-post-wrapper>
           <div v-if="index % 10 === 1 && jobOffers.length > 0" class="card card-post d-flex flex-row flex-nowrap gap-3 p-3" style="overflow: hidden;">
-            <a v-for="jobOffer in jobOffers" :key="jobOffer.url" :href="jobOffer.url" class="d-block flex-shrink-0 border rounded p-3" style="height: 100px; min-width: 200px;">
-              ${ jobOffer.title }
+            <a v-for="jobOffer in jobOffers" :key="jobOffer.url" :href="jobOffer.url" class="d-block text-decoration-none flex-shrink-0 border rounded p-3" style="min-height: 220px; min-width: 240px;">
+              <div class="d-flex align-items-center mb-2">
+                <img v-if="jobOffer.company.logo" :src="jobOffer.company.logo" :alt="jobOffer.company.name" style="width: 32px; height: 32px; object-fit: contain;" class="me-2">
+                <div v-else class="neon-placeholder d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                  <vue-icon name="jobOfferMissingLogo"></vue-icon>
+                </div>
+                <span>${ jobOffer.title }</span>
+              </div>
+              <div class="mb-2">${ jobOffer.company.name }</div>
+              <div class="mb-2">
+                <template v-if="jobOffer.salary.from || jobOffer.salary.to">
+                  <template v-if="jobOffer.salary.from && jobOffer.salary.to">${ jobOffer.salary.from } - ${ jobOffer.salary.to }</template>
+                  <template v-else-if="jobOffer.salary.from">od ${ jobOffer.salary.from }</template>
+                  <template v-else>do ${ jobOffer.salary.to }</template>
+                  ${ jobOffer.salary.currency }
+                  ${ jobOffer.salary.gross ? 'brutto' : 'netto' }
+                  / ${ jobOffer.salary.rate }
+                </template>
+                <template v-else>Wynagrodzenie nieujawnione</template>
+              </div>
+              <div class="d-flex flex-wrap gap-1">
+                <span v-for="tag in jobOffer.tags" :key="tag.name" class="d-inline-flex align-items-center border rounded px-1">
+                  <img v-if="tag.image" :src="tag.image" style="width: 16px; height: 16px;" class="me-1">
+                  ${ tag.name }
+                </span>
+              </div>
             </a>
           </div>
         </template>

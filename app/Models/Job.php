@@ -33,6 +33,7 @@ use Illuminate\Notifications\RoutesNotifications;
  * @property bool $is_gross
  * @property string $employment
  * @property string $seniority
+ * @property string $currency_symbol
  * @property int $views
  * @property float $score
  * @property float $rank
