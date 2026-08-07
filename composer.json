@@ -69,7 +69,8 @@
       "Database\\Seeders\\": "database/seeders/",
       "Neon2\\": "neon2/app/src/",
       "Modules\\Campaigns\\": "modules/campaigns/src",
-      "Libs\\Arrays\\": "libs/arrays/src"
+      "Libs\\Arrays\\": "libs/arrays/src",
+      "Projections\\": "projections/"
     },
     "files": [
       "app/helpers.php",
