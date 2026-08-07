@@ -185,23 +185,25 @@ class TopicController extends BaseController {
 
         $jobOffers = $request->has('preview')
             ? $this->job->listJobOffers(null, null)
-                ->load(['firm', 'tags', 'currency'])
+                ->load(['firm', 'tags', 'currency', 'locations'])
                 ->shuffle()
                 ->map(fn(Job $job): array => [
-                    'title'   => $job->title,
-                    'url'     => route('neon.jobOffer.show', [$job->slug, $job->id]),
-                    'company' => [
+                    'title'    => $job->title,
+                    'url'      => route('neon.jobOffer.show', [$job->slug, $job->id]),
+                    'company'  => [
                         'name' => $job->firm->name,
                         'logo' => $job->firm->logo->getFilename() ? (string)$job->firm->logo->url() : null,
                     ],
-                    'salary'  => [
+                    'salary'   => [
                         'from'     => $job->salary_from,
                         'to'       => $job->salary_to,
                         'currency' => $job->currency_symbol,
                         'rate'     => $job->rate,
                         'gross'    => $job->is_gross,
                     ],
-                    'tags'    => $job->tags
+                    'isRemote' => (bool)$job->is_remote,
+                    'cities'   => $job->locations->pluck('city')->filter()->values()->toArray(),
+                    'tags'     => $job->tags
                         ->map(fn(Tag $tag): array => [
                             'name'  => $tag->name,
                             'image' => $tag->logo->getFilename() ? (string)$tag->logo->url() : null,

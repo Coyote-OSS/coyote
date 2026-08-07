@@ -171,10 +171,12 @@
         {% if loop.index % 10 == 2 and job_offers is not empty %}
           <div class="card card-post d-flex flex-row flex-nowrap gap-3 p-3" style="overflow: hidden;">
             {% for jobOffer in job_offers %}
-              <a href="{{ jobOffer.url }}" class="d-block text-decoration-none flex-shrink-0 border rounded p-3" style="min-height: 220px; min-width: 240px;">
+              <a href="{{ jobOffer.url }}" class="d-block text-decoration-none flex-shrink-0 border rounded p-3"
+                 style="min-height: 220px; min-width: 240px;">
                 <div class="d-flex align-items-center mb-2">
                   {% if jobOffer.company.logo %}
-                    <img src="{{ jobOffer.company.logo }}" alt="{{ jobOffer.company.name }}" style="width: 32px; height: 32px; object-fit: contain;" class="me-2">
+                    <img src="{{ jobOffer.company.logo }}" alt="{{ jobOffer.company.name }}"
+                         style="width: 32px; height: 32px; object-fit: contain;" class="me-2">
                   {% else %}
                     <div class="neon-placeholder d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
                       {{ icon('jobOfferMissingLogo') }}
@@ -199,6 +201,16 @@
                     Wynagrodzenie nieujawnione
                   {% endif %}
                 </div>
+                {% if jobOffer.cities is not empty or jobOffer.isRemote %}
+                  <div class="d-flex align-items-center flex-wrap gap-1 mb-2">
+                    {% if jobOffer.cities is not empty %}
+                      <span>{{ jobOffer.cities|join(', ') }}</span>
+                    {% endif %}
+                    {% if jobOffer.isRemote %}
+                      <span class="d-inline-flex align-items-center border rounded px-1">Remote</span>
+                    {% endif %}
+                  </div>
+                {% endif %}
                 <div class="d-flex flex-wrap gap-1">
                   {% for tag in jobOffer.tags %}
                     <span class="d-inline-flex align-items-center border rounded px-1">
@@ -306,11 +318,15 @@
               :post="post"
               @reply="reply"
           ></vue-post-wrapper>
-          <div v-if="index % 10 === 1 && jobOffers.length > 0" class="card card-post d-flex flex-row flex-nowrap gap-3 p-3" style="overflow: hidden;">
-            <a v-for="jobOffer in jobOffers" :key="jobOffer.url" :href="jobOffer.url" class="d-block text-decoration-none flex-shrink-0 border rounded p-3" style="min-height: 220px; min-width: 240px;">
+          <div v-if="index % 10 === 1 && jobOffers.length > 0" class="card card-post d-flex flex-row flex-nowrap gap-3 p-3"
+               style="overflow: hidden;">
+            <a v-for="jobOffer in jobOffers" :key="jobOffer.url" :href="jobOffer.url"
+               class="d-block text-decoration-none flex-shrink-0 border rounded p-3" style="min-height: 220px; min-width: 240px;">
               <div class="d-flex align-items-center mb-2">
-                <img v-if="jobOffer.company.logo" :src="jobOffer.company.logo" :alt="jobOffer.company.name" style="width: 32px; height: 32px; object-fit: contain;" class="me-2">
-                <div v-else class="neon-placeholder d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                <img v-if="jobOffer.company.logo" :src="jobOffer.company.logo" :alt="jobOffer.company.name"
+                     style="width: 32px; height: 32px; object-fit: contain;" class="me-2">
+                <div v-else class="neon-placeholder d-flex align-items-center justify-content-center me-2"
+                     style="width: 32px; height: 32px;">
                   <vue-icon name="jobOfferMissingLogo"></vue-icon>
                 </div>
                 <span>${ jobOffer.title }</span>
@@ -326,6 +342,10 @@
                   / ${ jobOffer.salary.rate }
                 </template>
                 <template v-else>Wynagrodzenie nieujawnione</template>
+              </div>
+              <div v-if="jobOffer.cities.length > 0 || jobOffer.isRemote" class="d-flex align-items-center flex-wrap gap-1 mb-2">
+                <span v-if="jobOffer.cities.length > 0">${ jobOffer.cities.join(', ') }</span>
+                <span v-if="jobOffer.isRemote" class="d-inline-flex align-items-center border rounded px-1">Remote</span>
               </div>
               <div class="d-flex flex-wrap gap-1">
                 <span v-for="tag in jobOffer.tags" :key="tag.name" class="d-inline-flex align-items-center border rounded px-1">
