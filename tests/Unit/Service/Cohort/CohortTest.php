@@ -1,5 +1,5 @@
 <?php
-namespace Service\Cohort;
+namespace Tests\Unit\Service\Cohort;
 
 use Coyote\Services\Adm\Cohort\CohortRetention;
 use Coyote\Services\Adm\Cohort\CohortService;
