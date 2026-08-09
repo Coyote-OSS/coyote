@@ -70,7 +70,7 @@
       "Neon2\\": "neon2/app/src/",
       "Modules\\Campaigns\\": "modules/campaigns/src",
       "Libs\\Arrays\\": "libs/arrays/src",
-      "Projections\\": "projections/"
+      "Web\\Projections\\": "web/projections/"
     },
     "files": [
       "app/helpers.php",

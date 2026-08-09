@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Projections\ForumJobOffers\ViewModel\ForumJobOfferTile;
 use Tests\Legacy\IntegrationNew\BaseFixture\Server;
+use Web\Projections\ForumJobOffers\ViewModel\ForumJobOfferTile;
 
 #[CoversClass(ForumJobOffersPresenter::class)]
 class ForumJobOffersPresenterTest extends TestCase {

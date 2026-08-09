@@ -1,5 +1,5 @@
 <?php
-namespace Projections\ForumJobOffers\ViewModel;
+namespace Web\Projections\ForumJobOffers\ViewModel;
 
 readonly class Tag {
     public function __construct(

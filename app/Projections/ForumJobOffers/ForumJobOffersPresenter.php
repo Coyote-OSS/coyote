@@ -4,8 +4,8 @@ namespace Coyote\Projections\ForumJobOffers;
 use Coyote;
 use Coyote\Job;
 use Coyote\Repositories\Eloquent\JobRepository;
-use Projections\ForumJobOffers\ViewModel;
-use Projections\ForumJobOffers\ViewModel\ForumJobOfferTile;
+use Web\Projections\ForumJobOffers\ViewModel;
+use Web\Projections\ForumJobOffers\ViewModel\ForumJobOfferTile;
 
 readonly class ForumJobOffersPresenter {
     public function __construct(private JobRepository $jobRepository) {}
