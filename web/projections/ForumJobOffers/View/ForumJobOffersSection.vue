@@ -1,0 +1,26 @@
+<template>
+  <section class="tile-backlight flex flex-col items-start gap-6 rounded-lg p-6">
+    <div class="flex w-full items-center justify-between">
+      <h2 class="text-base font-semibold text-gray-800">Oferty Pracy</h2>
+      <a href="#" class="flex items-center gap-1 text-xs font-medium text-green-500 no-underline">
+        Zobacz więcej
+        <Icon name="chevron-right" class="text-sm"/>
+      </a>
+    </div>
+    <div class="flex w-full flex-row gap-3.5 overflow-x-auto">
+      <VueForumJobOfferTile v-for="(tile, index) in tiles" :key="index" :tile="tile"/>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import type {ForumJobOfferTile} from '../ViewModel/ForumJobOfferTile';
+import VueForumJobOfferTile from './ForumJobOfferTile.vue';
+import Icon from '../../../libs/Icon/Icon.vue';
+
+interface Props {
+  tiles: ForumJobOfferTile[];
+}
+
+defineProps<Props>();
+</script>

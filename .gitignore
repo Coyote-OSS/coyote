@@ -13,6 +13,10 @@ vendor/
 # Node
 node_modules/
 
+# Yarn
+.yarnrc.yml
+.yarn/
+
 # Laravel
 .env
 bootstrap/cache/
@@ -29,3 +33,4 @@ storage/oauth-public.key
 
 # Claude
 .claude/
+.nwave/

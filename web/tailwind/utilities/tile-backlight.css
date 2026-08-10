@@ -1,0 +1,18 @@
+@utility tile-backlight {
+  border: 1px solid transparent;
+
+  background: linear-gradient(white, white) padding-box,
+  linear-gradient(135deg,
+      color-mix(in srgb, var(--palette-green-500) 25%, transparent),
+      color-mix(in srgb, var(--palette-green-750) 25%, transparent)) border-box;
+
+  @variant dark {
+    background: radial-gradient(
+        50% 100% at 50% 100%,
+        color-mix(in srgb, var(--palette-green-500) 25%, transparent) 0%,
+        transparent 100%
+    ) padding-box,
+    linear-gradient(var(--palette-gray-900), var(--palette-gray-900)) padding-box,
+    linear-gradient(135deg, var(--palette-green-500), var(--palette-green-750)) border-box;
+  }
+}

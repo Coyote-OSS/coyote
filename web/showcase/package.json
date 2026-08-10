@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vue": "^3.5.17"
+  }
+}

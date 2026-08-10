@@ -1,0 +1,7 @@
+@utility tile-shadow {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+
+  @variant dark {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+}

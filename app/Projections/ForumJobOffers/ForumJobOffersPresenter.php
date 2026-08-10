@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Projections\ForumJobOffers;
 
+use Carbon\Carbon;
 use Coyote;
 use Coyote\Job;
 use Coyote\Repositories\Eloquent\JobRepository;
@@ -40,8 +41,13 @@ readonly class ForumJobOffersPresenter {
             jobOfferTitle:$job->title,
             headerPills:$this->headerPills($job),
             salary:$this->formatSalary($job),
+            isNew:$this->isNew($job),
             technologyTags:$job->tags->map($this->formatTagEloquentModel(...))->values()->toArray(),
         );
+    }
+
+    private function isNew(Job $job): bool {
+        return carbon($job->boost_at)->diffInDays(Carbon::now()) <= 2;
     }
 
     private function formatTagEloquentModel(Coyote\Tag $tag): ViewModel\Tag {

@@ -1,0 +1,19 @@
+@utility bg-green-100 {
+  background-color: var(--palette-green-100);
+
+  @variant dark {
+    background-color: var(--palette-green-900);
+  }
+}
+
+@utility text-green-500 {
+  color: var(--palette-green-500);
+}
+
+@utility text-green-600 {
+  color: var(--palette-green-600);
+
+  @variant dark {
+    color: var(--palette-green-400);
+  }
+}

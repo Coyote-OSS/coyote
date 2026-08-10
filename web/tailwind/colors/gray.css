@@ -1,0 +1,55 @@
+@utility text-gray-400 {
+  color: var(--palette-gray-400);
+
+  @variant dark {
+    color: var(--palette-gray-600);
+  }
+}
+
+@utility text-gray-500 {
+  color: var(--palette-gray-600);
+
+  @variant dark {
+    color: var(--palette-gray-500);
+  }
+}
+
+@utility text-gray-600 {
+  color: var(--palette-gray-700);
+
+  @variant dark {
+    color: var(--palette-gray-400);
+  }
+}
+
+@utility text-gray-800 {
+  color: var(--palette-gray-850);
+
+  @variant dark {
+    color: white;
+  }
+}
+
+@utility bg-gray-25 {
+  background-color: var(--palette-gray-100);
+
+  @variant dark {
+    background-color: var(--palette-gray-950);
+  }
+}
+
+@utility bg-gray-50 {
+  background-color: var(--palette-gray-50);
+
+  @variant dark {
+    background-color: var(--palette-gray-900);
+  }
+}
+
+@utility bg-gray-100 {
+  background-color: white;
+
+  @variant dark {
+    background-color: var(--palette-gray-850);
+  }
+}

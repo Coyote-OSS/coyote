@@ -148,6 +148,20 @@ class ForumJobOffersPresenterTest extends TestCase {
     }
 
     #[Test]
+    public function isNew_whenBoostedWithinTwoDays(): void {
+        $job = $this->createPublishedJob(['boost_at' => now()->subDay()]);
+        $this->enablePreview();
+        $this->assertTrue($this->tileFor($job)->isNew);
+    }
+
+    #[Test]
+    public function isNotNew_whenBoostedMoreThanTwoDaysAgo(): void {
+        $job = $this->createPublishedJob(['boost_at' => now()->subDays(3)]);
+        $this->enablePreview();
+        $this->assertFalse($this->tileFor($job)->isNew);
+    }
+
+    #[Test]
     public function technologyTagLogoUrlIsNull_whenTagHasNoLogo(): void {
         $job = $this->createPublishedJob();
         $tag = Tag::query()->create(['name' => $this->uniqueTagName()]);

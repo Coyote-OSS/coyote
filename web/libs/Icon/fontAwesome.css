@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'ShowcaseIcons';
+  font-style: normal;
+  font-weight: 300;
+  src: url('fa-light-300.woff2') format('woff2');
+}
+
+.fa-light {
+  font-family: 'ShowcaseIcons';
+  font-weight: 300;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+}

@@ -10,6 +10,7 @@ COPY webpack.common.js webpack.dev.js webpack.prod.js /app/
 COPY resources /app/resources
 COPY public /app/public
 COPY neon2 /app/neon2
+COPY web /app/web
 
 ARG FRONTEND_SENTRY_DSN
 ARG VAPID_PUBLIC_KEY
@@ -26,6 +27,10 @@ RUN rm -rf node_modules
 
 WORKDIR /app/neon2/web
 RUN rm -rf node_modules
+
+WORKDIR /app/web/showcase/
+RUN yarn install
+RUN yarn vite build --mode production
 
 WORKDIR /app
 COPY composer.json composer.json

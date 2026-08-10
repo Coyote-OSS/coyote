@@ -1,0 +1,7 @@
+@utility border-tile-outline {
+  border-color: var(--palette-gray-100);
+
+  @variant dark {
+    border-color: var(--palette-gray-850);
+  }
+}

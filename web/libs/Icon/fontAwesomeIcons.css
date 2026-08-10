@@ -1,0 +1,15 @@
+.fa-star:before {
+  content: "\f005";
+}
+
+.fa-location-dot:before {
+  content: "\f3c5";
+}
+
+.fa-building:before {
+  content: "\f1ad";
+}
+
+.fa-chevron-right:before {
+  content: "\f054";
+}

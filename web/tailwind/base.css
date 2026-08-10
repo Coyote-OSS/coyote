@@ -1,0 +1,30 @@
+@theme {
+  --font-sans: "Inter Tight", sans-serif;
+  --color-*: initial;
+
+  --palette-gray-50: #f5f7fa;
+  --palette-gray-75: #f0f2f5;
+  --palette-gray-100: #eaecf1;
+  --palette-gray-150: #e4e6e7;
+  --palette-gray-200: #dde4ea;
+  --palette-gray-300: #acb0b4;
+  --palette-gray-400: #91969c;
+  --palette-gray-500: #767d84;
+  --palette-gray-600: #5c6066;
+  --palette-gray-700: #44474b;
+  --palette-gray-800: #2b2e30;
+  --palette-gray-850: #181a1b;
+  --palette-gray-900: #121314;
+  --palette-gray-950: #0a0d10;
+
+  --palette-green-100: #e7f7e6;
+  --palette-green-200: #bdd5c3;
+  --palette-green-300: #a8daaa;
+  --palette-green-400: #54c173;
+  --palette-green-500: #00a538;
+  --palette-green-600: #016a24;
+  --palette-green-700: #014718;
+  --palette-green-750: #003f16;
+  --palette-green-800: #012f0d;
+  --palette-green-900: #001407;
+}

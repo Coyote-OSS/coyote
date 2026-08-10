@@ -1,0 +1,15 @@
+@utility bg-blue-100 {
+  background-color: #dee8fa;
+
+  @variant dark {
+    background-color: #152233;
+  }
+}
+
+@utility text-blue-600 {
+  color: #2358cc;
+
+  @variant dark {
+    color: #3a6bd6;
+  }
+}
