@@ -1,12 +1,16 @@
+import {defineCustomElement} from "vue";
+import fontAwesomeStyles from '../../../web/libs/Icon/fontAwesome.css?inline';
+import fontAwesomeIconsStyles from '../../../web/libs/Icon/fontAwesomeIcons.css?inline';
+import {ForumJobOfferTile} from "../../../web/projections/ForumJobOffers/ViewModel/ForumJobOfferTile";
 import * as Models from "../types/models";
 import {createVueApp, createVueAppNotifications, setAxiosErrorVueNotification} from "../vue";
-import {ForumJobOfferTile} from "../../../projections/ForumJobOffers/ViewModel/ForumJobOfferTile";
-
 import VueForum from './forum/homepage';
 import VueLog from './forum/log';
 import VuePosts from './forum/posts';
 import VueSidebar from './forum/sidebar';
 import VueTags from './forum/tags';
+import tailwindStyles from "./vue-shadow-root.css?inline";
+import VueShadowRoot from "./vue-shadow-root.vue";
 
 declare global {
   interface Window {
@@ -61,3 +65,23 @@ document.getElementById('btn-toggle-sidebar')
     document.getElementById('sidebar')!.classList.toggle('d-block');
     return false;
   });
+
+if (!document.head.querySelector('style[data-shadow-root-fonts]')) {
+  const fontFaceStyle = document.createElement('style');
+  fontFaceStyle.setAttribute('data-shadow-root-fonts', '');
+  fontFaceStyle.textContent = fontAwesomeStyles.toString();
+  document.head.appendChild(fontFaceStyle);
+}
+
+customElements.define('vue-shadow-root', defineCustomElement(VueShadowRoot, {
+  styles: [
+    tailwindStyles.toString(),
+    fontAwesomeStyles.toString(),
+    fontAwesomeIconsStyles.toString(),
+  ],
+}));
+
+const shadowRootEl = document.querySelector('vue-shadow-root') as any;
+if (shadowRootEl) {
+  shadowRootEl.tiles = window.forumJobOfferTiles;
+}

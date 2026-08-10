@@ -46,6 +46,7 @@ module.exports = {
       },
       {
         test: /\.(sass|scss|css)$/,
+        resourceQuery: {not: [/inline/]},
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -67,6 +68,32 @@ module.exports = {
           },
           'sass-loader',
         ],
+      },
+      {
+        // imported as `import css from '*.css?inline'` to get compiled CSS text
+        // as a JS string, e.g. for injecting into a Vue defineCustomElement shadow root
+        test: /\.css$/,
+        resourceQuery: /inline/,
+        use: [
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: {
+                  "@tailwindcss/postcss": {},
+                },
+              },
+            },
+          },
+        ],
+      },
+      {
+        test: /\.woff2?$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/build/[name].[hash][ext]',
+        },
       },
       {
         test: /\.js$/,

@@ -78,7 +78,7 @@ readonly class ForumJobOffersPresenter {
         return "$range $job->currency_symbol $tax / $rate";
     }
 
-    private function canAccessForumJobOffers(): bool {
+    public function canAccessForumJobOffers(): bool {
         return request()->has('preview');
     }
 

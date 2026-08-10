@@ -42,6 +42,9 @@
   {% include "forum.partials.top" %}
 
   <main class="mainbar pt-0">
+    {% if forumJobOffersPreview %}
+      <vue-shadow-root></vue-shadow-root>
+    {% endif %}
     <div id="js-skeleton">
       <div class="mb-3">
         {% if paginationManyPages %}

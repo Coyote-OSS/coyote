@@ -4,3 +4,6 @@ manifest.json
 # Images
 logo.dark.*
 logo.light.*
+
+# Webpack+Vite mismatch
+fonts/build/

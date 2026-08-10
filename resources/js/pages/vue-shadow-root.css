@@ -1,0 +1,69 @@
+@import "../../../web/tailwind/tailwind.css";
+
+@source "../libs/Icon";
+
+/*
+ * Tailwind normally relies on `@property`'s `initial-value` to default these
+ * custom properties, and only ships a plain-selector fallback for browsers
+ * with known `@property` bugs (old Safari/Firefox) via a `@supports` check.
+ * That check assumes Chrome/Firefox don't need the fallback — true in the
+ * light DOM, but `@property` silently doesn't apply inside a shadow root in
+ * either engine. So we set the same defaults unconditionally here, in the
+ * same low-priority `properties` layer, so utilities can still override them.
+ */
+
+@layer properties {
+  *, ::before, ::after, ::backdrop {
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-translate-z: 0;
+    --tw-rotate-x: initial;
+    --tw-rotate-y: initial;
+    --tw-rotate-z: initial;
+    --tw-skew-x: initial;
+    --tw-skew-y: initial;
+    --tw-space-y-reverse: 0;
+    --tw-space-x-reverse: 0;
+    --tw-border-style: solid;
+    --tw-gradient-position: initial;
+    --tw-gradient-from: #0000;
+    --tw-gradient-via: #0000;
+    --tw-gradient-to: #0000;
+    --tw-gradient-stops: initial;
+    --tw-gradient-via-stops: initial;
+    --tw-gradient-from-position: 0%;
+    --tw-gradient-via-position: 50%;
+    --tw-gradient-to-position: 100%;
+    --tw-leading: initial;
+    --tw-font-weight: initial;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-color: initial;
+    --tw-shadow-alpha: 100%;
+    --tw-inset-shadow: 0 0 #0000;
+    --tw-inset-shadow-color: initial;
+    --tw-inset-shadow-alpha: 100%;
+    --tw-ring-color: initial;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-inset-ring-color: initial;
+    --tw-inset-ring-shadow: 0 0 #0000;
+    --tw-ring-inset: initial;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-outline-style: solid;
+    --tw-blur: initial;
+    --tw-brightness: initial;
+    --tw-contrast: initial;
+    --tw-grayscale: initial;
+    --tw-hue-rotate: initial;
+    --tw-invert: initial;
+    --tw-opacity: initial;
+    --tw-saturate: initial;
+    --tw-sepia: initial;
+    --tw-drop-shadow: initial;
+    --tw-drop-shadow-color: initial;
+    --tw-drop-shadow-alpha: 100%;
+    --tw-drop-shadow-size: initial;
+    --tw-duration: initial;
+  }
+}
