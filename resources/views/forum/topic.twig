@@ -42,9 +42,6 @@
   {% include "forum.partials.top" %}
 
   <main class="mainbar pt-0">
-    {% if forumJobOffersPreview %}
-      <vue-shadow-root></vue-shadow-root>
-    {% endif %}
     <div id="js-skeleton">
       <div class="mb-3">
         {% if paginationManyPages %}
@@ -264,7 +261,9 @@
               :post="post"
               @reply="reply"
           ></vue-post-wrapper>
-          <vue-forum-job-offers-section v-if="index % 10 === 1" :tiles="forumJobOfferTiles"></vue-forum-job-offers-section>
+          {% if forumJobOffersPreview %}
+            <vue-shadow-root v-if="index % 10 === 1"></vue-shadow-root>
+          {% endif %}
         </template>
       </template>
 

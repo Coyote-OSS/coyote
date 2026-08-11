@@ -21,8 +21,18 @@ export function createVueApp(name: string, selector: string, component: object):
   return app;
 }
 
-export function createVueAppNotifications(name: string, selector: string, component: object): void {
+type CustomElementPredicate = (tag: string) => boolean;
+
+export function createVueAppNotifications(
+  name: string,
+  selector: string,
+  component: object,
+  isCustomElement?: CustomElementPredicate,
+): void {
   const app = createApp({...component, name});
+  if (isCustomElement) {
+    app.config.compilerOptions.isCustomElement = isCustomElement;
+  }
   install(app);
   app.use(store);
   app.provide('icons', icons);

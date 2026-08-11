@@ -1,7 +1,6 @@
 import {mapGetters, mapState} from "vuex";
 
 import VueForm from "../../components/forum/form.vue";
-import VueForumJobOffersSection from "../../components/forum/forum-job-offers-section.vue";
 import VuePoll from "../../components/forum/poll.vue";
 import VuePostWrapper from "../../components/forum/post-wrapper.vue";
 import VueIcon from "../../components/icon";
@@ -22,7 +21,6 @@ export default {
     'vue-poll': VuePoll,
     'vue-pagination': VuePagination,
     'vue-icon': VueIcon,
-    'vue-forum-job-offers-section': VueForumJobOffersSection,
   },
   store,
   data() {

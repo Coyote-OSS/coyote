@@ -38,7 +38,7 @@ declare global {
 setAxiosErrorVueNotification();
 
 exists('#js-forum') && createVueAppNotifications('Forum', '#js-forum', VueForum);
-exists('#js-post') && createVueAppNotifications('Posts', '#js-post', VuePosts);
+exists('#js-post') && createVueAppNotifications('Posts', '#js-post', VuePosts, tag => tag === 'vue-shadow-root');
 exists('#js-log') && createVueApp('Log', '#js-log', VueLog);
 createVueApp('Sidebar', '#js-sidebar', VueSidebar);
 createVueApp('Tags', '#js-tags', VueTags);
@@ -80,8 +80,3 @@ customElements.define('vue-shadow-root', defineCustomElement(VueShadowRoot, {
     fontAwesomeIconsStyles.toString(),
   ],
 }));
-
-const shadowRootEl = document.querySelector('vue-shadow-root') as any;
-if (shadowRootEl) {
-  shadowRootEl.tiles = window.forumJobOfferTiles;
-}
