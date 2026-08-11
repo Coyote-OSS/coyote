@@ -21,8 +21,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class Kernel extends Foundation\Http\Kernel
-{
+class Kernel extends Foundation\Http\Kernel {
     /** @var array */
     protected $middleware = [
         Middleware\TrustProxies::class,
@@ -35,26 +34,23 @@ class Kernel extends Foundation\Http\Kernel
 
     /** @var array */
     protected $middlewareGroups = [
-        'web'  => [
+        'web' => [
             Middleware\EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartSession::class,
             Middleware\SetupGuestCookie::class,
-            Middleware\TrackCloudflareGeo::class,
             ShareErrorsFromSession::class,
             Middleware\PreventRequestForgery::class,
             SubstituteBindings::class,
             Middleware\DefaultBindings::class,
             Middleware\FirewallBlacklist::class,
-            Middleware\SurveilRoutes::class,
             Middleware\RedirectToCanonicalUrl::class,
         ],
-        'api'  => [
+        'api' => [
             'throttle:60,1',
             SubstituteBindings::class,
             Middleware\DefaultBindings::class,
             ForceRootUrl::class,
-            Middleware\SurveilRoutes::class,
         ],
     ];
 
