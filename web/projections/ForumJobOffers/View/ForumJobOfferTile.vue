@@ -1,7 +1,7 @@
 <template>
   <a :href="tile.jobOfferHref" :class="[
     'border border-tile-outline bg-gray-100 text-gray-800',
-    'flex flex-col no-underline tile-shadow transition hover:shadow-md',
+    'flex flex-col no-underline tile-shadow transition-shadow hover:shadow-md',
     'w-86 shrink-0 gap-2 rounded-2xl p-2',
   ]">
     <div class="flex items-center gap-2">

@@ -74,6 +74,8 @@ export class CoyoteNavigationService implements NavigationService {
     window.document.body.classList.toggle('theme-light', !dark);
     window.document.querySelector('body > header')?.classList?.toggle('dark', dark);
     window.document.querySelector('body > footer')?.classList?.toggle('dark', dark);
+    Array.from(document.querySelectorAll('vue-shadow-root'))
+      .forEach(element => element.dark = dark);
   }
 
   viewNotifications(): void {
