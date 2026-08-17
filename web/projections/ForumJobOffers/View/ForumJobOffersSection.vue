@@ -7,7 +7,7 @@
         <Icon name="chevron-right" class="text-sm"/>
       </a>
     </div>
-    <div class="flex w-full flex-row gap-3.5 overflow-x-auto">
+    <div class="-my-5 flex w-full flex-row gap-3.5 overflow-x-auto py-5">
       <VueForumJobOfferTile v-for="(tile, index) in tiles" :key="index" :tile="tile"/>
     </div>
   </section>
