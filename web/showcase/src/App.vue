@@ -54,7 +54,7 @@ const tiles: ForumJobOfferTile[] = [
     jobOfferHref: '#',
     jobOfferTitle: 'Senior PHP Developer',
     headerPills: ['Remote', 'B2B'],
-    salary: '18 000 - 24 000 PLN',
+    salaryFormat: '18 000 - 24 000 PLN',
     salaryDisclosed: true,
     isNew: false,
     technologyTags: [
@@ -69,7 +69,7 @@ const tiles: ForumJobOfferTile[] = [
     jobOfferHref: '#',
     jobOfferTitle: 'PHP Dev',
     headerPills: [],
-    salary: 'Nie podano $$$',
+    salaryFormat: 'Nie podano $$$',
     salaryDisclosed: false,
     isNew: false,
     technologyTags: [],
@@ -81,7 +81,7 @@ const tiles: ForumJobOfferTile[] = [
     jobOfferHref: '#',
     jobOfferTitle: 'Senior Staff Principal Full-Stack Software Engineering Architect Specializing in Distributed Systems, Cloud Infrastructure and Platform Reliability',
     headerPills: ['Warszawa, +1', 'Hybrid'],
-    salary: '25 000 - 35 000 PLN',
+    salaryFormat: '25 000 - 35 000 PLN',
     salaryDisclosed: true,
     isNew: true,
     technologyTags: [

@@ -6,7 +6,7 @@ export interface ForumJobOfferTile {
   jobOfferHref: string;
   jobOfferTitle: string;
   headerPills: string[];
-  salary: string;
+  salaryFormat: string;
   salaryDisclosed: boolean;
   isNew: boolean;
   technologyTags: Tag[];

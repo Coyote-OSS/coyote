@@ -12,7 +12,7 @@ readonly class ForumJobOfferTile {
         public string  $jobOfferHref,
         public string  $jobOfferTitle,
         public array   $headerPills,
-        public string  $salary,
+        public string  $salaryFormat,
         public bool    $salaryDisclosed,
         public bool    $isNew,
         public array   $technologyTags,

@@ -43,7 +43,7 @@
           tile.salaryDisclosed ? 'bg-green-100 text-salary' : 'bg-gray-25 text-gray-500',
           'shrink-0 rounded-lg px-1.5 py-1 text-xs font-medium',
         ]">
-          {{tile.salary}}
+          {{tile.salaryFormat}}
         </span>
       </div>
       <template v-if="tile.technologyTags.length > 0">

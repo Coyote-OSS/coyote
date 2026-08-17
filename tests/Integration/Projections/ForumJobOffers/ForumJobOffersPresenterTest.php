@@ -51,7 +51,7 @@ class ForumJobOffersPresenterTest extends TestCase {
         $this->assertSame(route('neon.jobOffer.show', [$job->slug, $job->id]), $tile->jobOfferHref);
         $this->assertSame($job->title, $tile->jobOfferTitle);
         $this->assertSame(['Warszawa'], $tile->headerPills);
-        $this->assertSame('12000 - 18000 zł brutto / miesięcznie', $tile->salary);
+        $this->assertSame('12000 - 18000 zł brutto / miesięcznie', $tile->salaryFormat);
         $this->assertCount(1, $tile->technologyTags);
         $this->assertSame($tagName, $tile->technologyTags[0]->name);
         $this->assertStringContainsString('tag-logo.jpg', $tile->technologyTags[0]->logoUrl);
@@ -82,7 +82,7 @@ class ForumJobOffersPresenterTest extends TestCase {
         $job = $this->createPublishedJob(['salary_from' => null, 'salary_to' => null]);
         $this->enablePreview();
 
-        $this->assertSame('Nie podano $$$', $this->tileFor($job)->salary);
+        $this->assertSame('Nie podano $$$', $this->tileFor($job)->salaryFormat);
     }
 
     #[Test]
@@ -96,7 +96,7 @@ class ForumJobOffersPresenterTest extends TestCase {
         ]);
         $this->enablePreview();
 
-        $this->assertSame('od 10000 zł netto / miesięcznie', $this->tileFor($job)->salary);
+        $this->assertSame('od 10000 zł netto / miesięcznie', $this->tileFor($job)->salaryFormat);
     }
 
     #[Test]
@@ -110,7 +110,7 @@ class ForumJobOffersPresenterTest extends TestCase {
         ]);
         $this->enablePreview();
 
-        $this->assertSame('do 9000 zł netto / godzinowo', $this->tileFor($job)->salary);
+        $this->assertSame('do 9000 zł netto / godzinowo', $this->tileFor($job)->salaryFormat);
     }
 
     #[Test]

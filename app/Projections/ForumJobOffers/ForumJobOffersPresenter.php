@@ -40,7 +40,7 @@ readonly class ForumJobOffersPresenter {
             jobOfferHref:route('neon.jobOffer.show', [$job->slug, $job->id]),
             jobOfferTitle:$job->title,
             headerPills:$this->headerPills($job),
-            salary:$this->formatSalary($job),
+            salaryFormat:$this->formatSalary($job),
             salaryDisclosed:$job->salary_from || $job->salary_to,
             isNew:$this->isNew($job),
             technologyTags:$job->tags->map($this->formatTagEloquentModel(...))->values()->toArray(),
