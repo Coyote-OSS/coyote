@@ -41,6 +41,7 @@ readonly class ForumJobOffersPresenter {
             jobOfferTitle:$job->title,
             headerPills:$this->headerPills($job),
             salary:$this->formatSalary($job),
+            salaryDisclosed:$job->salary_from || $job->salary_to,
             isNew:$this->isNew($job),
             technologyTags:$job->tags->map($this->formatTagEloquentModel(...))->values()->toArray(),
         );
@@ -70,7 +71,7 @@ readonly class ForumJobOffersPresenter {
 
     private function formatSalary(Job $job): string {
         if (!$job->salary_from && !$job->salary_to) {
-            return 'Wynagrodzenie nieujawnione';
+            return 'Nie podano $$$';
         }
         $range = $this->formatSalaryRange($job);
         $tax = $this->formatSalaryTax($job);

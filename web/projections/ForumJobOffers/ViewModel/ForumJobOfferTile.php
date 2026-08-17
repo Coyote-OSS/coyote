@@ -13,6 +13,7 @@ readonly class ForumJobOfferTile {
         public string  $jobOfferTitle,
         public array   $headerPills,
         public string  $salary,
+        public bool    $salaryDisclosed,
         public bool    $isNew,
         public array   $technologyTags,
     ) {}

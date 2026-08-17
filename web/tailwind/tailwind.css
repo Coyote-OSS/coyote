@@ -4,6 +4,7 @@
 @import "./colors/gray.css";
 @import "./colors/green.css";
 @import "./components/separator.css";
+@import "./utilities/salary.css";
 @import "./utilities/tag.css";
 @import "./utilities/tile-backlight.css";
 @import "./utilities/tile-outline.css";

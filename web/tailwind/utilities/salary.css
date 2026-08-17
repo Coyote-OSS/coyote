@@ -1,0 +1,7 @@
+@utility text-salary {
+  color: var(--palette-green-700);
+
+  @variant dark {
+    color: var(--palette-green-500);
+  }
+}

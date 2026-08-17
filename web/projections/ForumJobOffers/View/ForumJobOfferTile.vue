@@ -39,7 +39,10 @@
       <hr class="separator"/>
       <div class="flex items-center justify-between gap-2">
         <span class="truncate text-sm text-gray-500" v-text="tile.companyName"/>
-        <span class="bg-green-100 text-green-600 shrink-0 rounded-lg px-1.5 py-1 text-xs font-medium">
+        <span :class="[
+          tile.salaryDisclosed ? 'bg-green-100 text-salary' : 'bg-gray-25 text-gray-500',
+          'shrink-0 rounded-lg px-1.5 py-1 text-xs font-medium',
+        ]">
           {{tile.salary}}
         </span>
       </div>

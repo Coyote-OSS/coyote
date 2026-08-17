@@ -82,7 +82,7 @@ class ForumJobOffersPresenterTest extends TestCase {
         $job = $this->createPublishedJob(['salary_from' => null, 'salary_to' => null]);
         $this->enablePreview();
 
-        $this->assertSame('Wynagrodzenie nieujawnione', $this->tileFor($job)->salary);
+        $this->assertSame('Nie podano $$$', $this->tileFor($job)->salary);
     }
 
     #[Test]
