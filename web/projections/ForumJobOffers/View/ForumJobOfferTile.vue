@@ -47,14 +47,14 @@
         <hr class="separator"/>
         <div class="flex flex-wrap gap-1">
           <span v-for="tag in visibleTags" :key="tag.name" :class="[
-          'bg-gray-25 text-gray-500',
+          'bg-tag text-gray-500',
           'inline-flex items-center gap-1',
           'rounded px-1.5 py-0.5 text-xs',
         ]">
             <img v-if="tag.logoUrl" :src="tag.logoUrl" :alt="tag.name" class="h-3.5 w-3.5"/>
             {{tag.name}}
           </span>
-          <span v-if="hiddenTagCount > 0" class="bg-gray-25 text-gray-500 rounded px-1.5 py-0.5 text-xs">
+          <span v-if="hiddenTagCount > 0" class="bg-tag text-gray-500 rounded px-1.5 py-0.5 text-xs">
             +{{hiddenTagCount}}
           </span>
         </div>

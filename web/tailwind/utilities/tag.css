@@ -1,0 +1,7 @@
+@utility bg-tag {
+  background-color: var(--palette-gray-200);
+
+  @variant dark {
+    background-color: var(--palette-gray-950);
+  }
+}
