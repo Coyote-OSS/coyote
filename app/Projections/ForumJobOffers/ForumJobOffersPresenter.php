@@ -28,7 +28,6 @@ readonly class ForumJobOffersPresenter {
         return $this->jobRepository
             ->listJobOffers(null, null)
             ->load(['firm', 'tags', 'currency', 'locations'])
-            ->shuffle()
             ->map($this->formatJobEloquentModel(...))
             ->toArray();
     }

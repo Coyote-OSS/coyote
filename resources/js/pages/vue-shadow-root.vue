@@ -4,9 +4,10 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
+import {rotateJobOffers} from '../../../web/projections/ForumJobOffers/rotateJobOffers';
 import ForumJobOffersSection from '../../../web/projections/ForumJobOffers/View/ForumJobOffersSection.vue';
 
-const tiles = window.forumJobOfferTiles;
+const tiles = rotateJobOffers(window.forumJobOfferTiles, 3, new Date());
 
 interface Props {
   dark: boolean|'true'|'false'; // CustomElements serialize properties to string
