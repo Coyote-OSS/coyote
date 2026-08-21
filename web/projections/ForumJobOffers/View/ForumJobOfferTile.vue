@@ -18,7 +18,7 @@
           Nowe
         </span>
         <span class="flex h-[34px] w-[34px] items-center justify-center rounded">
-          <Icon name="star" class="text-gray-400 text-base"/>
+          <Icon name="favourite" class="text-gray-400 text-base"/>
         </span>
       </span>
     </div>
@@ -32,7 +32,7 @@
           'flex items-center justify-center',
           'h-9 w-9 shrink-0 rounded-lg',
         ]">
-          <Icon name="building"/>
+          <Icon name="company"/>
         </div>
         <p class="line-clamp-2 text-sm font-normal text-gray-600" v-text="tile.jobOfferTitle"/>
       </div>

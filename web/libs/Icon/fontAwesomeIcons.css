@@ -13,3 +13,11 @@
 .fa-chevron-right:before {
   content: "\f054";
 }
+
+.fa-display:before {
+  content: "\e163";
+}
+
+.fa-mobile-screen-button:before {
+  content: "\f3cd";
+}

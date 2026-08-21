@@ -5,9 +5,11 @@
 <script lang="ts">
 export const icons = {
   location: 'fa-light fa-location-dot',
-  star: 'fa-light fa-star',
-  building: 'fa-light fa-building',
+  favourite: 'fa-light fa-star',
+  company: 'fa-light fa-building',
   'chevron-right': 'fa-light fa-chevron-right',
+  viewportDesktop: 'fa-light fa-display',
+  viewportMobile: 'fa-light fa-mobile-screen-button',
 };
 
 export type IconName = keyof typeof icons;

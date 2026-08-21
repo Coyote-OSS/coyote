@@ -1,5 +1,5 @@
 <template>
-  <section class="tile-backlight flex flex-col items-start gap-6 rounded-lg p-6">
+  <section class="tile-backlight flex flex-col items-start gap-6 rounded-lg p-4 sm:p-6">
     <div class="flex w-full items-center justify-between">
       <h2 class="text-base font-semibold text-gray-800">Oferty Pracy</h2>
       <a href="#" class="flex items-center gap-1 text-xs font-medium text-green-500 no-underline">
@@ -8,15 +8,19 @@
       </a>
     </div>
     <div class="-my-5 flex w-full flex-row gap-3.5 overflow-x-auto py-5">
-      <VueForumJobOfferTile v-for="(tile, index) in tiles" :key="index" :tile="tile"/>
+      <VueForumJobOfferTile
+        v-for="(tile, index) in tiles"
+        :key="index"
+        :tile="tile"
+        :class="{'hidden sm:flex': index > 0}"/>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import Icon from '../../../libs/Icon/Icon.vue';
 import type {ForumJobOfferTile} from '../ViewModel/ForumJobOfferTile';
 import VueForumJobOfferTile from './ForumJobOfferTile.vue';
-import Icon from '../../../libs/Icon/Icon.vue';
 
 interface Props {
   tiles: ForumJobOfferTile[];

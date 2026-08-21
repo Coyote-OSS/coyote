@@ -1,101 +1,40 @@
 <template>
-  <div class="grid grid-cols-2">
-    <main class="dark min-h-screen dark:bg-(--palette-gray-900) px-6 py-10">
-      <header>
-        <h1 class="text-2xl font-bold text-gray-800">Coyote UI Showcase</h1>
-        <p class="mt-1 text-sm text-gray-500">Dark mode</p>
-      </header>
-      <section class="mt-10">
-        <h2 class="text-lg font-semibold text-gray-800">ForumJobOfferTile</h2>
-        <div class="mt-4 flex flex-col gap-4">
-          <VueForumJobOfferTile v-for="(tile, index) in tiles" :key="index" :tile="tile"/>
-        </div>
-      </section>
-      <section class="mt-10">
-        <h2 class="text-lg font-semibold text-gray-800">ForumJobOffersSection</h2>
-        <div class="mt-4">
-          <VueForumJobOffersSection :tiles="tiles"/>
-        </div>
-      </section>
-    </main>
-    <main class="min-h-screen bg-(--palette-gray-75) px-6 py-10">
-      <header>
-        <h1 class="text-2xl font-bold text-gray-800">Coyote UI Showcase</h1>
-        <p class="mt-1 text-sm text-gray-500">Light mode</p>
-      </header>
-      <section class="mt-10">
-        <h2 class="text-lg font-semibold text-gray-800">ForumJobOfferTile</h2>
-        <div class="mt-4 flex flex-col gap-4">
-          <VueForumJobOfferTile v-for="(tile, index) in tiles" :key="index" :tile="tile"/>
-        </div>
-      </section>
-      <section class="mt-10">
-        <h2 class="text-lg font-semibold text-gray-800">ForumJobOffersSection</h2>
-        <div class="mt-4">
-          <VueForumJobOffersSection :tiles="tiles"/>
-        </div>
-      </section>
-    </main>
+  <ShowcaseGrid v-if="isEmbedded"/>
+  <div v-else class="flex flex-wrap items-start justify-center gap-10 bg-gray-50 px-6 py-10">
+    <div v-for="device in devices" :key="device.label" class="flex flex-col items-center gap-3">
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-500">
+        <Icon :name="device.icon" class="text-sm"/>
+        {{ device.label }}
+      </span>
+      <iframe
+        :src="frameSrc"
+        :width="device.width"
+        :height="device.height"
+        class="rounded-[2rem] border-8 border-(--palette-gray-800) bg-gray-100 shadow-lg"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type {ForumJobOfferTile} from '../../projections/ForumJobOffers/ViewModel/ForumJobOfferTile';
-import VueForumJobOfferTile from '../../projections/ForumJobOffers/View/ForumJobOfferTile.vue';
-import VueForumJobOffersSection from '../../projections/ForumJobOffers/View/ForumJobOffersSection.vue';
+import {computed} from 'vue';
+import Icon, {type IconName} from '../../libs/Icon/Icon.vue';
+import ShowcaseGrid from './ShowcaseGrid.vue';
 
-const logoPlaceholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' rx='8' fill='%2394a3b8'/%3E%3C/svg%3E";
+// Tailwind media queries evaluate against the real browser viewport, not a
+// resized container, so the only way to preview the `sm:` breakpoint without
+// resizing the actual window is to render the grid in an iframe with a fixed
+// width — the iframe gets its own independent viewport for CSS purposes.
+const isEmbedded = new URLSearchParams(window.location.search).get('embed') === '1';
 
-const tiles: ForumJobOfferTile[] = [
-  // standard: regular company name and logo, regular title, a salary, two tags (one with a logo, one without)
-  {
-    companyName: 'Acme Corp',
-    companyLogoUrl: logoPlaceholder,
-    jobOfferHref: '#',
-    jobOfferTitle: 'Senior PHP Developer',
-    headerPills: ['Remote', 'B2B'],
-    salaryFormat: '18 000 - 24 000 PLN',
-    salaryDisclosed: true,
-    isNew: false,
-    technologyTags: [
-      {name: 'PHP', logoUrl: logoPlaceholder},
-      {name: 'Symfony', logoUrl: null},
-    ],
-  },
-  // empty: every optional field is short or omitted, salary falls back to the same string the real presenter uses
-  {
-    companyName: 'Nova',
-    companyLogoUrl: null,
-    jobOfferHref: '#',
-    jobOfferTitle: 'PHP Dev',
-    headerPills: [],
-    salaryFormat: 'Nie podano $$$',
-    salaryDisclosed: false,
-    isNew: false,
-    technologyTags: [],
-  },
-  // full: very long company name and title, logo present, ten technology tags, the only one with the "Nowe" badge
-  {
-    companyName: 'International Multinational Technology & Consulting Solutions Group Corporation',
-    companyLogoUrl: logoPlaceholder,
-    jobOfferHref: '#',
-    jobOfferTitle: 'Senior Staff Principal Full-Stack Software Engineering Architect Specializing in Distributed Systems, Cloud Infrastructure and Platform Reliability',
-    headerPills: ['Warszawa, +1', 'Hybrid'],
-    salaryFormat: '25 000 - 35 000 PLN',
-    salaryDisclosed: true,
-    isNew: true,
-    technologyTags: [
-      {name: 'PHP', logoUrl: logoPlaceholder},
-      {name: 'Symfony', logoUrl: null},
-      {name: 'Laravel', logoUrl: logoPlaceholder},
-      {name: 'Vue', logoUrl: null},
-      {name: 'TypeScript', logoUrl: logoPlaceholder},
-      {name: 'Docker', logoUrl: null},
-      {name: 'Kubernetes', logoUrl: logoPlaceholder},
-      {name: 'AWS', logoUrl: null},
-      {name: 'PostgreSQL', logoUrl: logoPlaceholder},
-      {name: 'Redis', logoUrl: null},
-    ],
-  },
+const devices: {label: string; icon: IconName; width: number; height: number}[] = [
+  {label: 'Desktop', icon: 'viewportDesktop', width: 1024, height: 700},
+  {label: 'Mobile', icon: 'viewportMobile', width: 390, height: 844},
 ];
+
+const frameSrc = computed(() => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('embed', '1');
+  return url.toString();
+});
 </script>
