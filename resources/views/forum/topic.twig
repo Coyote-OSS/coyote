@@ -261,9 +261,7 @@
               :post="post"
               @reply="reply"
           ></vue-post-wrapper>
-          {% if forumJobOffersPreview %}
-            <vue-shadow-root v-if="index % 10 === 1" :dark="$store.state.theme.darkTheme"></vue-shadow-root>
-          {% endif %}
+          <vue-shadow-root v-if="index % 10 === 1" :dark="$store.state.theme.darkTheme"></vue-shadow-root>
         </template>
       </template>
 

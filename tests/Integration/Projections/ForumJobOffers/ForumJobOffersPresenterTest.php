@@ -6,7 +6,6 @@ use Coyote\Firm;
 use Coyote\Job;
 use Coyote\Projections\ForumJobOffers\ForumJobOffersPresenter;
 use Coyote\Tag;
-use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -18,14 +17,7 @@ class ForumJobOffersPresenterTest extends TestCase {
     use Server\Laravel\Application;
 
     #[Test]
-    public function hidesJobOffers_withoutPreviewQueryParameter(): void {
-        $this->disablePreview();
-        $this->createPublishedJob();
-        $this->assertSame([], $this->presenter()->forumJobOffers());
-    }
-
-    #[Test]
-    public function exposesForumJobOfferTile_withPreviewQueryParameter(): void {
+    public function exposesForumJobOfferTile(): void {
         $job = $this->createPublishedJob([
             'salary_from' => 12000,
             'salary_to'   => 18000,
@@ -42,7 +34,6 @@ class ForumJobOffersPresenterTest extends TestCase {
         $tag->setAttribute('logo', 'tag-logo.jpg');
         $tag->save();
         $job->tags()->sync([$tag->id]);
-        $this->enablePreview();
 
         $tile = $this->tileFor($job);
 
@@ -60,7 +51,6 @@ class ForumJobOffersPresenterTest extends TestCase {
     #[Test]
     public function excludesUnpublishedJobOffers(): void {
         $job = $this->createPublishedJob(['is_publish' => false]);
-        $this->enablePreview();
 
         $this->assertJobIsMissing($job);
     }
@@ -72,7 +62,6 @@ class ForumJobOffersPresenterTest extends TestCase {
         // so the expiry has to be forced after creation instead of through the factory.
         $job->deadline_at = now()->subDay();
         $job->save();
-        $this->enablePreview();
 
         $this->assertJobIsMissing($job);
     }
@@ -80,7 +69,6 @@ class ForumJobOffersPresenterTest extends TestCase {
     #[Test]
     public function formatsSalaryAsUndisclosed_whenNeitherFromNorToIsSet(): void {
         $job = $this->createPublishedJob(['salary_from' => null, 'salary_to' => null]);
-        $this->enablePreview();
 
         $this->assertSame('Nie podano $$$', $this->tileFor($job)->salaryFormat);
     }
@@ -94,7 +82,6 @@ class ForumJobOffersPresenterTest extends TestCase {
             'rate'        => Job::MONTHLY,
             'is_gross'    => false,
         ]);
-        $this->enablePreview();
 
         $this->assertSame('od 10000 zł netto / miesięcznie', $this->tileFor($job)->salaryFormat);
     }
@@ -108,7 +95,6 @@ class ForumJobOffersPresenterTest extends TestCase {
             'rate'        => Job::HOURLY,
             'is_gross'    => false,
         ]);
-        $this->enablePreview();
 
         $this->assertSame('do 9000 zł netto / godzinowo', $this->tileFor($job)->salaryFormat);
     }
@@ -116,7 +102,6 @@ class ForumJobOffersPresenterTest extends TestCase {
     #[Test]
     public function includesRemotePill_whenJobIsRemote(): void {
         $job = $this->createPublishedJob(['is_remote' => true]);
-        $this->enablePreview();
 
         $this->assertSame(['Remote'], $this->tileFor($job)->headerPills);
     }
@@ -124,7 +109,6 @@ class ForumJobOffersPresenterTest extends TestCase {
     #[Test]
     public function omitsHeaderPills_whenJobHasNoLocationsAndIsNotRemote(): void {
         $job = $this->createPublishedJob(['is_remote' => false]);
-        $this->enablePreview();
 
         $this->assertSame([], $this->tileFor($job)->headerPills);
     }
@@ -132,7 +116,6 @@ class ForumJobOffersPresenterTest extends TestCase {
     #[Test]
     public function companyLogoUrlIsNull_whenFirmHasNoLogo(): void {
         $job = $this->createPublishedJob();
-        $this->enablePreview();
 
         $this->assertNull($this->tileFor($job)->companyLogoUrl);
     }
@@ -142,7 +125,6 @@ class ForumJobOffersPresenterTest extends TestCase {
         $job = $this->createPublishedJob();
         $job->firm->setAttribute('logo', 'firm-logo.jpg');
         $job->firm->save();
-        $this->enablePreview();
 
         $this->assertStringContainsString('firm-logo.jpg', $this->tileFor($job)->companyLogoUrl);
     }
@@ -150,14 +132,12 @@ class ForumJobOffersPresenterTest extends TestCase {
     #[Test]
     public function isNew_whenBoostedWithinTwoDays(): void {
         $job = $this->createPublishedJob(['boost_at' => now()->subDay()]);
-        $this->enablePreview();
         $this->assertTrue($this->tileFor($job)->isNew);
     }
 
     #[Test]
     public function isNotNew_whenBoostedMoreThanTwoDaysAgo(): void {
         $job = $this->createPublishedJob(['boost_at' => now()->subDays(3)]);
-        $this->enablePreview();
         $this->assertFalse($this->tileFor($job)->isNew);
     }
 
@@ -166,7 +146,6 @@ class ForumJobOffersPresenterTest extends TestCase {
         $job = $this->createPublishedJob();
         $tag = Tag::query()->create(['name' => $this->uniqueTagName()]);
         $job->tags()->sync([$tag->id]);
-        $this->enablePreview();
 
         $this->assertNull($this->tileFor($job)->technologyTags[0]->logoUrl);
     }
@@ -213,17 +192,5 @@ class ForumJobOffersPresenterTest extends TestCase {
 
     private function presenter(): ForumJobOffersPresenter {
         return $this->laravel->app->make(ForumJobOffersPresenter::class);
-    }
-
-    private function disablePreview(): void {
-        $this->bindRequest([]);
-    }
-
-    private function enablePreview(): void {
-        $this->bindRequest(['preview' => 'true']);
-    }
-
-    private function bindRequest(array $query): void {
-        $this->laravel->app->instance('request', Request::create('/', 'GET', $query));
     }
 }

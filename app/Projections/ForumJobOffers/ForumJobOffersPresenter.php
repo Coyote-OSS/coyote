@@ -15,16 +15,6 @@ readonly class ForumJobOffersPresenter {
      * @return ForumJobOfferTile[]
      */
     public function forumJobOffers(): array {
-        if ($this->canAccessForumJobOffers()) {
-            return $this->forumJobOfferTiles();
-        }
-        return [];
-    }
-
-    /**
-     * @return ForumJobOfferTile[]
-     */
-    private function forumJobOfferTiles(): array {
         return $this->jobRepository
             ->listJobOffers(null, null)
             ->load(['firm', 'tags', 'currency', 'locations'])
@@ -76,10 +66,6 @@ readonly class ForumJobOffersPresenter {
         $tax = $this->formatSalaryTax($job);
         $rate = $this->formatSalaryRate($job);
         return "$range $job->currency_symbol $tax / $rate";
-    }
-
-    public function canAccessForumJobOffers(): bool {
-        return request()->has('preview');
     }
 
     private function formatSalaryRate(Job $job): string {

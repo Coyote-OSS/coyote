@@ -171,7 +171,6 @@ class TopicController extends BaseController {
                 'threadStartUrl'          => route('forum.topic', [$forum->slug, $topic->id, $topic->slug]),
                 'posts'                   => $posts,
                 'forumJobOfferTiles'      => $jobOffersPresenter->forumJobOffers(),
-                'forumJobOffersPreview'   => $jobOffersPresenter->canAccessForumJobOffers(),
                 'forumJobOffersHref'      => route('neon.jobOffer.list'),
                 'forum'                   => $forum,
                 'paginationCurrentPage'   => $paginate->currentPage(),
