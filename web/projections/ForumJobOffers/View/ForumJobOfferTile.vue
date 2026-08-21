@@ -2,7 +2,7 @@
   <a :href="tile.jobOfferHref" :class="[
     'border border-tile-outline bg-gray-100 text-gray-800',
     'flex flex-col no-underline tile-shadow transition-shadow hover:shadow-md',
-    'w-86 shrink-0 gap-2 rounded-2xl p-2',
+    'w-full gap-2 rounded-2xl p-2 sm:w-86 sm:shrink-0',
   ]">
     <div class="flex items-center gap-2">
       <span v-for="pill in tile.headerPills" :key="pill" :class="[
