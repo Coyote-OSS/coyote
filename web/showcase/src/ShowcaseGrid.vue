@@ -14,7 +14,7 @@
       <section>
         <h2 class="text-lg font-semibold text-gray-800">ForumJobOffersSection</h2>
         <div class="mt-4">
-          <VueForumJobOffersSection :tiles="tiles"/>
+          <VueForumJobOffersSection :tiles="tiles" job-board-href="#"/>
         </div>
       </section>
     </main>
@@ -32,7 +32,7 @@
       <section>
         <h2 class="text-lg font-semibold text-gray-800">ForumJobOffersSection</h2>
         <div class="mt-4">
-          <VueForumJobOffersSection :tiles="tiles"/>
+          <VueForumJobOffersSection :tiles="tiles" job-board-href="#"/>
         </div>
       </section>
     </main>

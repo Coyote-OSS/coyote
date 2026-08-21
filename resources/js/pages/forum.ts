@@ -25,6 +25,7 @@ declare global {
     showDiscussModeSelect: boolean;
     reasons: string[];
     forumJobOfferTiles: ForumJobOfferTile[];
+    forumJobOffersHref: string;
     allForums: Models.Forum[];
     showCategoryName: boolean;
     groupStickyTopics: boolean;

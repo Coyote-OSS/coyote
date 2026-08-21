@@ -1,5 +1,8 @@
 <template>
-  <ForumJobOffersSection :class="['mb-4.5', {dark: isDark}]" :tiles="tiles"/>
+  <ForumJobOffersSection
+    :class="['mb-4.5', {dark: isDark}]"
+    :tiles="tiles"
+    :job-board-href="jobBoardHref"/>
 </template>
 
 <script setup lang="ts">
@@ -8,6 +11,7 @@ import {rotateJobOffers} from '../../../web/projections/ForumJobOffers/rotateJob
 import ForumJobOffersSection from '../../../web/projections/ForumJobOffers/View/ForumJobOffersSection.vue';
 
 const tiles = rotateJobOffers(window.forumJobOfferTiles, 3, new Date());
+const jobBoardHref = window.forumJobOffersHref;
 
 interface Props {
   dark: boolean|'true'|'false'; // CustomElements serialize properties to string

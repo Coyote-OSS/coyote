@@ -172,6 +172,7 @@ class TopicController extends BaseController {
                 'posts'                   => $posts,
                 'forumJobOfferTiles'      => $jobOffersPresenter->forumJobOffers(),
                 'forumJobOffersPreview'   => $jobOffersPresenter->canAccessForumJobOffers(),
+                'forumJobOffersHref'      => route('neon.jobOffer.list'),
                 'forum'                   => $forum,
                 'paginationCurrentPage'   => $paginate->currentPage(),
                 'paginationPerPage'       => $paginate->perPage(),

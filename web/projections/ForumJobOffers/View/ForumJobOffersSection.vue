@@ -2,7 +2,7 @@
   <section class="tile-backlight flex flex-col items-start gap-6 rounded-lg p-4 sm:p-6">
     <div class="flex w-full items-center justify-between">
       <h2 class="text-base font-semibold text-gray-800">Oferty Pracy</h2>
-      <a href="#" class="flex items-center gap-1 text-xs font-medium text-green-500 no-underline">
+      <a :href="jobBoardHref" class="flex items-center gap-1 text-xs font-medium text-green-500 no-underline">
         Zobacz więcej
         <Icon name="chevron-right" class="text-sm"/>
       </a>
@@ -24,6 +24,7 @@ import VueForumJobOfferTile from './ForumJobOfferTile.vue';
 
 interface Props {
   tiles: ForumJobOfferTile[];
+  jobBoardHref: string;
 }
 
 defineProps<Props>();
