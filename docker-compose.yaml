@@ -108,7 +108,7 @@ services:
       - coyote
 
   selenium:
-    image: selenium/standalone-chrome:104.0
+    image: selenium/standalone-chrome:151.0-20260808
     depends_on:
       - nginx
     volumes:
