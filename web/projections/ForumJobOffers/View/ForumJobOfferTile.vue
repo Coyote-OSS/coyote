@@ -22,11 +22,13 @@
         </span>
       </span>
     </div>
-
     <div class="bg-gray-50 flex flex-col gap-2 rounded-lg p-2">
       <div class="flex items-center gap-2">
-        <img v-if="tile.companyLogoUrl" :src="tile.companyLogoUrl" :alt="tile.companyName"
-             class="h-9 w-9 shrink-0 rounded-lg object-contain"/>
+        <img
+          v-if="tile.companyLogoUrl"
+          :src="tile.companyLogoUrl"
+          :alt="tile.companyName"
+          class="h-9 w-9 shrink-0 rounded-lg object-contain"/>
         <div v-else :class="[
           'bg-gray-25 text-gray-400',
           'flex items-center justify-center',
@@ -48,17 +50,14 @@
       </div>
       <template v-if="tile.technologyTags.length > 0">
         <hr class="separator"/>
-        <div class="flex flex-wrap gap-1">
-          <span v-for="tag in visibleTags" :key="tag.name" :class="[
+        <div class="flex gap-1 overflow-hidden">
+          <span v-for="tag in tile.technologyTags" :key="tag.name" :class="[
           'bg-tag text-gray-500',
-          'inline-flex items-center gap-1',
+          'inline-flex shrink-0 items-center gap-1',
           'rounded px-1.5 py-0.5 text-xs',
         ]">
             <img v-if="tag.logoUrl" :src="tag.logoUrl" :alt="tag.name" class="h-3.5 w-3.5"/>
             {{tag.name}}
-          </span>
-          <span v-if="hiddenTagCount > 0" class="bg-tag text-gray-500 rounded px-1.5 py-0.5 text-xs">
-            +{{hiddenTagCount}}
           </span>
         </div>
       </template>
@@ -67,18 +66,12 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue';
-import type {ForumJobOfferTile} from '../ViewModel/ForumJobOfferTile';
 import Icon from '../../../libs/Icon/Icon.vue';
+import type {ForumJobOfferTile} from '../ViewModel/ForumJobOfferTile';
 
 interface Props {
   tile: ForumJobOfferTile;
 }
 
-const props = defineProps<Props>();
-
-const MAX_VISIBLE_TAGS = 4;
-
-const visibleTags = computed(() => props.tile.technologyTags.slice(0, MAX_VISIBLE_TAGS));
-const hiddenTagCount = computed(() => Math.max(0, props.tile.technologyTags.length - MAX_VISIBLE_TAGS));
+defineProps<Props>();
 </script>
