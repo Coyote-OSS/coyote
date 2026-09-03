@@ -229,6 +229,7 @@ return [
         Swap\Laravel\SwapServiceProvider::class,
         Coyote\Providers\SeoServiceProvider::class,
         Coyote\Feature\JobBoard\JobBoardServiceProvider::class,
+        Coyote\Projections\ForumJobOffers\ForumJobOffersServiceProvider::class,
     ],
 
     /*

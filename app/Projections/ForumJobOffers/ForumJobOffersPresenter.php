@@ -9,17 +9,21 @@ use Web\Projections\ForumJobOffers\ViewModel;
 use Web\Projections\ForumJobOffers\ViewModel\ForumJobOfferTile;
 
 readonly class ForumJobOffersPresenter {
-    public function __construct(private JobRepository $jobRepository) {}
+    public function __construct(
+        private JobRepository $jobRepository,
+        private Shuffler      $shuffler,
+    ) {}
 
     /**
      * @return ForumJobOfferTile[]
      */
     public function forumJobOffers(): array {
-        return $this->jobRepository
+        $tiles = $this->jobRepository
             ->listJobOffers(null, null)
             ->load(['firm', 'tags', 'currency', 'locations'])
             ->map($this->formatJobEloquentModel(...))
             ->toArray();
+        return $this->shuffler->shuffle($tiles);
     }
 
     private function formatJobEloquentModel(Job $job): ForumJobOfferTile {
