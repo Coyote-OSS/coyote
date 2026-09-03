@@ -1,52 +1,8 @@
-<template>
-  <div class="grid grid-cols-1 sm:grid-cols-2">
-    <main class="dark min-h-screen space-y-10 dark:bg-(--palette-gray-900) px-6 py-10">
-      <header>
-        <h1 class="text-2xl font-bold text-gray-800">Coyote UI Showcase</h1>
-        <p class="mt-1 text-sm text-gray-500">Dark mode</p>
-      </header>
-      <section>
-        <h2 class="text-lg font-semibold text-gray-800">ForumJobOfferTile</h2>
-        <div class="mt-4 flex flex-col gap-4">
-          <VueForumJobOfferTile v-for="(tile, index) in tiles" :key="index" :tile="tile"/>
-        </div>
-      </section>
-      <section>
-        <h2 class="text-lg font-semibold text-gray-800">ForumJobOffersSection</h2>
-        <div class="mt-4">
-          <VueForumJobOffersSection :tiles="tiles" job-board-href="#"/>
-        </div>
-      </section>
-    </main>
-    <main class="min-h-screen space-y-10 bg-(--palette-gray-75) px-6 py-10">
-      <header>
-        <h1 class="text-2xl font-bold text-gray-800">Coyote UI Showcase</h1>
-        <p class="mt-1 text-sm text-gray-500">Light mode</p>
-      </header>
-      <section>
-        <h2 class="text-lg font-semibold text-gray-800">ForumJobOfferTile</h2>
-        <div class="mt-4 flex flex-col gap-4">
-          <VueForumJobOfferTile v-for="(tile, index) in tiles" :key="index" :tile="tile"/>
-        </div>
-      </section>
-      <section>
-        <h2 class="text-lg font-semibold text-gray-800">ForumJobOffersSection</h2>
-        <div class="mt-4">
-          <VueForumJobOffersSection :tiles="tiles" job-board-href="#"/>
-        </div>
-      </section>
-    </main>
-  </div>
-</template>
-
-<script setup lang="ts">
 import type {ForumJobOfferTile} from '../../projections/ForumJobOffers/ViewModel/ForumJobOfferTile';
-import VueForumJobOfferTile from '../../projections/ForumJobOffers/View/ForumJobOfferTile.vue';
-import VueForumJobOffersSection from '../../projections/ForumJobOffers/View/ForumJobOffersSection.vue';
 
 const logoPlaceholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' rx='8' fill='%2394a3b8'/%3E%3C/svg%3E";
 
-const tiles: ForumJobOfferTile[] = [
+export const exampleForumJobOfferTiles: ForumJobOfferTile[] = [
   // standard: regular company name and logo, regular title, a salary, two tags (one with a logo, one without)
   {
     companyName: 'Acme Corp',
@@ -98,4 +54,3 @@ const tiles: ForumJobOfferTile[] = [
     ],
   },
 ];
-</script>
