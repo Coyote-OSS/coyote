@@ -1,6 +1,8 @@
 <?php
 namespace Tests\Integration\Projections\ForumJobOffers;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Coyote\Currency;
 use Coyote\Firm;
 use Coyote\Job;
@@ -131,14 +133,20 @@ class ForumJobOffersPresenterTest extends TestCase {
 
     #[Test]
     public function isNew_whenBoostedWithinTwoDays(): void {
-        $job = $this->createPublishedJob(['boost_at' => now()->subDay()]);
+        $job = $this->createPublishedJob(boostAt:now()->subDay());
         $this->assertTrue($this->tileFor($job)->isNew);
     }
 
     #[Test]
     public function isNotNew_whenBoostedMoreThanTwoDaysAgo(): void {
-        $job = $this->createPublishedJob(['boost_at' => now()->subDays(3)]);
+        $job = $this->createPublishedJob(boostAt:now()->subDays(3));
         $this->assertFalse($this->tileFor($job)->isNew);
+    }
+
+    #[Test]
+    public function fixtureTest_createsPublishedJobWithBoostAt(): void {
+        $job = $this->createPublishedJob(boostAt:Carbon::createFromTimestamp(1704112000));
+        $this->assertSame(1704112000, $job->boost_at->getTimestamp());
     }
 
     #[Test]
@@ -150,14 +158,21 @@ class ForumJobOffersPresenterTest extends TestCase {
         $this->assertNull($this->tileFor($job)->technologyTags[0]->logoUrl);
     }
 
-    private function createPublishedJob(array $overrides = []): Job {
-        // Job::creating() always sets deadline_at from the plan length, so a fresh job
-        // is never expired by default; excludesExpiredJobOffers() overrides it afterwards.
+    private function createPublishedJob(
+        array                $attributes = [],
+        CarbonInterface|null $boostAt = null,
+    ): Job {
+        // Job::creating() always sets deadline_at from the plan length and boost_at to now,
+        // so a fresh job is never expired or stale by default; a requested override for
+        // either has to be forced after creation instead of through the factory.
         /** @var Job $job */
-        $job = factory(Job::class)->create(['is_publish' => true, ...$overrides]);
+        $job = factory(Job::class)->create(['is_publish' => true, ...$attributes]);
         // the legacy 'firm' factory state only associates in-memory and never persists firm_id,
         // so the firm is attached and saved explicitly here instead.
         $job->firm()->associate(factory(Firm::class)->create(['user_id' => $job->user_id]));
+        if ($boostAt !== null) {
+            $job->boost_at = $boostAt;
+        }
         $job->save();
         return $job->fresh();
     }
