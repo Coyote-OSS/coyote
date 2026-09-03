@@ -12,20 +12,20 @@ class LinkTest extends TestCase {
     public function markdownLink() {
         $this->assertRenderPost(
             '[foo](http://external)',
-            '<p><a href="http://external" rel="nofollow">foo</a></p>');
+            '<p><a href="http://external" rel="nofollow" target="_blank">foo</a></p>');
     }
 
     #[Test]
     public function htmlLink() {
         $this->assertRenderPost(
             '<a href="http://external">foo</a>',
-            '<p><a href="http://external" rel="nofollow">foo</a></p>');
+            '<p><a href="http://external" rel="nofollow" target="_blank">foo</a></p>');
     }
 
     #[Test]
     public function override() {
         $this->assertRenderPost(
             '<a href="http://external" rel="follow">foo</a>',
-            '<p><a href="http://external" rel="nofollow">foo</a></p>');
+            '<p><a href="http://external" rel="nofollow" target="_blank">foo</a></p>');
     }
 }
