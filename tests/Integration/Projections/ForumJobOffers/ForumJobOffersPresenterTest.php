@@ -7,7 +7,11 @@ use Coyote\Currency;
 use Coyote\Firm;
 use Coyote\Job;
 use Coyote\Projections\ForumJobOffers\ForumJobOffersPresenter;
+use Coyote\Projections\ForumJobOffers\Shuffler;
+use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Tag;
+use Libs\Arrays\arrays;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -17,6 +21,23 @@ use Web\Projections\ForumJobOffers\ViewModel\ForumJobOfferTile;
 #[CoversClass(ForumJobOffersPresenter::class)]
 class ForumJobOffersPresenterTest extends TestCase {
     use Server\Laravel\Application;
+
+    private ForumJobOffersPresenter $presenter;
+
+    #[Before]
+    public function initialize(): void {
+        $repository = $this->laravel->app->make(JobRepository::class);
+        $this->presenter = new ForumJobOffersPresenter($repository, $this->ascendingTitleShuffler());
+    }
+
+    private function ascendingTitleShuffler(): Shuffler {
+        return new class implements Shuffler {
+            public function shuffle(array $items): array {
+                \uSort($items, fn(ForumJobOfferTile $a, ForumJobOfferTile $b) => $a->jobOfferTitle <=> $b->jobOfferTitle);
+                return $items;
+            }
+        };
+    }
 
     #[Test]
     public function exposesForumJobOfferTile(): void {
@@ -158,6 +179,16 @@ class ForumJobOffersPresenterTest extends TestCase {
         $this->assertNull($this->tileFor($job)->technologyTags[0]->logoUrl);
     }
 
+    #[Test]
+    public function ordersOffersUsingTheInjectedShuffler(): void {
+        $jobs = [
+            $this->createPublishedJob(['title' => 'C Job']),
+            $this->createPublishedJob(['title' => 'A Job']),
+            $this->createPublishedJob(['title' => 'B Job']),
+        ];
+        $this->assertSame(['A Job', 'B Job', 'C Job'], $this->jobTitlesFor($jobs));
+    }
+
     private function createPublishedJob(
         array                $attributes = [],
         CarbonInterface|null $boostAt = null,
@@ -191,6 +222,18 @@ class ForumJobOffersPresenterTest extends TestCase {
         $this->fail("No ForumJobOfferTile found for job #$job->id");
     }
 
+    /**
+     * @param Job[] $jobs
+     * @return string[]
+     */
+    private function jobTitlesFor(array $jobs): array {
+        $hrefs = \array_map(fn(Job $job) => route('neon.jobOffer.show', [$job->slug, $job->id]), $jobs);
+        return $this->presenter->forumJobOffers()
+                |> arrays::filter(fn(ForumJobOfferTile $tile) => \in_array($tile->jobOfferHref, $hrefs, true))
+                |> arrays::values()
+                |> arrays::map(fn(ForumJobOfferTile $tile) => $tile->jobOfferTitle);
+    }
+
     private function assertJobIsMissing(Job $job): void {
         $href = route('neon.jobOffer.show', [$job->slug, $job->id]);
         foreach ($this->tiles() as $tile) {
@@ -202,10 +245,6 @@ class ForumJobOffersPresenterTest extends TestCase {
      * @return ForumJobOfferTile[]
      */
     private function tiles(): array {
-        return $this->presenter()->forumJobOffers();
-    }
-
-    private function presenter(): ForumJobOffersPresenter {
-        return $this->laravel->app->make(ForumJobOffersPresenter::class);
+        return $this->presenter->forumJobOffers();
     }
 }
