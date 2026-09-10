@@ -39,6 +39,6 @@ class RepliedNotification extends Notification
                     link_to($url, htmlentities($this->comment->resource->title))
                 )
             )
-            ->action('Kliknij, aby ją zobaczyć', "$url#comment-$this->comment->id");
+            ->action('Kliknij, aby ją zobaczyć', "$url#comment-{$this->comment->id}");
     }
 }
