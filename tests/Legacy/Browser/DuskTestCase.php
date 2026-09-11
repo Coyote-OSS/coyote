@@ -8,7 +8,7 @@ use Laravel\Dusk\Browser;
 use Laravel\Dusk\Chrome\SupportsChrome;
 use Laravel\Dusk\Concerns\ProvidesBrowser;
 use RuntimeException;
-use Tests\Legacy\IntegrationOld\CreatesApplication;
+use Tests\Legacy\LaravelIntegration\CreatesApplication;
 
 abstract class DuskTestCase extends \Illuminate\Foundation\Testing\TestCase
 {
