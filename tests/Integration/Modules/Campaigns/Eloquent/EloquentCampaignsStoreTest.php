@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Test\Modules\Campaigns\Store\CampaignStoreContractTests;
-use Tests\Legacy\IntegrationNew\BaseFixture\Server;
+use Tests\Legacy\Integration\BaseFixture\Server;
 
 #[CoversClass(EloquentCampaignsStore::class)]
 class EloquentCampaignsStoreTest extends TestCase {

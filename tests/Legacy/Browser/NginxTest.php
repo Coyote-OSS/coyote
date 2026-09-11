@@ -5,8 +5,8 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Legacy\IntegrationNew\BaseFixture;
-use Tests\Legacy\IntegrationNew\BaseFixture\Server\Laravel;
+use Tests\Legacy\Integration\BaseFixture;
+use Tests\Legacy\Integration\BaseFixture\Server\Laravel;
 
 /**
  * If nginx configuration changed, perform "nginx -s reload"

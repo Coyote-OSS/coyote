@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Legacy\IntegrationNew\BaseFixture;
+use Tests\Legacy\Integration\BaseFixture;
 
 #[CoversClass(AuthPriviligedUsers::class)]
 class AuthPriviligedUsersTest extends TestCase {

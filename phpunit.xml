@@ -3,7 +3,7 @@
   <testsuites>
     <testsuite name="Legacy">
       <directory suffix="Test.php">./tests/Legacy/LaravelIntegration/</directory>
-      <directory suffix="Test.php">./tests/Legacy/IntegrationNew/</directory>
+      <directory suffix="Test.php">./tests/Legacy/Integration/</directory>
       <directory suffix="Test.php">./tests/Legacy/Unit/</directory>
     </testsuite>
     <testsuite name="Campaigns">

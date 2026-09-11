@@ -83,7 +83,7 @@
       "Tests\\Legacy\\Unit\\": "tests/Legacy/Unit/",
       "Tests\\Legacy\\Browser\\": "tests/Legacy/Browser/",
       "Tests\\Legacy\\LaravelIntegration\\": "tests/Legacy/LaravelIntegration/",
-      "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/",
+      "Tests\\Legacy\\Integration\\": "tests/Legacy/Integration/",
       "Test\\Modules\\Campaigns\\": "modules/campaigns/test",
       "Test\\Libs\\Arrays\\": "libs/arrays/test"
     }

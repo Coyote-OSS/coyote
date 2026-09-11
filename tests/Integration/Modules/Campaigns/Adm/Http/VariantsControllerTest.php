@@ -10,8 +10,8 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Legacy\IntegrationNew\BaseFixture\Forum\ModelsDriver;
-use Tests\Legacy\IntegrationNew\BaseFixture\Server;
+use Tests\Legacy\Integration\BaseFixture\Forum\ModelsDriver;
+use Tests\Legacy\Integration\BaseFixture\Server;
 
 #[CoversClass(Adm\Http\VariantsController::class)]
 class VariantsControllerTest extends TestCase {

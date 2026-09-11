@@ -10,7 +10,7 @@ use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Legacy\IntegrationNew\BaseFixture\Server;
+use Tests\Legacy\Integration\BaseFixture\Server;
 
 #[CoversClass(CampaignsController::class)]
 class CampaignsControllerTest extends TestCase {

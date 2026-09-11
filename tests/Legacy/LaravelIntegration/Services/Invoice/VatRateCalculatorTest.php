@@ -6,7 +6,7 @@ use Coyote\Services\Invoice\VatRateCalculator;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Legacy\IntegrationNew\BaseFixture\Server\Laravel;
+use Tests\Legacy\Integration\BaseFixture\Server\Laravel;
 
 class VatRateCalculatorTest extends TestCase
 {
