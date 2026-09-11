@@ -4,9 +4,7 @@
     <testsuite name="Legacy">
       <directory suffix="Test.php">./tests/Legacy/IntegrationOld/</directory>
       <directory suffix="Test.php">./tests/Legacy/IntegrationNew/</directory>
-    </testsuite>
-    <testsuite name="Unit">
-      <directory suffix="Test.php">./tests/Unit/</directory>
+      <directory suffix="Test.php">./tests/Legacy/Unit/</directory>
     </testsuite>
     <testsuite name="Campaigns">
       <directory suffix="Test.php">./modules/campaigns/test/</directory>

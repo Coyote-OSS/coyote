@@ -80,7 +80,7 @@
   "autoload-dev": {
     "psr-4": {
       "Tests\\": "tests/",
-      "Tests\\Unit\\": "tests/Unit/",
+      "Tests\\Legacy\\Unit\\": "tests/Legacy/Unit/",
       "Tests\\Legacy\\Browser\\": "tests/Legacy/Browser/",
       "Tests\\Legacy\\IntegrationOld\\": "tests/Legacy/IntegrationOld/",
       "Tests\\Legacy\\IntegrationNew\\": "tests/Legacy/IntegrationNew/",

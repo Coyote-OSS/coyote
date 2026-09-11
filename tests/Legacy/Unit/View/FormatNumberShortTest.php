@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Unit\View;
+namespace Tests\Legacy\Unit\View;
 
 use Coyote\View\FormatNumber;
 use PHPUnit\Framework\Attributes\Before;

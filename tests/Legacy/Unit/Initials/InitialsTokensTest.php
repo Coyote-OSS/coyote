@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Unit\Initials;
+namespace Tests\Legacy\Unit\Initials;
 
 use Coyote\Domain\Initials;
 use PHPUnit\Framework\Attributes\Test;
