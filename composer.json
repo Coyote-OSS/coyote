@@ -81,7 +81,7 @@
     "psr-4": {
       "Tests\\": "tests/",
       "Tests\\Legacy\\Unit\\": "tests/Legacy/Unit/",
-      "Tests\\Legacy\\Browser\\": "tests/Legacy/Browser/",
+      "Tests\\Legacy\\LaravelDusk\\": "tests/Legacy/LaravelDusk/",
       "Tests\\Legacy\\LaravelIntegration\\": "tests/Legacy/LaravelIntegration/",
       "Tests\\Legacy\\Integration\\": "tests/Legacy/Integration/",
       "Test\\Modules\\Campaigns\\": "modules/campaigns/test",

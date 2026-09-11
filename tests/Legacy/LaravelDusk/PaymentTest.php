@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Legacy\Browser;
+namespace Tests\Legacy\LaravelDusk;
 
 use Coyote\Country;
 use Coyote\Coupon;

@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Legacy\Browser;
+namespace Tests\Legacy\LaravelDusk;
 
 use Carbon\Carbon;
 use Coyote\Services\UrlBuilder;

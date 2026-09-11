@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Legacy\Browser;
+namespace Tests\Legacy\LaravelDusk;
 
 use Coyote\User;
 use Faker\Factory;

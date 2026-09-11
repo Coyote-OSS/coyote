@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Legacy\Browser;
+namespace Tests\Legacy\LaravelDusk;
 
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
@@ -19,9 +19,9 @@ abstract class DuskTestCase extends \Illuminate\Foundation\Testing\TestCase
     {
         parent::setUp();
         Browser::$baseUrl = $this->baseUrl();
-        Browser::$storeScreenshotsAt = base_path('tests/Legacy/Browser/screenshots');
-        Browser::$storeConsoleLogAt = base_path('tests/Legacy/Browser/console');
-        Browser::$storeSourceAt = base_path('tests/Legacy/Browser/source');
+        Browser::$storeScreenshotsAt = base_path('tests/Legacy/LaravelDusk/screenshots');
+        Browser::$storeConsoleLogAt = base_path('tests/Legacy/LaravelDusk/console');
+        Browser::$storeSourceAt = base_path('tests/Legacy/LaravelDusk/source');
         Browser::$userResolver = function () {
             throw new RuntimeException('User resolver has not been set.');
         };

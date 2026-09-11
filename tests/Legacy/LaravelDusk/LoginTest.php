@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Legacy\Browser;
+namespace Tests\Legacy\LaravelDusk;
 
 use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\Before;

@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Legacy\Browser;
+namespace Tests\Legacy\LaravelDusk;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
