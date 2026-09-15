@@ -297,6 +297,7 @@ readonly class FontAwesomePro {
             'topicPages'                                => 'fa-light fa-file',
             'topicActionGoToStart'                      => 'fa-light fa-backward-fast',
             'topicShare'                                => 'fa-light fa-share-nodes',
+            'topicCreatePost'                           => 'fa-light fa-reply',
 
             // topic log
             'topicLogUserAgent'                         => 'fa-light fa-globe',
