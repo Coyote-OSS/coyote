@@ -182,10 +182,7 @@
                     class="btn btn-primary btn-sm neon-primary-button"
                     @click="save">
           <template v-if="post.id">Zapisz</template>
-          <b v-else>
-            <template v-if="showTitleInput">Rozpocznij wątek</template>
-            <template v-else>Opublikuj odpowiedź</template>
-          </b>
+          <b v-else>{{showTitleInput ? 'Rozpocznij wątek' : 'Opublikuj odpowiedź'}}</b>
         </vue-button>
       </div>
     </div>
@@ -264,9 +261,11 @@ export default {
     focus(): void {
       this.$refs.markdown.focus();
     },
-    cancel() {
-      this.post.text = this.originalText;
-      this.$emit('cancel');
+    cancel(): void {
+      if (this.exists) {
+        this.post.text = this.originalText;
+        this.$emit('cancel');
+      }
     },
     removeDraft(): void {
       this.post.text = '';
