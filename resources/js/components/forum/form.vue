@@ -166,6 +166,11 @@
         </div>
       </div>
       <div>
+        <button v-if="isDraft" @click="removeDraft" class="btn btn-sm btn-danger ms-2" type="button">
+          <vue-icon name="postDraftRemove"/>
+          {{' '}}
+          Porzuć draft
+        </button>
         <button v-if="post.id" @click="cancel" title="Anuluj (Esc)" class="btn btn-sm btn-danger ms-2">
           Anuluj
         </button>
@@ -263,6 +268,9 @@ export default {
       this.post.text = this.originalText;
       this.$emit('cancel');
     },
+    removeDraft(): void {
+      this.post.text = '';
+    },
     ...mapMutations('poll', ['removeItem', 'resetDefaults']),
     ...mapMutations('posts', ['deleteAttachment', 'changePage']),
     async save() {
@@ -339,6 +347,12 @@ export default {
     ...mapGetters('posts', ['totalPages', 'currentPage']),
     isFirstPost() {
       return !this.topic || this.topic.first_post_id === this.post.id;
+    },
+    isDraft(): boolean {
+      if (this.exists) {
+        return false;
+      }
+      return this.post.text !== '';
     },
     draftKey() {
       return `topic-${this.topic.id ? this.topic.id : ''}`;

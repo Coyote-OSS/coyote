@@ -337,6 +337,7 @@ readonly class FontAwesomePro {
             'postVisitThread'                           => 'fa-light fa-share',
             'postCopyLinkPost'                          => 'fa-light fa-link',
             'postCopyLinkThread'                        => 'fa-light fa-link',
+            'postDraftRemove'                           => $genericDelete,
 
             // tree topic
             'postGuiderailExpanded'                     => 'fa-solid fa-plus',
