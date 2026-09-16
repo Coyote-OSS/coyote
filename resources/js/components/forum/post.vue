@@ -317,10 +317,10 @@
               </div>
               <div v-if="post.permissions.write" :class="{'ms-auto':is_mode_linear}">
                 <template v-if="!post.deleted_at">
-                  <span @click="replyMentionAuthor" class="post-action" title="Odpowiedz na ten post" v-if="is_mode_linear">
-                    <vue-icon name="postMentionAuthor"/>
-                  </span>
-                  <span @click="replyQuoteContent" class="post-action" title="Dodaj cytat do pola odpowiedzi" v-if="!treeTopicPostFirst">
+                  <span v-if="!treeTopicPostFirst"
+                        class="post-action"
+                        title="Dodaj cytat do pola odpowiedzi"
+                        @click="replyQuoteContent">
                     <vue-icon name="postAnswerQuote"/>
                     <span class="d-none d-sm-inline ms-1">Odpowiedz</span>
                   </span>
@@ -635,7 +635,9 @@ export default {
       return this.$props.post.type === 'obscured';
     },
     postIndentCssClasses(): string[] {
-      if (!this.$props.treeItem) return [];
+      if (!this.$props.treeItem) {
+        return [];
+      }
       const indent = this.$props.treeItem.indent;
       const indentCssClasses = [
         'indent-none', 'indent-1', 'indent-2', 'indent-3', 'indent-4', 'indent-5',
