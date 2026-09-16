@@ -18,6 +18,7 @@ readonly class FontAwesomePro {
         $genericSave = $faTick;
         $genericBack = 'fa-light fa-arrow-left';
         $genericLocation = 'fa-light fa-location-dot';
+        $genericPlus = 'fa-light fa-plus';
 
         return [
             // global
@@ -27,7 +28,7 @@ readonly class FontAwesomePro {
             'alertDanger'                               => 'fa-light fa-triangle-exclamation',
             'alertSuccess'                              => $faTick,
             'navigateBack'                              => 'fa-light fa-arrow-left',
-            'genericAdd'                                => 'fa-light fa-plus',
+            'genericAdd'                                => $genericPlus,
             'genericEdit'                               => 'fa-light fa-edit',
             'genericSearch'                             => 'fa-light fa-magnifying-glass',
             'genericLink'                               => 'fa-light fa-link',
@@ -78,7 +79,7 @@ readonly class FontAwesomePro {
             'campaignVoivodeship'                       => $genericLocation,
 
             // microblog
-            'microblogNew'                              => 'fa-light fa-plus',
+            'microblogNew'                              => $genericPlus,
             'microblogMine'                             => 'fa-light fa-address-book',
             'microblogReport'                           => 'fa-light fa-flag',
             'microblogShare'                            => 'fa-light fa-share-nodes',
@@ -194,8 +195,8 @@ readonly class FontAwesomePro {
             'tagRemove'                                 => $genericClose,
             'tagRank'                                   => 'fa-light fa-circle',
             'tagRanked'                                 => 'fa-solid fa-circle',
-            'tagPopularInclude'                         => 'fa-light fa-plus',
-            'tagPopularMore'                            => 'fa-light fa-plus',
+            'tagPopularInclude'                         => $genericPlus,
+            'tagPopularMore'                            => $genericPlus,
 
             // asset thumbnail
             'thumbnailAssetRemove'                      => $genericClose,
@@ -297,7 +298,8 @@ readonly class FontAwesomePro {
             'topicPages'                                => 'fa-light fa-file',
             'topicActionGoToStart'                      => 'fa-light fa-backward-fast',
             'topicShare'                                => 'fa-light fa-share-nodes',
-            'topicCreatePost'                           => 'fa-light fa-reply',
+            'topicNew'                                  => $genericPlus,
+            'topicPostNew'                              => 'fa-solid fa-arrow-turn-left',
 
             // topic log
             'topicLogUserAgent'                         => 'fa-light fa-globe',
@@ -431,7 +433,7 @@ readonly class FontAwesomePro {
             'jobOfferCompanyEmployees'                  => 'fa-light fa-users',
             'jobOfferCompanyEstablishmentYear'          => 'fa-light fa-calendar',
             'jobOfferCompanyWebsite'                    => 'fa-light fa-link',
-            'jobOfferLocationAdd'                       => 'fa-light fa-plus',
+            'jobOfferLocationAdd'                       => $genericPlus,
             'jobOfferLocationRemove'                    => 'fa-light fa-circle-minus',
             'jobOfferBenefitPresent'                    => $faTick,
             'jobOfferBenefitMissing'                    => $faCross,
@@ -480,7 +482,7 @@ readonly class FontAwesomePro {
             'wikiAuthors'                               => 'fa-light fa-users',
             'wikiCategories'                            => 'fa-light fa-folder-open',
             'wikiCategory'                              => 'fa-light fa-paragraph',
-            'wikiChildCreate'                           => 'fa-light fa-plus',
+            'wikiChildCreate'                           => $genericPlus,
             'wikiClearCache'                            => 'fa-light fa-trash-can',
             'wikiCommentEdit'                           => 'fa-light fa-pen-to-square',
             'wikiCommentRemove'                         => 'fa-light fa-trash-can',
@@ -516,7 +518,7 @@ readonly class FontAwesomePro {
 
             // survey
             'surveyExperiment'                          => 'fa-light fa-flask',
-            'surveyExperimentNew'                       => 'fa-light fa-plus',
+            'surveyExperimentNew'                       => $genericPlus,
             'surveyExperimentBack'                      => 'fa-light fa-arrow-left',
             'surveyExperimentMemberRemove'              => 'fa-light fa-trash',
             'surveyExperimentMembersSave'               => $faTick,
@@ -549,7 +551,7 @@ readonly class FontAwesomePro {
             'contentMarkerHeading'                      => 'fa-light fa-heading',
 
             // admin censore
-            'adminCensoreNew'                           => 'fa-light fa-plus',
+            'adminCensoreNew'                           => $genericPlus,
             'adminCensoreRemove'                        => 'fa-light fa-trash-can',
 
             // admin user

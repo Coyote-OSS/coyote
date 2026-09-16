@@ -172,12 +172,15 @@
         {{' '}}
         <vue-button :processing="isProcessing"
                     :disabled="post.text.trim().length === 0"
-                    :icon="!post.id ? 'topicCreatePost' : undefined"
+                    :icon="createPostIcon"
                     title="Kliknij, aby zapisać (Ctrl+Enter)"
                     class="btn btn-primary btn-sm neon-primary-button"
                     @click="save">
           <template v-if="post.id">Zapisz</template>
-          <b v-else>Opublikuj odpowiedź</b>
+          <b v-else>
+            <template v-if="showTitleInput">Rozpocznij wątek</template>
+            <template v-else>Opublikuj odpowiedź</template>
+          </b>
         </vue-button>
       </div>
     </div>
@@ -342,6 +345,15 @@ export default {
     },
     exists() {
       return this.post.id !== undefined;
+    },
+    createPostIcon() {
+      if (this.exists) {
+        return undefined;
+      }
+      if (this.showTitleInput) {
+        return 'topicNew';
+      }
+      return 'topicPostNew';
     },
   },
 };
