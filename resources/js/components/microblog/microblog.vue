@@ -129,7 +129,7 @@
             <span @click="checkAuth(reply, microblog.user)" class="microblog-action" title="Odpowiedz na ten wpis">
               <vue-icon name="microblogAddComment"/>
               {{ ' ' }}
-              <span class="d-none d-sm-inline">Komentuj</span>
+              <Skomentuj class="d-none d-sm-inline">Komentuj</Skomentuj>
             </span>
             <span @click="copy" class="microblog-action" title="Kopiuj link do schowka">
               <vue-icon name="microblogShare"/>

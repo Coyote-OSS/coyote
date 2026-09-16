@@ -312,7 +312,7 @@
                     <vue-icon name="postCommentActive"/>
                   </span>
                   <vue-icon v-else name="postComment"/>
-                  <span class="d-none d-sm-inline ms-1">Komentuj</span>
+                  <span class="d-none d-sm-inline ms-1">Skomentuj</span>
                 </span>
               </div>
               <div v-if="post.permissions.write" :class="{'ms-auto':is_mode_linear}">

@@ -20,7 +20,7 @@
         </p>
         <vue-button :disabled="isProcessing" @click="saveComment" class="btn btn-sm btn-primary neon-primary-button float-end"
                     title="Kliknij, aby wysłać (Ctrl+Enter)">
-          <template v-if="newComment">Komentuj</template>
+          <template v-if="newComment">Skomentuj</template>
           <template v-else>Zapisz</template>
         </vue-button>
         <button @click.prevent="cancel" class="btn btn-sm btn-danger float-end me-2">Anuluj</button>

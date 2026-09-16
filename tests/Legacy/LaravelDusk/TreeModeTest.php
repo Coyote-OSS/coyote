@@ -48,7 +48,7 @@ class TreeModeTest extends DuskTestCase
             $browser->press('Dodaj post');
             $browser->waitUntilMissingText('Bądź rzeczowy.');
             $browser->assertPathIs('/Forum/Newbie/*-*');
-            $browser->assertDontSee('Komentuj');
+            $browser->assertDontSee('Skomentuj');
         });
     }
 
@@ -58,7 +58,7 @@ class TreeModeTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $topic = $this->driver->seedTopic(mode:'linear');
             $this->driver->visit($browser, $this->driver->topicUrl($topic));
-            $browser->assertSee('Komentuj');
+            $browser->assertSee('Skomentuj');
         });
     }
 
@@ -68,7 +68,7 @@ class TreeModeTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $topic = $this->driver->seedTopic(mode:'tree');
             $this->driver->visit($browser, $this->driver->topicUrl($topic));
-            $browser->assertDontSee('Komentuj');
+            $browser->assertDontSee('Skomentuj');
         });
     }
 }
