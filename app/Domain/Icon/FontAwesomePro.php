@@ -316,7 +316,7 @@ readonly class FontAwesomePro {
             'postDelete'                                => 'fa-light fa-trash-can',
             'postRestore'                               => 'fa-light fa-arrow-rotate-left',
             'postMentionAuthor'                         => 'fa-light fa-at',
-            'postAnswerQuote'                           => 'fa-light fa-comment',
+            'postAnswerQuote'                           => 'fa-light fa-arrow-turn-left',
             'postReport'                                => 'fa-light fa-flag',
             'postMenuDropdown'                          => $genericDropdown,
             'postMergeWithPrevious'                     => 'fa-light fa-arrow-up-from-bracket',
