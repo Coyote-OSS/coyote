@@ -312,7 +312,7 @@
                     <vue-icon name="postCommentActive"/>
                   </span>
                   <vue-icon v-else name="postComment"/>
-                  <span class="d-none d-sm-inline ms-1">Skomentuj</span>
+                  <span class="ms-1">Skomentuj</span>
                 </span>
               </div>
               <div v-if="post.permissions.write" :class="{'ms-auto':is_mode_linear}">
@@ -322,7 +322,7 @@
                         title="Dodaj cytat do pola odpowiedzi"
                         @click="replyQuoteContent">
                     <vue-icon name="postAnswerQuote"/>
-                    <span class="d-none d-sm-inline ms-1">Odpowiedz</span>
+                    <span class="ms-1">Odpowiedz</span>
                   </span>
                 </template>
                 <div v-if="postDropdownVisible" class="dropdown float-end">
