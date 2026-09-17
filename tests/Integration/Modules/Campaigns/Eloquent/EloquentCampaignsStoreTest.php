@@ -5,8 +5,10 @@ use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Illuminate\Database;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use Libs\Arrays\arrays;
 use Modules\Campaigns;
 use Modules\Campaigns\Store\CampaignsStore;
+use Modules\Campaigns\Store\CampaignVariant;
 use Modules\Campaigns\Store\VariantPayload;
 use Modules\Campaigns\VariantType;
 use Modules\Campaigns\Voivodeship;
@@ -79,11 +81,30 @@ class EloquentCampaignsStoreTest extends TestCase {
         ]);
     }
 
+    #[Test]
+    public function listsCampaignVariantsInCreationOrder(): void {
+        // given
+        $campaignId = $this->createCampaign();
+        $this->store->createVariant($campaignId, new VariantPayload(VariantType::Banner, 'first.png'));
+        $this->store->createVariant($campaignId, new VariantPayload(VariantType::Banner, 'second.png'));
+        $this->store->createVariant($campaignId, new VariantPayload(VariantType::Banner, 'third.png'));
+        // when
+        [$campaign] = $this->store->listCampaigns();
+        // then
+        Assert::assertSame(
+            ['first.png', 'second.png', 'third.png'],
+            $this->variantUrls($campaign));
+    }
+
     protected function contractTestStore(): CampaignsStore {
         return $this->store;
     }
 
     private function table(): Builder {
         return $this->connection->table('module_campaigns');
+    }
+
+    private function variantUrls(Campaigns\Store\Campaign $campaign): array {
+        return $campaign->variants |> arrays::map(fn(CampaignVariant $variant) => $variant->payload->imageUrl);
     }
 }

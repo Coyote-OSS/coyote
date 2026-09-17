@@ -11,7 +11,7 @@ use Modules\Campaigns\VariantType;
 class InMemoryDriver implements Driver {
     private array $campaignIds = [];
     private string $deviceType = '';
-    private int $rotationSeed = 0;
+    private int $rotationSeed = -1;
 
     public function __construct(private readonly CampaignsStore $store) {}
 
@@ -37,7 +37,7 @@ class InMemoryDriver implements Driver {
         $variants = $this->allVariantsForSlot($slotType);
         $result = [];
         for ($i = 0; $i < min($this->slotWindowSize($slotType), count($variants)); $i++) {
-            $result[] = $variants[($this->rotationSeed - 1 + $i) % count($variants)];
+            $result[] = $variants[($this->rotationSeed + $i) % count($variants)];
         }
         return $result;
     }
