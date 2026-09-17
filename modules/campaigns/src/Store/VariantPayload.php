@@ -17,8 +17,8 @@ readonly class VariantPayload {
      */
     private static function variantType(string $bannerType): VariantType {
         return match ($bannerType) {
-            'horizontal'  => VariantType::Standard,
-            'sidebar'     => VariantType::Sidebar,
+            'horizontal'  => VariantType::Banner,
+            'sidebar'     => VariantType::Rectangle,
             'leaderboard' => VariantType::LeaderBoard,
             default       => throw new Exception(),
         };

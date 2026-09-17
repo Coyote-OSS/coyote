@@ -84,7 +84,7 @@ readonly class CampaignBannerSelector {
      * @return CampaignVariant[]|null
      */
     private function elevatedHorizontalVariants(Campaign $campaign, VariantType $type, bool $isSoleCampaign): ?array {
-        if ($type !== VariantType::Standard) {
+        if ($type !== VariantType::Banner) {
             return null;
         }
         if ($campaign->payload->isPremium) {

@@ -53,8 +53,8 @@ readonly class CampaignsFacade {
         ?string $until = null,
     ): int {
         $campaignId = $this->createCampaign($name, $redirectUrl, $since, $until);
-        $this->createVariant($campaignId, $horizontalBanner, Campaigns\VariantType::Standard);
-        $this->createVariant($campaignId, $sidebarBanner, Campaigns\VariantType::Sidebar);
+        $this->createVariant($campaignId, $horizontalBanner, Campaigns\VariantType::Banner);
+        $this->createVariant($campaignId, $sidebarBanner, Campaigns\VariantType::Rectangle);
         return $campaignId;
     }
 

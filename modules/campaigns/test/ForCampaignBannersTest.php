@@ -94,7 +94,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [],
-            $this->banner('side.png', variantId:7, type:VariantType::Sidebar)));
+            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
         // act
         $bannerSet = $this->presenter->bannerSet();
         // assert
@@ -106,7 +106,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [],
-            $this->banner('side.png', variantId:7, type:VariantType::Sidebar)));
+            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
         // act
         $bannerSet = $this->presenter->bannerSet();
         // assert
@@ -118,7 +118,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [],
-            $this->banner('side.png', variantId:7, type:VariantType::Sidebar)));
+            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
         // act
         $bannerSet = $this->presenter->bannerSet();
         // assert
@@ -130,7 +130,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [],
-            $this->banner('side.png', variantId:7, type:VariantType::Sidebar)));
+            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
         // act
         $bannerSet = $this->presenter->bannerSet();
         // assert
@@ -166,7 +166,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [],
-            $this->banner('side.png', variantId:7, type:VariantType::Sidebar)));
+            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
         // assert-expect
         $this->campaignStore->expects($this->once())->method('viewVariant')->with(7);
         // act
@@ -178,7 +178,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [$this->banner('h1.png', variantId:1), $this->banner('h2.png', variantId:2)],
-            $this->banner('side.png', variantId:3, type:VariantType::Sidebar)));
+            $this->banner('side.png', variantId:3, type:VariantType::Rectangle)));
         // assert-expect
         $this->campaignStore
             ->expects($this->exactly(3))
@@ -196,7 +196,7 @@ class ForCampaignBannersTest extends TestCase {
         return new CampaignBanner(
             $bannerUrl,
             'irrelevant',
-            $type ?? VariantType::Standard,
+            $type ?? VariantType::Banner,
             $variantId,
         );
     }

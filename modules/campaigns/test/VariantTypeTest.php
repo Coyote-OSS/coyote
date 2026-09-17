@@ -8,12 +8,12 @@ use PHPUnit\Framework\TestCase;
 class VariantTypeTest extends TestCase {
     #[Test]
     public function standard(): void {
-        $this->assertSame(VariantType::Standard, VariantType::fromSize(728, 90));
+        $this->assertSame(VariantType::Banner, VariantType::fromSize(728, 90));
     }
 
     #[Test]
     public function sidebar(): void {
-        $this->assertSame(VariantType::Sidebar, VariantType::fromSize(300, 250));
+        $this->assertSame(VariantType::Rectangle, VariantType::fromSize(300, 250));
     }
 
     #[Test]
@@ -23,12 +23,12 @@ class VariantTypeTest extends TestCase {
 
     #[Test]
     public function standardXl(): void {
-        $this->assertSame(VariantType::StandardXl, VariantType::fromSize(728, 200));
+        $this->assertSame(VariantType::BannerXl, VariantType::fromSize(728, 200));
     }
 
     #[Test]
     public function sidebarXl(): void {
-        $this->assertSame(VariantType::SidebarXl, VariantType::fromSize(300, 600));
+        $this->assertSame(VariantType::RectangleXl, VariantType::fromSize(300, 600));
     }
 
     #[Test]

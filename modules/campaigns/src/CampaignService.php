@@ -41,8 +41,8 @@ readonly class CampaignService {
     private function enabledCampaignBanners(): CampaignBanners {
         $campaigns = $this->listActiveCampaigns();
         return new CampaignBanners(
-            $this->selector->campaignBanners($campaigns, VariantType::Standard, 2),
-            $this->selector->campaignBanners($campaigns, VariantType::Sidebar, 1)[0] ?? null);
+            $this->selector->campaignBanners($campaigns, VariantType::Banner, 2),
+            $this->selector->campaignBanners($campaigns, VariantType::Rectangle, 1)[0] ?? null);
     }
 
     /**

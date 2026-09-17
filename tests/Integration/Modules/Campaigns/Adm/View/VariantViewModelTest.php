@@ -33,12 +33,12 @@ class VariantViewModelTest extends TestCase {
 
     #[Test]
     public function bannerTypeTitle_horizontal(): void {
-        $this->assertSame('Banner', $this->type(VariantType::Standard)->bannerTypeTitle());
+        $this->assertSame('Banner', $this->type(VariantType::Banner)->bannerTypeTitle());
     }
 
     #[Test]
     public function bannerTypeTitle_sidebar(): void {
-        $this->assertSame('Rectangle', $this->type(VariantType::Sidebar)->bannerTypeTitle());
+        $this->assertSame('Rectangle', $this->type(VariantType::Rectangle)->bannerTypeTitle());
     }
 
     #[Test]
@@ -47,7 +47,7 @@ class VariantViewModelTest extends TestCase {
     }
 
     private function ctr(int $exposures, int $clicks): ?string {
-        $viewModel = new VariantViewModel('', new CampaignStats(0, $clicks, $exposures, 0), true, '', VariantType::Standard);
+        $viewModel = new VariantViewModel('', new CampaignStats(0, $clicks, $exposures, 0), true, '', VariantType::Banner);
         return $viewModel->stats->ctr();
     }
 

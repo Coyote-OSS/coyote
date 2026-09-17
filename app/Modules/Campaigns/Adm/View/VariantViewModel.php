@@ -14,11 +14,11 @@ readonly class VariantViewModel {
 
     public function bannerTypeTitle(): string {
         return match ($this->type) {
-            VariantType::Standard      => 'Banner',
-            VariantType::Sidebar       => 'Rectangle',
+            VariantType::Banner        => 'Banner',
+            VariantType::Rectangle     => 'Rectangle',
             VariantType::LeaderBoard   => 'LeaderBoard',
-            VariantType::StandardXl    => 'Banner XL',
-            VariantType::SidebarXl     => 'Rectangle XL',
+            VariantType::BannerXl      => 'Banner XL',
+            VariantType::RectangleXl   => 'Rectangle XL',
             VariantType::LeaderBoardXl => 'LeaderBoard XL',
         };
     }

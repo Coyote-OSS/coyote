@@ -357,17 +357,17 @@ trait CampaignStoreContractTests {
         // then variant is found with payload
         [$variant] = $this->store->findCampaign($campaignId)->variants;
         $variantPayload = $variant->payload;
-        Assert::assertSame(VariantType::Standard, $variantPayload->type);
+        Assert::assertSame(VariantType::Banner, $variantPayload->type);
         Assert::assertSame('image-url', $variantPayload->imageUrl);
     }
 
     #[Test]
     #[TestDox('given a campaign; when create-variant; finds variant type')]
-    #[TestWith([VariantType::Standard])]
-    #[TestWith([VariantType::Sidebar])]
+    #[TestWith([VariantType::Banner])]
+    #[TestWith([VariantType::Rectangle])]
     #[TestWith([VariantType::LeaderBoard])]
-    #[TestWith([VariantType::StandardXl])]
-    #[TestWith([VariantType::SidebarXl])]
+    #[TestWith([VariantType::BannerXl])]
+    #[TestWith([VariantType::RectangleXl])]
     #[TestWith([VariantType::LeaderBoardXl])]
     public function givenCampaign_createVariant_findsVariantType(VariantType $type): void {
         // given a campaign

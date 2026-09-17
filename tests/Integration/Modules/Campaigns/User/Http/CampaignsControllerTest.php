@@ -88,7 +88,7 @@ class CampaignsControllerTest extends TestCase {
     private function addCampaignWithVariant(?string $redirectUrl = null): array {
         $store = $this->instance();
         $campaignId = $store->createCampaign($this->exampleCampaign($redirectUrl));
-        $variantId = $store->createVariant($campaignId, new VariantPayload(VariantType::Standard, 'image.png'));
+        $variantId = $store->createVariant($campaignId, new VariantPayload(VariantType::Banner, 'image.png'));
         return [$campaignId, $variantId];
     }
 

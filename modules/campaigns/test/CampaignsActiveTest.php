@@ -60,7 +60,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign with target of 2 views
         $this->setupCampaignTargetViews(2);
         // when the campaign is viewed 0 times
-        $this->stubCampaignViews(0, VariantType::Standard);
+        $this->stubCampaignViews(0, VariantType::Banner);
         // then the campaign is active
         $this->assertCampaignActive();
     }
@@ -70,7 +70,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign without target views
         $this->setupCampaignTargetViews(null);
         // when the campaign is viewed 0 times
-        $this->stubCampaignViews(0, VariantType::Standard);
+        $this->stubCampaignViews(0, VariantType::Banner);
         // then the campaign is active
         $this->assertCampaignActive();
     }
@@ -80,7 +80,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign without target views
         $this->setupCampaignTargetViews(null);
         // when the campaign is viewed 2 times
-        $this->stubCampaignViews(2, VariantType::Standard);
+        $this->stubCampaignViews(2, VariantType::Banner);
         // then the campaign is active
         $this->assertCampaignActive();
     }
@@ -90,7 +90,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign with target of 2 views
         $this->setupCampaignTargetViews(2);
         // when the campaign is viewed 3 times
-        $this->stubCampaignViews(3, VariantType::Standard);
+        $this->stubCampaignViews(3, VariantType::Banner);
         // then the campaign is not active
         $this->assertCampaignNotActive('target-reached');
     }
@@ -100,7 +100,7 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign with target of 2 views
         $this->setupCampaignTargetViews(2);
         // when the campaign is viewed 3 times
-        $this->stubCampaignViews(3, VariantType::Sidebar);
+        $this->stubCampaignViews(3, VariantType::Rectangle);
         // then the campaign is not active
         $this->assertCampaignNotActive('target-reached');
     }
@@ -110,8 +110,8 @@ class CampaignsActiveTest extends TestCase {
         // given a campaign with target of 2 views
         $this->setupCampaignTargetViews(8);
         // when the campaign is viewed 3 times
-        $this->stubCampaignViews(4, VariantType::Sidebar);
-        $this->stubCampaignViews(4, VariantType::Standard);
+        $this->stubCampaignViews(4, VariantType::Rectangle);
+        $this->stubCampaignViews(4, VariantType::Banner);
         // then the campaign is not active
         $this->assertCampaignNotActive('target-reached');
     }
