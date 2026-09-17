@@ -52,8 +52,9 @@
     "twilio/sdk": "^8.7"
   },
   "require-dev": {
+    "behat/behat": "^3.33",
     "fakerphp/faker": "^1.15",
-    "laravel/dusk": "^v8.2.0",
+    "laravel/dusk": "^v8.6.0",
     "mockery/mockery": "^1.4",
     "phpunit/phpunit": "^13.2.1"
   },
@@ -79,6 +80,7 @@
   },
   "autoload-dev": {
     "psr-4": {
+      "Features\\": "features/",
       "Tests\\": "tests/",
       "Tests\\Legacy\\Unit\\": "tests/Legacy/Unit/",
       "Tests\\Legacy\\LaravelDusk\\": "tests/Legacy/LaravelDusk/",
