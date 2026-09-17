@@ -9,4 +9,6 @@ interface Driver {
     public function resolveVariantsForUser(string $deviceType): void;
 
     public function variantsForSlot(string $slotType): array;
+
+    public function close(): void;
 }

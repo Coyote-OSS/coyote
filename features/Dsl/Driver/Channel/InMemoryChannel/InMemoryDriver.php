@@ -77,4 +77,6 @@ class InMemoryDriver implements Driver {
     private function isSoleCampaign(): bool {
         return $this->campaignCount === 1;
     }
+
+    public function close(): void {}
 }

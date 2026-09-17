@@ -30,4 +30,25 @@ jobs:
         run: ./vendor/bin/phpunit ./modules/
 
       - name: Run acceptance tests (in-memory)
-        run: ./vendor/bin/behat
+        run: TEST_CHANNEL=in-memory ./vendor/bin/behat
+
+  integration:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup laravel
+        run: cp .env.default .env
+
+      - name: Run docker containers
+        run: docker compose -f docker-compose.yaml up -d
+
+      - name: Setup directory owner
+        run: sudo chown -R packer:packer ./ # User with UID 1000 on host machine
+
+      - name: Install coyote server
+        run: make composer-install migrate
+
+      - name: Run Behat tests
+        run: docker compose exec -T php bash -c 'TEST_CHANNEL=integration vendor/bin/behat'
