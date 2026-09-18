@@ -3,6 +3,7 @@ namespace Test\Modules\Campaigns;
 
 use Modules\Campaigns\CampaignBannersFacade;
 use Modules\Campaigns\CampaignService;
+use Modules\Campaigns\DeviceType;
 use Modules\Campaigns\ForCampaignBanners;
 use Modules\Campaigns\Internal\CampaignBanner;
 use Modules\Campaigns\Internal\CampaignBanners;
@@ -33,7 +34,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBannersEmpty();
         // act
-        $bannerSet = $this->presenter->bannerSet();
+        $bannerSet = $this->bannerSet();
         // assert
         $this->assertEmpty($bannerSet->horizontal);
     }
@@ -43,7 +44,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBannersEmpty();
         // act
-        $bannerSet = $this->presenter->bannerSet();
+        $bannerSet = $this->bannerSet();
         // assert
         $this->assertNull($bannerSet->sidebar);
     }
@@ -55,7 +56,7 @@ class ForCampaignBannersTest extends TestCase {
             [$this->banner('img.png', variantId:1)],
             null));
         // act
-        $bannerSet = $this->presenter->bannerSet();
+        $bannerSet = $this->bannerSet();
         // assert
         $this->assertSame('img.png', $bannerSet->horizontal[0]->imageUrl);
     }
@@ -67,7 +68,7 @@ class ForCampaignBannersTest extends TestCase {
             [$this->banner('img.png', variantId:42)],
             null));
         // act
-        $bannerSet = $this->presenter->bannerSet();
+        $bannerSet = $this->bannerSet();
         // assert
         $this->assertSame('https://test-redirect/42', $bannerSet->horizontal[0]->redirectUrl);
     }
@@ -80,7 +81,7 @@ class ForCampaignBannersTest extends TestCase {
             null);
         $this->stubCampaignBanners($campaignBanners);
         // act
-        $bannerSet = $this->presenter->bannerSet();
+        $bannerSet = $this->bannerSet();
         // assert
         $this->assertCount(2, $bannerSet->horizontal);
     }
@@ -92,7 +93,7 @@ class ForCampaignBannersTest extends TestCase {
             [],
             $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
         // act
-        $bannerSet = $this->presenter->bannerSet();
+        $bannerSet = $this->bannerSet();
         // assert
         $this->assertSame('side.png', $bannerSet->sidebar->imageUrl);
     }
@@ -104,7 +105,7 @@ class ForCampaignBannersTest extends TestCase {
             [],
             $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
         // act
-        $bannerSet = $this->presenter->bannerSet();
+        $bannerSet = $this->bannerSet();
         // assert
         $this->assertSame('https://test-redirect/7', $bannerSet->sidebar->redirectUrl);
     }
@@ -116,7 +117,7 @@ class ForCampaignBannersTest extends TestCase {
             [],
             $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
         // act
-        $bannerSet = $this->presenter->bannerSet();
+        $bannerSet = $this->bannerSet();
         // assert
         $this->assertSame('https://test-redirect/7/expose', $bannerSet->sidebar->exposeUrl);
     }
@@ -128,7 +129,7 @@ class ForCampaignBannersTest extends TestCase {
             [],
             $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
         // act
-        $bannerSet = $this->presenter->bannerSet();
+        $bannerSet = $this->bannerSet();
         // assert
         $this->assertSame('https://test-redirect/7/adblock', $bannerSet->sidebar->adblockUrl);
     }
@@ -152,5 +153,9 @@ class ForCampaignBannersTest extends TestCase {
 
     private function stubCampaignBanners(CampaignBanners $campaignBanners): void {
         $this->campaignService->method('campaignBanners')->willReturn($campaignBanners);
+    }
+
+    private function bannerSet(): \Modules\Campaigns\CampaignBannerSet {
+        return $this->presenter->bannerSet(DeviceType::Desktop);
     }
 }

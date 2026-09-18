@@ -3,6 +3,7 @@ namespace Test\Modules\Campaigns;
 
 use Libs\Arrays\arrays;
 use Modules\Campaigns\CampaignService;
+use Modules\Campaigns\DeviceType;
 use Modules\Campaigns\VariantType;
 use Modules\Campaigns\Voivodeship;
 use PHPUnit\Framework\Attributes\Before;
@@ -276,7 +277,7 @@ class CampaignsBannersTest extends TestCase {
         $this->date->stubCurrentDate('2000-01-02');
         $inactiveId = $this->facade->addCampaign(name:'inactive', since:'2100-01-01', until:'2100-01-01');
         $activeId = $this->facade->addCampaign(name:'active', since:'2000-01-01', until:'2000-01-03');
-        $campaignBanners = $this->campaigns->campaignBanners()->horizontal;
+        $campaignBanners = $this->campaigns->campaignBanners(DeviceType::Desktop)->horizontal;
         $this->assertCampaignKeys(["$activeId"], $campaignBanners);
     }
 

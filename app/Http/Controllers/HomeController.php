@@ -56,7 +56,7 @@ class HomeController extends Controller {
             'homepageMembers'       => $this->members(),
             'settings'              => $this->getSettings(),
             'home_ads'              => $this->userIncludeAds(),
-            'campaign_banners_home' => $presenter->bannerSet(),
+            'campaign_banners_home' => $presenter->bannerSet(Campaigns\DeviceType::Desktop),
         ]);
     }
 

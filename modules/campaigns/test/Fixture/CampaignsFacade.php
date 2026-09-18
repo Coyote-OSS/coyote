@@ -3,6 +3,7 @@ namespace Test\Modules\Campaigns\Fixture;
 
 use Libs\Arrays\arrays;
 use Modules\Campaigns;
+use Modules\Campaigns\DeviceType;
 use Modules\Campaigns\Internal\CampaignBanner;
 use PHPUnit\Framework\Assert;
 
@@ -59,12 +60,12 @@ readonly class CampaignsFacade {
     }
 
     public function createCampaign(
-        ?string                 $name = null,
-        ?string                 $redirectUrl = null,
-        ?string                 $since = null,
-        ?string                 $until = null,
-        bool                    $isPremium = false,
-        ?Campaigns\Voivodeship  $voivodeship = null,
+        ?string                $name = null,
+        ?string                $redirectUrl = null,
+        ?string                $since = null,
+        ?string                $until = null,
+        bool                   $isPremium = false,
+        ?Campaigns\Voivodeship $voivodeship = null,
     ): int {
         return $this->store->createCampaign(new Campaigns\Store\CampaignPayload(
             $name ?? '',
@@ -98,10 +99,10 @@ readonly class CampaignsFacade {
      * @return CampaignBanner[]
      */
     public function horizontalBanners(): array {
-        return $this->campaigns->campaignBanners()->horizontal;
+        return $this->campaigns->campaignBanners(DeviceType::Desktop)->horizontal;
     }
 
     public function sidebarBanner(): ?CampaignBanner {
-        return $this->campaigns->campaignBanners()->sidebar;
+        return $this->campaigns->campaignBanners(DeviceType::Desktop)->sidebar;
     }
 }

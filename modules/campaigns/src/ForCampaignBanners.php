@@ -2,5 +2,5 @@
 namespace Modules\Campaigns;
 
 interface ForCampaignBanners {
-    public function bannerSet(): CampaignBannerSet;
+    public function bannerSet(DeviceType $device): CampaignBannerSet;
 }

@@ -189,7 +189,7 @@ class TopicController extends BaseController {
                 'flags'                   => $this->flags($forum),
                 'schema_topic'            => $this->discussionForumPosting($topic, $post['html']),
                 'topic_ads'               => $this->userIncludeAds(),
-                'campaign_banners_topic'  => $presenter->bannerSet(),
+                'campaign_banners_topic'  => $presenter->bannerSet(Campaigns\DeviceType::Desktop),
             ]);
     }
 

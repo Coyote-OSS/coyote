@@ -21,7 +21,7 @@ readonly class CampaignService {
         $this->selector = new CampaignBannerSelector($rotate);
     }
 
-    public function campaignBanners(): CampaignBanners {
+    public function campaignBanners(DeviceType $device): CampaignBanners {
         if ($this->isCampaignBannersDisabled()) {
             return $this->disabledCampaignBanners();
         }
