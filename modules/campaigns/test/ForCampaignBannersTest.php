@@ -6,7 +6,6 @@ use Modules\Campaigns\CampaignService;
 use Modules\Campaigns\ForCampaignBanners;
 use Modules\Campaigns\Internal\CampaignBanner;
 use Modules\Campaigns\Internal\CampaignBanners;
-use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\VariantType;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -20,15 +19,12 @@ use Test\Modules\Campaigns\Fixture\TestRedirectUrls;
 class ForCampaignBannersTest extends TestCase {
     private ForCampaignBanners $presenter;
     private CampaignService|MockObject $campaignService;
-    private CampaignsStore|MockObject $campaignStore;
 
     #[Before]
     public function initialize(): void {
         $this->campaignService = $this->createStub(CampaignService::class);
-        $this->campaignStore = $this->createMock(CampaignsStore::class);
         $this->presenter = new CampaignBannersFacade(
             $this->campaignService,
-            $this->campaignStore,
             new TestRedirectUrls("https://test-redirect"));
     }
 
@@ -135,57 +131,6 @@ class ForCampaignBannersTest extends TestCase {
         $bannerSet = $this->presenter->bannerSet();
         // assert
         $this->assertSame('https://test-redirect/7/adblock', $bannerSet->sidebar->adblockUrl);
-    }
-
-    #[Test]
-    public function recordsNoViewsForEmptyBannerSet(): void {
-        // arrange
-        $this->stubCampaignBannersEmpty();
-        // assert-expect
-        $this->campaignStore
-            ->expects($this->never())
-            ->method('viewVariant');
-        // act
-        $this->presenter->recordViews($this->presenter->bannerSet());
-    }
-
-    #[Test]
-    public function recordsViewForHorizontalBanner(): void {
-        // arrange
-        $this->stubCampaignBanners(new CampaignBanners(
-            [$this->banner('img.png', variantId:42)],
-            null));
-        // assert-expect
-        $this->campaignStore->expects($this->once())->method('viewVariant')->with(42);
-        // act
-        $this->presenter->recordViews($this->presenter->bannerSet());
-    }
-
-    #[Test]
-    public function recordsViewForSidebarBanner(): void {
-        // arrange
-        $this->stubCampaignBanners(new CampaignBanners(
-            [],
-            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
-        // assert-expect
-        $this->campaignStore->expects($this->once())->method('viewVariant')->with(7);
-        // act
-        $this->presenter->recordViews($this->presenter->bannerSet());
-    }
-
-    #[Test]
-    public function recordsViewsForAllBanners(): void {
-        // arrange
-        $this->stubCampaignBanners(new CampaignBanners(
-            [$this->banner('h1.png', variantId:1), $this->banner('h2.png', variantId:2)],
-            $this->banner('side.png', variantId:3, type:VariantType::Rectangle)));
-        // assert-expect
-        $this->campaignStore
-            ->expects($this->exactly(3))
-            ->method('viewVariant')
-            ->withParameterSetsInOrder([1], [2], [3]);
-        // act
-        $this->presenter->recordViews($this->presenter->bannerSet());
     }
 
     private function banner(

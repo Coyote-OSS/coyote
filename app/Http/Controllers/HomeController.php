@@ -39,9 +39,6 @@ class HomeController extends Controller {
         $this->topic->pushCriteria(new SkipHiddenCategories($this->userId));
         $date = new DiscreetDate(date('Y-m-d H:i:s'));
 
-        $bannerSet = $presenter->bannerSet();
-        $presenter->recordViews($bannerSet);
-
         return $this->view('home', [
             'flags'                 => $this->flags(),
             'microblogs'            => $this->getMicroblogs(),
@@ -59,7 +56,7 @@ class HomeController extends Controller {
             'homepageMembers'       => $this->members(),
             'settings'              => $this->getSettings(),
             'home_ads'              => $this->userIncludeAds(),
-            'campaign_banners_home' => $bannerSet,
+            'campaign_banners_home' => $presenter->bannerSet(),
         ]);
     }
 

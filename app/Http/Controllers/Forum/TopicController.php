@@ -163,8 +163,6 @@ class TopicController extends BaseController {
 
         $topic->load('tags');
         $post = array_first($posts['data']);
-        $bannerSet = $presenter->bannerSet();
-        $presenter->recordViews($bannerSet);
 
         return $this
             ->view('forum.topic', [
@@ -191,7 +189,7 @@ class TopicController extends BaseController {
                 'flags'                   => $this->flags($forum),
                 'schema_topic'            => $this->discussionForumPosting($topic, $post['html']),
                 'topic_ads'               => $this->userIncludeAds(),
-                'campaign_banners_topic'  => $bannerSet,
+                'campaign_banners_topic'  => $presenter->bannerSet(),
             ]);
     }
 

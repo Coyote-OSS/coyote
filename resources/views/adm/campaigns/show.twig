@@ -65,21 +65,6 @@
       </div>
       <div class="list-group-item d-flex">
         <span>
-          {{ icon('campaignViews') }}
-          <b>Wyświetlenia:</b>
-          {{ campaign.stats.views|number_format }}
-          {% if campaign.targetViews %}
-            <span class="text-muted">
-              (docelowo: {{ campaign.targetViews|number_format }})
-            </span>
-          {% endif %}
-        </span>
-        <span class="ms-auto text-muted">
-          {{ icon('genericInfo', {title: 'Wariant został wczytany przez urządzenie, wliczając w to: przeglądarkę użytkownika, scrapper, crawler, bot, etc.'}) }}
-        </span>
-      </div>
-      <div class="list-group-item d-flex">
-        <span>
           {{ icon('campaignExposures') }}
           <b>Ekspozycje:</b>
           {{ campaign.stats.exposures|number_format }}
@@ -141,7 +126,6 @@
     {{ components.table('Ta kampania na razie nie ma żadnych banerów.', campaign.variants, [
       { key: 'imageUrl', label: 'Grafika', labelIcon: 'campaignBanner', style: 'image', styleClass:'max-h-4 max-w-26' },
       { key: 'bannerTypeTitle', label: 'Typ', labelIcon: 'campaignBannerType' },
-      { key: 'stats.views', label: 'Wyświetlenia', labelIcon: 'campaignViews', style: 'number' },
       { key: 'stats.exposures', label: 'Ekspozycje', labelIcon: 'campaignExposures', style: 'number' },
       { key: 'stats.blocked', label: 'Zablokowane', labelIcon: 'campaignBlocked', style: 'number' },
       { key: 'stats.clicks', label: 'Kliknięcia', labelIcon: 'campaignClicks', style: 'number' },
