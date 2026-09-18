@@ -5,6 +5,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
+use function array_shift;
 
 trait CampaignSteps {
     /** @var array<int, array<string, string[]>> */
@@ -77,6 +78,14 @@ trait CampaignSteps {
         $this->assert->assertEquals(
             $table->getRows(),
             \array_column($this->renderedSlots, $slotType));
+    }
+
+    #[Then('the following slots contain:')]
+    public function theFollowingSlotsContain(TableNode $expectedSlots): void {
+        foreach ($expectedSlots->getRows() as $slot) {
+            $slotType = array_shift($slot);
+            $this->assert->assertEquals($slot, $this->driver->variantsForSlot($slotType));
+        }
     }
 
     #[Given('there is a campaign :campaign, which has a :variantType variant :variantUrl')]
