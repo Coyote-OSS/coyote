@@ -2,18 +2,47 @@
 namespace Features\Dsl\Driver\Channel\InMemoryChannel;
 
 use Features\Dsl\Driver\Driver;
-use Modules\Campaigns\Store\Campaign;
+use Libs\Arrays\arrays;
+use Modules\Campaigns\CampaignBanner;
+use Modules\Campaigns\CampaignBannerSet;
+use Modules\Campaigns\CampaignBannersFacade;
+use Modules\Campaigns\CampaignService;
+use Modules\Campaigns\DeviceType;
+use Modules\Campaigns\ForCampaignBanners;
 use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\VariantPayload;
 use Modules\Campaigns\VariantType;
+use Test\Modules\Campaigns\Fixture\TestCurrentDate;
+use Test\Modules\Campaigns\Fixture\TestPrivilegedUsers;
+use Test\Modules\Campaigns\Fixture\TestRedirectUrls;
+use Test\Modules\Campaigns\Fixture\TestRotatingBanners;
+use Test\Modules\Campaigns\Fixture\TestUserVoivodeship;
+use Test\Modules\Campaigns\Store\InMemoryCampaignsStore;
 
 class InMemoryDriver implements Driver {
-    private array $campaignIds = [];
-    private string $deviceType = '';
-    private int $rotationSeed = -1;
+    public static function create(): self {
+        $rotatingBanners = new TestRotatingBanners();
+        $store = new InMemoryCampaignsStore();
+        $facade = new CampaignBannersFacade(
+            new CampaignService(
+                new TestPrivilegedUsers(),
+                $rotatingBanners,
+                new TestCurrentDate(),
+                $store,
+                new TestUserVoivodeship()),
+            new TestRedirectUrls('https://example.test'));
+        return new InMemoryDriver($store, $facade, $rotatingBanners);
+    }
 
-    public function __construct(private readonly CampaignsStore $store) {}
+    private array $campaignIds = [];
+    private ?CampaignBannerSet $resolvedBanners;
+
+    public function __construct(
+        private readonly CampaignsStore      $store,
+        private readonly ForCampaignBanners  $service,
+        private readonly TestRotatingBanners $rotatingBanners,
+    ) {}
 
     public function createCampaign(string $campaign, bool $premium): void {
         $this->campaignIds[$campaign] = $this->store->createCampaign(new CampaignPayload(
@@ -29,95 +58,27 @@ class InMemoryDriver implements Driver {
     }
 
     public function resolveVariantsForUser(string $deviceType): void {
-        $this->deviceType = $deviceType;
-        $this->rotationSeed++;
+        $this->resolvedBanners = $this->service->bannerSet($this->deviceType($deviceType));
+        $this->rotatingBanners->rotate();
     }
 
     public function variantsForSlot(string $slotType): array {
-        $variants = $this->allVariantsForSlot($slotType);
-        $result = [];
-        for ($i = 0; $i < min($this->slotWindowSize($slotType), count($variants)); $i++) {
-            $result[] = $variants[($this->rotationSeed + $i) % count($variants)];
-        }
-        return $result;
+        return match ($slotType) {
+            'square' => $this->resolvedBanners->sidebar === null
+                ? []
+                : [$this->resolvedBanners->sidebar->imageUrl],
+            'feed'   => $this->resolvedBanners->feed |> arrays::map(fn(CampaignBanner $banner) => $banner->imageUrl),
+            'header' => $this->resolvedBanners->horizontal |> arrays::map(fn(CampaignBanner $banner) => $banner->imageUrl),
+            default  => throw new \Exception()
+        };
     }
 
-    private function slotWindowSize(string $slotType): int {
-        if ($slotType === 'square') {
-            return 1;
-        }
-        return 2;
-    }
-
-    /**
-     * @return string[]
-     */
-    private function allVariantsForSlot(string $slotType): array {
-        $campaigns = $this->store->listCampaigns();
-        $type = $this->resolvedVariantType($slotType, $campaigns);
-        $urls = [];
-        foreach ($campaigns as $campaign) {
-            foreach ($campaign->variantsOfType($type) as $variant) {
-                $urls[] = $variant->payload->imageUrl;
-            }
-        }
-        return $urls;
-    }
-
-    /**
-     * @param Campaign[] $campaigns
-     */
-    private function resolvedVariantType(string $slotType, array $campaigns): VariantType {
-        if ($slotType === 'square') {
-            if ($this->deviceType === 'desktop') {
-                if ($this->anyCampaignHasVariant($campaigns, VariantType::RectangleXl, onlyPremium:true)) {
-                    return VariantType::RectangleXl;
-                }
-            }
-            return VariantType::Rectangle;
-        }
-        if ($slotType === 'header') {
-            if ($this->deviceType === 'desktop') {
-                if (count($campaigns) === 1) {
-                    if ($this->anyCampaignHasVariant($campaigns, VariantType::LeaderBoard, false)) {
-                        return VariantType::LeaderBoard;
-                    }
-                }
-                if ($this->anyCampaignHasVariant($campaigns, VariantType::LeaderBoardXl, onlyPremium:true)) {
-                    return VariantType::LeaderBoardXl;
-                }
-            }
-        }
-        if ($slotType === 'feed') {
-            if ($this->deviceType === 'mobile') {
-                if ($this->anyCampaignHasVariant($campaigns, VariantType::BannerXl, false)) {
-                    return VariantType::BannerXl;
-                }
-            } else {
-                if ($this->anyCampaignHasVariant($campaigns, VariantType::Banner, false)) {
-                    return VariantType::Banner;
-                }
-            }
-            return VariantType::Rectangle;
-        }
-        if ($this->deviceType === 'mobile') {
-            return VariantType::BannerXl;
-        }
-        return VariantType::Banner;
-    }
-
-    /**
-     * @param Campaign[] $campaigns
-     */
-    private function anyCampaignHasVariant(array $campaigns, VariantType $type, bool $onlyPremium): bool {
-        foreach ($campaigns as $campaign) {
-            if (!$onlyPremium || $campaign->payload->isPremium) {
-                if (!empty($campaign->variantsOfType($type))) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    private function deviceType(string $deviceType): DeviceType {
+        return match ($deviceType) {
+            'desktop' => DeviceType::Desktop,
+            'mobile'  => DeviceType::Mobile,
+            default   => throw new \Exception()
+        };
     }
 
     private function parseVariantType(string $variantType): VariantType {

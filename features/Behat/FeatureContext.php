@@ -6,7 +6,6 @@ use Behat\Hook\AfterScenario;
 use Features\Dsl\Driver\Channel\InMemoryChannel\InMemoryDriver;
 use Features\Dsl\Driver\Channel\IntegrationChannel\IntegrationDriver;
 use Features\Dsl\Driver\Driver;
-use Test\Modules\Campaigns\Store\InMemoryCampaignsStore;
 
 /**
  * @noinspection PhpUnused
@@ -24,7 +23,7 @@ class FeatureContext implements Context {
 
     private function initializeDriver(): Driver {
         return match (\getEnv('TEST_CHANNEL')) {
-            'in-memory'   => new InMemoryDriver(new InMemoryCampaignsStore()),
+            'in-memory'   => InMemoryDriver::create(),
             'integration' => new IntegrationDriver(),
             default       => throw new \Error('Failed to resolve the test channel.'),
         };
