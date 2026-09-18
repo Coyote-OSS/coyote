@@ -337,6 +337,107 @@ class CampaignsBannersTest extends TestCase {
         $this->assertEmpty($this->facade->getHorizontalBannerUrls());
     }
 
+    #[Test]
+    public function soleNonPremiumCampaign_withOnlyLeaderBoard_showsLeaderBoardInsteadOfHorizontal(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:false);
+        $this->facade->createVariant($campaignId, 'leaderboard.png', VariantType::LeaderBoard);
+        $this->assertEquals(['leaderboard.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function premiumCampaign_withOnlyLeaderBoardXl_showsLeaderBoardXlInsteadOfHorizontal(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($campaignId, 'leaderboard-xl.png', VariantType::LeaderBoardXl);
+        $this->assertEquals(['leaderboard-xl.png'], $this->facade->getHorizontalBannerUrls());
+    }
+
+    #[Test]
+    public function mobileDevice_usesBannerXlForHorizontal(): void {
+        $campaignId = $this->facade->createCampaign();
+        $this->facade->createVariant($campaignId, 'banner-xl.png', VariantType::BannerXl);
+        $horizontal = $this->campaigns->campaignBanners(DeviceType::Mobile)->horizontal;
+        $this->assertSame(['banner-xl.png'], $horizontal |> arrays::map(fn($banner) => $banner->bannerUrl));
+    }
+
+    #[Test]
+    public function mobileDevice_neverElevatesToLeaderBoardXl(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($campaignId, 'banner-xl.png', VariantType::BannerXl);
+        $this->facade->createVariant($campaignId, 'leaderboard-xl.png', VariantType::LeaderBoardXl);
+        $horizontal = $this->campaigns->campaignBanners(DeviceType::Mobile)->horizontal;
+        $this->assertSame(['banner-xl.png'], $horizontal |> arrays::map(fn($banner) => $banner->bannerUrl));
+    }
+
+    #[Test]
+    public function premiumCampaign_withRectangleXl_showsRectangleXlInsteadOfSidebar(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($campaignId, 'rectangle.png', VariantType::Rectangle);
+        $this->facade->createVariant($campaignId, 'rectangle-xl.png', VariantType::RectangleXl);
+        $this->assertEquals('rectangle-xl.png', $this->facade->getSidebarBannerUrl());
+    }
+
+    #[Test]
+    public function premiumCampaign_withOnlyRectangleXl_showsRectangleXlAsSidebar(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($campaignId, 'rectangle-xl.png', VariantType::RectangleXl);
+        $this->assertEquals('rectangle-xl.png', $this->facade->getSidebarBannerUrl());
+    }
+
+    #[Test]
+    public function nonPremiumCampaign_withRectangleXl_showsSidebarAsUsual(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:false);
+        $this->facade->createVariant($campaignId, 'rectangle.png', VariantType::Rectangle);
+        $this->facade->createVariant($campaignId, 'rectangle-xl.png', VariantType::RectangleXl);
+        $this->assertEquals('rectangle.png', $this->facade->getSidebarBannerUrl());
+    }
+
+    #[Test]
+    public function mobileDevice_neverElevatesToRectangleXl(): void {
+        $campaignId = $this->facade->createCampaign(isPremium:true);
+        $this->facade->createVariant($campaignId, 'rectangle.png', VariantType::Rectangle);
+        $this->facade->createVariant($campaignId, 'rectangle-xl.png', VariantType::RectangleXl);
+        $sidebar = $this->campaigns->campaignBanners(DeviceType::Mobile)->sidebar;
+        $this->assertSame('rectangle.png', $sidebar->bannerUrl);
+    }
+
+    #[Test]
+    public function feedFallsBackToRectangle_whenNoBannerVariantExists(): void {
+        $campaignId = $this->facade->createCampaign();
+        $this->facade->createVariant($campaignId, 'one.png', VariantType::Rectangle);
+        $this->facade->createVariant($campaignId, 'two.png', VariantType::Rectangle);
+        $feed = $this->campaigns->campaignBanners(DeviceType::Desktop)->feed;
+        $this->assertSame(['one.png', 'two.png'], $feed |> arrays::map(fn($banner) => $banner->bannerUrl));
+    }
+
+    #[Test]
+    public function feedUsesBanner_whenAnyCampaignHasABannerVariant(): void {
+        $campaignId = $this->facade->createCampaign();
+        $this->facade->createVariant($campaignId, 'banner.png', VariantType::Banner);
+        $feed = $this->campaigns->campaignBanners(DeviceType::Desktop)->feed;
+        $this->assertSame(['banner.png'], $feed |> arrays::map(fn($banner) => $banner->bannerUrl));
+    }
+
+    #[Test]
+    public function feedDoesNotElevateToLeaderBoard(): void {
+        $campaignId = $this->facade->createCampaign();
+        $this->facade->createVariant($campaignId, 'leaderboard.png', VariantType::LeaderBoard);
+        $feed = $this->campaigns->campaignBanners(DeviceType::Desktop)->feed;
+        $this->assertEmpty($feed);
+    }
+
+    #[Test]
+    public function feedRotatesThroughMultipleVariantsOfASingleCampaign(): void {
+        $campaignId = $this->facade->createCampaign();
+        $this->facade->createVariant($campaignId, 'one.png', VariantType::Rectangle);
+        $this->facade->createVariant($campaignId, 'two.png', VariantType::Rectangle);
+        $this->facade->createVariant($campaignId, 'three.png', VariantType::Rectangle);
+        $urls = fn() => $this->campaigns->campaignBanners(DeviceType::Desktop)->feed
+            |> arrays::map(fn($banner) => $banner->bannerUrl);
+        $this->assertSame(['one.png', 'two.png'], $urls());
+        $this->rotateBanners->rotate();
+        $this->assertSame(['two.png', 'three.png'], $urls());
+    }
+
     private function assertCampaignKeys(
         array $expectedCampaignKeys,
         array $actualCampaignBanners,

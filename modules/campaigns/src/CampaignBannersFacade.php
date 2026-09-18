@@ -14,6 +14,7 @@ readonly class CampaignBannersFacade implements ForCampaignBanners {
         return new CampaignBannerSet(
             $banners->horizontal |> arrays::map($this->mapBanner(...)),
             $banners->sidebar !== null ? $this->mapBanner($banners->sidebar) : null,
+            $banners->feed |> arrays::map($this->mapBanner(...)),
         );
     }
 
