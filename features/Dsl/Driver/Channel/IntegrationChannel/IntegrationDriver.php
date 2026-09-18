@@ -4,27 +4,24 @@ namespace Features\Dsl\Driver\Channel\IntegrationChannel;
 use Coyote\Modules\Campaigns\Eloquent;
 use Features\Dsl\Driver\Channel\InMemoryChannel\InMemoryDriver;
 use Features\Dsl\Driver\Driver;
-use Illuminate\Contracts\Console;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Foundation\Application;
 use Modules\Campaigns\ForCampaignBanners;
 use Modules\Campaigns\ForRotatingBanners;
 use Modules\Campaigns\Store\CampaignsStore;
 use Test\Modules\Campaigns\Fixture\TestRotatingBanners;
 
 readonly class IntegrationDriver implements Driver {
-    private Application $app;
+    private LaravelKernel $laravel;
     private Driver $driver;
 
     public function __construct() {
-        $this->app = require __DIR__ . '/../../../../../bootstrap/app.php';
-        $this->app->make(Console\Kernel::class)->bootstrap();
-        Eloquent\Campaign::query()->forceDelete();
+        $this->laravel = new LaravelKernel();
+        $this->laravel->bootstrap();
+        $this->functionalIsolation();
         $rotatingBanners = new TestRotatingBanners();
-        $this->app->instance(ForRotatingBanners::class, $rotatingBanners);
+        $this->laravel->app->instance(ForRotatingBanners::class, $rotatingBanners);
         $this->driver = new InMemoryDriver(
-            $this->app->make(CampaignsStore::class),
-            $this->app->make(ForCampaignBanners::class),
+            $this->laravel->app->make(CampaignsStore::class),
+            $this->laravel->app->make(ForCampaignBanners::class),
             $rotatingBanners);
     }
 
@@ -44,11 +41,13 @@ readonly class IntegrationDriver implements Driver {
         return $this->driver->variantsForSlot($slotType);
     }
 
-    public function close(): void {
-        $this->database()->disconnect();
+    private function functionalIsolation(): void {
+        // Currently, clearing the database models serves
+        // the purpose of functional isolation.
+        Eloquent\Campaign::query()->forceDelete();
     }
 
-    private function database(): DatabaseManager {
-        return $this->app->make(DatabaseManager::class);
+    public function close(): void {
+        $this->laravel->disconnectDatabase();
     }
 }
