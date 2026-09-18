@@ -1,11 +1,15 @@
 <?php
 namespace Features\Behat;
 
+use Behat\Gherkin\Node\TableNode;
 use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
 
 trait CampaignSteps {
+    /** @var array<int, array<string, string[]>> */
+    private array $renderedSlots = [];
+
     #[Given('there is a campaign :campaign')]
     #[Given('there is a standard campaign :campaign')]
     #[Given('there is a sole campaign :campaign')]
@@ -35,6 +39,19 @@ trait CampaignSteps {
         $this->driver->resolveVariantsForUser($deviceType);
     }
 
+    #[When('variants are resolved :times times for a user on :deviceType')]
+    public function variantsAreResolvedForAUserOnDeviceMultipleTimes(string $deviceType, int $times): void {
+        $this->renderedSlots = [];
+        for ($i = 0; $i < $times; $i++) {
+            $this->driver->resolveVariantsForUser($deviceType);
+            $this->renderedSlots[] = [
+                'header' => $this->driver->variantsForSlot('header'),
+                'feed'   => $this->driver->variantsForSlot('feed'),
+                'square' => $this->driver->variantsForSlot('square'),
+            ];
+        }
+    }
+
     #[When('variants are resolved')]
     public function variantsAreResolved(): void {
         $this->driver->resolveVariantsForUser('desktop');
@@ -53,6 +70,13 @@ trait CampaignSteps {
     #[Then('the :slotType slot is empty')]
     public function theSlotIsEmpty(string $slotType): void {
         $this->assert->assertEmpty($this->driver->variantsForSlot($slotType));
+    }
+
+    #[Then('the :slotType slot rotates through:')]
+    public function theSlotRotatesThrough(string $slotType, TableNode $table): void {
+        $this->assert->assertEquals(
+            $table->getRows(),
+            \array_column($this->renderedSlots, $slotType));
     }
 
     #[Given('there is a campaign :campaign, which has a :variantType variant :variantUrl')]
