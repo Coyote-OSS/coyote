@@ -43,10 +43,10 @@ class InMemoryDriver implements Driver {
     }
 
     private function slotWindowSize(string $slotType): int {
-        if ($slotType === 'feed') {
-            return 2;
+        if ($slotType === 'square') {
+            return 1;
         }
-        return 1;
+        return 2;
     }
 
     /**
