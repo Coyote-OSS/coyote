@@ -17,7 +17,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     #[Test]
     public function rendersEmptyCampaignBannerContainer(): void {
-        $bannerSet = new CampaignBannerSet([], null);
+        $bannerSet = new CampaignBannerSet([], null, []);
         $html = $this->campaignBanner('horizontal', $bannerSet);
         $this->assertNull($html->querySelector('.campaign-banner'));
     }
@@ -26,7 +26,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
     public function rendersSidebarBannerLinkAndImage(): void {
         $bannerSet = new CampaignBannerSet([], $this->banner(
             'https://example.com/sidebar',
-            'https://example.com/sidebar.jpg'));
+            'https://example.com/sidebar.jpg'), []);
         $html = $this->campaignBanner('sidebar', $bannerSet);
         $this->assertSame('https://example.com/sidebar',
             $html->querySelector('a')->getAttribute('href'));
@@ -39,7 +39,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
         $bannerSet = new CampaignBannerSet([], $this->banner(
             '',
             '',
-            exposeUrl:'https://example.com/sidebar/expose'));
+            exposeUrl:'https://example.com/sidebar/expose'), []);
         $html = $this->campaignBanner('sidebar', $bannerSet);
         $this->assertSame('https://example.com/sidebar/expose',
             $html->querySelector('img')->getAttribute('data-expose-url'));
@@ -50,7 +50,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
         $bannerSet = new CampaignBannerSet([], $this->banner(
             '',
             '',
-            adblockUrl:'https://example.com/sidebar/adblock'));
+            adblockUrl:'https://example.com/sidebar/adblock'), []);
         $html = $this->campaignBanner('sidebar', $bannerSet);
         $this->assertSame('https://example.com/sidebar/adblock',
             $html->querySelector('img')->getAttribute('data-adblock-url'));
@@ -61,7 +61,7 @@ class TwigMacroCampaignBannerTest extends TestCase {
         $banner = $this->banner(
             redirectUrl:'https://example.com/horizontal',
             imageUrl:'https://example.com/horizontal.jpg');
-        $bannerSet = new CampaignBannerSet([$banner], null);
+        $bannerSet = new CampaignBannerSet([$banner], null, []);
         $html = $this->campaignBanner('horizontal', $bannerSet);
         $this->assertSame('https://example.com/horizontal',
             $html->querySelector('a')->getAttribute('href'));
@@ -71,14 +71,14 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     #[Test]
     public function horizontalPlaceholderDoesNotRenderSidebar(): void {
-        $bannerSet = new CampaignBannerSet([], $this->banner());
+        $bannerSet = new CampaignBannerSet([], $this->banner(), []);
         $html = $this->campaignBanner('horizontal', $bannerSet);
         $this->assertNull($html->querySelector('a'));
     }
 
     #[Test]
     public function sidebarPlaceholderDoesNotRenderHorizontal(): void {
-        $bannerSet = new CampaignBannerSet([$this->banner()], null);
+        $bannerSet = new CampaignBannerSet([$this->banner()], null, []);
         $dom = $this->campaignBanner('sidebar', $bannerSet);
         $this->assertNull($dom->querySelector('a'));
     }

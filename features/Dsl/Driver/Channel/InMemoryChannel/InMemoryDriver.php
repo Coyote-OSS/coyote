@@ -17,7 +17,7 @@ class InMemoryDriver implements Driver {
 
     public function createCampaign(string $campaign, bool $premium): void {
         $this->campaignIds[$campaign] = $this->store->createCampaign(new CampaignPayload(
-            $campaign, '', null, null, null, null, $premium, null,
+            $campaign, '', null, null, 999, null, $premium, null,
         ));
     }
 

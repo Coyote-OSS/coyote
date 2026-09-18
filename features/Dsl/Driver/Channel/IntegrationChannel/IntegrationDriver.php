@@ -7,17 +7,30 @@ use Features\Dsl\Driver\Driver;
 use Illuminate\Contracts\Console;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Application;
+use Libs\Arrays\arrays;
+use Modules\Campaigns\CampaignBanner;
+use Modules\Campaigns\CampaignBannerSet;
+use Modules\Campaigns\DeviceType;
+use Modules\Campaigns\ForCampaignBanners;
+use Modules\Campaigns\ForRotatingBanners;
 use Modules\Campaigns\Store\CampaignsStore;
+use Test\Modules\Campaigns\Fixture\TestRotatingBanners;
 
-readonly class IntegrationDriver implements Driver {
-    private Application $app;
-    private Driver $driver;
+class IntegrationDriver implements Driver {
+    private readonly Application $app;
+    private readonly Driver $driver;
+    private readonly ForCampaignBanners $service;
+    private readonly TestRotatingBanners $rotatingBanners;
+    private ?CampaignBannerSet $resolvedBanners;
 
     public function __construct() {
         $this->app = require __DIR__ . '/../../../../../bootstrap/app.php';
         $this->app->make(Console\Kernel::class)->bootstrap();
         Eloquent\Campaign::query()->forceDelete();
         $this->driver = new InMemoryDriver($this->app->make(CampaignsStore::class));
+        $this->rotatingBanners = new TestRotatingBanners();
+        $this->app->instance(ForRotatingBanners::class, $this->rotatingBanners);
+        $this->service = $this->app->make(ForCampaignBanners::class);
     }
 
     public function createCampaign(string $campaign, bool $premium): void {
@@ -29,11 +42,19 @@ readonly class IntegrationDriver implements Driver {
     }
 
     public function resolveVariantsForUser(string $deviceType): void {
-        $this->driver->resolveVariantsForUser($deviceType);
+        $this->resolvedBanners = $this->service->bannerSet($this->deviceType($deviceType));
+        $this->rotatingBanners->rotate();
     }
 
     public function variantsForSlot(string $slotType): array {
-        return $this->driver->variantsForSlot($slotType);
+        return match ($slotType) {
+            'square' => $this->resolvedBanners->sidebar === null
+                ? []
+                : [$this->resolvedBanners->sidebar->imageUrl],
+            'feed'   => $this->resolvedBanners->feed |> arrays::map(fn(CampaignBanner $banner) => $banner->imageUrl),
+            'header' => $this->resolvedBanners->horizontal |> arrays::map(fn(CampaignBanner $banner) => $banner->imageUrl),
+            default  => throw new \Exception()
+        };
     }
 
     public function close(): void {
@@ -42,5 +63,13 @@ readonly class IntegrationDriver implements Driver {
 
     private function database(): DatabaseManager {
         return $this->app->make(DatabaseManager::class);
+    }
+
+    private function deviceType(string $deviceType): DeviceType {
+        return match ($deviceType) {
+            'desktop' => DeviceType::Desktop,
+            'mobile'  => DeviceType::Mobile,
+            default   => throw new \Exception()
+        };
     }
 }

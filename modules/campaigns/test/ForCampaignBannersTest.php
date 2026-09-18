@@ -54,7 +54,8 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [$this->banner('img.png', variantId:1)],
-            null));
+            null,
+            []));
         // act
         $bannerSet = $this->bannerSet();
         // assert
@@ -66,7 +67,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [$this->banner('img.png', variantId:42)],
-            null));
+            null, []));
         // act
         $bannerSet = $this->bannerSet();
         // assert
@@ -78,7 +79,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $campaignBanners = new CampaignBanners(
             [$this->banner('one.png', variantId:1), $this->banner('two.png', variantId:2)],
-            null);
+            null, []);
         $this->stubCampaignBanners($campaignBanners);
         // act
         $bannerSet = $this->bannerSet();
@@ -87,11 +88,47 @@ class ForCampaignBannersTest extends TestCase {
     }
 
     #[Test]
+    public function noFeedBanners(): void {
+        // arrange
+        $this->stubCampaignBannersEmpty();
+        // act
+        $bannerSet = $this->bannerSet();
+        // assert
+        $this->assertEmpty($bannerSet->feed);
+    }
+
+    #[Test]
+    public function feedBannerImageUrl(): void {
+        // arrange
+        $this->stubCampaignBanners(new CampaignBanners(
+            horizontal:[],
+            sidebar:null,
+            feed:[$this->banner('feed.png', variantId:5)]));
+        // act
+        $bannerSet = $this->bannerSet();
+        // assert
+        $this->assertSame('feed.png', $bannerSet->feed[0]->imageUrl);
+    }
+
+    #[Test]
+    public function feedBannerRedirectUrl(): void {
+        // arrange
+        $this->stubCampaignBanners(new CampaignBanners(
+            horizontal:[],
+            sidebar:null,
+            feed:[$this->banner('feed.png', variantId:9)]));
+        // act
+        $bannerSet = $this->bannerSet();
+        // assert
+        $this->assertSame('https://test-redirect/9', $bannerSet->feed[0]->redirectUrl);
+    }
+
+    #[Test]
     public function sidebarBannerImageUrl(): void {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [],
-            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
+            $this->banner('side.png', variantId:7, type:VariantType::Rectangle), []));
         // act
         $bannerSet = $this->bannerSet();
         // assert
@@ -103,7 +140,8 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [],
-            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
+            $this->banner('side.png', variantId:7, type:VariantType::Rectangle),
+            []));
         // act
         $bannerSet = $this->bannerSet();
         // assert
@@ -115,7 +153,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [],
-            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
+            $this->banner('side.png', variantId:7, type:VariantType::Rectangle), []));
         // act
         $bannerSet = $this->bannerSet();
         // assert
@@ -127,7 +165,7 @@ class ForCampaignBannersTest extends TestCase {
         // arrange
         $this->stubCampaignBanners(new CampaignBanners(
             [],
-            $this->banner('side.png', variantId:7, type:VariantType::Rectangle)));
+            $this->banner('side.png', variantId:7, type:VariantType::Rectangle), []));
         // act
         $bannerSet = $this->bannerSet();
         // assert
@@ -148,7 +186,7 @@ class ForCampaignBannersTest extends TestCase {
     }
 
     private function stubCampaignBannersEmpty(): void {
-        $this->stubCampaignBanners(new CampaignBanners([], null));
+        $this->stubCampaignBanners(new CampaignBanners([], null, []));
     }
 
     private function stubCampaignBanners(CampaignBanners $campaignBanners): void {
