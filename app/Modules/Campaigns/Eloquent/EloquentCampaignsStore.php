@@ -147,4 +147,8 @@ class EloquentCampaignsStore implements CampaignsStore {
             'leaderboard-xl' => VariantType::LeaderBoardXl,
         };
     }
+
+    public function removeCampaigns(): void {
+        Eloquent\Campaign::query()->delete();
+    }
 }

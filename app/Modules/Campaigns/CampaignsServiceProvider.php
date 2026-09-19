@@ -65,5 +65,11 @@ class CampaignsServiceProvider extends ServiceProvider {
         $router
             ->post('/campaigns/{variantId}/adblock', [CampaignsController::class, 'adblock'])
             ->name('campaigns.adblock');
+        $router
+            ->post('/harness/campaigns/reset', function (EloquentCampaignsStore $store) {
+                $store->removeCampaigns();
+                return response()->noContent();
+            })
+            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1']);
     }
 }
