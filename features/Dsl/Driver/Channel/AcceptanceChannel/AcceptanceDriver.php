@@ -8,8 +8,7 @@ use Libs\Arrays\arrays;
 class AcceptanceDriver implements Driver {
     private readonly BrowserDriver $driver;
     private readonly VariantImageFixture $variantImages;
-    /** @var array<string, int> */
-    private array $campaignIds = [];
+    private readonly CampaignIdMapping $campaignIds;
     /** @var array<string, string> */
     private array $variantAliases = [];
     private int $rotationSeed = 0;
@@ -17,6 +16,7 @@ class AcceptanceDriver implements Driver {
     public function __construct() {
         $this->driver = new BrowserDriver($this->userAgentNonCrawler());
         $this->variantImages = new VariantImageFixture();
+        $this->campaignIds = new CampaignIdMapping();
         $this->logIntoAdminPanel();
         $this->resetCampaigns();
     }
@@ -30,11 +30,11 @@ class AcceptanceDriver implements Driver {
             $this->driver->browser->check('is_premium');
         }
         $this->driver->browser->waitForReload(fn(Browser $browser) => $browser->press('Zapisz'));
-        $this->campaignIds[$campaign] = $this->currentCampaignId();
+        $this->campaignIds->setCampaignId($campaign, $this->currentCampaignId());
     }
 
     public function addVariant(string $campaign, string $variantType, string $variantUrl): void {
-        $campaignId = $this->campaignIds[$campaign];
+        $campaignId = $this->campaignIds->getCampaignId($campaign);
         $imagePath = $this->variantImages->create($variantType);
         try {
             $this->driver->browser->visit("/Adm/Campaigns/Show/$campaignId");
