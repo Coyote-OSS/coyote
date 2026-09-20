@@ -7,6 +7,7 @@ use Libs\Arrays\arrays;
 
 class AcceptanceDriver implements Driver {
     private readonly BrowserDriver $driver;
+    private readonly HarnessClient $harness;
     private readonly VariantImageFixture $variantImages;
     private readonly CampaignIdMapping $campaignIds;
     private readonly VariantAliasMapping $variantAliases;
@@ -14,11 +15,12 @@ class AcceptanceDriver implements Driver {
 
     public function __construct() {
         $this->driver = new BrowserDriver($this->userAgentNonCrawler());
+        $this->harness = new HarnessClient($this->driver->browser);
         $this->variantImages = new VariantImageFixture();
         $this->campaignIds = new CampaignIdMapping();
         $this->variantAliases = new VariantAliasMapping();
         $this->logIntoAdminPanel();
-        $this->resetCampaigns();
+        $this->harness->resetCampaigns();
     }
 
     public function createCampaign(string $campaign, bool $premium): void {
@@ -49,9 +51,10 @@ class AcceptanceDriver implements Driver {
     public function resolveVariantsForUser(string $deviceType): void {
         [$width, $height] = $this->viewportSize($deviceType);
         $this->driver->browser->resize($width, $height);
-        $this->pinRotationSeed($this->rotationSeed++);
+        $this->harness->pinRotationSeed($this->rotationSeed++);
         $this->driver->browser->driver->manage()->deleteAllCookies();
-        $this->driver->browser->visit('/');
+        $this->driver->browser->visit('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
+        $this->driver->browser->waitUntilMissing('#js-skeleton');
     }
 
     private function viewportSize(string $deviceType): array {
@@ -66,9 +69,16 @@ class AcceptanceDriver implements Driver {
         return match ($slotType) {
             'header' => $this->aliasedImageUrls('.campaign-banner-header img'),
             'square' => $this->aliasedImageUrls('.campaign-banner-square img'),
-            'feed'   => $this->feedImageUrls(),
+            'feed'   => $this->aliasedImageUrls('.campaign-banner-feed img'),
             default  => throw new \Exception("Invalid slot type: $slotType"),
         };
+    }
+
+    /**
+     * @return string[]
+     */
+    private function aliasedImageUrls(string $selector): array {
+        return $this->imageUrls($selector) |> arrays::map($this->variantAliases->getVariantAlias(...));
     }
 
     public function close(): void {
@@ -86,35 +96,6 @@ class AcceptanceDriver implements Driver {
         $this->driver->browser->waitForReload(fn(Browser $browser) => $browser->press('Logowanie'));
     }
 
-    private function resetCampaigns(): void {
-        [$status] = $this->driver->browser->script(<<<'JS'
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/harness/campaigns/reset', false);
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-            xhr.send();
-            return xhr.status;
-            JS,
-        );
-        if ($status !== 204) {
-            throw new \Exception("Failed to clear campaigns via the test harness (status $status).");
-        }
-    }
-
-    private function pinRotationSeed(int $seed): void {
-        [$status] = $this->driver->browser->script(<<<JS
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/harness/campaigns/rotation-seed', false);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-            xhr.send(JSON.stringify({seed: $seed}));
-            return xhr.status;
-            JS,
-        );
-        if ($status !== 204) {
-            throw new \Exception("Failed to pin the rotation seed via the test harness (status $status).");
-        }
-    }
-
     private function currentCampaignId(): int {
         \preg_match('#/Campaigns/Show/(\d+)#', $this->driver->browser->driver->getCurrentURL(), $matches);
         return (int)$matches[1];
@@ -127,21 +108,6 @@ class AcceptanceDriver implements Driver {
         return $this->driver->browser->elements($selector)
                 |> arrays::filter(fn($element) => $element->isDisplayed())
                 |> arrays::map(fn($element) => $element->getAttribute('src'));
-    }
-
-    /**
-     * @return string[]
-     */
-    private function aliasedImageUrls(string $selector): array {
-        return \array_map(
-            fn(string $url) => $this->variantAliases->getVariantAlias($url),
-            $this->imageUrls($selector));
-    }
-
-    private function feedImageUrls(): array {
-        $this->driver->browser->visit('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
-        $this->driver->browser->waitUntilMissing('#js-skeleton');
-        return $this->aliasedImageUrls('.campaign-banner-feed img');
     }
 
     private function closeGdprIfVisible(): void {
