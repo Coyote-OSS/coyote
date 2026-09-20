@@ -40,23 +40,24 @@ class HomeController extends Controller {
         $date = new DiscreetDate(date('Y-m-d H:i:s'));
 
         return $this->view('home', [
-            'flags'                 => $this->flags(),
-            'microblogs'            => $this->getMicroblogs(),
-            'interesting'           => $this->topic->interesting(),
-            'newest'                => $this->topic->newest(),
-            'activities'            => $this->getActivities(),
-            'reputation'            => $cache->remember('homepage:reputation', 30 * 60, fn() => [
+            'flags'                         => $this->flags(),
+            'microblogs'                    => $this->getMicroblogs(),
+            'interesting'                   => $this->topic->interesting(),
+            'newest'                        => $this->topic->newest(),
+            'activities'                    => $this->getActivities(),
+            'reputation'                    => $cache->remember('homepage:reputation', 30 * 60, fn() => [
                 'week'    => $this->reputation->reputationSince($date->startOfThisWeek(), limit:5),
                 'month'   => $this->reputation->reputationSince($date->startOfThisMonth(), limit:5),
                 'quarter' => $this->reputation->reputationSince($date->startOfThisQuarter(), limit:5),
             ]),
-            'emojis'                => Emoji::all(),
-            'events'                => [],
-            'globalViewers'         => $this->globalViewers(),
-            'homepageMembers'       => $this->members(),
-            'settings'              => $this->getSettings(),
-            'home_ads'              => $this->userIncludeAds(),
-            'campaign_banners_home' => $presenter->bannerSet(Campaigns\DeviceType::Desktop),
+            'emojis'                        => Emoji::all(),
+            'events'                        => [],
+            'globalViewers'                 => $this->globalViewers(),
+            'homepageMembers'               => $this->members(),
+            'settings'                      => $this->getSettings(),
+            'home_ads'                      => $this->userIncludeAds(),
+            'campaign_banners_home_desktop' => $presenter->bannerSet(Campaigns\DeviceType::Desktop),
+            'campaign_banners_home_mobile'  => $presenter->bannerSet(Campaigns\DeviceType::Mobile),
         ]);
     }
 

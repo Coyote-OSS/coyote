@@ -71,5 +71,11 @@ class CampaignsServiceProvider extends ServiceProvider {
                 return response()->noContent();
             })
             ->middleware(['web', 'auth', 'can:adm-access', 'adm:1']);
+        $router
+            ->post('/harness/campaigns/rotation-seed', function (TimeRotatingBanners $rotation) {
+                $rotation->overrideSeed(request()->input('seed'));
+                return response()->noContent();
+            })
+            ->middleware('web', 'auth', 'can:adm-access', 'adm:1');
     }
 }

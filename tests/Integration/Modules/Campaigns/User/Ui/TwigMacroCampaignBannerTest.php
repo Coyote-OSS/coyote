@@ -12,84 +12,124 @@ class TwigMacroCampaignBannerTest extends TestCase {
 
     private string $campaignBanner = "
         {% from 'campaignBanner.campaignBanner' import campaignBanner %}
-        {{ campaignBanner(placeholderType, bannerSet) }}
+        {{ campaignBanner(slotType, desktopBannerSet, mobileBannerSet) }}
     ";
 
     #[Test]
     public function rendersEmptyCampaignBannerContainer(): void {
         $bannerSet = new CampaignBannerSet([], null, []);
-        $html = $this->campaignBanner('horizontal', $bannerSet);
+        $html = $this->campaignBanner('header', $bannerSet, $bannerSet);
         $this->assertNull($html->querySelector('.campaign-banner'));
     }
 
     #[Test]
-    public function rendersSidebarBannerLinkAndImage(): void {
+    public function rendersSquareBannerLinkAndImage(): void {
         $bannerSet = new CampaignBannerSet([], $this->banner(
-            'https://example.com/sidebar',
-            'https://example.com/sidebar.jpg'), []);
-        $html = $this->campaignBanner('sidebar', $bannerSet);
-        $this->assertSame('https://example.com/sidebar',
+            'https://example.com/square',
+            'https://example.com/square.jpg'), []);
+        $html = $this->campaignBanner('square', $bannerSet, $bannerSet);
+        $this->assertSame('https://example.com/square',
             $html->querySelector('a')->getAttribute('href'));
-        $this->assertSame('https://example.com/sidebar.jpg',
+        $this->assertSame('https://example.com/square.jpg',
             $html->querySelector('img')->getAttribute('src'));
     }
 
     #[Test]
-    public function rendersSidebarBannerExposeUrlDataAttribute(): void {
+    public function rendersSquareBannerExposeUrlDataAttribute(): void {
         $bannerSet = new CampaignBannerSet([], $this->banner(
             '',
             '',
-            exposeUrl:'https://example.com/sidebar/expose'), []);
-        $html = $this->campaignBanner('sidebar', $bannerSet);
-        $this->assertSame('https://example.com/sidebar/expose',
+            exposeUrl:'https://example.com/square/expose'), []);
+        $html = $this->campaignBanner('square', $bannerSet, $bannerSet);
+        $this->assertSame('https://example.com/square/expose',
             $html->querySelector('img')->getAttribute('data-expose-url'));
     }
 
     #[Test]
-    public function rendersSidebarBannerAdblockUrlDataAttribute(): void {
+    public function rendersSquareBannerAdblockUrlDataAttribute(): void {
         $bannerSet = new CampaignBannerSet([], $this->banner(
             '',
             '',
-            adblockUrl:'https://example.com/sidebar/adblock'), []);
-        $html = $this->campaignBanner('sidebar', $bannerSet);
-        $this->assertSame('https://example.com/sidebar/adblock',
+            adblockUrl:'https://example.com/square/adblock'), []);
+        $html = $this->campaignBanner('square', $bannerSet, $bannerSet);
+        $this->assertSame('https://example.com/square/adblock',
             $html->querySelector('img')->getAttribute('data-adblock-url'));
     }
 
     #[Test]
-    public function rendersHorizontalBannerLinkAndImage(): void {
+    public function rendersHeaderBannerLinkAndImage(): void {
         $banner = $this->banner(
-            redirectUrl:'https://example.com/horizontal',
-            imageUrl:'https://example.com/horizontal.jpg');
+            redirectUrl:'https://example.com/header',
+            imageUrl:'https://example.com/header.jpg');
         $bannerSet = new CampaignBannerSet([$banner], null, []);
-        $html = $this->campaignBanner('horizontal', $bannerSet);
-        $this->assertSame('https://example.com/horizontal',
+        $html = $this->campaignBanner('header', $bannerSet, $bannerSet);
+        $this->assertSame('https://example.com/header',
             $html->querySelector('a')->getAttribute('href'));
-        $this->assertSame('https://example.com/horizontal.jpg',
+        $this->assertSame('https://example.com/header.jpg',
             $html->querySelector('img')->getAttribute('src'));
     }
 
     #[Test]
-    public function horizontalPlaceholderDoesNotRenderSidebar(): void {
+    public function rendersFeedBannerLinkAndImage(): void {
+        $banner = $this->banner(
+            redirectUrl:'https://example.com/feed',
+            imageUrl:'https://example.com/feed.jpg');
+        $bannerSet = new CampaignBannerSet([], null, [$banner]);
+        $html = $this->campaignBanner('feed', $bannerSet, $bannerSet);
+        $this->assertSame('https://example.com/feed',
+            $html->querySelector('a')->getAttribute('href'));
+        $this->assertSame('https://example.com/feed.jpg',
+            $html->querySelector('img')->getAttribute('src'));
+    }
+
+    #[Test]
+    public function headerPlaceholderDoesNotRenderSquare(): void {
         $bannerSet = new CampaignBannerSet([], $this->banner(), []);
-        $html = $this->campaignBanner('horizontal', $bannerSet);
+        $html = $this->campaignBanner('header', $bannerSet, $bannerSet);
         $this->assertNull($html->querySelector('a'));
     }
 
     #[Test]
-    public function sidebarPlaceholderDoesNotRenderHorizontal(): void {
+    public function squarePlaceholderDoesNotRenderHeader(): void {
         $bannerSet = new CampaignBannerSet([$this->banner()], null, []);
-        $dom = $this->campaignBanner('sidebar', $bannerSet);
+        $dom = $this->campaignBanner('square', $bannerSet, $bannerSet);
         $this->assertNull($dom->querySelector('a'));
     }
 
+    #[Test]
+    public function headerPlaceholderDoesNotRenderFeed(): void {
+        $bannerSet = new CampaignBannerSet([], null, [$this->banner()]);
+        $html = $this->campaignBanner('header', $bannerSet, $bannerSet);
+        $this->assertNull($html->querySelector('a'));
+    }
+
+    #[Test]
+    public function feedPlaceholderDoesNotRenderHeader(): void {
+        $bannerSet = new CampaignBannerSet([$this->banner()], null, []);
+        $html = $this->campaignBanner('feed', $bannerSet, $bannerSet);
+        $this->assertNull($html->querySelector('a'));
+    }
+
+    #[Test]
+    public function rendersTheMobileBannerSetEvenWhenTheDesktopOneIsEmpty(): void {
+        $empty = new CampaignBannerSet([], null, []);
+        $mobile = new CampaignBannerSet([], $this->banner(
+            'https://example.com/mobile-square',
+            'https://example.com/mobile-square.jpg'), []);
+        $html = $this->campaignBanner('square', $empty, $mobile);
+        $this->assertSame('https://example.com/mobile-square',
+            $html->querySelector('a')->getAttribute('href'));
+    }
+
     private function campaignBanner(
-        string            $placeholderType,
-        CampaignBannerSet $bannerSet,
+        string            $slotType,
+        CampaignBannerSet $desktopBannerSet,
+        CampaignBannerSet $mobileBannerSet,
     ): \Dom\HTMLDocument {
         return $this->renderTwigTemplate($this->campaignBanner, [
-            'placeholderType' => $placeholderType,
-            'bannerSet'       => $bannerSet,
+            'slotType'          => $slotType,
+            'desktopBannerSet'  => $desktopBannerSet,
+            'mobileBannerSet'   => $mobileBannerSet,
         ]);
     }
 
