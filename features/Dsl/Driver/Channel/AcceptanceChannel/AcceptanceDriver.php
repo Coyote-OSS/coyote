@@ -9,14 +9,14 @@ class AcceptanceDriver implements Driver {
     private readonly BrowserDriver $driver;
     private readonly VariantImageFixture $variantImages;
     private readonly CampaignIdMapping $campaignIds;
-    /** @var array<string, string> */
-    private array $variantAliases = [];
+    private readonly VariantAliasMapping $variantAliases;
     private int $rotationSeed = 0;
 
     public function __construct() {
         $this->driver = new BrowserDriver($this->userAgentNonCrawler());
         $this->variantImages = new VariantImageFixture();
         $this->campaignIds = new CampaignIdMapping();
+        $this->variantAliases = new VariantAliasMapping();
         $this->logIntoAdminPanel();
         $this->resetCampaigns();
     }
@@ -40,7 +40,7 @@ class AcceptanceDriver implements Driver {
             $this->driver->browser->visit("/Adm/Campaigns/Show/$campaignId");
             $this->driver->browser->attach('images[]', $imagePath);
             $this->driver->browser->waitForReload(fn(Browser $browser) => $browser->press('Prześlij'));
-            $this->variantAliases[$this->lastUploadedVariantImageUrl()] = $variantUrl;
+            $this->variantAliases->setVariantAlias($this->lastUploadedVariantImageUrl(), $variantUrl);
         } finally {
             \unlink($imagePath);
         }
@@ -134,7 +134,7 @@ class AcceptanceDriver implements Driver {
      */
     private function aliasedImageUrls(string $selector): array {
         return \array_map(
-            fn(string $url) => $this->variantAliases[$url] ?? throw new \Exception(),
+            fn(string $url) => $this->variantAliases->getVariantAlias($url),
             $this->imageUrls($selector));
     }
 
