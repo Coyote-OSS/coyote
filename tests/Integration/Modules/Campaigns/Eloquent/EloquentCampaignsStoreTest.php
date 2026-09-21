@@ -4,7 +4,6 @@ namespace Tests\Integration\Modules\Campaigns\Eloquent;
 use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Illuminate\Database;
 use Illuminate\Database\Connection;
-use Illuminate\Database\Query\Builder;
 use Libs\Arrays\arrays;
 use Modules\Campaigns;
 use Modules\Campaigns\Store\CampaignsStore;
@@ -32,7 +31,7 @@ class EloquentCampaignsStoreTest extends TestCase {
     public function initialize(): void {
         $this->connection = $this->laravel->app->get(Connection::class);
         $this->store = new EloquentCampaignsStore();
-        $this->table()->delete();
+        $this->store->removeCampaigns();
     }
 
     #[Test]
@@ -98,10 +97,6 @@ class EloquentCampaignsStoreTest extends TestCase {
 
     protected function contractTestStore(): CampaignsStore {
         return $this->store;
-    }
-
-    private function table(): Builder {
-        return $this->connection->table('module_campaigns');
     }
 
     private function variantUrls(Campaigns\Store\Campaign $campaign): array {
