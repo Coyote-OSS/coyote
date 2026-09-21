@@ -2,16 +2,15 @@
 namespace Features\Dsl\Driver\Channel\AcceptanceChannel;
 
 use Features\Dsl\Driver\Driver;
-use Laravel\Dusk\Browser;
 use Libs\Arrays\arrays;
 
-class AcceptanceDriver implements Driver {
-    private readonly BrowserDriver $driver;
-    private readonly HarnessClient $harness;
-    private readonly VariantImageFixture $variantImages;
-    private readonly CampaignIdMapping $campaignIds;
-    private readonly VariantAliasMapping $variantAliases;
-    private int $rotationSeed = 0;
+readonly class AcceptanceDriver implements Driver {
+    private BrowserDriver $driver;
+    private HarnessClient $harness;
+    private VariantImageFixture $variantImages;
+    private CampaignIdMapping $campaignIds;
+    private VariantAliasMapping $variantAliases;
+    private RotationSeed $rotationSeed;
 
     public function __construct() {
         $this->driver = new BrowserDriver($this->userAgentNonCrawler());
@@ -19,7 +18,8 @@ class AcceptanceDriver implements Driver {
         $this->variantImages = new VariantImageFixture();
         $this->campaignIds = new CampaignIdMapping();
         $this->variantAliases = new VariantAliasMapping();
-        $this->logIntoAdminPanel();
+        $this->rotationSeed = new RotationSeed();
+        $this->logIntoAdminPanel('admin-lowrep', 'admin-lowrep');
         $this->harness->resetCampaigns();
     }
 
@@ -31,7 +31,7 @@ class AcceptanceDriver implements Driver {
         if ($premium) {
             $this->driver->browser->check('is_premium');
         }
-        $this->driver->browser->waitForReload(fn(Browser $browser) => $browser->press('Zapisz'));
+        $this->driver->submit('Zapisz');
         $this->campaignIds->setCampaignId($campaign, $this->currentCampaignId());
     }
 
@@ -41,20 +41,18 @@ class AcceptanceDriver implements Driver {
         try {
             $this->driver->browser->visit("/Adm/Campaigns/Show/$campaignId");
             $this->driver->browser->attach('images[]', $imagePath);
-            $this->driver->browser->waitForReload(fn(Browser $browser) => $browser->press('Prześlij'));
+            $this->driver->submit('Prześlij');
             $this->variantAliases->setVariantAlias($this->lastUploadedVariantImageUrl(), $variantUrl);
         } finally {
-            \unlink($imagePath);
+            $this->variantImages->remove($imagePath);
         }
     }
 
     public function resolveVariantsForUser(string $deviceType): void {
-        [$width, $height] = $this->viewportSize($deviceType);
-        $this->driver->browser->resize($width, $height);
-        $this->harness->pinRotationSeed($this->rotationSeed++);
-        $this->driver->browser->driver->manage()->deleteAllCookies();
-        $this->driver->browser->visit('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
-        $this->driver->browser->waitUntilMissing('#js-skeleton');
+        $this->driver->browser->resize(...$this->viewportSize($deviceType));
+        $this->harness->pinRotationSeed($this->rotationSeed->current());
+        $this->rotationSeed->increment();
+        $this->resolveAllSlotsForCurrentDevice();
     }
 
     private function viewportSize(string $deviceType): array {
@@ -82,18 +80,18 @@ class AcceptanceDriver implements Driver {
     }
 
     public function close(): void {
-        $this->driver->browser->quit();
+        $this->driver->close();
     }
 
-    private function logIntoAdminPanel(): void {
+    private function logIntoAdminPanel(string $username, string $password): void {
         $this->driver->browser->visit('/Login');
         $this->closeGdprIfVisible();
-        $this->driver->browser->type('name', 'admin');
-        $this->driver->browser->type('password', 'admin');
-        $this->driver->browser->waitForReload(fn(Browser $browser) => $browser->press('Zaloguj się'));
+        $this->driver->browser->type('name', $username);
+        $this->driver->browser->type('password', $password);
+        $this->driver->submit('Zaloguj się');
         $this->driver->browser->visit('/Adm');
-        $this->driver->browser->type('password', 'admin');
-        $this->driver->browser->waitForReload(fn(Browser $browser) => $browser->press('Logowanie'));
+        $this->driver->browser->type('password', $password);
+        $this->driver->submit('Logowanie');
     }
 
     private function currentCampaignId(): int {
@@ -126,5 +124,10 @@ class AcceptanceDriver implements Driver {
 
     private function userAgentNonCrawler(): string {
         return 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
+    }
+
+    private function resolveAllSlotsForCurrentDevice(): void {
+        $this->driver->browser->visit('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
+        $this->driver->browser->waitUntilMissing('#js-skeleton');
     }
 }

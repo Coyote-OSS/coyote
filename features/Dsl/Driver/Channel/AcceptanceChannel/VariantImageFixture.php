@@ -8,6 +8,10 @@ readonly class VariantImageFixture {
         return $path;
     }
 
+    public function remove(string $imagePath): void {
+        \unlink($imagePath);
+    }
+
     private function variantDimensions(string $variantType): array {
         return match ($variantType) {
             'banner'         => [728, 90],

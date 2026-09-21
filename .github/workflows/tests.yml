@@ -29,10 +29,13 @@ jobs:
       - name: Run module unit tests
         run: ./vendor/bin/phpunit ./modules/
 
+      - name: Run acceptance test unit tests
+        run: ./vendor/bin/phpunit ./features/
+
       - name: Run acceptance tests (in-memory)
         run: TEST_CHANNEL=in-memory ./vendor/bin/behat
 
-  integration:
+  acceptance:
     runs-on: ubuntu-24.04
 
     steps:
@@ -50,5 +53,11 @@ jobs:
       - name: Install coyote server
         run: make composer-install migrate
 
-      - name: Run Behat tests
+      - name: Run acceptance tests (integration driver)
         run: docker compose exec -T php bash -c 'TEST_CHANNEL=integration vendor/bin/behat'
+
+      - name: Seed for acceptance tests
+        run: docker compose exec -T php php artisan db:seed --class=ForumsTableSeeder
+
+      - name: Run acceptance tests (browser driver)
+        run: docker compose exec -T php bash -c 'TEST_CHANNEL=acceptance vendor/bin/behat'

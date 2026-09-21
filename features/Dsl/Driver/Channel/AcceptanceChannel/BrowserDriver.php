@@ -4,14 +4,18 @@ namespace Features\Dsl\Driver\Channel\AcceptanceChannel;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Laravel\Dusk\Browser;
+use Laravel\Dusk;
 
 readonly class BrowserDriver {
-    public Browser $browser;
+    public Dusk\Browser $browser;
 
     public function __construct(string $userAgent) {
-        Browser::$baseUrl = 'http://nginx';
-        $this->browser = new Browser($this->remoteWebDriver($userAgent));
+        Dusk\Browser::$baseUrl = 'http://nginx';
+        $this->browser = new Dusk\Browser($this->remoteWebDriver($userAgent));
+    }
+
+    public function submit(string $button): void {
+        $this->browser->waitForReload(fn(Dusk\Browser $browser) => $browser->press($button));
     }
 
     private function remoteWebDriver(string $userAgent): RemoteWebDriver {
@@ -27,5 +31,9 @@ readonly class BrowserDriver {
         $capabilities = DesiredCapabilities::chrome();
         $capabilities->setCapability(ChromeOptions::CAPABILITY, $chromeOptions);
         return RemoteWebDriver::create('http://selenium:4444/wd/hub', $capabilities);
+    }
+
+    public function close(): void {
+        $this->browser->quit();
     }
 }
