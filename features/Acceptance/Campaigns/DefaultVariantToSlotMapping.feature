@@ -1,4 +1,4 @@
-Feature: Campaign variant resolution
+Feature: Default variant-to-slot mapping
   In order to fulfill paying customers' campaigns,
   As a campaign space provider,
   I need to resolve the right graphic variant for a user's device.
@@ -8,7 +8,7 @@ Feature: Campaign variant resolution
     And it is not a sole campaign
 
   Scenario: Variant "banner" is resolved into wide slots on desktop
-    And the campaign "sale" has a "banner" variant "banner.png"
+    Given the campaign "sale" has a "banner" variant "banner.png"
     When variants are resolved for a user on "desktop"
     Then the "header" slot contains "banner.png"
     And the "feed" slot contains "banner.png"

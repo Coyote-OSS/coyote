@@ -1,7 +1,7 @@
-Feature: Rotation of variants across renders
+Feature: Rotation of variants across resolutions
   In order to give multiple campaigns fair exposure in the same slot,
   As a campaign space provider,
-  I need each render to rotate through the eligible campaigns' variants.
+  I need each resolution to rotate through the eligible campaigns' variants.
 
   Scenario: Campaign with two variants of the same kind rotates through the square slot
     Given there is a campaign "solo", which has a "rectangle" variant "one.png"

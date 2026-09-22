@@ -5,19 +5,19 @@ Feature: Leaderboard-xl header for a premium campaign
 
   Scenario: Leaderboard-xl variant is resolved into the header on desktop
     Given there is a premium campaign "sale"
-    Given the campaign "sale" has a "leaderboard-xl" variant "lbxl.png"
+    And the campaign "sale" has a "leaderboard-xl" variant "lbxl.png"
     When variants are resolved for a user on "desktop"
     Then the "header" slot contains "lbxl.png"
 
   Scenario: Leaderboard-xl variant is NOT resolved into the header on mobile
     Given there is a premium campaign "sale"
-    Given the campaign "sale" has a "leaderboard-xl" variant "lbxl.png"
+    And the campaign "sale" has a "leaderboard-xl" variant "lbxl.png"
     When variants are resolved for a user on "mobile"
     Then the "header" slot does not contain "lbxl.png"
 
   Scenario: Leaderboard-xl variant is NOT resolved into the feed
     Given there is a premium campaign "sale"
-    Given the campaign "sale" has a "leaderboard-xl" variant "lbxl.png"
+    And the campaign "sale" has a "leaderboard-xl" variant "lbxl.png"
     When variants are resolved for a user on "desktop"
     Then the "feed" slot does not contain "lbxl.png"
 
