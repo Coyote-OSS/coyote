@@ -1,13 +1,11 @@
 <?php
 namespace Features\Dsl\Driver\Channel\AcceptanceChannel;
 
-use Laravel\Dusk\Browser;
-
 readonly class HarnessClient {
-    public function __construct(private Browser $browser) {}
+    public function __construct(private BrowserDriver $driver) {}
 
     public function resetCampaigns(): void {
-        [$status] = $this->browser->script(<<<'JS'
+        [$status] = $this->driver->browser()->script(<<<'JS'
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/harness/campaigns/reset', false);
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
@@ -21,7 +19,7 @@ readonly class HarnessClient {
     }
 
     public function pinRotationSeed(int $seed): void {
-        [$status] = $this->browser->script(<<<JS
+        [$status] = $this->driver->browser()->script(<<<JS
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/harness/campaigns/rotation-seed', false);
             xhr.setRequestHeader('Content-Type', 'application/json');

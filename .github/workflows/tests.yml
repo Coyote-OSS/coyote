@@ -56,8 +56,12 @@ jobs:
       - name: Run acceptance tests (integration driver)
         run: docker compose exec -T php bash -c 'TEST_CHANNEL=integration vendor/bin/behat'
 
-      - name: Seed for acceptance tests
-        run: docker compose exec -T php php artisan db:seed --class=ForumsTableSeeder
+      - name: Prepare application for acceptance tests
+        run: |
+          docker compose exec -T php yarn --cwd neon2/web install
+          docker compose exec -T php yarn install
+          docker compose exec -T php yarn run prod
+          docker compose exec -T php php artisan db:seed --class=AcceptanceTestSeeder
 
       - name: Run acceptance tests (browser driver)
         run: docker compose exec -T php bash -c 'TEST_CHANNEL=acceptance vendor/bin/behat'
