@@ -34,7 +34,12 @@ class FeatureContext implements Context {
 
     #[BeforeScenario]
     public function initializeDriver(): void {
-        $this->driver->initialize();
+        try {
+            $this->driver->initialize();
+        } catch (\Throwable $throwable) {
+            $this->driver->finalize();
+            throw $throwable;
+        }
     }
 
     #[AfterScenario]
