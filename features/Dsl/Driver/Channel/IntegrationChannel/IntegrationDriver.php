@@ -24,7 +24,7 @@ readonly class IntegrationDriver implements Driver {
             $rotatingBanners);
     }
 
-    public function initialize(): void {
+    public function initialize(string $feature, string $scenario): void {
         // Currently, clearing the database models serves
         // the purpose of functional isolation.
         Eloquent\Campaign::query()->forceDelete();
@@ -49,4 +49,6 @@ readonly class IntegrationDriver implements Driver {
     public function variantsForSlot(string $slotType): array {
         return $this->driver->variantsForSlot($slotType);
     }
+
+    public function captureDiagnostics(string $testTitle) {}
 }

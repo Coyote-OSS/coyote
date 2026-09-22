@@ -27,6 +27,14 @@ readonly class BrowserDriver {
         $this->browser->waitForReload(fn(Dusk\Browser $browser) => $browser->press($button));
     }
 
+    public function screenshot(string $path): void {
+        $directory = \dirname($path);
+        if (!\is_dir($directory)) {
+            \mkdir($directory, 0777, true);
+        }
+        $this->browser->driver->takeScreenshot($path);
+    }
+
     private function remoteWebDriver(string $userAgent): RemoteWebDriver {
         $chromeOptions = new ChromeOptions();
         $chromeOptions->addArguments([
@@ -35,6 +43,7 @@ readonly class BrowserDriver {
             '--no-sandbox',
             '--ignore-ssl-errors',
             '--whitelisted-ips=""',
+            '--window-size=1366,1200',
             "--user-agent=$userAgent",
         ]);
         $capabilities = DesiredCapabilities::chrome();

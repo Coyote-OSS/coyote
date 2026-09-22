@@ -65,3 +65,12 @@ jobs:
 
       - name: Run acceptance tests (browser driver)
         run: docker compose exec -T php bash -c 'TEST_CHANNEL=acceptance vendor/bin/behat'
+
+      - name: Upload acceptance test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance-test-results
+          path: storage/screenshots/
+          retention-days: 2
+          if-no-files-found: ignore

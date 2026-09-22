@@ -2,9 +2,11 @@
 namespace Features\Dsl\Driver;
 
 interface Driver {
-    public function initialize(): void;
+    public function initialize(string $feature, string $scenario): void;
 
     public function finalize(): void;
+
+    public function captureDiagnostics(string $testTitle);
 
     public function createCampaign(string $campaign, bool $premium): void;
 

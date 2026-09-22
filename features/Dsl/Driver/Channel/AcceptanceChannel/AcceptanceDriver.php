@@ -11,17 +11,22 @@ readonly class AcceptanceDriver implements Driver {
     private CampaignIdMapping $campaignIds;
     private VariantAliasMapping $variantAliases;
     private RotationSeed $rotationSeed;
+    private ScreenshotSequence $screenshots;
 
-    public function __construct() {
+    public function __construct(\DateTimeImmutable $testStartDate) {
         $this->driver = new BrowserDriver('http://nginx', $this->userAgentNonCrawler());
         $this->harness = new HarnessClient($this->driver);
         $this->variantImages = new VariantImageFixture();
         $this->campaignIds = new CampaignIdMapping();
         $this->variantAliases = new VariantAliasMapping();
         $this->rotationSeed = new RotationSeed();
+        $this->screenshots = new ScreenshotSequence(
+            __DIR__ . '/../../../../../storage/screenshots',
+            $testStartDate);
     }
 
-    public function initialize(): void {
+    public function initialize(string $feature, string $scenario): void {
+        $this->screenshots->startScenario($feature, $scenario);
         $this->driver->initialize();
         $this->logIntoAdminPanel('admin-lowrep', 'admin-lowrep');
         $this->harness->resetCampaigns();
@@ -41,6 +46,7 @@ readonly class AcceptanceDriver implements Driver {
         }
         $this->driver->submit('Zapisz');
         $this->campaignIds->setCampaignId($campaign, $this->currentCampaignId());
+        $this->screenshot('createCampaign');
     }
 
     public function addVariant(string $campaign, string $variantType, string $variantUrl): void {
@@ -51,6 +57,7 @@ readonly class AcceptanceDriver implements Driver {
             $this->driver->browser()->attach('images[]', $imagePath);
             $this->driver->submit('Prześlij');
             $this->variantAliases->setVariantAlias($this->lastUploadedVariantImageUrl(), $variantUrl);
+            $this->screenshot('addVariant');
         } finally {
             $this->variantImages->remove($imagePath);
         }
@@ -61,6 +68,7 @@ readonly class AcceptanceDriver implements Driver {
         $this->harness->pinRotationSeed($this->rotationSeed->current());
         $this->rotationSeed->increment();
         $this->resolveAllSlotsForCurrentDevice();
+        $this->screenshot('resolveVariantsForUser');
     }
 
     private function viewportSize(string $deviceType): array {
@@ -133,5 +141,13 @@ readonly class AcceptanceDriver implements Driver {
     private function resolveAllSlotsForCurrentDevice(): void {
         $this->driver->browser()->visit('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
         $this->driver->browser()->waitUntilMissing('#js-skeleton');
+    }
+
+    public function captureDiagnostics(string $testTitle): void {
+        $this->screenshot($testTitle);
+    }
+
+    private function screenshot(string $label): void {
+        $this->driver->screenshot($this->screenshots->nextPath($label));
     }
 }

@@ -93,7 +93,9 @@ class InMemoryDriver implements Driver {
         };
     }
 
-    public function initialize(): void {}
+    public function initialize(string $feature, string $scenario): void {}
 
     public function finalize(): void {}
+
+    public function captureDiagnostics(string $testTitle) {}
 }
