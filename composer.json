@@ -70,6 +70,7 @@
       "Database\\Seeders\\": "database/seeders/",
       "Neon2\\": "neon2/app/src/",
       "Modules\\Campaigns\\": "modules/campaigns/src",
+      "Modules\\JobBoard\\": "modules/jobBoard/src",
       "Libs\\Arrays\\": "libs/arrays/src",
       "Web\\Projections\\": "web/projections/"
     },
@@ -87,6 +88,7 @@
       "Tests\\Legacy\\LaravelIntegration\\": "tests/Legacy/LaravelIntegration/",
       "Tests\\Legacy\\Integration\\": "tests/Legacy/Integration/",
       "Test\\Modules\\Campaigns\\": "modules/campaigns/test",
+      "Test\\Modules\\JobBoard\\": "modules/jobBoard/test",
       "Test\\Libs\\Arrays\\": "libs/arrays/test"
     }
   },

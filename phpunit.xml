@@ -10,6 +10,10 @@
       <directory suffix="Test.php">./modules/campaigns/test/</directory>
       <directory suffix="Test.php">./tests/Integration/Modules/Campaigns/</directory>
     </testsuite>
+    <testsuite name="JobBoard">
+      <directory suffix="Test.php">./modules/jobBoard/test/</directory>
+      <directory suffix="Test.php">./tests/Integration/Modules/JobBoard/</directory>
+    </testsuite>
     <testsuite name="Projections">
       <directory suffix="Test.php">./tests/Integration/Projections/</directory>
     </testsuite>

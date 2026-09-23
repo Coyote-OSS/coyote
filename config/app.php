@@ -192,6 +192,7 @@ return [
         Coyote\Providers\Neon\ServiceProvider::class,
         Neon2\Laravel\RouteServiceProvider::class,
         Coyote\Modules\Campaigns\CampaignsServiceProvider::class,
+        Coyote\Modules\JobBoard\JobBoardServiceProvider::class,
         Coyote\Providers\RouteServiceProvider::class,
         Coyote\Providers\ViewServiceProvider::class,
         Coyote\Providers\AuthServiceProvider::class,

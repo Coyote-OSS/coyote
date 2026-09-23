@@ -13,12 +13,14 @@ use Modules\Campaigns\Store\CampaignPayload;
 use Modules\Campaigns\Store\CampaignsStore;
 use Modules\Campaigns\Store\VariantPayload;
 use Modules\Campaigns\VariantType;
+use Modules\JobBoard\JobBoardStore;
 use Test\Modules\Campaigns\Fixture\TestCurrentDate;
 use Test\Modules\Campaigns\Fixture\TestPrivilegedUsers;
 use Test\Modules\Campaigns\Fixture\TestRedirectUrls;
 use Test\Modules\Campaigns\Fixture\TestRotatingBanners;
 use Test\Modules\Campaigns\Fixture\TestUserVoivodeship;
 use Test\Modules\Campaigns\Store\InMemoryCampaignsStore;
+use Test\Modules\JobBoard\Store\InMemoryJobBoardStore;
 
 class InMemoryDriver implements Driver {
     public static function create(): self {
@@ -32,27 +34,32 @@ class InMemoryDriver implements Driver {
                 $store,
                 new TestUserVoivodeship()),
             new TestRedirectUrls('https://example.test'));
-        return new InMemoryDriver($store, $facade, $rotatingBanners);
+        return new InMemoryDriver(
+            $store,
+            new InMemoryJobBoardStore(),
+            $facade,
+            $rotatingBanners);
     }
 
     private array $campaignIds = [];
-    private array $jobOffers = [];
+    private array $jobOfferIds = [];
     private ?CampaignBannerSet $resolvedBanners;
 
     public function __construct(
-        private readonly CampaignsStore      $store,
+        private readonly CampaignsStore      $campaigns,
+        private readonly JobBoardStore       $jobBoard,
         private readonly ForCampaignBanners  $service,
         private readonly TestRotatingBanners $rotatingBanners,
     ) {}
 
     public function createCampaign(string $campaign, bool $premium): void {
-        $this->campaignIds[$campaign] = $this->store->createCampaign(new CampaignPayload(
+        $this->campaignIds[$campaign] = $this->campaigns->createCampaign(new CampaignPayload(
             $campaign, '', null, null, 999, null, $premium, null,
         ));
     }
 
     public function addVariant(string $campaign, string $variantType, string $variantUrl): void {
-        $this->store->createVariant($this->campaignIds[$campaign], new VariantPayload(
+        $this->campaigns->createVariant($this->campaignIds[$campaign], new VariantPayload(
             $this->parseVariantType($variantType),
             $variantUrl,
         ));
@@ -95,15 +102,15 @@ class InMemoryDriver implements Driver {
     }
 
     public function createJobOffer(string $jobOffer): void {
-        $this->jobOffers[$jobOffer] = 0;
+        $this->jobOfferIds[$jobOffer] = $this->jobBoard->createJobOffer($jobOffer);
     }
 
     public function clickJobOffer(string $jobOffer): void {
-        $this->jobOffers[$jobOffer]++;
+        $this->jobBoard->clickJobOffer($this->jobOfferIds[$jobOffer]);
     }
 
     public function jobOfferClicks(string $jobOffer): int {
-        return $this->jobOffers[$jobOffer];
+        return $this->jobBoard->jobOfferClicks($this->jobOfferIds[$jobOffer]);
     }
 
     public function initialize(string $feature, string $scenario): void {}

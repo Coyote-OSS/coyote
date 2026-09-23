@@ -7,6 +7,7 @@ use Features\Dsl\Driver\Driver;
 use Modules\Campaigns\ForCampaignBanners;
 use Modules\Campaigns\ForRotatingBanners;
 use Modules\Campaigns\Store\CampaignsStore;
+use Modules\JobBoard\JobBoardStore;
 use Test\Modules\Campaigns\Fixture\TestRotatingBanners;
 
 readonly class IntegrationDriver implements Driver {
@@ -20,6 +21,7 @@ readonly class IntegrationDriver implements Driver {
         $this->laravel->app->instance(ForRotatingBanners::class, $rotatingBanners);
         $this->driver = new InMemoryDriver(
             $this->laravel->app->make(CampaignsStore::class),
+            $this->laravel->app->make(JobBoardStore::class),
             $this->laravel->app->make(ForCampaignBanners::class),
             $rotatingBanners);
     }
@@ -52,11 +54,15 @@ readonly class IntegrationDriver implements Driver {
 
     public function captureDiagnostics(string $testTitle) {}
 
-    public function createJobOffer(string $jobOffer): void {}
+    public function createJobOffer(string $jobOffer): void {
+        $this->driver->createJobOffer($jobOffer);
+    }
 
-    public function clickJobOffer(string $jobOffer): void {}
+    public function clickJobOffer(string $jobOffer): void {
+        $this->driver->clickJobOffer($jobOffer);
+    }
 
     public function jobOfferClicks(string $jobOffer): int {
-        return 0;
+        return $this->driver->jobOfferClicks($jobOffer);
     }
 }
