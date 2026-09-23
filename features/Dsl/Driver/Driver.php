@@ -15,4 +15,10 @@ interface Driver {
     public function resolveVariantsForUser(string $deviceType): void;
 
     public function variantsForSlot(string $slotType): array;
+
+    public function createJobOffer(string $jobOffer): void;
+
+    public function clickJobOffer(string $jobOffer): void;
+
+    public function jobOfferClicks(string $jobOffer): int;
 }

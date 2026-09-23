@@ -150,4 +150,12 @@ readonly class AcceptanceDriver implements Driver {
     private function screenshot(string $label): void {
         $this->driver->screenshot($this->screenshots->nextPath($label));
     }
+
+    public function createJobOffer(string $jobOffer): void {}
+
+    public function clickJobOffer(string $jobOffer): void {}
+
+    public function jobOfferClicks(string $jobOffer): int {
+        return 0;
+    }
 }

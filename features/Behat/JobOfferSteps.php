@@ -1,7 +1,6 @@
 <?php
 namespace Features\Behat;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
@@ -9,16 +8,18 @@ use Behat\Step\When;
 trait JobOfferSteps {
     #[Given('there is a job offer :jobOffer')]
     public function thereIsAJobOffer(string $jobOffer): void {
-        throw new PendingException();
+        $this->driver->createJobOffer($jobOffer);
+    }
+
+    #[When('a user clicks the tile of the job offer :jobOffer twice')]
+    public function aUserClicksTheTileOfTheJobOfferTwice(string $jobOffer): void {
+        $this->driver->clickJobOffer($jobOffer);
+        $this->driver->clickJobOffer($jobOffer);
     }
 
     #[Then('the job offer :jobOffer has :clicks clicks')]
     public function theJobOfferHasClicks(string $jobOffer, int $clicks): void {
-        throw new PendingException();
-    }
-
-    #[When('a user clicks the tile of the job offer :jobOffer twice')]
-    public function aUserClicksTheTileOfTheJobOfferTwice(string $jobOFfer): void {
-        throw new PendingException();
+        $actualClicks = $this->driver->jobOfferClicks($jobOffer);
+        $this->assert->assertEquals($clicks, $actualClicks);
     }
 }

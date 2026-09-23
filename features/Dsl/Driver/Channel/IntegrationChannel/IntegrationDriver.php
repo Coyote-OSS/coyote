@@ -51,4 +51,12 @@ readonly class IntegrationDriver implements Driver {
     }
 
     public function captureDiagnostics(string $testTitle) {}
+
+    public function createJobOffer(string $jobOffer): void {}
+
+    public function clickJobOffer(string $jobOffer): void {}
+
+    public function jobOfferClicks(string $jobOffer): int {
+        return 0;
+    }
 }

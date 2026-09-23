@@ -36,6 +36,7 @@ class InMemoryDriver implements Driver {
     }
 
     private array $campaignIds = [];
+    private array $jobOffers = [];
     private ?CampaignBannerSet $resolvedBanners;
 
     public function __construct(
@@ -91,6 +92,18 @@ class InMemoryDriver implements Driver {
             'rectangle-xl'   => VariantType::RectangleXl,
             default          => throw new \Exception("Unknown variant type: $variantType")
         };
+    }
+
+    public function createJobOffer(string $jobOffer): void {
+        $this->jobOffers[$jobOffer] = 0;
+    }
+
+    public function clickJobOffer(string $jobOffer): void {
+        $this->jobOffers[$jobOffer]++;
+    }
+
+    public function jobOfferClicks(string $jobOffer): int {
+        return $this->jobOffers[$jobOffer];
     }
 
     public function initialize(string $feature, string $scenario): void {}

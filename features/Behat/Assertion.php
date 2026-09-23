@@ -27,7 +27,7 @@ readonly class Assertion {
         }
     }
 
-    public function assertEquals(array $expected, array $actual): void {
+    public function assertEquals(mixed $expected, mixed $actual): void {
         if ($expected !== $actual) {
             $expectedFmt = \json_encode($expected, true);
             $actualFmt = \json_encode($actual, true);
