@@ -19,8 +19,15 @@ readonly class AcceptanceDriver implements Driver {
         $this->campaignIds = new CampaignIdMapping();
         $this->variantAliases = new VariantAliasMapping();
         $this->rotationSeed = new RotationSeed();
+    }
+
+    public function initialize(): void {
         $this->logIntoAdminPanel('admin-lowrep', 'admin-lowrep');
         $this->harness->resetCampaigns();
+    }
+
+    public function finalize(): void {
+        $this->driver->close();
     }
 
     public function createCampaign(string $campaign, bool $premium): void {
@@ -77,10 +84,6 @@ readonly class AcceptanceDriver implements Driver {
      */
     private function aliasedImageUrls(string $selector): array {
         return $this->imageUrls($selector) |> arrays::map($this->variantAliases->getVariantAlias(...));
-    }
-
-    public function close(): void {
-        $this->driver->close();
     }
 
     private function logIntoAdminPanel(string $username, string $password): void {

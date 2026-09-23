@@ -2,6 +2,10 @@
 namespace Features\Dsl\Driver;
 
 interface Driver {
+    public function initialize(): void;
+
+    public function finalize(): void;
+
     public function createCampaign(string $campaign, bool $premium): void;
 
     public function addVariant(string $campaign, string $variantType, string $variantUrl): void;
@@ -9,6 +13,4 @@ interface Driver {
     public function resolveVariantsForUser(string $deviceType): void;
 
     public function variantsForSlot(string $slotType): array;
-
-    public function close(): void;
 }

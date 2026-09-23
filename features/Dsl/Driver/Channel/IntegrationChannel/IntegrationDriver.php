@@ -16,13 +16,22 @@ readonly class IntegrationDriver implements Driver {
     public function __construct() {
         $this->laravel = new LaravelKernel();
         $this->laravel->bootstrap();
-        $this->functionalIsolation();
         $rotatingBanners = new TestRotatingBanners();
         $this->laravel->app->instance(ForRotatingBanners::class, $rotatingBanners);
         $this->driver = new InMemoryDriver(
             $this->laravel->app->make(CampaignsStore::class),
             $this->laravel->app->make(ForCampaignBanners::class),
             $rotatingBanners);
+    }
+
+    public function initialize(): void {
+        // Currently, clearing the database models serves
+        // the purpose of functional isolation.
+        Eloquent\Campaign::query()->forceDelete();
+    }
+
+    public function finalize(): void {
+        $this->laravel->disconnectDatabase();
     }
 
     public function createCampaign(string $campaign, bool $premium): void {
@@ -39,15 +48,5 @@ readonly class IntegrationDriver implements Driver {
 
     public function variantsForSlot(string $slotType): array {
         return $this->driver->variantsForSlot($slotType);
-    }
-
-    private function functionalIsolation(): void {
-        // Currently, clearing the database models serves
-        // the purpose of functional isolation.
-        Eloquent\Campaign::query()->forceDelete();
-    }
-
-    public function close(): void {
-        $this->laravel->disconnectDatabase();
     }
 }

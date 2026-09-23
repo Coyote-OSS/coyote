@@ -93,5 +93,7 @@ class InMemoryDriver implements Driver {
         };
     }
 
-    public function close(): void {}
+    public function initialize(): void {}
+
+    public function finalize(): void {}
 }

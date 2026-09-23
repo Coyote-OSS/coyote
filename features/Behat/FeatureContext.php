@@ -18,11 +18,12 @@ class FeatureContext implements Context {
     private Assertion $assert;
 
     public function __construct() {
-        $this->driver = $this->initializeDriver();
+        $this->driver = $this->createDriver();
         $this->assert = new Assertion();
+        $this->driver->initialize();
     }
 
-    private function initializeDriver(): Driver {
+    private function createDriver(): Driver {
         return match (\getEnv('TEST_CHANNEL')) {
             'in-memory'   => InMemoryDriver::create(),
             'integration' => new IntegrationDriver(),
@@ -32,7 +33,7 @@ class FeatureContext implements Context {
     }
 
     #[AfterScenario]
-    public function closeDriver(): void {
-        $this->driver->close();
+    public function finalizeDriver(): void {
+        $this->driver->finalize();
     }
 }
