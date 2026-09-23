@@ -13,8 +13,8 @@ readonly class AcceptanceDriver implements Driver {
     private RotationSeed $rotationSeed;
 
     public function __construct() {
-        $this->driver = new BrowserDriver($this->userAgentNonCrawler());
-        $this->harness = new HarnessClient($this->driver->browser);
+        $this->driver = new BrowserDriver('http://nginx', $this->userAgentNonCrawler());
+        $this->harness = new HarnessClient($this->driver);
         $this->variantImages = new VariantImageFixture();
         $this->campaignIds = new CampaignIdMapping();
         $this->variantAliases = new VariantAliasMapping();
@@ -22,6 +22,7 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     public function initialize(): void {
+        $this->driver->initialize();
         $this->logIntoAdminPanel('admin-lowrep', 'admin-lowrep');
         $this->harness->resetCampaigns();
     }
@@ -31,12 +32,12 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     public function createCampaign(string $campaign, bool $premium): void {
-        $this->driver->browser->visit('/Adm/Campaigns/Save');
-        $this->driver->browser->type('name', $campaign);
-        $this->driver->browser->type('redirect_url', 'https://example.test');
-        $this->driver->browser->type('target_views', '999');
+        $this->driver->browser()->visit('/Adm/Campaigns/Save');
+        $this->driver->browser()->type('name', $campaign);
+        $this->driver->browser()->type('redirect_url', 'https://example.test');
+        $this->driver->browser()->type('target_views', '999');
         if ($premium) {
-            $this->driver->browser->check('is_premium');
+            $this->driver->browser()->check('is_premium');
         }
         $this->driver->submit('Zapisz');
         $this->campaignIds->setCampaignId($campaign, $this->currentCampaignId());
@@ -46,8 +47,8 @@ readonly class AcceptanceDriver implements Driver {
         $campaignId = $this->campaignIds->getCampaignId($campaign);
         $imagePath = $this->variantImages->create($variantType);
         try {
-            $this->driver->browser->visit("/Adm/Campaigns/Show/$campaignId");
-            $this->driver->browser->attach('images[]', $imagePath);
+            $this->driver->browser()->visit("/Adm/Campaigns/Show/$campaignId");
+            $this->driver->browser()->attach('images[]', $imagePath);
             $this->driver->submit('Prześlij');
             $this->variantAliases->setVariantAlias($this->lastUploadedVariantImageUrl(), $variantUrl);
         } finally {
@@ -56,7 +57,7 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     public function resolveVariantsForUser(string $deviceType): void {
-        $this->driver->browser->resize(...$this->viewportSize($deviceType));
+        $this->driver->browser()->resize(...$this->viewportSize($deviceType));
         $this->harness->pinRotationSeed($this->rotationSeed->current());
         $this->rotationSeed->increment();
         $this->resolveAllSlotsForCurrentDevice();
@@ -87,18 +88,18 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     private function logIntoAdminPanel(string $username, string $password): void {
-        $this->driver->browser->visit('/Login');
+        $this->driver->browser()->visit('/Login');
         $this->closeGdprIfVisible();
-        $this->driver->browser->type('name', $username);
-        $this->driver->browser->type('password', $password);
+        $this->driver->browser()->type('name', $username);
+        $this->driver->browser()->type('password', $password);
         $this->driver->submit('Zaloguj się');
-        $this->driver->browser->visit('/Adm');
-        $this->driver->browser->type('password', $password);
+        $this->driver->browser()->visit('/Adm');
+        $this->driver->browser()->type('password', $password);
         $this->driver->submit('Logowanie');
     }
 
     private function currentCampaignId(): int {
-        \preg_match('#/Campaigns/Show/(\d+)#', $this->driver->browser->driver->getCurrentURL(), $matches);
+        \preg_match('#/Campaigns/Show/(\d+)#', $this->driver->browser()->driver->getCurrentURL(), $matches);
         return (int)$matches[1];
     }
 
@@ -106,16 +107,16 @@ readonly class AcceptanceDriver implements Driver {
      * @return string[]
      */
     private function imageUrls(string $selector): array {
-        return $this->driver->browser->elements($selector)
+        return $this->driver->browser()->elements($selector)
                 |> arrays::filter(fn($element) => $element->isDisplayed())
                 |> arrays::map(fn($element) => $element->getAttribute('src'));
     }
 
     private function closeGdprIfVisible(): void {
-        $gdprButton = $this->driver->browser->element('#gdpr-all');
+        $gdprButton = $this->driver->browser()->element('#gdpr-all');
         if ($gdprButton?->isDisplayed()) {
-            $this->driver->browser->click('#gdpr-all');
-            $this->driver->browser->waitUntilMissing('.gdpr-modal');
+            $this->driver->browser()->click('#gdpr-all');
+            $this->driver->browser()->waitUntilMissing('.gdpr-modal');
         }
     }
 
@@ -130,7 +131,7 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     private function resolveAllSlotsForCurrentDevice(): void {
-        $this->driver->browser->visit('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
-        $this->driver->browser->waitUntilMissing('#js-skeleton');
+        $this->driver->browser()->visit('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
+        $this->driver->browser()->waitUntilMissing('#js-skeleton');
     }
 }

@@ -7,11 +7,20 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Laravel\Dusk;
 
 readonly class BrowserDriver {
-    public Dusk\Browser $browser;
+    private ?Dusk\Browser $browser;
 
-    public function __construct(string $userAgent) {
-        Dusk\Browser::$baseUrl = 'http://nginx';
-        $this->browser = new Dusk\Browser($this->remoteWebDriver($userAgent));
+    public function __construct(
+        private string $baseUrl,
+        private string $userAgent,
+    ) {}
+
+    public function initialize(): void {
+        Dusk\Browser::$baseUrl = $this->baseUrl;
+        $this->browser = new Dusk\Browser($this->remoteWebDriver($this->userAgent));
+    }
+
+    public function browser(): Dusk\Browser {
+        return $this->browser;
     }
 
     public function submit(string $button): void {

@@ -3,6 +3,7 @@ namespace Features\Behat;
 
 use Behat\Behat\Context\Context;
 use Behat\Hook\AfterScenario;
+use Behat\Hook\BeforeScenario;
 use Features\Dsl\Driver\Channel\AcceptanceChannel\AcceptanceDriver;
 use Features\Dsl\Driver\Channel\InMemoryChannel\InMemoryDriver;
 use Features\Dsl\Driver\Channel\IntegrationChannel\IntegrationDriver;
@@ -20,7 +21,6 @@ class FeatureContext implements Context {
     public function __construct() {
         $this->driver = $this->createDriver();
         $this->assert = new Assertion();
-        $this->driver->initialize();
     }
 
     private function createDriver(): Driver {
@@ -30,6 +30,11 @@ class FeatureContext implements Context {
             'acceptance'  => new AcceptanceDriver(),
             default       => throw new \Error('Failed to resolve the test channel.'),
         };
+    }
+
+    #[BeforeScenario]
+    public function initializeDriver(): void {
+        $this->driver->initialize();
     }
 
     #[AfterScenario]
