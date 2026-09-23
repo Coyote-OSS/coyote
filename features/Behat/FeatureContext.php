@@ -18,6 +18,7 @@ use Features\Dsl\Driver\Driver;
  */
 class FeatureContext implements Context {
     use CampaignSteps;
+    use JobOfferSteps;
 
     private static \DateTimeImmutable $testStartDate;
 
