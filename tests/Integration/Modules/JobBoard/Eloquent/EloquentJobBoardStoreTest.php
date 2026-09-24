@@ -26,7 +26,7 @@ class EloquentJobBoardStoreTest extends TestCase {
     public function initialize(): void {
         $this->connection = $this->laravel->app->get(Connection::class);
         $this->store = new EloquentJobBoardStore();
-        Plan::query()->forceCreate(['name' => 'Free']);
+        Plan::query()->firstOrCreate(['name' => 'Free']);
     }
 
     #[Test]

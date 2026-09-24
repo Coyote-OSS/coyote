@@ -29,7 +29,7 @@ class JobBoardHarnessTest extends TestCase {
 
     #[Before(-10)]
     public function givenFreePlan(): void {
-        $this->freePlanId = Plan::query()->forceCreate(['name' => 'Free'])->id;
+        $this->freePlanId = Plan::query()->firstOrCreate(['name' => 'Free'])->id;
     }
 
     #[Test]

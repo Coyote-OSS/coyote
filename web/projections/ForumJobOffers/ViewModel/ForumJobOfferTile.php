@@ -10,6 +10,7 @@ readonly class ForumJobOfferTile {
         public string  $companyName,
         public ?string $companyLogoUrl,
         public string  $jobOfferHref,
+        public string  $jobOfferClickHref,
         public string  $jobOfferTitle,
         public array   $headerPills,
         public string  $salaryFormat,

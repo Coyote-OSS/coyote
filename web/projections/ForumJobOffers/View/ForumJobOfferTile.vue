@@ -1,5 +1,5 @@
 <template>
-  <a :href="tile.jobOfferHref" :class="[
+  <a :href="tile.jobOfferHref" @click="countClick" :class="[
     'border border-tile-outline bg-gray-100 text-gray-800',
     'flex flex-col no-underline tile-shadow transition-shadow hover:shadow-md',
     'w-full gap-2 rounded-2xl p-2 sm:w-86 sm:shrink-0',
@@ -73,5 +73,9 @@ interface Props {
   tile: ForumJobOfferTile;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+function countClick(): void {
+  navigator.sendBeacon(props.tile.jobOfferClickHref);
+}
 </script>

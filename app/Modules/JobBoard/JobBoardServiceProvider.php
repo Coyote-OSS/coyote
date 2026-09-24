@@ -2,6 +2,7 @@
 namespace Coyote\Modules\JobBoard;
 
 use Coyote\Modules\JobBoard\Eloquent\EloquentJobBoardStore;
+use Coyote\Modules\JobBoard\User\Http\JobOffersController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\JobBoard\JobBoardStore;
@@ -12,9 +13,16 @@ class JobBoardServiceProvider extends ServiceProvider {
             JobBoardStore::class,
             EloquentJobBoardStore::class);
         $this->registerRoutes($this->app->make(Router::class));
+        $this->registerRoutesHarness($this->app->make(Router::class));
     }
 
     private function registerRoutes(Router $router): void {
+        $router
+            ->post('/job-board/job-offers/{jobOfferId}/click', [JobOffersController::class, 'click'])
+            ->name('jobBoard.jobOffer.click');
+    }
+
+    private function registerRoutesHarness(Router $router): void {
         $router
             ->post('/harness/job-board/reset', function (EloquentJobBoardStore $store) {
                 $store->removeJobOffers();
