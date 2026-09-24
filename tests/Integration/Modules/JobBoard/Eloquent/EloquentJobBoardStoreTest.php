@@ -2,6 +2,8 @@
 namespace Tests\Integration\Modules\JobBoard\Eloquent;
 
 use Coyote\Modules\JobBoard\Eloquent\EloquentJobBoardStore;
+use Coyote\Payment;
+use Coyote\Plan;
 use Illuminate\Database;
 use Illuminate\Database\Connection;
 use Modules\JobBoard\JobBoardStore;
@@ -24,6 +26,7 @@ class EloquentJobBoardStoreTest extends TestCase {
     public function initialize(): void {
         $this->connection = $this->laravel->app->get(Connection::class);
         $this->store = new EloquentJobBoardStore();
+        Plan::query()->forceCreate(['name' => 'Free']);
     }
 
     #[Test]
@@ -34,6 +37,26 @@ class EloquentJobBoardStoreTest extends TestCase {
             'id'     => $jobOfferId,
             'clicks' => 1,
         ]);
+    }
+
+    #[Test]
+    public function removesJobOffersWithPayments(): void {
+        // given a job offer with a payment
+        $jobOfferId = $this->store->createJobOffer('job-offer-title');
+        $this->createPayment($jobOfferId);
+        // when job offers are removed
+        $this->store->removeJobOffers();
+        // then no job offers remain
+        $this->assertSame(0, $this->laravel->databaseTable('jobs')->count());
+    }
+
+    private function createPayment(int $jobOfferId): void {
+        $payment = new Payment([
+            'plan_id' => Plan::query()->where('name', 'Free')->value('id'),
+            'days'    => 14,
+        ]);
+        $payment->job_id = $jobOfferId;
+        $payment->save();
     }
 
     protected function contractTestStore(): JobBoardStore {

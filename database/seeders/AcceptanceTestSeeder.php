@@ -13,5 +13,6 @@ class AcceptanceTestSeeder extends Seeder {
         $this->call(AcceptanceUsersTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(TopicsTableSeeder::class);
+        $this->call(ModernPlansTableSeeder::class);
     }
 }

@@ -1,6 +1,10 @@
 <?php
 namespace Features\Dsl\Driver\Channel\AcceptanceChannel;
 
+use Facebook\WebDriver\Exception\NoSuchShadowRootException;
+use Facebook\WebDriver\Exception\TimeoutException;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverElement;
 use Features\Dsl\Driver\Driver;
 use Libs\Arrays\arrays;
 
@@ -9,6 +13,7 @@ readonly class AcceptanceDriver implements Driver {
     private HarnessClient $harness;
     private VariantImageFixture $variantImages;
     private CampaignIdMapping $campaignIds;
+    private JobOfferIdMapping $jobOfferIds;
     private VariantAliasMapping $variantAliases;
     private RotationSeed $rotationSeed;
     private ScreenshotSequence $screenshots;
@@ -18,6 +23,7 @@ readonly class AcceptanceDriver implements Driver {
         $this->harness = new HarnessClient($this->driver);
         $this->variantImages = new VariantImageFixture();
         $this->campaignIds = new CampaignIdMapping();
+        $this->jobOfferIds = new JobOfferIdMapping();
         $this->variantAliases = new VariantAliasMapping();
         $this->rotationSeed = new RotationSeed();
         $this->screenshots = new ScreenshotSequence(
@@ -30,6 +36,7 @@ readonly class AcceptanceDriver implements Driver {
         $this->driver->initialize();
         $this->logIntoAdminPanel('admin-lowrep', 'admin-lowrep');
         $this->harness->resetCampaigns();
+        $this->harness->resetJobOffers();
     }
 
     public function finalize(): void {
@@ -139,6 +146,10 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     private function resolveAllSlotsForCurrentDevice(): void {
+        $this->visitTopic();
+    }
+
+    private function visitTopic(): void {
         $this->driver->browser()->visit('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
         $this->driver->browser()->waitUntilMissing('#js-skeleton');
     }
@@ -151,11 +162,51 @@ readonly class AcceptanceDriver implements Driver {
         $this->driver->screenshot($this->screenshots->nextPath($label));
     }
 
-    public function createJobOffer(string $jobOffer): void {}
+    public function createJobOffer(string $jobOffer): void {
+        $this->jobOfferIds->setJobOfferId($jobOffer, $this->harness->createJobOffer($jobOffer));
+    }
 
-    public function clickJobOffer(string $jobOffer): void {}
+    public function clickJobOffer(string $jobOffer): void {
+        // With fewer than 3 job offers, the tiles are only shown on mobile.
+        $this->driver->browser()->resize(...$this->viewportSize('mobile'));
+        $this->visitTopic();
+        $tile = $this->jobOfferTile($jobOffer);
+        $this->screenshot('clickJobOffer');
+        $this->driver->browser()->waitForReload(fn() => $tile->click());
+    }
 
     public function jobOfferClicks(string $jobOffer): int {
-        return 0;
+        return $this->harness->jobOfferClicks($this->jobOfferIds->getJobOfferId($jobOffer));
+    }
+
+    private function jobOfferTile(string $jobOffer): WebDriverElement {
+        $tile = null;
+        try {
+            $this->driver->browser()->waitUsing(5, 100, function () use ($jobOffer, &$tile): bool {
+                $tile = $this->displayedJobOfferTile($jobOffer);
+                return $tile !== null;
+            });
+        } catch (TimeoutException) {
+            throw new \Exception("Job offer tile is not displayed: $jobOffer");
+        }
+        return $tile;
+    }
+
+    private function displayedJobOfferTile(string $jobOffer): ?WebDriverElement {
+        // Job offer tiles are rendered between posts, in the shadow DOM of <vue-shadow-root>,
+        // which is attached only once the custom element is defined.
+        foreach ($this->driver->browser()->elements('vue-shadow-root') as $shadowHost) {
+            try {
+                $tiles = $shadowHost->getShadowRoot()->findElements(WebDriverBy::cssSelector('a'));
+            } catch (NoSuchShadowRootException) {
+                continue;
+            }
+            foreach ($tiles as $tile) {
+                if ($tile->isDisplayed() && \str_contains($tile->getText(), $jobOffer)) {
+                    return $tile;
+                }
+            }
+        }
+        return null;
     }
 }

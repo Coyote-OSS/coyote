@@ -1,6 +1,7 @@
 <?php
 namespace Features\Dsl\Driver\Channel\IntegrationChannel;
 
+use Coyote;
 use Coyote\Modules\Campaigns\Eloquent;
 use Features\Dsl\Driver\Channel\InMemoryChannel\InMemoryDriver;
 use Features\Dsl\Driver\Driver;
@@ -27,9 +28,20 @@ readonly class IntegrationDriver implements Driver {
     }
 
     public function initialize(string $feature, string $scenario): void {
+        $this->initializeCampaigns();
+        $this->initializeJobBoard();
+    }
+
+    private function initializeCampaigns(): void {
         // Currently, clearing the database models serves
         // the purpose of functional isolation.
         Eloquent\Campaign::query()->forceDelete();
+    }
+
+    private function initializeJobBoard(): void {
+        Coyote\Plan::query()
+            ->where('name', 'Free')
+            ->firstOr(fn() => Coyote\Plan::query()->forceCreate(['name' => 'Free']));
     }
 
     public function finalize(): void {
