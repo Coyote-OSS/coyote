@@ -26,8 +26,10 @@ class FeatureContext implements Context {
     #[BeforeSuite]
     public static function initializeTestContext(): void {
         $userAgentNonCrawler = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
-        self::$testContext = new TestContext('http://nginx', $userAgentNonCrawler);
-        self::$testContext->initialize();
+        self::$testContext = new TestContext(
+            'http://nginx',
+            $userAgentNonCrawler,
+            \getEnv('TEST_CHANNEL') === 'acceptance');
     }
 
     #[AfterSuite]
@@ -49,7 +51,7 @@ class FeatureContext implements Context {
             'integration' => new IntegrationDriver(),
             'acceptance'  => new AcceptanceDriver(
                 self::$testContext->browserDriver(),
-                self::$testContext->testStartDate(),
+                self::$testContext->testStartDate,
                 'http://nginx',
                 $this->stepScreenshots()),
             default       => throw new \Error('Failed to resolve the test channel.'),

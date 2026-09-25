@@ -6,17 +6,29 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Laravel\Dusk;
 
-readonly class BrowserDriver {
+class BrowserDriver {
     private ?Dusk\Browser $browser;
+    private bool $setUp = false;
 
-    public function __construct(
-        private string $baseUrl,
-        private string $userAgent,
-    ) {}
+    public function __construct(string $baseUrl, string $userAgent) {
+        Dusk\Browser::$baseUrl = $baseUrl;
+        $this->browser = new Dusk\Browser($this->remoteWebDriver($userAgent));
+    }
 
-    public function initialize(): void {
-        Dusk\Browser::$baseUrl = $this->baseUrl;
-        $this->browser = new Dusk\Browser($this->remoteWebDriver($this->userAgent));
+    /**
+     * @param callable $setUp called until it succeeds once for this browser
+     */
+    public function setUpOnce(callable $setUp): void {
+        if (!$this->setUp) {
+            $setUp();
+            $this->setUp = true;
+        }
+    }
+
+    public function reset(): void {
+        // Leave the page of the previous scenario, so its scripts don't run anymore.
+        $this->browser->driver->get('about:blank');
+        $this->browser->resize(1366, 1200);
     }
 
     public function browser(): Dusk\Browser {
@@ -45,6 +57,8 @@ readonly class BrowserDriver {
             '--whitelisted-ips=""',
             '--window-size=1366,1200',
             "--user-agent=$userAgent",
+            // Pages wait for external scripts and fonts, which only slow the tests down.
+            '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE nginx, EXCLUDE websocket, EXCLUDE localhost',
         ]);
         $capabilities = DesiredCapabilities::chrome();
         $capabilities->setCapability(ChromeOptions::CAPABILITY, $chromeOptions);
@@ -52,6 +66,11 @@ readonly class BrowserDriver {
     }
 
     public function close(): void {
-        $this->browser->quit();
+        try {
+            $this->browser?->quit();
+        } catch (\Throwable) {
+            // The browser is already gone.
+        }
+        $this->browser = null;
     }
 }

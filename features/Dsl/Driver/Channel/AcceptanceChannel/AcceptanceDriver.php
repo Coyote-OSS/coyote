@@ -8,7 +8,6 @@ use Features\Dsl\Driver\Driver;
 use Libs\Arrays\arrays;
 
 readonly class AcceptanceDriver implements Driver {
-    private BrowserDriver $driver;
     private HarnessClient $harness;
     private VariantImageFixture $variantImages;
     private CampaignIdMapping $campaignIds;
@@ -17,9 +16,13 @@ readonly class AcceptanceDriver implements Driver {
     private RotationSeed $rotationSeed;
     private ScreenshotSequence $screenshots;
 
-    public function __construct(\DateTimeImmutable $testStartDate) {
-        $this->driver = new BrowserDriver('http://nginx', $this->userAgentNonCrawler());
-        $this->harness = new HarnessClient($this->driver);
+    public function __construct(
+        private BrowserDriver $driver,
+        \DateTimeImmutable    $testStartDate,
+        string                $harnessBaseUrl,
+        private bool          $stepScreenshots,
+    ) {
+        $this->harness = new HarnessClient($harnessBaseUrl);
         $this->variantImages = new VariantImageFixture();
         $this->campaignIds = new CampaignIdMapping();
         $this->jobOfferIds = new JobOfferIdMapping();
@@ -32,8 +35,8 @@ readonly class AcceptanceDriver implements Driver {
 
     public function initialize(string $feature, string $scenario): void {
         $this->screenshots->startScenario($feature, $scenario);
-        $this->driver->initialize();
-        $this->logIntoAdminPanel('admin-lowrep', 'admin-lowrep');
+        $this->driver->reset();
+        $this->driver->setUpOnce(fn() => $this->logIntoAdminPanel('admin-lowrep', 'admin-lowrep'));
         $this->harness->resetCampaigns();
         $this->harness->resetJobOffers();
     }
@@ -136,10 +139,6 @@ readonly class AcceptanceDriver implements Driver {
         // The campaign's admin page lists variants in creation order.
         $urls = $this->imageUrls('img[alt="Grafika"]');
         return \end($urls);
-    }
-
-    private function userAgentNonCrawler(): string {
-        return 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
     }
 
     private function resolveAllSlotsForCurrentDevice(): void {
