@@ -34,6 +34,21 @@ class JobOffersControllerTest extends TestCase {
         $this->assertSame(1, $this->store()->jobOfferClicks($jobOfferId));
     }
 
+    #[Test]
+    public function exposeJobOffer_returnsSuccess(): void {
+        $jobOfferId = $this->store()->createJobOffer('php-developer');
+        $this->laravel
+            ->post("/job-board/job-offers/$jobOfferId/exposure")
+            ->assertNoContent();
+    }
+
+    #[Test]
+    public function exposeJobOffer_recordsJobOfferExposure(): void {
+        $jobOfferId = $this->store()->createJobOffer('php-developer');
+        $this->laravel->post("/job-board/job-offers/$jobOfferId/exposure");
+        $this->assertSame(1, $this->store()->jobOfferExposures($jobOfferId));
+    }
+
     private function store(): JobBoardStore {
         return $this->laravel->app->make(JobBoardStore::class);
     }

@@ -20,6 +20,7 @@ class EloquentJobBoardStore implements JobBoardStore {
                 'slug'        => 'slug',
                 'deadline_at' => Carbon::now()->addDays($freePlan->length),
                 'clicks'      => 0,
+                'exposures'   => 0,
             ])
             ->id;
     }
@@ -56,5 +57,13 @@ class EloquentJobBoardStore implements JobBoardStore {
                 'name'    => 'job-offer-firm',
             ])
             ->id;
+    }
+
+    public function exposeJobOffer(int $jobOfferId): void {
+        Eloquent\JobOffer::query()->whereKey($jobOfferId)->increment('exposures');
+    }
+
+    public function jobOfferExposures(int $jobOffer): int {
+        return Eloquent\JobOffer::query()->findOrFail($jobOffer)->exposures;
     }
 }

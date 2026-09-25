@@ -5,7 +5,7 @@ on:
     branches: ['*']
 
 jobs:
-  unit:
+  unit-php:
     runs-on: ubuntu-24.04
 
     steps:
@@ -34,6 +34,24 @@ jobs:
 
       - name: Run acceptance tests (in-memory)
         run: TEST_CHANNEL=in-memory ./vendor/bin/behat
+
+  unit-node:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install yarn dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run web libs unit tests
+        run: yarn vitest run --dir web/libs
 
   acceptance:
     runs-on: ubuntu-24.04

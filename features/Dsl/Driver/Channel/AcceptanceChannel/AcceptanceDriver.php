@@ -1,7 +1,6 @@
 <?php
 namespace Features\Dsl\Driver\Channel\AcceptanceChannel;
 
-use Facebook\WebDriver\Exception\NoSuchShadowRootException;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
@@ -196,11 +195,7 @@ readonly class AcceptanceDriver implements Driver {
         // Job offer tiles are rendered between posts, in the shadow DOM of <vue-shadow-root>,
         // which is attached only once the custom element is defined.
         foreach ($this->driver->browser()->elements('vue-shadow-root') as $shadowHost) {
-            try {
-                $tiles = $shadowHost->getShadowRoot()->findElements(WebDriverBy::cssSelector('a'));
-            } catch (NoSuchShadowRootException) {
-                continue;
-            }
+            $tiles = $shadowHost->getShadowRoot()->findElements(WebDriverBy::cssSelector('a'));
             foreach ($tiles as $tile) {
                 if ($tile->isDisplayed() && \str_contains($tile->getText(), $jobOffer)) {
                     return $tile;
@@ -208,5 +203,33 @@ readonly class AcceptanceDriver implements Driver {
             }
         }
         return null;
+    }
+
+    public function exposeJobOffer(string $jobOffer): void {
+        $exposuresBefore = $this->jobOfferExposures($jobOffer);
+        // With fewer than 3 job offers, the tiles are only shown on mobile.
+        $this->driver->browser()->resize(...$this->viewportSize('mobile'));
+        $this->visitTopic();
+        $tile = $this->jobOfferTile($jobOffer);
+        $this->driver->browser()->driver->executeScript(
+            'arguments[0].scrollIntoView({block: "center"});',
+            [$tile]);
+        $this->screenshot('exposeJobOffer');
+        $this->waitUntilExposureIsCounted($jobOffer, $exposuresBefore);
+    }
+
+    private function waitUntilExposureIsCounted(string $jobOffer, int $exposuresBefore): void {
+        // The tile must stay in view for a while before the exposure is sent,
+        // so wait for it to be counted, instead of guessing the time.
+        try {
+            $this->driver->browser()->waitUsing(5, 250,
+                fn(): bool => $this->jobOfferExposures($jobOffer) > $exposuresBefore);
+        } catch (TimeoutException) {
+            // An exposure that is never counted is reported by the assertion on exposures.
+        }
+    }
+
+    public function jobOfferExposures(string $jobOffer): int {
+        return $this->harness->jobOfferExposures($this->jobOfferIds->getJobOfferId($jobOffer));
     }
 }

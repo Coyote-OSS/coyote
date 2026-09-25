@@ -1,10 +1,21 @@
-export class BannerExposureObserver {
+export function observeExposure(element: Element, onExposure: () => void): void {
+  if (typeof IntersectionObserver !== 'undefined') {
+    new ExposureObserver(
+      element,
+      0.5, // fraction of the element that must be visible
+      1000, // how long it must stay visible to count as exposure
+      onExposure,
+    ).observe();
+  }
+}
+
+class ExposureObserver {
   private readonly observer: IntersectionObserver;
-  private timer: number|undefined;
+  private timer: ReturnType<typeof setTimeout>|undefined;
   private reported = false;
 
   constructor(
-    private readonly element: HTMLImageElement,
+    private readonly element: Element,
     private readonly threshold: number,
     private readonly durationMs: number,
     private readonly onExposure: () => void,
@@ -33,7 +44,7 @@ export class BannerExposureObserver {
     if (this.timer !== undefined) {
       return;
     }
-    this.timer = window.setTimeout(() => {
+    this.timer = setTimeout(() => {
       this.timer = undefined;
       this.reportExposure();
       this.observer.unobserve(this.element);
@@ -42,7 +53,7 @@ export class BannerExposureObserver {
 
   private clearTimer(): void {
     if (this.timer !== undefined) {
-      window.clearTimeout(this.timer);
+      clearTimeout(this.timer);
       this.timer = undefined;
     }
   }

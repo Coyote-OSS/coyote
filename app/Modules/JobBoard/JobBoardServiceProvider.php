@@ -20,25 +20,31 @@ class JobBoardServiceProvider extends ServiceProvider {
         $router
             ->post('/job-board/job-offers/{jobOfferId}/click', [JobOffersController::class, 'click'])
             ->name('jobBoard.jobOffer.click');
+        $router
+            ->post('/job-board/job-offers/{jobOfferId}/exposure', [JobOffersController::class, 'expose'])
+            ->name('jobBoard.jobOffer.exposure');
     }
 
     private function registerRoutesHarness(Router $router): void {
         $router
-            ->post('/harness/job-board/reset', function (EloquentJobBoardStore $store) {
-                $store->removeJobOffers();
-                return response()->noContent();
-            })
-            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1']);
-        $router
-            ->post('/harness/job-board/job-offers', function (EloquentJobBoardStore $store) {
-                $jobOfferId = $store->createJobOffer(request()->input('title'));
-                return response()->json(['id' => $jobOfferId], 201);
-            })
-            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1']);
-        $router
-            ->get('/harness/job-board/job-offers/{jobOfferId}/clicks', function (EloquentJobBoardStore $store, int $jobOfferId) {
-                return response()->json(['clicks' => $store->jobOfferClicks($jobOfferId)]);
-            })
-            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1']);
+            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1'])
+            ->group($this->registerRoutesWebAdmin(...));
+    }
+
+    private function registerRoutesWebAdmin(Router $router): void {
+        $router->post('/harness/job-board/reset', function (EloquentJobBoardStore $store) {
+            $store->removeJobOffers();
+            return response()->noContent();
+        });
+        $router->post('/harness/job-board/job-offers', function (EloquentJobBoardStore $store) {
+            $jobOfferId = $store->createJobOffer(request()->input('title'));
+            return response()->json(['id' => $jobOfferId], 201);
+        });
+        $router->get('/harness/job-board/job-offers/{jobOfferId}', function (EloquentJobBoardStore $store, int $jobOfferId) {
+            return response()->json([
+                'clicks'    => $store->jobOfferClicks($jobOfferId),
+                'exposures' => $store->jobOfferExposures($jobOfferId),
+            ]);
+        });
     }
 }

@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $title
  * @property int $clicks
+ * @property int $exposures
  */
 class JobOffer extends Model {
     protected $table = 'jobs';
-    protected $fillable = ['user_id', 'firm_id', 'plan_id', 'is_publish', 'title', 'slug', 'deadline_at', 'clicks'];
+    protected $fillable = ['user_id', 'firm_id', 'plan_id', 'is_publish', 'title', 'slug', 'deadline_at', 'clicks', 'exposures'];
 }

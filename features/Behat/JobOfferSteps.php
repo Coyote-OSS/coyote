@@ -22,4 +22,16 @@ trait JobOfferSteps {
         $actualClicks = $this->driver->jobOfferClicks($jobOffer);
         $this->assert->assertEquals($clicks, $actualClicks);
     }
+
+    #[When('a user sees the tile of the job offer :jobOffer twice')]
+    public function aUserSeesTheTileOfTheJobOfferTwice(string $jobOffer): void {
+        $this->driver->exposeJobOffer($jobOffer);
+        $this->driver->exposeJobOffer($jobOffer);
+    }
+
+    #[Then('the job offer :jobOffer has :exposures exposures')]
+    public function theJobOfferHasExposures(string $jobOffer, int $exposures): void {
+        $actualExposures = $this->driver->jobOfferExposures($jobOffer);
+        $this->assert->assertEquals($exposures, $actualExposures);
+    }
 }

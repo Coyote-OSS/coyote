@@ -54,6 +54,7 @@
     "tailwindcss": "^4.1.11",
     "ts-loader": "^8.2.0",
     "typescript": "^5.8.3",
+    "vitest": "^4",
     "vue": "^3.5.17",
     "vue-easy-lightbox": "^1.19.0",
     "vue-loader": "^17.4.2",

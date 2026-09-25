@@ -77,4 +77,12 @@ readonly class IntegrationDriver implements Driver {
     public function jobOfferClicks(string $jobOffer): int {
         return $this->driver->jobOfferClicks($jobOffer);
     }
+
+    public function exposeJobOffer(string $jobOffer): void {
+        $this->driver->exposeJobOffer($jobOffer);
+    }
+
+    public function jobOfferExposures(string $jobOffer): int {
+        return $this->driver->jobOfferExposures($jobOffer);
+    }
 }

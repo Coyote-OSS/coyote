@@ -11,6 +11,7 @@ readonly class ForumJobOfferTile {
         public ?string $companyLogoUrl,
         public string  $jobOfferHref,
         public string  $jobOfferClickHref,
+        public string  $jobOfferExposureHref,
         public string  $jobOfferTitle,
         public array   $headerPills,
         public string  $salaryFormat,

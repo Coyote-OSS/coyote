@@ -113,6 +113,14 @@ class InMemoryDriver implements Driver {
         return $this->jobBoard->jobOfferClicks($this->jobOfferIds[$jobOffer]);
     }
 
+    public function exposeJobOffer(string $jobOffer): void {
+        $this->jobBoard->exposeJobOffer($this->jobOfferIds[$jobOffer]);
+    }
+
+    public function jobOfferExposures(string $jobOffer): int {
+        return $this->jobBoard->jobOfferExposures($this->jobOfferIds[$jobOffer]);
+    }
+
     public function initialize(string $feature, string $scenario): void {}
 
     public function finalize(): void {}

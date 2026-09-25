@@ -50,17 +50,25 @@ readonly class HarnessClient {
     }
 
     public function jobOfferClicks(int $jobOfferId): int {
+        return $this->jobOffer($jobOfferId)['clicks'];
+    }
+
+    public function jobOfferExposures(int $jobOfferId): int {
+        return $this->jobOffer($jobOfferId)['exposures'];
+    }
+
+    private function jobOffer(int $jobOfferId): array {
         [[$status, $body]] = $this->driver->browser()->script(<<<JS
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/harness/job-board/job-offers/$jobOfferId/clicks', false);
+            xhr.open('GET', '/harness/job-board/job-offers/$jobOfferId', false);
             xhr.send();
             return [xhr.status, xhr.responseText];
             JS,
         );
         if ($status !== 200) {
-            throw new \Exception('Failed to read job offer clicks via the test harness.');
+            throw new \Exception('Failed to read a job offer via the test harness.');
         }
-        return \json_decode($body, true)['clicks'];
+        return \json_decode($body, true);
     }
 
     public function pinRotationSeed(int $seed): void {

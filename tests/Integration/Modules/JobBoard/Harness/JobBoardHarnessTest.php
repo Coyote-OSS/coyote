@@ -105,30 +105,45 @@ class JobBoardHarnessTest extends TestCase {
     }
 
     #[Test]
-    public function readingJobOfferClicks_failsWithoutAuthorization(): void {
+    public function readingJobOffer_failsWithoutAuthorization(): void {
         // given a job offer
         $jobOfferId = $this->createJobOffer('php-developer');
         // and I don't have access to the job board harness
         $this->loginRegularUser();
-        // when I attempt to read the job offer clicks
-        $response = $this->httpJobOfferClicks($jobOfferId);
+        // when I attempt to read the job offer
+        $response = $this->httpJobOffer($jobOfferId);
         // then the request is rejected
         $response->assertForbidden();
     }
 
     #[Test]
-    public function readingJobOfferClicks_respondsWithClicksFromDatabase(): void {
+    public function readingJobOffer_respondsWithClicksFromDatabase(): void {
         // given a job offer clicked twice
         $jobOfferId = $this->createJobOffer('php-developer');
         $this->store()->clickJobOffer($jobOfferId);
         $this->store()->clickJobOffer($jobOfferId);
         // and I am authorized as admin
         $this->loginAdmin();
-        // when I read the job offer clicks
-        $response = $this->httpJobOfferClicks($jobOfferId);
+        // when I read the job offer
+        $response = $this->httpJobOffer($jobOfferId);
         // then the clicks are returned
         $response->assertOk();
         $this->assertSame(2, $response->json('clicks'));
+    }
+
+    #[Test]
+    public function readingJobOffer_respondsWithExposuresFromDatabase(): void {
+        // given a job offer exposed twice
+        $jobOfferId = $this->createJobOffer('php-developer');
+        $this->store()->exposeJobOffer($jobOfferId);
+        $this->store()->exposeJobOffer($jobOfferId);
+        // and I am authorized as admin
+        $this->loginAdmin();
+        // when I read the job offer
+        $response = $this->httpJobOffer($jobOfferId);
+        // then the exposures are returned
+        $response->assertOk();
+        $this->assertSame(2, $response->json('exposures'));
     }
 
     private function createJobOffer(string $jobOfferTitle): int {
@@ -164,7 +179,7 @@ class JobBoardHarnessTest extends TestCase {
         return $this->laravel->post('/harness/job-board/job-offers', ['title' => $jobOfferTitle]);
     }
 
-    private function httpJobOfferClicks(int $jobOfferId): TestResponse {
-        return $this->laravel->get("/harness/job-board/job-offers/$jobOfferId/clicks");
+    private function httpJobOffer(int $jobOfferId): TestResponse {
+        return $this->laravel->get("/harness/job-board/job-offers/$jobOfferId");
     }
 }

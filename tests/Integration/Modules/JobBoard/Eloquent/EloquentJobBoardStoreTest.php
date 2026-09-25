@@ -59,6 +59,16 @@ class EloquentJobBoardStoreTest extends TestCase {
         $payment->save();
     }
 
+    #[Test]
+    public function updatesJobExposures(): void {
+        $jobOfferId = $this->store->createJobOffer('job-offer-title');
+        $this->store->exposeJobOffer($jobOfferId);
+        $this->laravel->assertSeeInDatabase('jobs', [
+            'id'        => $jobOfferId,
+            'exposures' => 1,
+        ]);
+    }
+
     protected function contractTestStore(): JobBoardStore {
         return $this->store;
     }

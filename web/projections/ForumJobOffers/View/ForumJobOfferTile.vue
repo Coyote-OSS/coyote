@@ -1,5 +1,5 @@
 <template>
-  <a :href="tile.jobOfferHref" @click="countClick" :class="[
+  <a ref="anchor" :href="tile.jobOfferHref" @click="countClick" :class="[
     'border border-tile-outline bg-gray-100 text-gray-800',
     'flex flex-col no-underline tile-shadow transition-shadow hover:shadow-md',
     'w-full gap-2 rounded-2xl p-2 sm:w-86 sm:shrink-0',
@@ -66,6 +66,8 @@
 </template>
 
 <script setup lang="ts">
+import {onMounted, useTemplateRef} from 'vue';
+import {observeExposure} from '../../../libs/Exposure/observeExposure';
 import Icon from '../../../libs/Icon/Icon.vue';
 import type {ForumJobOfferTile} from '../ViewModel/ForumJobOfferTile';
 
@@ -74,6 +76,13 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const anchor = useTemplateRef<HTMLAnchorElement>('anchor');
+
+onMounted(() => observeExposure(anchor.value!, countExposure));
+
+function countExposure(): void {
+  navigator.sendBeacon(props.tile.jobOfferExposureHref);
+}
 
 function countClick(): void {
   navigator.sendBeacon(props.tile.jobOfferClickHref);
