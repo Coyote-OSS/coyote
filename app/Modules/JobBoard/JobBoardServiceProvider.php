@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Modules\JobBoard;
 
+use Coyote\Http\Middleware\AcceptanceTestOnly;
 use Coyote\Modules\JobBoard\Eloquent\EloquentJobBoardStore;
 use Coyote\Modules\JobBoard\User\Http\JobOffersController;
 use Illuminate\Routing\Router;
@@ -27,11 +28,11 @@ class JobBoardServiceProvider extends ServiceProvider {
 
     private function registerRoutesHarness(Router $router): void {
         $router
-            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1'])
-            ->group($this->registerRoutesWebAdmin(...));
+            ->middleware(AcceptanceTestOnly::class)
+            ->group($this->registerRoutesHarnessEndpoints(...));
     }
 
-    private function registerRoutesWebAdmin(Router $router): void {
+    private function registerRoutesHarnessEndpoints(Router $router): void {
         $router->post('/harness/job-board/reset', function (EloquentJobBoardStore $store) {
             $store->removeJobOffers();
             return response()->noContent();

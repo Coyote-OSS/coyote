@@ -6,33 +6,25 @@ use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Illuminate\Testing\TestResponse;
 use Modules\Campaigns\ForRotatingBanners;
 use Modules\Campaigns\Store\CampaignPayload;
-use PHPUnit\Framework\Attributes\Before;
+use Coyote\Services\AcceptanceTest\AcceptanceTest;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Legacy\Integration\BaseFixture\Forum\ModelsDriver;
+use Tests\Integration\Fixture\Acceptance\ConstantAcceptanceTest;
 use Tests\Legacy\Integration\BaseFixture\Server;
 
 #[CoversClass(CampaignsServiceProvider::class)]
 class CampaignsHarnessTest extends TestCase {
     use Server\Laravel\Transactional;
-    use Server\Http;
-
-    private ModelsDriver $models;
-
-    #[Before]
-    public function givenModels(): void {
-        $this->models = new ModelsDriver();
-    }
 
     #[Test]
-    public function removingAllCampaigns_failsWithoutAuthorization(): void {
-        // given I don't have access to campaigns
-        $this->loginRegularUser();
+    public function removingAllCampaigns_isNotAvailableOutsideAcceptanceTests(): void {
+        // given the application is not running acceptance tests
+        $this->givenProductionMode();
         // when I attempt to remove all campaigns
         $response = $this->httpRemoveCampaigns();
-        // then the request is rejected
-        $response->assertForbidden();
+        // then the harness is not found
+        $response->assertNotFound();
     }
 
     #[Test]
@@ -40,8 +32,6 @@ class CampaignsHarnessTest extends TestCase {
         // given a couple of campaigns exist
         $this->createCampaign('first-to-remove');
         $this->createCampaign('second-to-remove');
-        // and I am authorized as admin
-        $this->loginAdmin();
         // when I remove all campaigns
         $this->httpRemoveCampaigns();
         // then no campaigns remain
@@ -49,19 +39,17 @@ class CampaignsHarnessTest extends TestCase {
     }
 
     #[Test]
-    public function overridingTheRotationSeed_failsWithoutAuthorization(): void {
-        // given I don't have access to campaigns
-        $this->loginRegularUser();
+    public function overridingTheRotationSeed_isNotAvailableOutsideAcceptanceTests(): void {
+        // given the application is not running acceptance tests
+        $this->givenProductionMode();
         // when I attempt to override the rotation seed
         $response = $this->httpOverrideRotationSeed(7);
-        // then the request is rejected
-        $response->assertForbidden();
+        // then the harness is not found
+        $response->assertNotFound();
     }
 
     #[Test]
     public function overridingTheRotationSeed_pinsTheSeedInsteadOfTheClock(): void {
-        // given I am authorized as admin
-        $this->loginAdmin();
         // when I override the rotation seed
         $this->httpOverrideRotationSeed(7);
         // then the seed is pinned, rather than falling back to the clock
@@ -77,13 +65,8 @@ class CampaignsHarnessTest extends TestCase {
             ->createCampaign(new CampaignPayload($name, '', null, null, null, null, false, null));
     }
 
-    private function loginRegularUser(): void {
-        $this->server->loginById($this->models->newUserReturnId());
-    }
-
-    private function loginAdmin(): void {
-        $this->server->loginById($this->models->newUserReturnId(permissionNames:['adm-access']));
-        $this->laravel->withSession(['admin' => true]);
+    private function givenProductionMode(): void {
+        $this->laravel->app->instance(AcceptanceTest::class, new ConstantAcceptanceTest(false));
     }
 
     private function httpRemoveCampaigns(): TestResponse {

@@ -82,7 +82,7 @@ jobs:
           docker compose exec -T php php artisan db:seed --class=AcceptanceTestSeeder
 
       - name: Run acceptance tests (browser driver)
-        run: docker compose exec -T php bash -c 'TEST_CHANNEL=acceptance vendor/bin/behat'
+        run: docker compose exec -T php bash -c 'TEST_CHANNEL=acceptance TEST_SCREENSHOTS=true vendor/bin/behat'
 
       - name: Upload acceptance test results
         if: always()

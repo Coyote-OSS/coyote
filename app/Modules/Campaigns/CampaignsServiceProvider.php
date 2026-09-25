@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Modules\Campaigns;
 
+use Coyote\Http\Middleware\AcceptanceTestOnly;
 use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Coyote\Modules\Campaigns\Provided\AuthPriviligedUsers;
 use Coyote\Modules\Campaigns\Provided\CarbonCurrentDate;
@@ -66,11 +67,11 @@ class CampaignsServiceProvider extends ServiceProvider {
             ->post('/campaigns/{variantId}/adblock', [CampaignsController::class, 'adblock'])
             ->name('campaigns.adblock');
         $router
-            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1'])
-            ->group($this->registerRoutesWebAdmin(...));
+            ->middleware(AcceptanceTestOnly::class)
+            ->group($this->registerRoutesHarness(...));
     }
 
-    private function registerRoutesWebAdmin(Router $router): void {
+    private function registerRoutesHarness(Router $router): void {
         $router->post('/harness/campaigns/reset', function (EloquentCampaignsStore $store) {
             $store->removeCampaigns();
             return response()->noContent();

@@ -38,9 +38,7 @@ readonly class AcceptanceDriver implements Driver {
         $this->harness->resetJobOffers();
     }
 
-    public function finalize(): void {
-        $this->driver->close();
-    }
+    public function finalize(): void {}
 
     public function createCampaign(string $campaign, bool $premium): void {
         $this->driver->browser()->visit('/Adm/Campaigns/Save');
@@ -154,11 +152,13 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     public function captureDiagnostics(string $testTitle): void {
-        $this->screenshot($testTitle);
+        $this->driver->screenshot($this->screenshots->nextPath($testTitle));
     }
 
     private function screenshot(string $label): void {
-        $this->driver->screenshot($this->screenshots->nextPath($label));
+        if ($this->stepScreenshots) {
+            $this->driver->screenshot($this->screenshots->nextPath($label));
+        }
     }
 
     public function createJobOffer(string $jobOffer): void {

@@ -6,6 +6,7 @@ use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Hook\AfterScenario;
 use Behat\Hook\AfterStep;
+use Behat\Hook\AfterSuite;
 use Behat\Hook\BeforeScenario;
 use Behat\Hook\BeforeSuite;
 use Features\Dsl\Driver\Channel\AcceptanceChannel\AcceptanceDriver;
@@ -20,11 +21,18 @@ class FeatureContext implements Context {
     use CampaignSteps;
     use JobOfferSteps;
 
-    private static \DateTimeImmutable $testStartDate;
+    private static TestContext $testContext;
 
     #[BeforeSuite]
-    public static function captureTestStartDate(): void {
-        self::$testStartDate = new \DateTimeImmutable();
+    public static function initializeTestContext(): void {
+        $userAgentNonCrawler = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
+        self::$testContext = new TestContext('http://nginx', $userAgentNonCrawler);
+        self::$testContext->initialize();
+    }
+
+    #[AfterSuite]
+    public static function finalizeTestContext(): void {
+        self::$testContext->finalize();
     }
 
     private Driver $driver;
@@ -39,22 +47,33 @@ class FeatureContext implements Context {
         return match (\getEnv('TEST_CHANNEL')) {
             'in-memory'   => InMemoryDriver::create(),
             'integration' => new IntegrationDriver(),
-            'acceptance'  => new AcceptanceDriver(self::$testStartDate),
+            'acceptance'  => new AcceptanceDriver(
+                self::$testContext->browserDriver(),
+                self::$testContext->testStartDate(),
+                'http://nginx',
+                $this->stepScreenshots()),
             default       => throw new \Error('Failed to resolve the test channel.'),
+        };
+    }
+
+    private function stepScreenshots(): bool {
+        return match (\getEnv('TEST_SCREENSHOTS')) {
+            'true'  => true,
+            'false' => false,
+            default => throw new \Exception('Failed to resolve screenshot setting.'),
         };
     }
 
     #[BeforeScenario]
     public function initializeDriver(BeforeScenarioScope $scope): void {
+        $testTitle = $scope->getScenario()->getName();
         try {
-            $this->driver->initialize(
-                $scope->getFeature()->getTitle(),
-                $scope->getScenario()->getName());
+            $this->driver->initialize($scope->getFeature()->getTitle(), $testTitle);
         } catch (\Throwable $throwable) {
             // Behat does not run AfterScenario hooks when BeforeScenario fails, so the
-            // driver has to capture a diagnostic screenshot and close itself here, or
-            // both are silently lost and the browser session leaks into the next scenario.
-            $this->driver->captureDiagnostics($scope->getScenario()->getName());
+            // driver has to capture a diagnostic screenshot and finalize itself here,
+            // or both are silently lost.
+            $this->driver->captureDiagnostics($testTitle);
             $this->driver->finalize();
             throw $throwable;
         }
