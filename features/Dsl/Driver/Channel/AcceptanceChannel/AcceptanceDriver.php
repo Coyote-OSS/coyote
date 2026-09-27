@@ -1,11 +1,11 @@
 <?php
 namespace Features\Dsl\Driver\Channel\AcceptanceChannel;
 
-use Facebook\WebDriver\Exception\NoSuchShadowRootException;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
 use Features\Dsl\Driver\Driver;
+use Laravel\Dusk;
 use Libs\Arrays\arrays;
 
 readonly class AcceptanceDriver implements Driver {
@@ -18,8 +18,11 @@ readonly class AcceptanceDriver implements Driver {
     private RotationSeed $rotationSeed;
     private ScreenshotSequence $screenshots;
 
-    public function __construct(\DateTimeImmutable $testStartDate) {
-        $this->driver = new BrowserDriver('http://nginx', $this->userAgentNonCrawler());
+    public function __construct(
+        \DateTimeImmutable $testStartDate,
+        Dusk\Browser       $browser,
+    ) {
+        $this->driver = new BrowserDriver($browser);
         $this->harness = new HarnessClient('http://nginx');
         $this->variantImages = new VariantImageFixture();
         $this->campaignIds = new CampaignIdMapping();
@@ -33,14 +36,13 @@ readonly class AcceptanceDriver implements Driver {
 
     public function initialize(string $feature, string $scenario): void {
         $this->screenshots->startScenario($feature, $scenario);
-        $this->driver->initialize();
         $this->logIntoAdminPanel('admin-lowrep', 'admin-lowrep');
         $this->harness->resetCampaigns();
         $this->harness->resetJobOffers();
     }
 
     public function finalize(): void {
-        $this->driver->close();
+        $this->driver->clearState();
     }
 
     public function createCampaign(string $campaign, bool $premium): void {
@@ -141,10 +143,6 @@ readonly class AcceptanceDriver implements Driver {
         return \end($urls);
     }
 
-    private function userAgentNonCrawler(): string {
-        return 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
-    }
-
     private function resolveAllSlotsForCurrentDevice(): void {
         $this->visitTopic();
     }
@@ -196,11 +194,7 @@ readonly class AcceptanceDriver implements Driver {
         // Job offer tiles are rendered between posts, in the shadow DOM of <vue-shadow-root>,
         // which is attached only once the custom element is defined.
         foreach ($this->driver->browser()->elements('vue-shadow-root') as $shadowHost) {
-            try {
-                $tiles = $shadowHost->getShadowRoot()->findElements(WebDriverBy::cssSelector('a'));
-            } catch (NoSuchShadowRootException) {
-                continue;
-            }
+            $tiles = $shadowHost->getShadowRoot()->findElements(WebDriverBy::cssSelector('a'));
             foreach ($tiles as $tile) {
                 if ($tile->isDisplayed() && \str_contains($tile->getText(), $jobOffer)) {
                     return $tile;

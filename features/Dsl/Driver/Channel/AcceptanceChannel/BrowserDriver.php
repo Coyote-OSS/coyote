@@ -1,23 +1,10 @@
 <?php
 namespace Features\Dsl\Driver\Channel\AcceptanceChannel;
 
-use Facebook\WebDriver\Chrome\ChromeOptions;
-use Facebook\WebDriver\Remote\DesiredCapabilities;
-use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Laravel\Dusk;
 
 readonly class BrowserDriver {
-    private ?Dusk\Browser $browser;
-
-    public function __construct(
-        private string $baseUrl,
-        private string $userAgent,
-    ) {}
-
-    public function initialize(): void {
-        Dusk\Browser::$baseUrl = $this->baseUrl;
-        $this->browser = new Dusk\Browser($this->remoteWebDriver($this->userAgent));
-    }
+    public function __construct(private Dusk\Browser $browser) {}
 
     public function browser(): Dusk\Browser {
         return $this->browser;
@@ -35,23 +22,13 @@ readonly class BrowserDriver {
         $this->browser->driver->takeScreenshot($path);
     }
 
-    private function remoteWebDriver(string $userAgent): RemoteWebDriver {
-        $chromeOptions = new ChromeOptions();
-        $chromeOptions->addArguments([
-            '--disable-gpu',
-            '--headless',
-            '--no-sandbox',
-            '--ignore-ssl-errors',
-            '--whitelisted-ips=""',
-            '--window-size=1366,1200',
-            "--user-agent=$userAgent",
-        ]);
-        $capabilities = DesiredCapabilities::chrome();
-        $capabilities->setCapability(ChromeOptions::CAPABILITY, $chromeOptions);
-        return RemoteWebDriver::create('http://selenium:4444/wd/hub', $capabilities);
-    }
-
-    public function close(): void {
-        $this->browser->quit();
+    public function clearState(): void {
+        // The session outlives the scenario, so state that
+        // the next scenario must not inherit is cleared instead.
+        $this->browser->driver->manage()->deleteAllCookies();
+        if (\str_starts_with($this->browser->driver->getCurrentURL(), Dusk\Browser::$baseUrl)) {
+            $this->browser->driver->executeScript('localStorage.clear(); sessionStorage.clear();');
+        }
+        $this->browser->resize(BrowserConnection::WIDTH, BrowserConnection::HEIGHT);
     }
 }
