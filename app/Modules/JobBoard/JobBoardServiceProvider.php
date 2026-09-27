@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Modules\JobBoard;
 
+use Coyote\Http\Middleware\AcceptanceTestOnly;
 use Coyote\Modules\JobBoard\Eloquent\EloquentJobBoardStore;
 use Coyote\Modules\JobBoard\User\Http\JobOffersController;
 use Illuminate\Routing\Router;
@@ -12,8 +13,9 @@ class JobBoardServiceProvider extends ServiceProvider {
         $this->app->bind(
             JobBoardStore::class,
             EloquentJobBoardStore::class);
-        $this->registerRoutes($this->app->make(Router::class));
-        $this->registerRoutesHarness($this->app->make(Router::class));
+        $router = $this->app->make(Router::class);
+        $this->registerRoutes($router);
+        $this->registerRoutesAcceptanceTest($router);
     }
 
     private function registerRoutes(Router $router): void {
@@ -22,23 +24,26 @@ class JobBoardServiceProvider extends ServiceProvider {
             ->name('jobBoard.jobOffer.click');
     }
 
+    private function registerRoutesAcceptanceTest(Router $router): void {
+        $router->group(
+            ['middleware' => ['web', AcceptanceTestOnly::class]],
+            $this->registerRoutesHarness(...));
+    }
+
     private function registerRoutesHarness(Router $router): void {
         $router
             ->post('/harness/job-board/reset', function (EloquentJobBoardStore $store) {
                 $store->removeJobOffers();
                 return response()->noContent();
-            })
-            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1']);
+            });
         $router
             ->post('/harness/job-board/job-offers', function (EloquentJobBoardStore $store) {
                 $jobOfferId = $store->createJobOffer(request()->input('title'));
                 return response()->json(['id' => $jobOfferId], 201);
-            })
-            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1']);
+            });
         $router
             ->get('/harness/job-board/job-offers/{jobOfferId}/clicks', function (EloquentJobBoardStore $store, int $jobOfferId) {
                 return response()->json(['clicks' => $store->jobOfferClicks($jobOfferId)]);
-            })
-            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1']);
+            });
     }
 }

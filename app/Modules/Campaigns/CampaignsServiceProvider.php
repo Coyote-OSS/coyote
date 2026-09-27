@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Modules\Campaigns;
 
+use Coyote\Http\Middleware\AcceptanceTestOnly;
 use Coyote\Modules\Campaigns\Eloquent\EloquentCampaignsStore;
 use Coyote\Modules\Campaigns\Provided\AuthPriviligedUsers;
 use Coyote\Modules\Campaigns\Provided\CarbonCurrentDate;
@@ -52,7 +53,9 @@ class CampaignsServiceProvider extends ServiceProvider {
             ForCampaignBanners::class,
             CampaignBannersFacade::class);
 
-        $this->registerRoutes($this->app->make(Router::class));
+        $router = $this->app->make(Router::class);
+        $this->registerRoutes($router);
+        $this->registerRoutesAcceptanceTest($router);
     }
 
     private function registerRoutes(Router $router): void {
@@ -65,17 +68,24 @@ class CampaignsServiceProvider extends ServiceProvider {
         $router
             ->post('/campaigns/{variantId}/adblock', [CampaignsController::class, 'adblock'])
             ->name('campaigns.adblock');
+    }
+
+    private function registerRoutesAcceptanceTest(Router $router): void {
+        $router->group(
+            ['middleware' => ['web', AcceptanceTestOnly::class]],
+            $this->registerRoutesHarness(...));
+    }
+
+    private function registerRoutesHarness(Router $router): void {
         $router
             ->post('/harness/campaigns/reset', function (EloquentCampaignsStore $store) {
                 $store->removeCampaigns();
                 return response()->noContent();
-            })
-            ->middleware(['web', 'auth', 'can:adm-access', 'adm:1']);
+            });
         $router
             ->post('/harness/campaigns/rotation-seed', function (TimeRotatingBanners $rotation) {
                 $rotation->overrideSeed(request()->input('seed'));
                 return response()->noContent();
-            })
-            ->middleware('web', 'auth', 'can:adm-access', 'adm:1');
+            });
     }
 }
