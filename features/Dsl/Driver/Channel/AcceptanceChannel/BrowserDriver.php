@@ -29,6 +29,9 @@ readonly class BrowserDriver {
         if (\str_starts_with($this->browser->driver->getCurrentURL(), Dusk\Browser::$baseUrl)) {
             $this->browser->driver->executeScript('localStorage.clear(); sessionStorage.clear();');
         }
-        $this->browser->resize(BrowserConnection::WIDTH, BrowserConnection::HEIGHT);
+    }
+
+    public function resizeViewport(int $width, int $height): void {
+        $this->browser->resize($width, $height);
     }
 }

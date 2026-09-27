@@ -35,6 +35,7 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     public function initialize(string $feature, string $scenario): void {
+        $this->driver->resizeViewport(1200, 1080);
         $this->screenshots->startScenario($feature, $scenario);
         $this->logIntoAdminPanel('admin-lowrep', 'admin-lowrep');
         $this->harness->resetCampaigns();
@@ -73,7 +74,7 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     public function resolveVariantsForUser(string $deviceType): void {
-        $this->driver->browser()->resize(...$this->viewportSize($deviceType));
+        $this->driver->resizeViewport(...$this->viewportSize($deviceType));
         $this->harness->pinRotationSeed($this->rotationSeed->current());
         $this->rotationSeed->increment();
         $this->resolveAllSlotsForCurrentDevice();
