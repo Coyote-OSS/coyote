@@ -26,18 +26,17 @@ class InMemoryDriver implements Driver {
     public static function create(): self {
         $rotatingBanners = new TestRotatingBanners();
         $store = new InMemoryCampaignsStore();
-        $facade = new CampaignBannersFacade(
-            new CampaignService(
-                new TestPrivilegedUsers(),
-                $rotatingBanners,
-                new TestCurrentDate(),
-                $store,
-                new TestUserVoivodeship()),
-            new TestRedirectUrls('https://example.test'));
         return new InMemoryDriver(
             $store,
             new InMemoryJobBoardStore(),
-            $facade,
+            new CampaignBannersFacade(
+                new CampaignService(
+                    new TestPrivilegedUsers(),
+                    $rotatingBanners,
+                    new TestCurrentDate(),
+                    $store,
+                    new TestUserVoivodeship()),
+                new TestRedirectUrls('https://example.test')),
             $rotatingBanners);
     }
 
