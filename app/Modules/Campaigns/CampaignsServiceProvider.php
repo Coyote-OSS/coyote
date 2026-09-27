@@ -71,9 +71,9 @@ class CampaignsServiceProvider extends ServiceProvider {
     }
 
     private function registerRoutesAcceptanceTest(Router $router): void {
-        $router->group(
-            ['middleware' => ['web', AcceptanceTestOnly::class]],
-            $this->registerRoutesHarness(...));
+        $router
+            ->middleware(AcceptanceTestOnly::class)
+            ->group($this->registerRoutesHarness(...));
     }
 
     private function registerRoutesHarness(Router $router): void {

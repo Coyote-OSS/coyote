@@ -20,7 +20,7 @@ readonly class AcceptanceDriver implements Driver {
 
     public function __construct(\DateTimeImmutable $testStartDate) {
         $this->driver = new BrowserDriver('http://nginx', $this->userAgentNonCrawler());
-        $this->harness = new HarnessClient($this->driver);
+        $this->harness = new HarnessClient('http://nginx');
         $this->variantImages = new VariantImageFixture();
         $this->campaignIds = new CampaignIdMapping();
         $this->jobOfferIds = new JobOfferIdMapping();
