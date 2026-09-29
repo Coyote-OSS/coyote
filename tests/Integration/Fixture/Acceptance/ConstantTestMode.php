@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Integration\Fixture\Acceptance;
 
-use Coyote\Services\AcceptanceTest\AcceptanceTest;
+use Coyote\Services\TestMode\TestMode;
 
-readonly class ConstantAcceptanceTest implements AcceptanceTest {
+readonly class ConstantTestMode implements TestMode {
     public function __construct(private bool $acceptanceTest) {}
 
     public function isAcceptanceTest(): bool {

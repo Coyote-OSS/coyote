@@ -5,13 +5,13 @@ use Coyote\Modules\JobBoard\Eloquent\EloquentJobBoardStore;
 use Coyote\Modules\JobBoard\JobBoardServiceProvider;
 use Coyote\Plan;
 use Coyote\Projections\ForumJobOffers\ForumJobOffersPresenter;
-use Coyote\Services\AcceptanceTest\AcceptanceTest;
+use Coyote\Services\TestMode\TestMode;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\Integration\Fixture\Acceptance\ConstantAcceptanceTest;
+use Tests\Integration\Fixture\Acceptance\ConstantTestMode;
 use Tests\Legacy\Integration\BaseFixture\Server;
 use Web\Projections\ForumJobOffers\ViewModel\ForumJobOfferTile;
 
@@ -23,7 +23,7 @@ class JobBoardHarnessTest extends TestCase {
 
     #[Before]
     public function givenAcceptanceTestMode(): void {
-        $this->laravel->app->instance(AcceptanceTest::class, new ConstantAcceptanceTest(true));
+        $this->laravel->app->instance(TestMode::class, new ConstantTestMode(true));
     }
 
     #[Before(-10)]
@@ -137,7 +137,7 @@ class JobBoardHarnessTest extends TestCase {
     }
 
     private function givenProductionMode(): void {
-        $this->laravel->app->instance(AcceptanceTest::class, new ConstantAcceptanceTest(false));
+        $this->laravel->app->instance(TestMode::class, new ConstantTestMode(false));
     }
 
     private function httpRemoveJobOffers(): TestResponse {

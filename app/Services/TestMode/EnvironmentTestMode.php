@@ -1,9 +1,9 @@
 <?php
-namespace Coyote\Services\AcceptanceTest;
+namespace Coyote\Services\TestMode;
 
 use Illuminate\Support\Env;
 
-readonly class EnvironmentAcceptanceTest implements AcceptanceTest {
+readonly class EnvironmentTestMode implements TestMode {
     public function isAcceptanceTest(): bool {
         return Env::get('ACCEPTANCE_TEST') === 'acceptance';
     }

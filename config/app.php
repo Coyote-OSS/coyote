@@ -191,7 +191,7 @@ return [
         Coyote\Providers\EventServiceProvider::class,
         Coyote\Providers\Neon\ServiceProvider::class,
         Neon2\Laravel\RouteServiceProvider::class,
-        Coyote\Services\AcceptanceTest\AcceptanceTestServiceProvider::class,
+        Coyote\Services\TestMode\TestModeServiceProvider::class,
         Coyote\Modules\Campaigns\CampaignsServiceProvider::class,
         Coyote\Modules\JobBoard\JobBoardServiceProvider::class,
         Coyote\Providers\RouteServiceProvider::class,
