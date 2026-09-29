@@ -74,3 +74,27 @@ jobs:
           path: storage/screenshots/
           retention-days: 2
           if-no-files-found: ignore
+
+  integration:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup laravel
+        run: cp .env.default .env
+
+      - name: Run docker containers
+        run: docker compose -f docker-compose.yaml up -d
+
+      - name: Setup directory owner
+        run: sudo chown -R packer:packer ./ # User with UID 1000 on host machine
+
+      - name: Install coyote server
+        run: make composer-install migrate
+
+      - name: Prepare application for integration tests
+        run: docker compose exec -T php php artisan db:seed --class=IntegrationTestSeeder
+
+      - name: Run system integration tests
+        run: docker compose exec -T php bash -c './vendor/bin/phpunit ./tests/Integration/'
