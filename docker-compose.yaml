@@ -84,12 +84,12 @@ services:
       - coyote
 
   minio:
-    image: 4programmers/minio:RELEASE.2025-05-24T17-08-30Z
+    image: 4programmers/minio:RELEASE.2020-01-03T19-12-21Z
     volumes:
       - minio:/data
     environment:
-      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID}
-      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY}
+      MINIO_ACCESS_KEY: ${AWS_ACCESS_KEY_ID}
+      MINIO_SECRET_KEY: ${AWS_SECRET_ACCESS_KEY}
     command: server /data
     ports:
       - 39000:9000
