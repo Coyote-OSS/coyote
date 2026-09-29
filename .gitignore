@@ -1,6 +1,7 @@
 # Project
 .idea/
 *.iml
+.mcp.json
 
 # Composer
 composer.phar
