@@ -6,5 +6,9 @@ interface JobBoardStore {
 
     public function clickJobOffer(int $jobOfferId): void;
 
+    public function exposeJobOffer(int $jobOfferId): void;
+
     public function jobOfferClicks(int $jobOfferId): int;
+
+    public function jobOfferExposures(int $jobOfferId): int;
 }

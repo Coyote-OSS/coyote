@@ -20,20 +20,39 @@ class EloquentJobBoardStore implements JobBoardStore {
                 'slug'        => 'slug',
                 'deadline_at' => Carbon::now()->addDays($freePlan->length),
                 'clicks'      => 0,
+                'exposures'   => 0,
             ])
             ->id;
     }
 
     public function clickJobOffer(int $jobOfferId): void {
-        Eloquent\JobOffer::query()->whereKey($jobOfferId)->increment('clicks');
+        Eloquent\JobOffer::query()
+            ->whereKey($jobOfferId)
+            ->increment('clicks');
+    }
+
+    public function exposeJobOffer(int $jobOfferId): void {
+        Eloquent\JobOffer::query()
+            ->whereKey($jobOfferId)
+            ->increment('exposures');
     }
 
     public function jobOfferClicks(int $jobOfferId): int {
-        return Eloquent\JobOffer::query()->findOrFail($jobOfferId)->clicks;
+        return Eloquent\JobOffer::query()
+            ->select(['clicks'])
+            ->findOrFail($jobOfferId)
+            ->clicks ?? 0;
+    }
+
+    public function jobOfferExposures(int $jobOfferId): int {
+        return Eloquent\JobOffer::query()
+            ->select(['exposures'])
+            ->findOrFail($jobOfferId)
+            ->exposures ?? 0;
     }
 
     public function removeJobOffers(): void {
-        Coyote\Payment::query()->whereIn('job_id', Eloquent\JobOffer::query()->select('id'))->delete();
+        Coyote\Payment::query()->delete();
         Eloquent\JobOffer::query()->delete();
     }
 
