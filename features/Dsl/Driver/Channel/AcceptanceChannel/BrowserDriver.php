@@ -10,6 +10,10 @@ readonly class BrowserDriver {
         return $this->browser;
     }
 
+    public function navigate(string $url): void {
+        $this->browser->visit($url);
+    }
+
     public function submit(string $button): void {
         $this->browser->waitForReload(fn(Dusk\Browser $browser) => $browser->press($button));
     }

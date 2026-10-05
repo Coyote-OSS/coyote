@@ -47,7 +47,7 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     public function createCampaign(string $campaign, bool $premium): void {
-        $this->driver->browser()->visit('/Adm/Campaigns/Save');
+        $this->driver->navigate('/Adm/Campaigns/Save');
         $this->driver->browser()->type('name', $campaign);
         $this->driver->browser()->type('redirect_url', 'https://example.test');
         $this->driver->browser()->type('target_views', '999');
@@ -63,7 +63,7 @@ readonly class AcceptanceDriver implements Driver {
         $campaignId = $this->campaignIds->getCampaignId($campaign);
         $imagePath = $this->variantImages->create($variantType);
         try {
-            $this->driver->browser()->visit("/Adm/Campaigns/Show/$campaignId");
+            $this->driver->navigate("/Adm/Campaigns/Show/$campaignId");
             $this->driver->browser()->attach('images[]', $imagePath);
             $this->driver->submit('Prześlij');
             $this->variantAliases->setVariantAlias($this->lastUploadedVariantImageUrl(), $variantUrl);
@@ -106,12 +106,12 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     private function logIntoAdminPanel(string $username, string $password): void {
-        $this->driver->browser()->visit('/Login');
+        $this->driver->navigate('/Login');
         $this->closeGdprIfVisible();
         $this->driver->browser()->type('name', $username);
         $this->driver->browser()->type('password', $password);
         $this->driver->submit('Zaloguj się');
-        $this->driver->browser()->visit('/Adm');
+        $this->driver->navigate('/Adm');
         $this->driver->browser()->type('password', $password);
         $this->driver->submit('Logowanie');
     }
@@ -149,7 +149,7 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     private function visitTopic(): void {
-        $this->driver->browser()->visit('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
+        $this->driver->navigate('/Forum/Algorytmy/8-algorithms_every_developer_should_know');
         $this->driver->browser()->waitUntilMissing('#js-skeleton');
     }
 
