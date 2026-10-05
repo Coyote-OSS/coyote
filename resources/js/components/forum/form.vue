@@ -181,8 +181,12 @@
                     title="Kliknij, aby zapisać (Ctrl+Enter)"
                     class="btn btn-primary btn-sm neon-primary-button"
                     @click="save">
-          <template v-if="post.id">Zapisz</template>
-          <b v-else>{{showTitleInput ? 'Rozpocznij wątek' : 'Opublikuj odpowiedź'}}</b>
+          <template v-if="post.id">
+            Zapisz
+          </template>
+          <template v-else>
+            {{showTitleInput ? 'Rozpocznij wątek' : 'Opublikuj odpowiedź'}}
+          </template>
         </vue-button>
       </div>
     </div>
