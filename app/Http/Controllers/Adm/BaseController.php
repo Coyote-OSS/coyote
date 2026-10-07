@@ -7,10 +7,8 @@ use Lavary\Menu\Builder;
 use Lavary\Menu\Item;
 use Lavary\Menu\Menu;
 
-class BaseController extends Controller
-{
-    public function __construct()
-    {
+class BaseController extends Controller {
+    public function __construct() {
         parent::__construct();
         $this->breadcrumb->push('Panel administracyjny', route('adm.home'));
     }
@@ -18,15 +16,13 @@ class BaseController extends Controller
     /**
      * @inheritdoc
      */
-    protected function view($view = null, $data = [])
-    {
+    protected function view($view = null, $data = []) {
         return parent::view($view, array_merge($data, [
             'menu' => $this->buildMenu(app(Menu::class)),
         ]));
     }
 
-    private function buildMenu(Menu $menu): Builder
-    {
+    private function buildMenu(Menu $menu): Builder {
         return $menu->make('adm', function (Builder $menu) {
             if ($menu->all()->count() > 0) {
                 return;
@@ -38,6 +34,8 @@ class BaseController extends Controller
             };
 
             $menu->add('Strona główna', ['route' => 'adm.dashboard'])->prepend($fa('fa-display fa-fw'));
+            $menu->add('Statystyki', ['route' => 'adm.statistics'])->prepend($fa('fa-chart-line fa-fw'));
+
             $menu->divide(['class' => 'menu-group-moderator-actions']);
 
             $menu->add('Użytkownicy', ['route' => 'adm.users'])->prepend($fa('fa-user fa-fw'));
@@ -73,13 +71,11 @@ class BaseController extends Controller
     /**
      * Clear users cache permission after updating groups etc.
      */
-    protected function flushPermission(): void
-    {
+    protected function flushPermission(): void {
         $this->getCacheFactory()->tags('permissions')->flush();
     }
 
-    protected function getCacheFactory(): \Illuminate\Contracts\Cache\Repository
-    {
+    protected function getCacheFactory(): \Illuminate\Contracts\Cache\Repository {
         return app(\Illuminate\Contracts\Cache\Repository::class);
     }
 }

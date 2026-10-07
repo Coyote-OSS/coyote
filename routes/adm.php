@@ -20,6 +20,7 @@ $this->group(
     function () {
         /** @var $this Router */
         $this->get('Dashboard', 'DashboardController@index')->name('dashboard');
+        $this->get('Statistics', 'StatisticsController@index')->name('statistics');
         $this->get('Exit', 'ExitController@index')->name('exit');
 
         $this->get('Forum/Categories', 'Forum\CategoriesController@index')->name('forum.categories');
