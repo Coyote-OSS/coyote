@@ -12,4 +12,9 @@ class JobOffersController extends Controller {
         $this->store->clickJobOffer($jobOfferId);
         return response()->noContent();
     }
+
+    public function expose(int $jobOfferId): Response {
+        $this->store->exposeJobOffer($jobOfferId);
+        return response()->noContent();
+    }
 }

@@ -32,6 +32,7 @@ readonly class ForumJobOffersPresenter {
             companyLogoUrl:$this->formatLogoUrl($job->firm->logo),
             jobOfferHref:route('neon.jobOffer.show', [$job->slug, $job->id]),
             jobOfferClickHref:route('jobBoard.jobOffer.click', [$job->id]),
+            jobOfferExposureHref:route('jobBoard.jobOffer.exposure', [$job->id]),
             jobOfferTitle:$job->title,
             headerPills:$this->headerPills($job),
             salaryFormat:$this->formatSalary($job),

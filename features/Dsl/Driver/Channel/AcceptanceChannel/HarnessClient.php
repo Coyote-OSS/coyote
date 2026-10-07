@@ -41,6 +41,14 @@ readonly class HarnessClient {
         return $this->json($response)['clicks'];
     }
 
+    public function jobOfferExposures(int $jobOfferId): int {
+        $response = $this->http->get("/harness/job-board/job-offers/$jobOfferId/exposures");
+        if ($response->getStatusCode() === 200) {
+            return $this->json($response)['exposures'];
+        }
+        throw new \Exception('Failed to read job offer exposures via the test harness.');
+    }
+
     public function pinRotationSeed(int $seed): void {
         $response = $this->http->post('/harness/campaigns/rotation-seed', ['json' => ['seed' => $seed]]);
         if ($response->getStatusCode() !== 204) {

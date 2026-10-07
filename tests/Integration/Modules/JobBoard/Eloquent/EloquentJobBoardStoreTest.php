@@ -40,6 +40,26 @@ class EloquentJobBoardStoreTest extends TestCase {
     }
 
     #[Test]
+    public function readsPreMigrationJobClicksAsZero(): void {
+        $jobOfferId = $this->store->createJobOffer('job-offer-title');
+        $this->updateJobOffer($jobOfferId, ['clicks' => null]);
+        $this->assertSame(0, $this->store->jobOfferClicks($jobOfferId));
+    }
+
+    #[Test]
+    public function readsPreMigrationJobExposuresAsZero(): void {
+        $jobOfferId = $this->store->createJobOffer('job-offer-title');
+        $this->updateJobOffer($jobOfferId, ['exposures' => null]);
+        $this->assertSame(0, $this->store->jobOfferExposures($jobOfferId));
+    }
+
+    private function updateJobOffer(int $jobOfferId, array $columns): void {
+        $this->laravel->databaseTable('jobs')
+            ->where(['id' => $jobOfferId])
+            ->update($columns);
+    }
+
+    #[Test]
     public function removesJobOffersWithPayments(): void {
         // given a job offer with a payment
         $jobOfferId = $this->store->createJobOffer('job-offer-title');

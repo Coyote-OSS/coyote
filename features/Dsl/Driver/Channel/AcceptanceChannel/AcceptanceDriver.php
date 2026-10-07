@@ -1,7 +1,6 @@
 <?php
 namespace Features\Dsl\Driver\Channel\AcceptanceChannel;
 
-use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
 use Features\Dsl\Driver\Driver;
@@ -167,7 +166,7 @@ readonly class AcceptanceDriver implements Driver {
 
     public function clickJobOffer(string $jobOffer): void {
         // With fewer than 3 job offers, the tiles are only shown on mobile.
-        $this->driver->browser()->resize(...$this->viewportSize('mobile'));
+        $this->driver->resizeViewport(...$this->viewportSize('mobile'));
         $this->visitTopic();
         $tile = $this->jobOfferTile($jobOffer);
         $this->screenshot('clickJobOffer');
@@ -179,19 +178,6 @@ readonly class AcceptanceDriver implements Driver {
     }
 
     private function jobOfferTile(string $jobOffer): WebDriverElement {
-        $tile = null;
-        try {
-            $this->driver->browser()->waitUsing(5, 100, function () use ($jobOffer, &$tile): bool {
-                $tile = $this->displayedJobOfferTile($jobOffer);
-                return $tile !== null;
-            });
-        } catch (TimeoutException) {
-            throw new \Exception("Job offer tile is not displayed: $jobOffer");
-        }
-        return $tile;
-    }
-
-    private function displayedJobOfferTile(string $jobOffer): ?WebDriverElement {
         // Job offer tiles are rendered between posts, in the shadow DOM of <vue-shadow-root>,
         // which is attached only once the custom element is defined.
         foreach ($this->driver->browser()->elements('vue-shadow-root') as $shadowHost) {
@@ -202,6 +188,29 @@ readonly class AcceptanceDriver implements Driver {
                 }
             }
         }
-        return null;
+        throw new \Exception();
+    }
+
+    public function readJobOfferExposures(string $jobOffer): int {
+        return $this->harness->jobOfferExposures($this->jobOfferIds->getJobOfferId($jobOffer));
+    }
+
+    public function renderJobOfferTile(string $jobOffer): void {
+        $this->driver->navigate('/harness?view=forum-job-offers');
+        $this->waitForJobOfferTileExposure($jobOffer, 'not-exposed');
+        $this->screenshot('renderJobOfferTile');
+    }
+
+    public function scrollToJobOfferTile(string $jobOffer): void {
+        $this->driver->scrollToBottom();
+        $this->waitForJobOfferTileExposure($jobOffer, 'exposed');
+        $this->screenshot('scrollToJobOfferTile');
+    }
+
+    private function waitForJobOfferTileExposure(string $jobOffer, string $exposureStatus): void {
+        // The harness reflects the tile's exposure on the element wrapping it,
+        // once the exposure is observed and, if exposed, recorded.
+        $this->driver->browser()
+            ->waitFor("[data-forum-job-offer-tile='$jobOffer'][data-exposure='$exposureStatus']");
     }
 }

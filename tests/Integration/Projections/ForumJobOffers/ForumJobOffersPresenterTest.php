@@ -64,6 +64,7 @@ class ForumJobOffersPresenterTest extends TestCase {
         $this->assertStringContainsString('firm-logo.jpg', $tile->companyLogoUrl);
         $this->assertSame(route('neon.jobOffer.show', [$job->slug, $job->id]), $tile->jobOfferHref);
         $this->assertSame(route('jobBoard.jobOffer.click', [$job->id]), $tile->jobOfferClickHref);
+        $this->assertSame(route('jobBoard.jobOffer.exposure', [$job->id]), $tile->jobOfferExposureHref);
         $this->assertSame($job->title, $tile->jobOfferTitle);
         $this->assertSame(['Warszawa'], $tile->headerPills);
         $this->assertSame('12000 - 18000 zł brutto / miesięcznie', $tile->salaryFormat);

@@ -38,4 +38,8 @@ readonly class BrowserDriver {
     public function resizeViewport(int $width, int $height): void {
         $this->browser->resize($width, $height);
     }
+
+    public function scrollToBottom(): void {
+        $this->browser->driver->executeScript('window.scrollTo(0,document.body.scrollHeight);');
+    }
 }

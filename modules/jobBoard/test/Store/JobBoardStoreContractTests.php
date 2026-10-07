@@ -65,6 +65,36 @@ trait JobBoardStoreContractTests {
         Assert::assertSame(0, $this->store->jobOfferClicks($otherJobOfferId));
     }
 
+    #[Test]
+    #[TestDox('given a job offer; when exposures; returns zero')]
+    public function givenJobOffer_exposures_returnsZero(): void {
+        $jobOfferId = $this->createJobOffer();
+        Assert::assertSame(0, $this->store->jobOfferExposures($jobOfferId));
+    }
+
+    #[Test]
+    #[TestDox('given a job offer; when expose; increases')]
+    public function givenJobOffer_expose_increasesExposures(): void {
+        // given a job offer
+        $jobOfferId = $this->createJobOffer();
+        // when job offer is exposed
+        $this->store->exposeJobOffer($jobOfferId);
+        // then job offer exposures have increased
+        Assert::assertSame(1, $this->store->jobOfferExposures($jobOfferId));
+    }
+
+    #[Test]
+    #[TestDox('given two job offers; when expose; increases only exposed')]
+    public function givenTwoJobOffers_expose_increasesOnlyExposedJobOffer(): void {
+        // given two job offers
+        $exposedJobOfferId = $this->createJobOffer();
+        $otherJobOfferId = $this->createJobOffer();
+        // when one job offer is exposed
+        $this->store->exposeJobOffer($exposedJobOfferId);
+        // then the other job offer exposures have not increased
+        Assert::assertSame(0, $this->store->jobOfferExposures($otherJobOfferId));
+    }
+
     abstract protected function contractTestStore(): JobBoardStore;
 
     private function createJobOffer(): int {

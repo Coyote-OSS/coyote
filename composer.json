@@ -72,6 +72,7 @@
       "Modules\\Campaigns\\": "modules/campaigns/src",
       "Modules\\JobBoard\\": "modules/jobBoard/src",
       "Libs\\Arrays\\": "libs/arrays/src",
+      "Web\\Harness\\": "web/harness/server/",
       "Web\\Projections\\": "web/projections/"
     },
     "files": [

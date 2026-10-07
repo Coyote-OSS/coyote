@@ -4,6 +4,7 @@ namespace Coyote\Modules\JobBoard;
 use Coyote\Http\Middleware\AcceptanceTestOnly;
 use Coyote\Modules\JobBoard\Eloquent\EloquentJobBoardStore;
 use Coyote\Modules\JobBoard\User\Http\JobOffersController;
+use Coyote\Projections\ForumJobOffers\ForumJobOffersPresenter;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Modules\JobBoard\JobBoardStore;
@@ -22,6 +23,9 @@ class JobBoardServiceProvider extends ServiceProvider {
         $router
             ->post('/job-board/job-offers/{jobOfferId}/click', [JobOffersController::class, 'click'])
             ->name('jobBoard.jobOffer.click');
+        $router
+            ->post('/job-board/job-offers/{jobOfferId}/exposure', [JobOffersController::class, 'expose'])
+            ->name('jobBoard.jobOffer.exposure');
     }
 
     private function registerRoutesAcceptanceTest(Router $router): void {
@@ -42,8 +46,17 @@ class JobBoardServiceProvider extends ServiceProvider {
                 return response()->json(['id' => $jobOfferId], 201);
             });
         $router
-            ->get('/harness/job-board/job-offers/{jobOfferId}/clicks', function (EloquentJobBoardStore $store, int $jobOfferId) {
-                return response()->json(['clicks' => $store->jobOfferClicks($jobOfferId)]);
-            });
+            ->get('/harness/job-board/job-offers/{jobOfferId}/clicks',
+                fn(EloquentJobBoardStore $store, int $jobOfferId) => response()->json([
+                    'clicks' => $store->jobOfferClicks($jobOfferId),
+                ]));
+        $router
+            ->get('/harness/job-board/job-offers/{jobOfferId}/exposures',
+                fn(EloquentJobBoardStore $store, int $jobOfferId) => response()->json([
+                    'exposures' => $store->jobOfferExposures($jobOfferId),
+                ]));
+        $router
+            ->get('/harness/job-board/forum-job-offers',
+                fn(ForumJobOffersPresenter $presenter) => response()->json($presenter->forumJobOffers()));
     }
 }

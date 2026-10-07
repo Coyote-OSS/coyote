@@ -21,4 +21,10 @@ interface Driver {
     public function clickJobOffer(string $jobOffer): void;
 
     public function jobOfferClicks(string $jobOffer): int;
+
+    public function renderJobOfferTile(string $jobOffer): void;
+
+    public function scrollToJobOfferTile(string $jobOffer): void;
+
+    public function readJobOfferExposures(string $jobOffer): int;
 }

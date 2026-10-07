@@ -61,6 +61,8 @@ jobs:
           docker compose exec -T php yarn --cwd neon2/web install
           docker compose exec -T php yarn install
           docker compose exec -T php yarn run prod
+          docker compose exec -T php yarn --cwd web/harness/client install
+          docker compose exec -T php yarn --cwd web/harness/client vite build
           docker compose exec -T php php artisan db:seed --class=AcceptanceTestSeeder
 
       - name: Run acceptance tests (browser driver)

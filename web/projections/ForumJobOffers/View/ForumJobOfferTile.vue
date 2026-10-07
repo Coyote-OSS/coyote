@@ -1,5 +1,5 @@
 <template>
-  <a :href="tile.jobOfferHref" @click="countClick" :class="[
+  <a ref="tileElement" :href="tile.jobOfferHref" @click="countClick" :class="[
     'border border-tile-outline bg-gray-100 text-gray-800',
     'flex flex-col no-underline tile-shadow transition-shadow hover:shadow-md',
     'w-full gap-2 rounded-2xl p-2 sm:w-86 sm:shrink-0',
@@ -66,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import {onMounted, onUnmounted, useTemplateRef} from 'vue';
 import Icon from '../../../libs/Icon/Icon.vue';
 import type {ForumJobOfferTile} from '../ViewModel/ForumJobOfferTile';
 
@@ -74,8 +75,23 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits<{exposureObserved: [exposed: boolean]}>();
+const tileElement = useTemplateRef<HTMLElement>('tileElement');
+const exposureObserver = new IntersectionObserver(countExposure);
+
+onMounted(() => exposureObserver.observe(tileElement.value!));
+onUnmounted(() => exposureObserver.disconnect());
 
 function countClick(): void {
   navigator.sendBeacon(props.tile.jobOfferClickHref);
+}
+
+async function countExposure(entries: IntersectionObserverEntry[]): Promise<void> {
+  const exposed = entries.some(entry => entry.isIntersecting);
+  if (exposed) {
+    exposureObserver.disconnect();
+    await fetch(props.tile.jobOfferExposureHref, {method: 'POST', keepalive: true});
+  }
+  emit('exposureObserved', exposed);
 }
 </script>

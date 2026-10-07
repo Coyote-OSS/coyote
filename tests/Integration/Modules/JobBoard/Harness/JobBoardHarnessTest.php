@@ -120,6 +120,52 @@ class JobBoardHarnessTest extends TestCase {
         $this->assertSame(2, $response->json('clicks'));
     }
 
+    #[Test]
+    public function readingJobOfferExposures_isNotAvailableOutsideAcceptanceTests(): void {
+        // given a job offer
+        $jobOfferId = $this->createJobOffer('php-developer');
+        // and the application is not running acceptance tests
+        $this->givenProductionMode();
+        // when I attempt to read the job offer exposures
+        $response = $this->httpJobOfferExposures($jobOfferId);
+        // then the harness is not found
+        $response->assertNotFound();
+    }
+
+    #[Test]
+    public function readingJobOfferExposures_respondsWithExposuresFromDatabase(): void {
+        // given a job offer exposed twice
+        $jobOfferId = $this->createJobOffer('php-developer');
+        $this->store()->exposeJobOffer($jobOfferId);
+        $this->store()->exposeJobOffer($jobOfferId);
+        // when I read the job offer exposures
+        $response = $this->httpJobOfferExposures($jobOfferId);
+        // then the exposures are returned
+        $response->assertOk();
+        $this->assertSame(2, $response->json('exposures'));
+    }
+
+    #[Test]
+    public function readingForumJobOffers_isNotAvailableOutsideAcceptanceTests(): void {
+        // given the application is not running acceptance tests
+        $this->givenProductionMode();
+        // when I attempt to read the forum job offers
+        $response = $this->httpForumJobOffers();
+        // then the harness is not found
+        $response->assertNotFound();
+    }
+
+    #[Test]
+    public function readingForumJobOffers_respondsWithForumJobOfferTiles(): void {
+        // given a job offer
+        $this->createJobOffer('php-developer');
+        // when I read the forum job offers
+        $response = $this->httpForumJobOffers();
+        // then the tile of the job offer is returned
+        $response->assertOk();
+        $this->assertContains('php-developer', \array_column($response->json(), 'jobOfferTitle'));
+    }
+
     private function createJobOffer(string $jobOfferTitle): int {
         return $this->store()->createJobOffer($jobOfferTitle);
     }
@@ -150,5 +196,13 @@ class JobBoardHarnessTest extends TestCase {
 
     private function httpJobOfferClicks(int $jobOfferId): TestResponse {
         return $this->laravel->get("/harness/job-board/job-offers/$jobOfferId/clicks");
+    }
+
+    private function httpForumJobOffers(): TestResponse {
+        return $this->laravel->get('/harness/job-board/forum-job-offers');
+    }
+
+    private function httpJobOfferExposures(int $jobOfferId): TestResponse {
+        return $this->laravel->get("/harness/job-board/job-offers/$jobOfferId/exposures");
     }
 }

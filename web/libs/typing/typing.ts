@@ -4,3 +4,10 @@ export function defined<T>(value: T|undefined): T {
   }
   return value;
 }
+
+export function nonNull<T>(value: T|null): T {
+  if (value === null) {
+    throw new Error('Failed to access a null value.');
+  }
+  return value;
+}

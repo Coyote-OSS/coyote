@@ -194,6 +194,7 @@ return [
         Coyote\Services\TestMode\TestModeServiceProvider::class,
         Coyote\Modules\Campaigns\CampaignsServiceProvider::class,
         Coyote\Modules\JobBoard\JobBoardServiceProvider::class,
+        Web\Harness\HarnessServiceProvider::class,
         Coyote\Providers\RouteServiceProvider::class,
         Coyote\Providers\ViewServiceProvider::class,
         Coyote\Providers\AuthServiceProvider::class,
