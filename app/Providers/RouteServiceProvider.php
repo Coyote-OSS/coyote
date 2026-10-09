@@ -1,5 +1,4 @@
 <?php
-
 namespace Coyote\Providers;
 
 use Coyote\Guide;
@@ -22,15 +21,13 @@ use Coyote\Topic;
 use Coyote\User;
 use Illuminate\Routing\Router;
 
-class RouteServiceProvider extends \Illuminate\Foundation\Support\Providers\RouteServiceProvider
-{
+class RouteServiceProvider extends \Illuminate\Foundation\Support\Providers\RouteServiceProvider {
     /** @var string */
     protected $namespace = 'Coyote\Http\Controllers';
     /** @var Router */
     protected $router;
 
-    public function boot(): void
-    {
+    public function boot(): void {
         $this->router->pattern('id', '[0-9]+');
         $this->router->pattern('wiki', '[0-9]+');
         $this->router->pattern('block', '[0-9]+');
@@ -99,26 +96,22 @@ class RouteServiceProvider extends \Illuminate\Foundation\Support\Providers\Rout
         parent::boot();
     }
 
-    public function register(): void
-    {
+    public function register(): void {
         parent::register();
         $this->router = $this->app->make(Router::class);
     }
 
-    public function map(): void
-    {
+    public function map(): void {
         $this->mapApiRoutes();
         $this->mapWebRoutes();
     }
 
-    private function mapWebRoutes(): void
-    {
+    private function mapWebRoutes(): void {
         $this->router->group([
             'namespace'  => $this->namespace,
             'middleware' => 'web',
         ], function () {
             require base_path('routes/auth.php');
-            require base_path('routes/chat.php');
             require base_path('routes/misc.php');
             require base_path('routes/forum.php');
             require base_path('routes/job.php');
@@ -133,8 +126,7 @@ class RouteServiceProvider extends \Illuminate\Foundation\Support\Providers\Rout
         });
     }
 
-    private function mapApiRoutes(): void
-    {
+    private function mapApiRoutes(): void {
         $this->router->group([
             'namespace'  => $this->namespace,
             'middleware' => 'api',
