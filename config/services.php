@@ -59,23 +59,10 @@ return [
         'key'           => env('GOOGLE_MAPS_KEY', docker_secret('GOOGLE_MAPS_KEY_FILE'))
     ],
 
-    'paylane' => [
-        'username'      => env('PAYLANE_USERNAME', docker_secret('PAYLANE_USERNAME_FILE')),
-        'password'      => env('PAYLANE_PASSWORD', docker_secret('PAYLANE_PASSWORD_FILE')),
-        'salt'          => env('PAYLANE_SALT', docker_secret('PAYLANE_SALT_FILE'))
-    ],
-
     'stripe' => [
         'key'            => env('STRIPE_KEY', docker_secret('STRIPE_KEY_FILE')),
         'secret'         => env('STRIPE_SECRET', docker_secret('STRIPE_SECRET_FILE')),
         'endpoint_secret'=> env('STRIPE_ENDPOINT_SECRET', docker_secret('STRIPE_ENDPOINT_SECRET_FILE')),
-    ],
-
-    'p24' => [
-        'client_id'     => env('P24_CLIENT_ID', docker_secret('P24_CLIENT_ID_FILE')),
-        'payment_url'   => env('P24_PAYMENT_URL', 'https://sandbox.przelewy24.pl/trnDirect'),
-        'verify_url'    => env('P24_VERIFY_URL', 'https://sandbox.przelewy24.pl/trnVerify'),
-        'salt'          => env('P24_SALT', docker_secret('P24_SALT_FILE'))
     ],
 
     'recaptcha' => [

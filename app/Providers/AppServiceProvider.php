@@ -49,9 +49,6 @@ class AppServiceProvider extends ServiceProvider {
         $this->app['validator']->extend('wiki_route', 'Coyote\Http\Validators\WikiValidator@validateRoute');
         $this->app['validator']->extend('email_unique', 'Coyote\Http\Validators\EmailValidator@validateUnique');
         $this->app['validator']->extend('email_confirmed', 'Coyote\Http\Validators\EmailValidator@validateConfirmed');
-        $this->app['validator']->extend('cc_number', 'Coyote\Http\Validators\CreditCardValidator@validateNumber');
-        $this->app['validator']->extend('cc_cvc', 'Coyote\Http\Validators\CreditCardValidator@validateCvc');
-        $this->app['validator']->extend('cc_date', 'Coyote\Http\Validators\CreditCardValidator@validateDate');
         $this->app['validator']->extend('host', 'Coyote\Http\Validators\HostValidator@validateHost');
 
         $this->app['validator']->replacer('reputation', function ($message, $attribute, $rule, $parameters) {
