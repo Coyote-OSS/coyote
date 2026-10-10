@@ -1,0 +1,178 @@
+@use "../../theme/theme";
+@use "../../lookAndFeel/style-guide" as style;
+
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$cell-size: 52px;
+
+.prototype-vote-banner {
+  --prototype-vote-banner-direction: 135deg;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  @include theme.light {
+    background: linear-gradient(var(--prototype-vote-banner-direction), #e7f6ec 25%, style.$white 60%) padding-box,
+    linear-gradient(var(--prototype-vote-banner-direction), rgba(style.$green-500, 0.4), rgba(style.$white, 0.4)) border-box;
+  }
+
+  @include theme.dark {
+    background: radial-gradient(60% 120% at 100% 0%, rgba(style.$green-500, 0.25) 0%, transparent 100%) padding-box,
+    linear-gradient(style.$neutral-900, style.$neutral-900) padding-box,
+    linear-gradient(var(--prototype-vote-banner-direction), style.$green-500, #003f16) border-box;
+  }
+
+  @media (min-width: $breakpoint-md) {
+    --prototype-vote-banner-direction: 255deg;
+    flex-direction: row;
+    align-items: center;
+    min-height: 157px;
+  }
+}
+
+.prototype-vote-banner__mosaic {
+  display: none;
+
+  @media (min-width: $breakpoint-md) {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 206px;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    width: 362px;
+  }
+}
+
+.prototype-vote-banner__outlines {
+  position: absolute;
+  inset: 0;
+  mask-image: linear-gradient(120deg, transparent 10%, black 80%);
+}
+
+.prototype-vote-banner__outline {
+  position: absolute;
+  width: $cell-size;
+  height: $cell-size;
+  border: 1px solid;
+  border-radius: 20px;
+  @include theme.property(border-color, rgba(style.$green-500, 0.4), rgba(style.$green-500, 0.3));
+}
+
+.prototype-vote-banner__prototype {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $cell-size;
+  height: $cell-size;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #54c173, style.$green-700);
+  color: style.$white;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.prototype-vote-banner__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+
+  @media (min-width: $breakpoint-md) {
+    max-width: 480px;
+  }
+}
+
+.prototype-vote-banner__logo {
+  align-self: flex-start;
+  height: 18.6px;
+}
+
+.prototype-vote-banner__logo--light {
+  @include theme.property(display, block, none);
+}
+
+.prototype-vote-banner__logo--dark {
+  @include theme.property(display, none, block);
+}
+
+.prototype-vote-banner__title {
+  margin: 12px 0 0;
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 700;
+  @include theme.color(style.$neutral-800, style.$white);
+}
+
+.prototype-vote-banner__text {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 18px;
+  @include theme.color(style.$neutral-600, style.$neutral-300);
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+// nested to outweigh the global `a:not(.btn) {color: inherit}`
+.prototype-vote-banner .prototype-vote-banner__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin-top: 16px;
+  padding: 0 24px;
+  border-radius: 8px;
+  background: style.$green-500;
+  color: style.$white;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.15s;
+
+  &:hover, &:focus {
+    background: style.$green-700;
+    color: style.$white;
+    text-decoration: none;
+  }
+
+  @media (min-width: $breakpoint-md) {
+    align-self: flex-start;
+  }
+}
+
+.prototype-vote-banner__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  @include theme.property(background, style.$navy-025, style.$neutral-800);
+  @include theme.color(style.$neutral-400, style.$neutral-300);
+
+  &:hover {
+    @include theme.color(style.$neutral-800, style.$white);
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
