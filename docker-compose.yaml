@@ -1,8 +1,8 @@
 services:
   db:
-    image: postgres:13-alpine
+    image: postgres:18-alpine
     volumes:
-      - postgres:/var/lib/postgresql/data:z
+      - postgres:/var/lib/postgresql:z
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -93,14 +93,6 @@ services:
     command: server /data
     ports:
       - 39000:9000
-    logging:
-      options:
-        max-size: 10m
-    networks:
-      - coyote
-
-  mailhog:
-    image: mailhog/mailhog
     logging:
       options:
         max-size: 10m

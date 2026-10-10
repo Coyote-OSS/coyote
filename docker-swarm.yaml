@@ -74,7 +74,7 @@ x-secrets: &secrets
 
 services:
   db:
-    image: postgres:13-alpine
+    image: postgres:18-alpine
     command: postgres -c config_file=/etc/postgresql/postgresql.auto.conf
     ports:
       - 5432:5432
