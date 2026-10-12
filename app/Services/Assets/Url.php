@@ -32,6 +32,9 @@ class Url
     {
         $thumbnailPath = $this->thumbnailPath($thumbnail);
         if (!$this->filesystem->exists($thumbnailPath)) {
+            if (!$this->filesystem->exists($this->asset->path)) {
+                return $this->imageUrl($this->asset->path);
+            }
             $this->thumbnail->setFilter($thumbnail)->open($this->asset->path)->store($thumbnailPath);
         }
         return $this->imageUrl($thumbnailPath);
