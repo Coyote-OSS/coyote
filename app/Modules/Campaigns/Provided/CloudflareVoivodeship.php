@@ -25,19 +25,22 @@ class CloudflareVoivodeship implements ForUserVoivodeship {
     ];
 
     public function currentUserVoivodeship(): ?Voivodeship {
-        return $this->cloudflareVoivodeship(
-            request()->header('CF-IPCountry'),
-            request()->header('CF-Region'));
+        $country = request()->header('CF-IPCountry');
+        $region = request()->header('CF-Region');
+        if ($country === null || $region === null) {
+            return null;
+        }
+        return $this->cloudflareVoivodeship($country, $region);
     }
 
     private function cloudflareVoivodeship(string $cloudflareCountry, string $cloudflareRegion): ?Voivodeship {
         if ($this->compareCaseIns($cloudflareCountry, 'PL')) {
-            return null;
+            return $this->cloudflareRegions[$cloudflareRegion] ?? null;
         }
-        return $this->cloudflareRegions[$cloudflareRegion] ?? null;
+        return null;
     }
 
     private function compareCaseIns(string $actual, string $expected): bool {
-        return \strToUpper($actual) !== \strToUpper($expected);
+        return \strToUpper($actual) === \strToUpper($expected);
     }
 }
