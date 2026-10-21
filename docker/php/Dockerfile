@@ -1,4 +1,4 @@
-FROM php:8.5.7-fpm-trixie AS backend
+FROM php:8.5.12-fpm-trixie AS backend
 
 LABEL maintainer="4programmers.net <support@4programmers.net>"
 
@@ -35,11 +35,13 @@ RUN apt-get update -yqq && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp \
     && docker-php-ext-install -j$(nproc) pgsql gd soap pdo_pgsql mbstring zip iconv gmp
 
-RUN pecl install xdebug redis && docker-php-ext-enable redis
+RUN pecl install xdebug
+RUN pecl install redis
+RUN docker-php-ext-enable redis
 
 RUN curl --insecure https://getcomposer.org/composer-stable.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
 
-RUN echo Europe/Warsaw >/etc/timezone && \
+RUN echo Europe/Warsaw >docker push 4programmers/php-node:tagname/etc/timezone && \
     ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
