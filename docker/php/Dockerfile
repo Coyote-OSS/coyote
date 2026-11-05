@@ -4,7 +4,7 @@ LABEL maintainer="4programmers.net <support@4programmers.net>"
 
 WORKDIR /var/www
 
-RUN curl -sS https://deb.nodesource.com/setup_24.x | bash -
+RUN curl -sS https://deb.nodesource.com/setup_26.x | bash -
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /etc/apt/keyrings/yarn-archive-keyring.gpg > /dev/null
 RUN echo "deb [signed-by=/etc/apt/keyrings/yarn-archive-keyring.gpg] https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
@@ -31,6 +31,9 @@ RUN apt-get update -yqq && apt-get install -y \
     gnupg2 \
     nodejs \
     yarn
+
+RUN yarn set version stable \
+    && yarn config set nodeLinker node-modules
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp \
     && docker-php-ext-install -j$(nproc) pgsql gd soap pdo_pgsql mbstring zip iconv gmp
