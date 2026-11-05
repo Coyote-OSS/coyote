@@ -30,6 +30,12 @@ $fa-font-path: "/fonts/font-awesome";
   display: inline-block;
 }
 
+// Since fontawesome-free 6.7, icon classes only set --fa, and the content
+// is applied only for free styles (solid, regular, brands), not for light.
+.fa-light:before {
+  content: var(--fa);
+}
+
 .fa-regular {
   font-family: 'Font Awesome 6 Pro', 'Font Awesome 6 Free';
   font-style: normal;
