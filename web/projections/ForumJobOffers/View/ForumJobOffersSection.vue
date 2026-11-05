@@ -1,5 +1,5 @@
 <template>
-  <section class="tile-backlight flex flex-col items-start gap-6 rounded-lg p-4 sm:p-6">
+  <section class="tile-backlight flex flex-col items-start gap-6 rounded-lg p-4 sm:p-5">
     <div class="flex w-full items-center justify-between">
       <img :src="logoLight" alt="4programmers.net" class="h-5 dark:hidden"/>
       <img :src="logoDark" alt="4programmers.net" class="hidden h-5 dark:block"/>
