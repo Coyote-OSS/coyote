@@ -21,7 +21,7 @@
             <span
               v-if="!category.isRead"
               title="Nowe posty w tej kategorii"
-              class="absolute -top-1 -right-1 size-2 rounded-full bg-green-500 border border-neutral2-100"/>
+              class="absolute -top-1 -right-1 size-2 rounded-full bg-red-500 border border-neutral2-100"/>
           </span>
           <span
             class="truncate group-hover/item:text-green2-600"

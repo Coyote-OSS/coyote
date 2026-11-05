@@ -21,7 +21,7 @@ export const entryPointItems: EntryPointItem[] = [
     childrenForNotAuthenticated: true,
   },
   {type: 'link', title: 'Forum', action: 'forum', forumMenu: true},
-  {type: 'link', title: 'Mikroblogi', action: 'blog', forumMenu: true},
+  {type: 'link', title: 'Mikroblogi', action: 'blog'},
 ];
 
 export interface EntryPointItem {
