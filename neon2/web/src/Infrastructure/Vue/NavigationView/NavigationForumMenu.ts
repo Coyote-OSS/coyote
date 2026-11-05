@@ -1,29 +1,31 @@
 import {IconName} from "../Icon/icons";
 
 export interface NavigationForumMenu {
-  sections: Section[];
+  categories: Category[];
+  topics: Topic[];
   allCategoriesHref: string;
+  allTopicsHref: string;
   headerItems: HeaderItem[];
-  footerItems: FooterItem[];
+  userFilters: UserFilter[];
 }
 
-export interface Section {
+export interface Category {
   title: string;
-  icon: IconName;
-  href?: string;
-  items: SectionItem[];
-}
-
-interface SectionItem {
-  title: string;
-  subtitle: string|null;
-  promoted?: boolean;
-  trending?: boolean;
   href: string;
-  count: {
-    long: string;
-    short: string;
-  };
+  count: Count;
+  isRead: boolean;
+}
+
+export interface Topic {
+  title: string;
+  subtitle: string;
+  href: string;
+  count: Count;
+}
+
+interface Count {
+  long: string;
+  short: string;
 }
 
 interface HeaderItem {
@@ -33,7 +35,7 @@ interface HeaderItem {
   help: string;
 }
 
-interface FooterItem {
+interface UserFilter {
   title: string;
   href: string;
   help?: string;

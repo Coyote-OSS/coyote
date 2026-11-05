@@ -3,17 +3,28 @@
     <MobileDrawer v-if="mobileMenuOpen" @close="closeMobileMenu" class="lg:hidden"/>
     <div class="text-neutral2-600 bg-tile text-lg relative z-[2] lg:shadow">
       <div class="h-13.5 py-1 pr-3 pl-4 sm:gap-x-4 flex items-center mx-auto max-w-400">
-        <BrandLogo :class="hideIfSearch"/>
-        <NavTopbarListItem
-          :class="{'max-xl:hidden': store.navigationEntryPointsSuspended}"
-          v-for="item in entryPointItems"
-          :type="item.type"
-          :title="item.title"
-          :action="item.action"
-          :forum-menu="item.forumMenu"
-          :children="item.children"
-          :children-for-not-authenticated="item.childrenForNotAuthenticated"
-          @action="action"/>
+        <div
+          class="relative h-13.5 -my-1 flex items-stretch sm:gap-x-4"
+          @mouseover="forumMenuHover"
+          @mouseleave="closeForumMenu">
+          <BrandLogo :class="hideIfSearch" class="flex items-center" data-forum-menu-trigger/>
+          <NavTopbarListItem
+            :class="{'max-xl:hidden': store.navigationEntryPointsSuspended}"
+            v-for="item in entryPointItems"
+            :type="item.type"
+            :title="item.title"
+            :action="item.action"
+            :forum-menu="item.forumMenu"
+            :children="item.children"
+            :children-for-not-authenticated="item.childrenForNotAuthenticated"
+            @action="action"/>
+          <div
+            v-if="forumMenuOpen && store.navigationForumMenu"
+            data-forum-menu
+            class="absolute top-full left-0 right-0 min-w-[32rem] max-lg:hidden">
+            <ForumMenuDesktop/>
+          </div>
+        </div>
         <SearchField class="ml-auto"/>
         <NavTopbarListItem
           :class="hideIfSearch"
@@ -46,6 +57,7 @@ import {entryPointItems} from "../Presenter/entryPointItems";
 import {useNavigationService} from "../vue";
 import BrandLogo from "./BrandLogo.vue";
 import DesktopAuthControl from "./DesktopAuthControl.vue";
+import ForumMenuDesktop from "./ForumMenuDesktop.vue";
 import NavTopbarListItem from "./ListItem/NavTopbarListItem.vue";
 import MobileDrawer from "./MobileDrawer.vue";
 import NotificationControl from "./NotificationControl.vue";
@@ -54,6 +66,22 @@ import SearchField from "./SearchField.vue";
 const service = useNavigationService();
 const store = useNavigationStore();
 const mobileMenuOpen = ref<boolean>(false);
+const forumMenuOpen = ref<boolean>(false);
+
+function forumMenuHover(event: MouseEvent): void {
+  const target = event.target as Element;
+  if (target.closest('[data-forum-menu-trigger]')) {
+    forumMenuOpen.value = true;
+  } else if (target.closest('[data-forum-menu]')) {
+    return;
+  } else if (target.closest('a, button, [class*="group/navItem"]')) {
+    forumMenuOpen.value = false;
+  }
+}
+
+function closeForumMenu(): void {
+  forumMenuOpen.value = false;
+}
 
 function toggleMobileMenu(): void {
   mobileMenuOpen.value = !mobileMenuOpen.value;

@@ -22,6 +22,10 @@
   content: "\f075";
 }
 
+.fa-comments:before {
+  content: "\f086";
+}
+
 .fa-message:before {
   content: "\f27a";
 }

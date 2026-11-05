@@ -67,14 +67,12 @@ const jobBoardIcons = {
 };
 
 const navigationIcons = {
-  navigationSectionDiscussion: 'fa-light fa-suitcase',
-  navigationSectionDiscussionTechnical: 'fa-light fa-message-code',
-  navigationSectionCommunity: 'fa-light fa-users',
+  navigationForumCategory: 'fa-light fa-message',
+  navigationForumTopic: 'fa-light fa-comments',
   navigationActiveDiscussions: 'fa-light fa-message',
   navigationOnlineUsers: 'fa-light fa-arrow-trend-up',
-  navigationCategoryPromoted: 'fa-solid fa-star',
-  navigationCategoryTrending: 'fa-light fa-chevron-down',
   navigationAllCategories: 'fa-solid fa-chevron-right',
+  navigationAllTopics: 'fa-solid fa-chevron-right',
   navigationSearch: iconSearch,
   navigationGuestAvatar: 'fa-light fa-user',
   navigationProfile: 'fa-light fa-user',
