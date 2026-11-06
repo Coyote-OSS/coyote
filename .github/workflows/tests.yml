@@ -5,6 +5,18 @@ on:
     branches: ['*']
 
 jobs:
+  clarity-ci-started:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ezcdlabs/clarity@v0.22.0
+        with:
+          stage: ci
+          status: started
+
   unit:
     runs-on: ubuntu-24.04
 
@@ -100,3 +112,16 @@ jobs:
 
       - name: Run system integration tests
         run: docker compose exec -T php bash -c './vendor/bin/phpunit ./tests/Integration/'
+
+  clarity-ci-completed:
+    needs: [unit, acceptance, integration]
+    if: always() && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ezcdlabs/clarity@v0.22.0
+        with:
+          stage: ci
+          status: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'failed' || 'passed' }}
