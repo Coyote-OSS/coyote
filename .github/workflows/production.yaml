@@ -18,12 +18,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Report deploy started
-        uses: ezcdlabs/clarity@v0.22.0
-        with:
-          stage: deploy
-          status: started
-
       - name: Login to DockerHub
         run: docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}
 
@@ -68,13 +62,6 @@ jobs:
             sudo docker service update --image 4programmers/coyote:$GITHUB_SHA --update-order start-first --update-delay 10s coyote_php
             sudo docker service update --image 4programmers/coyote:$GITHUB_SHA coyote_worker
             sudo docker service update --image 4programmers/coyote:$GITHUB_SHA coyote_cron
-
-      - name: Report deploy result
-        if: always()
-        uses: ezcdlabs/clarity@v0.22.0
-        with:
-          stage: deploy
-          status: ${{ job.status == 'success' && 'passed' || 'failed' }}
 
       - name: Notify sentry
         uses: getsentry/action-release@v1.1.6
