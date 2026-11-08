@@ -58,7 +58,7 @@ readonly class FontAwesomePro {
             'homepageActivityVote'                      => 'fa-light fa-thumbs-up',
             'homepageActivityVoted'                     => 'fa-solid fa-thumbs-up',
             'homepageActivityComments'                  => 'fa-light fa-comment',
-            'homepageActivityReply'                     => 'fa-light fa-reply',
+            'homepageActivityReply'                     => 'fa-light fa-arrow-turn-left',
             'homepageActivityShowMore'                  => 'fa-light fa-chevron-down',
             'homepageTopicReplies'                      => 'fa-light fa-comments',
             'homepageTopicViews'                        => 'fa-light fa-eye',

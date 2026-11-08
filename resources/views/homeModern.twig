@@ -47,13 +47,14 @@
                   </div>
                 </a>
                 <div class="home-activity__who">
-                  <div>
+                  <div class="home-activity__line">
                     {% if activity.user.url %}
                       <a href="{{ activity.user.url }}" class="home-activity__user" data-user-id="{{ activity.user_id }}">{{ activity.user.name }}</a>
                     {% else %}
                       <span class="home-activity__user">{{ activity.user.name }}</span>
                     {% endif %}
                     <span class="home-activity__kind home-activity__kind--{{ activity.kind }}">{{ icon(activityKinds[activity.kind].icon) }} {{ activityKinds[activity.kind].label }}</span>
+                    <a href="{{ activity.topic.url }}" class="home-activity__thread" title="{{ activity.topic.title }}">{{ activity.topic.title }}</a>
                   </div>
                   <div class="home-activity__meta">
                     <a href="{{ activity.forum.url }}" class="home-chip">{{ activity.forum.name }}</a>
@@ -90,16 +91,17 @@
                     <span class="home-activity__score">{{ activity.score }}</span>
                   </button>
                 {% endif %}
-                {% if activity.comments is not null %}
+                {% if activity.replies is not null %}
+                  <a href="{{ activity.topic.url }}" class="home-activity__action" title="Odpowiedzi">
+                    {{ icon('homepageActivityReply') }}
+                    <span>{{ activity.replies }}</span>
+                  </a>
+                {% elseif activity.comments is not null %}
                   <a href="{{ activity.url }}" class="home-activity__action" title="Komentarze">
                     {{ icon('homepageActivityComments') }}
                     <span>{{ activity.comments }}</span>
                   </a>
                 {% endif %}
-                <a href="{{ activity.url }}" class="home-activity__action ms-auto">
-                  {{ icon('homepageActivityReply') }}
-                  <span>Odpowiedz</span>
-                </a>
               </footer>
             </article>
           {% endfor %}
@@ -125,7 +127,7 @@
       </section>
     </main>
 
-    <div class="col-lg-4 position-relative home-docked-gutter">
+    <div class="col-lg-4 position-relative">
       <aside class="home-column">
         {{ render_block('homepage_banner_side') }}
 
@@ -308,13 +310,15 @@
       {% else %}
         <small class="d-block text-muted text-center py-4">Brak wątków do wyświetlenia.</small>
       {% endfor %}
+      {% if moreUrl %}
+        <div class="home-topics__footer">
+          <a href="{{ moreUrl }}" class="home-topics__more">
+            {{ moreLabel }}
+            {{ icon('homepageMore') }}
+          </a>
+        </div>
+      {% endif %}
     </div>
-    {% if moreUrl %}
-      <a href="{{ moreUrl }}" class="home-more neon-tile neon-rounded">
-        {{ moreLabel }}
-        {{ icon('homepageMore') }}
-      </a>
-    {% endif %}
   </section>
 {% endmacro %}
 

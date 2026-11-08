@@ -170,17 +170,12 @@ $home-row-inset:   8px;  // hoverable rows sit 8px inside the card, their own pa
 $home-card-gap:    8px;  // between cards of one section, and below a section title
 $home-section-gap: 24px; // between sections
 
-// Community panel docked to the viewport side: the main column stays where it is,
-// only the sidebar makes room for the part of the panel that doesn't fit beside the page.
+// Community panel docked to the viewport side: it floats over the page without resizing anything,
+// only the other floating elements make room for it.
 body:has(.home-members--docked) {
   @include media-breakpoint-up(xl) {
     .scroll-top {
       margin-right: $home-members-docked-width;
-    }
-
-    // .container-3xl is at most 1600px wide; past that, the free space beside it absorbs part of the panel
-    .home-docked-gutter > * {
-      margin-right: max(0px, calc(#{$home-members-docked-width} - 12px - max(0px, (100vw - 1600px) / 2)));
     }
   }
 }
@@ -253,9 +248,27 @@ body:has(.home-members--docked) {
 .home-topics {
   padding:        $home-row-inset;
   container-type: inline-size;
+
+  // link to the rest of the topics, as the last row of the card
+  &__footer {
+    margin:      4px (-$home-row-inset) 0;
+    padding:     4px $home-row-inset 0;
+    border-top:  1px solid;
+    @include theme.var(border-top-color, $home-divider);
+  }
+
+  &__more {
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    gap:             8px;
+    font-size:       14px;
+    @include row;
+    @include theme.var(color, $home-accent);
+  }
 }
 
-// "Więcej … wątków", "Pokaż więcej aktywności", "Przejdź do mikroblogów"
+// "Pokaż więcej aktywności", "Przejdź do mikroblogów"
 .home-more {
   display:         flex;
   align-items:     center;
@@ -388,7 +401,7 @@ body:has(.home-members--docked) {
   }
 }
 
-// Narrow list (e.g. the sidebar next to the docked community panel):
+// Narrow list (e.g. the sidebar on a small screen):
 // wrap titles instead of cutting them, and shrink the replies counter.
 @container (max-width: 360px) {
   .home-topic {
@@ -432,7 +445,7 @@ body:has(.home-members--docked) {
 
 .home-activity {
   // bottom padding is smaller, because the action buttons carry their own padding
-  padding: $home-pad $home-pad 10px;
+  padding: $home-pad $home-pad 6px;
 
   &--folded {
     display: none;
@@ -482,18 +495,46 @@ body:has(.home-members--docked) {
     flex:      1;
   }
 
+  &__line {
+    display:     flex;
+    align-items: baseline;
+    min-width:   0;
+    white-space: nowrap;
+  }
+
   &__user {
     font-weight: normal;
+    flex-shrink: 0;
   }
 
   // type of activity: plain text with an icon, so it doesn't look like the category tag
   &__kind {
     margin-left: 8px;
     font-size:   12px;
+    flex-shrink: 0;
     @include muted;
 
     &--topic {
       @include theme.var(color, $home-accent-strong);
+    }
+  }
+
+  // thread of the activity, a separate item next to the activity type; on mobile it stays above the excerpt
+  &__thread {
+    min-width: 0;
+    font-size: 12px;
+    color:     inherit;
+    @include text-truncate();
+
+    &::before {
+      content: "·";
+      display: inline-block; // keeps the link's hover underline off the separator
+      margin:  0 6px;
+      @include muted;
+    }
+
+    @include media-breakpoint-down(md) {
+      display: none;
     }
   }
 
@@ -530,6 +571,10 @@ body:has(.home-members--docked) {
     font-size:   15px;
     font-weight: 600;
     @include text-truncate();
+
+    @include media-breakpoint-up(md) {
+      display: none;
+    }
   }
 
   &__topic-prefix {
@@ -552,9 +597,7 @@ body:has(.home-members--docked) {
     display:     flex;
     align-items: center;
     gap:         4px;
-    margin:      12px (-$home-row-inset) 0;
-    padding-top: 4px;
-    @include theme.property(border-top, 1px solid style.$navy-050, 1px solid style.$neutral-700);
+    margin:      6px (-$home-row-inset) 0;
   }
 
   &__action {

@@ -15,9 +15,10 @@ class ActivityFeedResource extends ActivityResource
     {
         $activity = parent::toArray($request);
         $activity['user']['url'] = $this->user_id ? route('profile', ['user_trashed' => $this->user_id]) : null;
+        $kind = $this->kind();
         return [
             ...$activity,
-            'kind'     => $this->kind(),
+            'kind'     => $kind,
             'url'      => $this->contentUrl(),
             'topic'    => [
                 'title' => $this->topic->title,
@@ -28,7 +29,8 @@ class ActivityFeedResource extends ActivityResource
                 'url'  => UrlBuilder::forum($this->forum),
             ],
             'score'    => (int)$this->content->score,
-            'comments' => $this->content_type === Post::class ? (int)$this->content->comments_count : null,
+            'comments' => $kind === 'post' ? (int)$this->content->comments_count : null,
+            'replies'  => $kind === 'topic' ? (int)$this->topic->replies : null,
             'vote'     => [
                 'type' => $this->content_type === Post::class ? 'post' : 'comment',
                 'id'   => $this->content_id,
