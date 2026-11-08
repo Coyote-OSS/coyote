@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
 @use "../../feature/theme/theme";
+@use "../../feature/lookAndFeel/style-guide" as style;
 
 @mixin size($size) {
   @if ($size == 'intermediate') {
@@ -148,5 +149,476 @@
       display:     block;
       font-family: "Open Sans", sans-serif;
     }
+  }
+}
+
+// Modern homepage (alpha-access)
+
+$home-muted: (light: style.$neutral-400, dark: style.$neutral-300);
+$home-hover: (light: style.$navy-025, dark: style.$neutral-700);
+$home-divider: (light: style.$navy-100, dark: style.$neutral-700);
+$home-chip: (light: style.$navy-050, dark: style.$neutral-700);
+$home-members-docked-width: 280px;
+
+// Make room for the community panel docked to the viewport side
+body:has(.home-members--docked) {
+  @include media-breakpoint-up(xl) {
+    padding-right: $home-members-docked-width;
+
+    .scroll-top {
+      margin-right: $home-members-docked-width;
+    }
+  }
+}
+
+@mixin muted {
+  @include theme.var(color, $home-muted);
+}
+
+.home-chip {
+  display:       inline-block;
+  padding:       1px 8px;
+  border-radius: 10px;
+  font-size:     11px;
+  line-height:   18px;
+  white-space:   nowrap;
+  max-width:     100%;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  @include theme.var(background, $home-chip);
+  @include theme.property(color, style.$green-800, style.$green-050);
+
+  &:hover {
+    text-decoration: none;
+    @include theme.property(background, style.$green-050, style.$green-900);
+  }
+}
+
+// Topics: "Najciekawsze" / "Nowe wątki"
+
+.home-topics {
+  padding: 4px 0;
+
+  &__more {
+    display:    block;
+    padding:    10px 16px;
+    font-size:  13px;
+    text-align: center;
+    @include theme.property(border-top, 1px solid style.$navy-100, 1px solid style.$neutral-700);
+  }
+}
+
+.home-topic {
+  display:     flex;
+  align-items: center;
+  gap:         14px;
+  padding:     10px 16px;
+
+  &:hover {
+    @include theme.var(background, $home-hover);
+  }
+
+  &__replies {
+    flex:           0 0 56px;
+    display:        flex;
+    flex-direction: column;
+    align-items:    center;
+    padding:        4px 0;
+    border-radius:  6px;
+    @include theme.var(background, $home-chip);
+    @include muted;
+
+    strong {
+      font-size:   16px;
+      line-height: 20px;
+    }
+
+    small {
+      font-size: 10px;
+    }
+
+    &--answered {
+      @include theme.property(background, style.$green-050, style.$green-950);
+      @include theme.property(color, style.$green-700, style.$green-200);
+    }
+  }
+
+  &__body {
+    min-width: 0;
+    flex:      1;
+  }
+
+  &__title {
+    display:     block;
+    font-size:   15px;
+    font-weight: 600;
+    @include text-truncate();
+  }
+
+  &__meta {
+    display:     flex;
+    flex-wrap:   wrap;
+    align-items: center;
+    gap:         4px 12px;
+    margin-top:  3px;
+    font-size:   12px;
+    @include muted;
+  }
+
+  &__date {
+    margin-left: auto;
+  }
+}
+
+// Recent activity feed
+
+.home-activities {
+  display:        flex;
+  flex-direction: column;
+  gap:            10px;
+}
+
+.home-activity {
+  padding: 14px 16px 6px;
+
+  &--folded {
+    display: none;
+  }
+
+  .home-activities--unfolded &--folded {
+    display: block;
+  }
+
+  &__header {
+    display:     flex;
+    align-items: center;
+    gap:         10px;
+  }
+
+  &__avatar {
+    width:  40px;
+    height: 40px;
+  }
+
+  &__who {
+    min-width: 0;
+    flex:      1;
+  }
+
+  &__user {
+    font-weight: 600;
+  }
+
+  &__kind {
+    margin-left:   4px;
+    padding:       0 6px;
+    border-radius: 4px;
+    font-size:     11px;
+    @include theme.var(background, $home-chip);
+    @include muted;
+
+    &--topic {
+      @include theme.property(background, style.$green-050, style.$green-950);
+      @include theme.property(color, style.$green-700, style.$green-200);
+    }
+  }
+
+  &__meta {
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+    margin-top:  2px;
+    font-size:   12px;
+    min-width:   0;
+    @include muted;
+
+    .home-chip {
+      min-width: 0;
+    }
+  }
+
+  &__content {
+    display:    block;
+    margin:     10px 0 4px;
+    color:      inherit;
+
+    &:hover {
+      text-decoration: none;
+
+      .home-activity__topic {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__topic {
+    display:     block;
+    font-size:   15px;
+    font-weight: 600;
+    @include text-truncate();
+  }
+
+  &__topic-prefix {
+    font-weight: normal;
+    @include muted;
+  }
+
+  &__excerpt {
+    display:            -webkit-box;
+    margin-top:         4px;
+    font-size:          14px;
+    line-height:        1.5;
+    overflow:           hidden;
+    overflow-wrap:      anywhere;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  &__actions {
+    display:     flex;
+    align-items: center;
+    gap:         4px;
+    margin:      0 -8px;
+    padding-top: 4px;
+    @include theme.property(border-top, 1px solid style.$navy-050, 1px solid style.$neutral-700);
+  }
+
+  &__action {
+    display:       inline-flex;
+    align-items:   center;
+    gap:           6px;
+    padding:       6px 10px;
+    border:        0;
+    border-radius: 6px;
+    background:    none;
+    font-size:     13px;
+    @include muted;
+
+    &:hover:not(:disabled) {
+      text-decoration: none;
+      @include theme.var(background, $home-hover);
+      @include theme.property(color, style.$green-700, style.$green-200);
+    }
+
+    &:disabled {
+      opacity: .6;
+      cursor:  default;
+    }
+  }
+
+  &__voted-icon {
+    display: none;
+  }
+
+  &__vote--voted {
+    @include theme.property(color, style.$green-600, style.$green-300);
+
+    .home-activity__vote-icon {
+      display: none;
+    }
+
+    .home-activity__voted-icon {
+      display: inline;
+    }
+  }
+}
+
+// Members list: online + recently seen, chat-style
+
+.home-members, .home-reputation {
+  &__header {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    padding:         14px 16px 8px;
+  }
+}
+
+.home-members {
+  &__header {
+    gap: 8px;
+
+    h2 {
+      margin-right: auto;
+    }
+  }
+
+  &__count {
+    font-size: 12px;
+    @include muted;
+  }
+
+  &__dock {
+    display:       none; // docking only makes sense when there's room beside the page
+    padding:       4px 6px;
+    border:        0;
+    border-radius: 6px;
+    background:    none;
+    line-height:   1;
+    @include muted;
+
+    &:hover {
+      @include theme.var(background, $home-hover);
+      @include theme.property(color, style.$green-700, style.$green-200);
+    }
+  }
+
+  @include media-breakpoint-up(xl) {
+    #home-members-dock {
+      display: inline-block;
+    }
+
+    &--docked {
+      position:       fixed;
+      z-index:        10;
+      top:            66px; // below the fixed navbar
+      right:          0;
+      bottom:         0;
+      width:          $home-members-docked-width;
+      margin:         0 !important;
+      border-radius:  0;
+      display:        flex;
+      flex-direction: column;
+      @include theme.property(border-left, 1px solid style.$navy-100, 1px solid style.$neutral-700);
+
+      #home-members-dock {
+        display: none;
+      }
+
+      #home-members-undock {
+        display: inline-block;
+      }
+
+      .home-members__list {
+        flex:            1;
+        overflow-y:      auto; // only on very short screens; the list itself has a fixed size
+        scrollbar-width: none;
+      }
+    }
+  }
+
+  &__list {
+    list-style: none;
+    margin:     0;
+    padding:    0 8px 8px;
+  }
+
+  &__divider {
+    margin:         10px 8px 4px;
+    font-size:      11px;
+    font-weight:    600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    @include muted;
+  }
+
+  &__note {
+    padding:   2px 8px 4px 54px;
+    font-size: 12px;
+    @include muted;
+  }
+
+  &__footer {
+    padding:   8px 16px 12px;
+    font-size: 12px;
+    @include muted;
+    @include theme.property(border-top, 1px solid style.$navy-050, 1px solid style.$neutral-700);
+  }
+}
+
+.home-member {
+  display:               grid;
+  grid-template-columns: 36px 1fr;
+  grid-template-rows:    auto auto;
+  column-gap:            10px;
+  align-items:           center;
+  padding:               6px 8px;
+  border-radius:         8px;
+
+  &:hover {
+    text-decoration: none;
+    @include theme.var(background, $home-hover);
+  }
+
+  &__avatar {
+    grid-row:      span 2;
+    position:      relative;
+    display:       block;
+    width:         36px;
+    height:        36px;
+
+    img, svg, .default-avatar, .user-avatar {
+      width:         36px;
+      height:        36px;
+      border-radius: 50%;
+      overflow:      hidden;
+    }
+
+    &--online::after {
+      content:       '';
+      position:      absolute;
+      right:         -1px;
+      bottom:        -1px;
+      width:         12px;
+      height:        12px;
+      border-radius: 50%;
+      background:    style.$green-500;
+      @include theme.property(border, 2px solid style.$white, 2px solid style.$neutral-800);
+    }
+  }
+
+  &__name {
+    font-size:   14px;
+    font-weight: 600;
+    line-height: 18px;
+    @include text-truncate();
+  }
+
+  &__status {
+    font-size:   12px;
+    line-height: 16px;
+    @include muted;
+    @include text-truncate();
+
+    &--online {
+      @include theme.property(color, style.$green-600, style.$green-300);
+    }
+  }
+}
+
+.home-reputation {
+  &__list {
+    list-style: none;
+    margin:     0;
+    padding:    8px;
+  }
+
+  &__item {
+    display:       flex;
+    align-items:   center;
+    gap:           10px;
+    padding:       6px 8px;
+    border-radius: 8px;
+
+    .home-member__avatar {
+      grid-row: auto;
+    }
+  }
+
+  &__rank {
+    flex:        0 0 16px;
+    font-weight: 600;
+    text-align:  center;
+    @include muted;
+  }
+
+  &__user {
+    flex:      1;
+    min-width: 0;
+  }
+
+  &__points {
+    font-size:   12px;
+    white-space: nowrap;
   }
 }

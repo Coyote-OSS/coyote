@@ -78,6 +78,7 @@ abstract class Controller extends \Illuminate\Routing\Controller
             'lastColorScheme' => $settings['lastColorScheme'] ?? 'light',
             'topicMode'       => ($settings['homepage.mode'] ?? 0) ? 'newest' : 'interesting',
             'reputationMode'  => ['week', 'month', 'quarter'][$settings['homepage.reputation'] ?? 0],
+            'membersDocked'   => ($settings['homepage.members'] ?? null) === 'docked',
         ];
     }
 

@@ -1,0 +1,305 @@
+{% extends 'layout' %}
+
+{% block title %}4programmers.net – Największa Społeczność Programistyczna w Polsce + Job Board{% endblock %}
+{% block description %}Dołącz do ponad 130 tys. zarejestrowanych programistów i skorzystaj z największego forum w Polsce. Szukasz pracy w IT, pomocy technicznej lub chcesz dzielić się wiedzą? Poznaj 4programmers.net już dziś!{% endblock %}
+{% block keywords %}społeczność programistyczna, forum programistyczne, programiści w Polsce, praca IT, job board, oferty pracy, pomoc w programowaniu, 4programmers{% endblock %}
+
+{% import 'legacyComponents.modals' as modal %}
+{% from 'titleBanner.titleBanner' import titleBanner %}
+{% from 'membersRadar.membersRadar' import membersRadar %}
+{% from 'progressBar.progressBar' import progressBar %}
+{% from 'campaignBanner.campaignBanner' import campaignBanner %}
+{% from 'prototypeVoteBanner.prototypeVoteBanner' import prototypeVoteBanner %}
+
+{% block container %}
+  {{ render_block('homepage_banner') }}
+
+  <div class="row">
+    <div class="col-12 mb-3">
+      <!-- TODO remove margin if not enabled -->
+      {{ campaignBanner('header', campaign_banners_home_desktop, campaign_banners_home_mobile) }}
+    </div>
+  </div>
+  <div class="row neon-modern">
+    <div class="col-lg-8">
+      {{ titleBanner(title:'Największa społeczność programistyczna w Polsce') }}
+    </div>
+    <div class="col-lg-4 mt-2 mt-lg-0">
+      {{ membersRadar(homepageMembers.usersTotal, homepageMembers.usersOnline, homepageMembers.guestsOnline) }}
+    </div>
+  </div>
+  <div class="row">
+    <main class="col-lg-8">
+      <section id="home-forum" class="mt-4">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h2 class="h4 mb-0">Na forum</h2>
+          <ul id="forum-tabs" class="nav nav-pills neon-tabber">
+            <li class="nav-item">
+              <span
+                  class="nav-link neon-tabber-tab {{ settings.topicMode == 'interesting' ? 'active' }}"
+                  title="Zobacz najciekawsze wątki na forum"
+                  data-bs-target="#interesting"
+                  data-bs-toggle="tab">
+                Najciekawsze
+              </span>
+            </li>
+            <li class="nav-item">
+              <span
+                  class="nav-link neon-tabber-tab {{ settings.topicMode == 'newest' ? 'active' }}"
+                  title="Lista najnowszych wątków na forum"
+                  data-bs-target="#newest"
+                  data-bs-toggle="tab">
+                Nowe wątki
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-content neon-tile neon-rounded home-topics">
+          {% for tab, topics in {interesting: interesting, newest: newest} %}
+            <div role="tabpanel" class="tab-pane {{ settings.topicMode == tab ? 'active' }}" id="{{ tab }}">
+              {% for topic in topics %}
+                <div class="home-topic">
+                  <div class="home-topic__replies {{ topic.replies > 0 ? 'home-topic__replies--answered' }}"
+                       title="{{ declination(topic.replies, ['odpowiedź', 'odpowiedzi', 'odpowiedzi']) }}">
+                    <strong>{{ topic.replies }}</strong>
+                    <small>{{ declination(topic.replies, ['odpowiedź', 'odpowiedzi', 'odpowiedzi'], true) }}</small>
+                  </div>
+                  <div class="home-topic__body">
+                    <a href="{{ route('forum.topic', [topic.forum_slug, topic.id, topic.slug]) }}" class="home-topic__title" title="{{ topic.title }}">
+                      {{ topic.title }}
+                    </a>
+                    <div class="home-topic__meta">
+                      <a href="{{ route('forum.category', [topic.forum_slug]) }}" class="home-chip">{{ topic.forum }}</a>
+                      <span title="{{ declination(topic.views, ['wyświetlenie', 'wyświetlenia', 'wyświetleń']) }}">
+                        {{ icon('homepageTopicViews') }} {{ topic.views }}
+                      </span>
+                      {% if topic.score > 0 %}
+                        <span title="{{ declination(topic.score, ['głos', 'głosy', 'głosów']) }}">
+                          {{ icon('homepageTopicScore') }} {{ topic.score }}
+                        </span>
+                      {% endif %}
+                      <span class="home-topic__date" title="{{ topic.last_post_created_at|format_date(false) }}">
+                        {{ topic.last_post_created_at|format_date }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              {% else %}
+                <small class="d-block text-muted text-center py-4">Brak wątków do wyświetlenia.</small>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <a href="{{ route('forum.home') }}" class="home-topics__more neon-color-link">Przejdź do forum</a>
+        </div>
+      </section>
+
+      <section id="box-activity" class="mt-4">
+        <h2 class="h4 mb-2">Ostatnia aktywność</h2>
+        <div class="home-activities">
+          {% set activityKinds = {
+            topic:   'Nowy wątek',
+            post:    'Odpowiedź',
+            comment: 'Komentarz',
+          } %}
+          {% for activity in activities %}
+            <article class="home-activity neon-tile neon-rounded {{ loop.index > 6 ? 'home-activity--folded' }}">
+              <header class="home-activity__header">
+                <a href="{{ activity.user.url ?: '#' }}" class="flex-shrink-0">
+                  <div class="neon-avatar-border home-activity__avatar">
+                    {{ user_avatar(activity.user.photo, activity.user.name) }}
+                  </div>
+                </a>
+                <div class="home-activity__who">
+                  <div>
+                    {% if activity.user.url %}
+                      <a href="{{ activity.user.url }}" class="home-activity__user" data-user-id="{{ activity.user_id }}">{{ activity.user.name }}</a>
+                    {% else %}
+                      <span class="home-activity__user">{{ activity.user.name }}</span>
+                    {% endif %}
+                    <span class="home-activity__kind home-activity__kind--{{ activity.kind }}">{{ activityKinds[activity.kind] }}</span>
+                  </div>
+                  <div class="home-activity__meta">
+                    <a href="{{ activity.forum.url }}" class="home-chip">{{ activity.forum.name }}</a>
+                    <span title="{{ activity.created_at|format_date(false) }}">{{ activity.created_at|format_date }}</span>
+                  </div>
+                </div>
+              </header>
+              <a href="{{ activity.kind == 'topic' ? activity.topic.url : activity.url }}" class="home-activity__content">
+                <span class="home-activity__topic">
+                  {% if activity.kind != 'topic' %}<span class="home-activity__topic-prefix">w wątku</span>{% endif %}
+                  {{ activity.topic.title }}
+                </span>
+                {% if activity.excerpt %}
+                  <span class="home-activity__excerpt">{{ activity.excerpt }}</span>
+                {% endif %}
+              </a>
+              <footer class="home-activity__actions">
+                {% set ownContent = user('id') and user('id') == activity.user_id %}
+                {% if not user('id') %}
+                  <a href="{{ route('login') }}" class="home-activity__action" title="Zaloguj się, aby oddać głos">
+                    {{ icon('homepageActivityVote') }}
+                    <span>{{ activity.score }}</span>
+                  </a>
+                {% else %}
+                  <button
+                      type="button"
+                      class="home-activity__action home-activity__vote {{ activity.voted ? 'home-activity__vote--voted' }}"
+                      data-vote-type="{{ activity.vote.type }}"
+                      data-vote-id="{{ activity.vote.id }}"
+                      {{ ownContent ? 'disabled' }}
+                      title="{{ ownContent ? 'Nie możesz głosować na swój wpis' : (activity.kind == 'comment' ? 'Doceń komentarz' : 'Doceń post') }}">
+                    <span class="home-activity__vote-icon">{{ icon('homepageActivityVote') }}</span>
+                    <span class="home-activity__voted-icon">{{ icon('homepageActivityVoted') }}</span>
+                    <span class="home-activity__score">{{ activity.score }}</span>
+                  </button>
+                {% endif %}
+                {% if activity.comments is not null %}
+                  <a href="{{ activity.url }}" class="home-activity__action" title="Komentarze">
+                    {{ icon('homepageActivityComments') }}
+                    <span>{{ activity.comments }}</span>
+                  </a>
+                {% endif %}
+                <a href="{{ activity.url }}" class="home-activity__action ms-auto">
+                  {{ icon('homepageActivityReply') }}
+                  <span>Odpowiedz</span>
+                </a>
+              </footer>
+            </article>
+          {% endfor %}
+        </div>
+        {% if activities|length > 6 %}
+          <button type="button" id="home-activities-more" class="btn btn-secondary w-100 mt-2">
+            {{ icon('homepageActivityShowMore') }}
+            Pokaż więcej aktywności
+          </button>
+        {% endif %}
+      </section>
+
+      <section id="js-microblog" class="mt-4">
+        <h2 class="h4 mb-2">Popularne na mikroblogu</h2>
+        <vue-microblog
+            v-for="microblog in microblogs" :key="microblog.id" :microblog="microblog"
+            :wrap="true"></vue-microblog>
+        <vue-notifications></vue-notifications>
+      </section>
+
+      <ul class="mt-3 mb-3 d-flex justify-content-center pagination">
+        <a class="page-link" href="{{ route('microblog.home') }}">
+          Pokaż więcej
+        </a>
+      </ul>
+    </main>
+
+    <div class="col-lg-4 position-relative mt-4">
+      <aside>
+        {{ render_block('homepage_banner_side') }}
+
+        <section id="home-members" class="home-members neon-tile neon-rounded mb-4 {{ settings.membersDocked ? 'home-members--docked' }}">
+          <header class="home-members__header">
+            <h2 class="h5 mb-0">Społeczność</h2>
+            <span class="home-members__count">
+              <span class="members-banner__online-indicator d-inline-block me-1"></span>
+              {{ community.onlineCount }} online
+            </span>
+            <button type="button" class="home-members__dock" id="home-members-dock"
+                    title="Odepnij od strony głównej i przypnij do boku ekranu"
+                    aria-label="Odepnij od strony głównej i przypnij do boku ekranu">
+              {{ icon('homepageMembersDock') }}
+            </button>
+            <button type="button" class="home-members__dock" id="home-members-undock"
+                    title="Przypnij z powrotem do strony głównej"
+                    aria-label="Przypnij z powrotem do strony głównej">
+              {{ icon('homepageMembersUndock') }}
+            </button>
+          </header>
+          <ul class="home-members__list">
+            {% for member in community.online %}
+              <li>
+                <a href="{{ member.profileUrl }}" class="home-member" data-user-id="{{ member.id }}">
+                  <span class="home-member__avatar home-member__avatar--online">
+                    {{ user_avatar(member.avatarUrl, member.name) }}
+                  </span>
+                  <span class="home-member__name">{{ member.name }}</span>
+                  <small class="home-member__status home-member__status--online">{{ member.group ?: 'online' }}</small>
+                </a>
+              </li>
+            {% endfor %}
+            {% if community.onlineHidden > 0 %}
+              <li class="home-members__note">i {{ declination(community.onlineHidden, ['inna osoba', 'inne osoby', 'innych osób']) }} online</li>
+            {% endif %}
+            {% if community.recent is not empty %}
+              <li class="home-members__divider">Ostatnio widziani</li>
+              {% for member in community.recent %}
+                <li>
+                  <a href="{{ member.profileUrl }}" class="home-member" data-user-id="{{ member.id }}">
+                    <span class="home-member__avatar">
+                      {{ user_avatar(member.avatarUrl, member.name) }}
+                    </span>
+                    <span class="home-member__name">{{ member.name }}</span>
+                    <small class="home-member__status" title="Ostatnia wizyta: {{ member.visitedAt|format_date(false) }}">
+                      {{ member.visitedAt|format_date }}
+                    </small>
+                  </a>
+                </li>
+              {% endfor %}
+            {% endif %}
+          </ul>
+          {% if community.guestsCount > 0 %}
+            <footer class="home-members__footer">
+              oraz {{ declination(community.guestsCount, ['niezalogowany gość', 'niezalogowanych gości', 'niezalogowanych gości']) }}
+            </footer>
+          {% endif %}
+        </section>
+
+        {{ render_block('job_ads') }}
+
+        <section class="neon-tile neon-rounded home-reputation my-4">
+          <header class="home-members__header">
+            <h2 class="h5 mb-0">Reputacja</h2>
+          </header>
+          <div id="reputation-tabs" class="nav nav-pills neon-tabber px-3">
+            <span data-bs-toggle="tab" data-bs-target="#week"
+                  class="nav-link neon-tabber-tab {{ settings.reputationMode == 'week' ? 'active' }}">Tydzień</span>
+            <span data-bs-toggle="tab" data-bs-target="#month"
+                  class="nav-link neon-tabber-tab {{ settings.reputationMode == 'month' ? 'active' }}">Miesiąc</span>
+            <span data-bs-toggle="tab" data-bs-target="#quarter"
+                  class="nav-link neon-tabber-tab {{ settings.reputationMode == 'quarter' ? 'active' }}">Kwartał</span>
+          </div>
+          <div class="tab-content">
+            {% for tab, users in reputation %}
+              <ol id="{{ tab }}" role="tabpanel" class="tab-pane home-reputation__list {{ settings.reputationMode == tab ? 'active' }}">
+                {% for user in users %}
+                  <li class="home-reputation__item">
+                    <span class="home-reputation__rank">{{ loop.index }}</span>
+                    <a href="{{ route('profile', [user.id]) }}" class="home-member__avatar">
+                      {{ user_avatar(user.photo, user.name) }}
+                    </a>
+                    <div class="home-reputation__user">
+                      <a class="home-member__name d-block" data-user-id="{{ user.id }}" href="{{ route('profile', [user.id]) }}">{{ user.name }}</a>
+                      {{ progressBar(user.percentage|round) }}
+                    </div>
+                    <span class="home-reputation__points"><b>{{ user.reputation }}</b> pkt</span>
+                  </li>
+                {% else %}
+                  <li class="text-muted text-center py-4 small">
+                    Bądź pierwszą osobą, która otrzyma punkty reputacji w tym okresie.
+                  </li>
+                {% endfor %}
+              </ol>
+            {% endfor %}
+          </div>
+        </section>
+
+        <div class="mt-4">
+          {{ campaignBanner('square', campaign_banners_home_desktop, campaign_banners_home_mobile) }}
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var microblogs = {{ microblogs|json_encode|raw }};
+    var flags = {{ flags|json_encode|raw }};
+    var emojis = {{ emojis|json_encode|raw }};
+  </script>
+{% endblock %}

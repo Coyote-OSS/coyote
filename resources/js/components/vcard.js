@@ -8,7 +8,14 @@ function removeVCard() {
   document.getElementById('vcard')?.remove();
 }
 
+function vCardDisabled(element) {
+  return element.closest('.home-members--docked') !== null;
+}
+
 function showVCard(event) {
+  if (vCardDisabled(event.target)) {
+    return;
+  }
   clearTimeout(tooltipTimer);
   const userId = event.target.dataset.userId;
   const anchorPoint = elementAnchorPoint(event);

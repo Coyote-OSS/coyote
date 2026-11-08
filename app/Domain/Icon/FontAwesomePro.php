@@ -55,6 +55,16 @@ readonly class FontAwesomePro {
             'homepageActivityPostComment'               => 'fa-light fa-comments',
             'homepageActivityTopic'                     => 'fa-light fa-file',
             'homepageActivityPost'                      => 'fa-light fa-file-lines',
+            'homepageActivityVote'                      => 'fa-light fa-thumbs-up',
+            'homepageActivityVoted'                     => 'fa-solid fa-thumbs-up',
+            'homepageActivityComments'                  => 'fa-light fa-comment',
+            'homepageActivityReply'                     => 'fa-light fa-reply',
+            'homepageActivityShowMore'                  => 'fa-light fa-chevron-down',
+            'homepageTopicReplies'                      => 'fa-light fa-comments',
+            'homepageTopicViews'                        => 'fa-light fa-eye',
+            'homepageTopicScore'                        => 'fa-light fa-thumbs-up',
+            'homepageMembersDock'                       => 'fa-light fa-up-right-from-square',
+            'homepageMembersUndock'                     => 'fa-light fa-down-left-and-up-right-to-center',
 
             // microblog page
             'recommendedUsers'                          => 'fa-light fa-user-plus',

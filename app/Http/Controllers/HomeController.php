@@ -1,12 +1,17 @@
 <?php
 namespace Coyote\Http\Controllers;
 
+use Coyote\Activity;
 use Coyote\Domain\DiscreetDate;
+use Coyote\Domain\Online\CommunityMembers;
+use Coyote\Domain\Online\Viewers;
+use Coyote\Http\Resources\ActivityFeedResource;
 use Coyote\Http\Resources\ActivityResource;
 use Coyote\Http\Resources\Api\MicroblogResource;
 use Coyote\Http\Resources\FlagResource;
 use Coyote\Http\Resources\MicroblogCollection;
 use Coyote\Microblog;
+use Coyote\Post;
 use Coyote\Repositories\Criteria\Forum\OnlyThoseWithAccess as OnlyThoseForumsWithAccess;
 use Coyote\Repositories\Criteria\Forum\SkipHiddenCategories;
 use Coyote\Repositories\Criteria\SkipIncognitoUsers;
@@ -21,6 +26,8 @@ use Coyote\Services\Parser\Extensions\Emoji;
 use Coyote\Services\Session\Renderer;
 use Coyote\User;
 use Illuminate\Contracts\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Modules\Campaigns;
 
@@ -34,37 +41,63 @@ class HomeController extends Controller {
     }
 
     public function index(Campaigns\ForCampaignBanners $presenter): View {
-        $cache = app(Cache\Repository::class);
         $this->topic->pushCriteria(new OnlyThoseTopicsWithAccess());
         $this->topic->pushCriteria(new SkipHiddenCategories($this->userId));
-        $date = new DiscreetDate(date('Y-m-d H:i:s'));
-
-        return $this->view('home', [
+        $this->activity->pushCriteria(new OnlyThoseForumsWithAccess($this->auth));
+        $this->activity->pushCriteria(new SkipHiddenCategories($this->userId));
+        $this->activity->pushCriteria(new SkipIncognitoUsers());
+        /** @var Renderer $renderer */
+        $renderer = app(Renderer::class);
+        $viewers = $renderer->sessionViewers('/');
+        $common = [
             'flags'                         => $this->flags(),
             'microblogs'                    => $this->getMicroblogs(),
             'interesting'                   => $this->topic->interesting(),
             'newest'                        => $this->topic->newest(),
-            'activities'                    => $this->getActivities(),
-            'reputation'                    => $cache->remember('homepage:reputation', 30 * 60, fn() => [
-                'week'    => $this->reputation->reputationSince($date->startOfThisWeek(), limit:5),
-                'month'   => $this->reputation->reputationSince($date->startOfThisMonth(), limit:5),
-                'quarter' => $this->reputation->reputationSince($date->startOfThisQuarter(), limit:5),
-            ]),
+            'reputation'                    => $this->reputation(),
             'emojis'                        => Emoji::all(),
             'events'                        => [],
-            'globalViewers'                 => $this->globalViewers(),
-            'homepageMembers'               => $this->members(),
+            'homepageMembers'               => $this->members($viewers),
             'settings'                      => $this->getSettings(),
             'home_ads'                      => $this->userIncludeAds(),
             'campaign_banners_home_desktop' => $presenter->bannerSet(Campaigns\DeviceType::Desktop),
             'campaign_banners_home_mobile'  => $presenter->bannerSet(Campaigns\DeviceType::Mobile),
+        ];
+        if (Gate::check('alpha-access')) {
+            return $this->view('homeModern', [
+                ...$common,
+                'activities' => $this->activityFeed(),
+                'community'  => $this->community($viewers),
+            ]);
+        }
+        return $this->view('home', [
+            ...$common,
+            'activities'    => $this->getActivities(),
+            'globalViewers' => $this->globalViewers(),
         ]);
     }
 
-    private function members(): array {
-        /** @var Renderer $renderer */
-        $renderer = app(Renderer::class);
-        $viewers = $renderer->sessionViewers('/');
+    private function reputation(): array {
+        $cache = app(Cache\Repository::class);
+        $date = new DiscreetDate(date('Y-m-d H:i:s'));
+        return $cache->remember('homepage:reputation', 30 * 60, fn() => [
+            'week'    => $this->reputation->reputationSince($date->startOfThisWeek(), limit:5),
+            'month'   => $this->reputation->reputationSince($date->startOfThisMonth(), limit:5),
+            'quarter' => $this->reputation->reputationSince($date->startOfThisQuarter(), limit:5),
+        ]);
+    }
+
+    private function community(Viewers $viewers): array {
+        /** @var CommunityMembers $members */
+        $members = app(CommunityMembers::class);
+        return [
+            ...$members->members($viewers, limit:12),
+            'onlineCount' => \count($viewers->users),
+            'guestsCount' => $viewers->guestsCount,
+        ];
+    }
+
+    private function members(Viewers $viewers): array {
         return [
             'usersTotal'   => \number_format(User::query()->withTrashed()->count(), thousands_separator:'.'),
             'usersOnline'  => \count($viewers->users) + $viewers->guestsCount,
@@ -81,17 +114,49 @@ class HomeController extends Controller {
     }
 
     private function getActivities(): array {
-        $this->activity->pushCriteria(new OnlyThoseForumsWithAccess($this->auth));
-        $this->activity->pushCriteria(new SkipHiddenCategories($this->userId));
-        $this->activity->pushCriteria(new SkipIncognitoUsers());
-        $result = $this->activity->latest(25);
-        return ActivityResource::collection($result)->toArray($this->request);
+        return ActivityResource::collection($this->activity->latest(25))->toArray($this->request);
+    }
+
+    private function activityFeed(): array {
+        $result = $this->activity->latest(25)
+            ->filter(fn(Activity $activity) => $activity->content && !$activity->content->trashed()
+                && $activity->topic && !$activity->topic->trashed())
+            ->values();
+        $result->loadMorphCount('content', [Post::class => ['comments']]);
+        $activities = ActivityFeedResource::collection($result)->toArray($this->request);
+        [$votedPosts, $votedComments] = $this->votedBy($activities);
+        foreach ($activities as &$activity) {
+            $voted = $activity['vote']['type'] === 'post' ? $votedPosts : $votedComments;
+            $activity['voted'] = \in_array($activity['vote']['id'], $voted);
+        }
+        return $activities;
     }
 
     private function globalViewers(): View {
         /** @var Renderer $renderer */
         $renderer = app(Renderer::class);
         return $renderer->render('/', local:false, includeHeading:false);
+    }
+
+    private function votedBy(array $activities): array {
+        if ($this->userId === null) {
+            return [[], []];
+        }
+        $ids = fn(string $type) => \array_column(\array_column(
+            \array_filter($activities, fn(array $activity) => $activity['vote']['type'] === $type),
+            'vote'), 'id');
+        return [
+            Post\Vote::query()
+                ->where('user_id', $this->userId)
+                ->whereIn('post_id', $ids('post'))
+                ->pluck('post_id')
+                ->all(),
+            DB::table('post_comment_votes')
+                ->where('user_id', $this->userId)
+                ->whereIn('post_comment_id', $ids('comment'))
+                ->pluck('post_comment_id')
+                ->all(),
+        ];
     }
 
     private function flags(): array {

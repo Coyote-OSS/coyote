@@ -34,6 +34,16 @@ readonly class FontAwesomeFree
             'homepageActivityPostComment'               => 'far fa-comments',
             'homepageActivityTopic'                     => 'far fa-file',
             'homepageActivityPost'                      => 'far fa-file-lines',
+            'homepageActivityVote'                      => 'far fa-thumbs-up',
+            'homepageActivityVoted'                     => 'fas fa-thumbs-up',
+            'homepageActivityComments'                  => 'far fa-comment',
+            'homepageActivityReply'                     => 'fas fa-reply',
+            'homepageActivityShowMore'                  => 'fas fa-chevron-down',
+            'homepageTopicReplies'                      => 'far fa-comments',
+            'homepageTopicViews'                        => 'far fa-eye',
+            'homepageTopicScore'                        => 'far fa-thumbs-up',
+            'homepageMembersDock'                       => 'fas fa-up-right-from-square',
+            'homepageMembersUndock'                     => 'fas fa-down-left-and-up-right-to-center',
 
             // microblog page
             'recommendedUsers'                          => 'fas fa-tag',
