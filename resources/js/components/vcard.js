@@ -9,7 +9,7 @@ function removeVCard() {
 }
 
 function vCardDisabled(element) {
-  return element.closest('.home-members--docked') !== null;
+  return element.closest('.home-members--docked, .pm-chat') !== null;
 }
 
 function showVCard(event) {

@@ -1,7 +1,9 @@
 import axios from 'axios';
 import PerfectScrollbar from 'perfect-scrollbar';
+import {createApp} from 'vue';
 import {mapGetters} from "vuex";
 
+import VuePmChat from '../components/pm/chat.vue';
 import VueMicroblog from "../components/microblog/microblog.vue";
 import store from "../store/index.ts";
 import {createVueAppNotifications} from '../vue';
@@ -151,7 +153,38 @@ function initMembersShowMore() {
   });
 }
 
+/**
+ * On desktop, private messages from the community list open in a chat box at the bottom
+ * of the page; on mobile (and with modifier keys) the links go to the full conversation.
+ */
+function initPmChat() {
+  const element = document.getElementById('js-pm-chat');
+  if (!element || !window.matchMedia('(min-width: 768px)').matches) {
+    return;
+  }
+  const app = createApp(VuePmChat);
+  app.use(store);
+  app.provide('icons', window.icons);
+  const chat = app.mount(element);
+
+  document.querySelectorAll('[data-chat-user-id]').forEach(link => {
+    link.addEventListener('click', event => {
+      if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      event.preventDefault();
+      chat.open({
+        id: Number(link.dataset.chatUserId),
+        name: link.dataset.chatUserName,
+        photo: link.dataset.chatUserPhoto || null,
+        initials: link.dataset.chatUserInitials,
+      });
+    });
+  });
+}
+
 (function () {
+  initPmChat();
   initBlockedActivities();
   initMembersShowMore();
   initMembersFollow();

@@ -15,6 +15,8 @@ class Media extends AbstractExtension {
         return [
             new TwigFunction('logo', $this->logo(...)),
             new TwigFunction('user_avatar', $this->userAvatarOrNothing(...)),
+            new TwigFunction('user_avatar_url', $this->userAvatarUrl(...)),
+            new TwigFunction('user_initials', $this->userInitials(...)),
         ];
     }
 
@@ -34,6 +36,17 @@ class Media extends AbstractExtension {
         $htmlUsername = \htmlSpecialChars($name);
         return new StringHtml('<img class="user-avatar mw-100" src="' . $photoUrl . '" alt="' . $htmlUsername . '" ' .
             'style="width:100%; height:100%; object-fit:cover; object-position:center;">');
+    }
+
+    public function userAvatarUrl(?string $photo): ?string {
+        if ($photo === null || $photo === '') {
+            return null;
+        }
+        return $this->photo($photo);
+    }
+
+    public function userInitials(string $name): string {
+        return new Initials()->of($name);
     }
 
     public function logo($filename, $secure = null): string {

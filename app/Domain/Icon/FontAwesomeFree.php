@@ -48,6 +48,11 @@ readonly class FontAwesomeFree
             'homepageMemberFollow'                      => 'far fa-bell',
             'homepageMemberFollowed'                    => 'fas fa-bell',
             'homepageMemberMessage'                     => 'far fa-envelope',
+            'homepageChatFullConversation'              => 'fas fa-up-right-from-square',
+            'homepageChatMinimize'                      => 'fas fa-minus',
+            'homepageChatClose'                         => 'fas fa-xmark',
+            'homepageChatSend'                          => 'fas fa-paper-plane',
+            'homepageChatLoading'                       => 'fas fa-spinner',
             'homepageMore'                              => 'fas fa-arrow-right',
 
             // microblog page

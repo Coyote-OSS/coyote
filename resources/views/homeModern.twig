@@ -241,6 +241,10 @@
     </div>
   </div>
 
+  {% if user('id') %}
+    <div id="js-pm-chat"></div>
+  {% endif %}
+
   <script type="text/javascript">
     var microblogs = {{ microblogs|json_encode|raw }};
     var flags = {{ flags|json_encode|raw }};
@@ -338,6 +342,8 @@
     {% if user('id') and user('id') != member.id %}
       <span class="home-member__actions">
         <a href="{{ route('user.pm.submit', {to: member.name}) }}" class="home-member__action home-member__message"
+           data-chat-user-id="{{ member.id }}" data-chat-user-name="{{ member.name }}"
+           data-chat-user-photo="{{ user_avatar_url(member.avatarUrl) }}" data-chat-user-initials="{{ user_initials(member.name) }}"
            title="Napisz prywatną wiadomość do {{ member.name }}">
           {{ icon('homepageMemberMessage') }}
         </a>

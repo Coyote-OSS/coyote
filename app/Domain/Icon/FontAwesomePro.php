@@ -69,6 +69,11 @@ readonly class FontAwesomePro {
             'homepageMemberFollow'                      => 'fa-light fa-bell',
             'homepageMemberFollowed'                    => 'fa-solid fa-bell',
             'homepageMemberMessage'                     => 'fa-light fa-envelope',
+            'homepageChatFullConversation'              => 'fa-light fa-up-right-from-square',
+            'homepageChatMinimize'                      => 'fa-light fa-minus',
+            'homepageChatClose'                         => 'fa-light fa-xmark',
+            'homepageChatSend'                          => 'fa-light fa-paper-plane',
+            'homepageChatLoading'                       => 'fa-light fa-spinner',
             'homepageMore'                              => 'fa-light fa-arrow-right',
 
             // microblog page

@@ -1,0 +1,256 @@
+@charset "UTF-8";
+
+@use "../../feature/theme/theme";
+@use "../../feature/lookAndFeel/style-guide" as style;
+
+// Private message chat box, pinned to the bottom of the modern homepage (desktop only)
+
+$pm-chat-width: 320px;
+$pm-chat-right: 96px; // leaves room for the "scroll to top" floater in the corner
+$pm-chat-members-docked-width: 280px; // see $home-members-docked-width
+$pm-chat-muted: (light: style.$neutral-400, dark: style.$neutral-300);
+$pm-chat-border: (light: style.$navy-100, dark: style.$neutral-700);
+
+.pm-chat {
+  position:       fixed;
+  z-index:        20;
+  right:          $pm-chat-right;
+  bottom:         0;
+  width:          $pm-chat-width;
+  height:         440px;
+  max-height:     calc(100vh - 90px);
+  display:        flex;
+  flex-direction: column;
+  font-size:      13px;
+  @include theme.property(box-shadow, 0 -2px 16px rgba(19, 26, 32, .12), 0 -2px 16px rgba(0, 0, 0, .5));
+
+  @include media-breakpoint-down(md) {
+    display: none;
+  }
+
+  &--minimized {
+    height: auto;
+  }
+
+  &__header {
+    display:       flex;
+    align-items:   center;
+    gap:           2px;
+    padding:       10px 10px 10px 16px;
+    cursor:        pointer;
+    user-select:   none;
+    border-bottom: 1px solid;
+    @include theme.var(border-bottom-color, $pm-chat-border);
+
+    .pm-chat--minimized & {
+      border-bottom: 0;
+    }
+  }
+
+  &__avatar {
+    flex-shrink:   0;
+    width:         28px;
+    height:        28px;
+    margin-right:  8px;
+    border-radius: 50%;
+    overflow:      hidden;
+
+    img, svg, .default-avatar, .user-avatar {
+      width:  28px;
+      height: 28px;
+    }
+  }
+
+  &__name {
+    margin-right:  auto;
+    font-size:     14px;
+    line-height:   20px;
+    overflow:      hidden;
+    text-overflow: ellipsis;
+    white-space:   nowrap;
+  }
+
+  &__unread {
+    min-width:     18px;
+    padding:       0 5px;
+    border-radius: 9px;
+    font-size:     11px;
+    line-height:   18px;
+    text-align:    center;
+    color:         #fff;
+    background:    style.$green-500;
+  }
+
+  &__button {
+    padding:       4px 6px;
+    border:        0;
+    border-radius: 6px;
+    background:    none;
+    line-height:   1;
+    @include theme.var(color, $pm-chat-muted);
+
+    &:hover {
+      @include theme.property(background, style.$navy-025, #202224);
+      @include theme.property(color, style.$green-700, style.$green-200);
+    }
+  }
+
+  &__messages {
+    flex:           1;
+    overflow-y:     auto;
+    display:        flex;
+    flex-direction: column;
+    gap:            4px;
+    padding:        12px 16px 4px;
+  }
+
+  &__status {
+    margin:     auto;
+    text-align: center;
+    @include theme.var(color, $pm-chat-muted);
+
+    &--error {
+      @include theme.property(color, style.$red-600, style.$red-300);
+    }
+
+    // above the messages already shown, instead of in the middle of the empty box
+    &--more {
+      margin: 0 auto 8px;
+    }
+  }
+
+  &__retry {
+    display:         block;
+    margin:          4px auto 0;
+    padding:         0;
+    border:          0;
+    background:      none;
+    text-decoration: underline;
+    color:           inherit;
+  }
+
+  &__message {
+    display:        flex;
+    flex-direction: column;
+    max-width:      85%;
+
+    &--own {
+      align-self:  flex-end;
+      align-items: flex-end;
+    }
+
+    &--theirs {
+      align-self:  flex-start;
+      align-items: flex-start;
+    }
+  }
+
+  &__bubble {
+    max-width:     100%;
+    padding:       6px 12px;
+    border-radius: 14px;
+    line-height:   1.45;
+    overflow-wrap: anywhere;
+
+    .pm-chat__message--own & {
+      border-bottom-right-radius: 4px;
+      @include theme.property(background, style.$green-050, style.$green-950);
+    }
+
+    .pm-chat__message--theirs & {
+      border-bottom-left-radius: 4px;
+      @include theme.property(background, style.$navy-050, style.$neutral-700);
+    }
+
+    p:last-child, ul:last-child, ol:last-child, pre:last-child, blockquote:last-child {
+      margin-bottom: 0;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    img.img-smile {
+      display:        inline;
+      height:         1.25em;
+      vertical-align: -.25em;
+    }
+
+    pre {
+      overflow-x: auto;
+    }
+  }
+
+  &__read {
+    margin-top: 2px;
+    font-size:  11px;
+    @include theme.var(color, $pm-chat-muted);
+  }
+
+  &__typing {
+    min-height: 18px;
+    padding:    0 16px;
+    font-size:  12px;
+    @include theme.var(color, $pm-chat-muted);
+  }
+
+  &__form {
+    display:     flex;
+    align-items: flex-end;
+    gap:         4px;
+    padding:     4px 10px 12px 16px;
+  }
+
+  &__input {
+    flex:          1;
+    resize:        none;
+    field-sizing:  content;
+    min-height:    36px;
+    max-height:    120px;
+    padding:       7px 12px;
+    border:        1px solid transparent;
+    border-radius: 18px;
+    outline:       none;
+    color:         inherit;
+    @include theme.property(background, style.$navy-050, style.$neutral-700);
+
+    &::placeholder {
+      @include theme.var(color, $pm-chat-muted);
+    }
+
+    &:focus {
+      border-color: style.$green-500;
+    }
+  }
+
+  &__send {
+    width:         36px;
+    height:        36px;
+    flex-shrink:   0;
+    border:        0;
+    border-radius: 50%;
+    background:    none;
+    @include theme.property(color, style.$green-700, style.$green-200);
+
+    &:hover:not(:disabled) {
+      @include theme.property(background, style.$green-050, style.$green-950);
+    }
+
+    &:disabled {
+      @include theme.var(color, $pm-chat-muted);
+    }
+  }
+
+  &__error {
+    padding:   0 16px 10px;
+    font-size: 12px;
+    color:     style.$red-500;
+  }
+}
+
+// next to the community panel docked to the side of the viewport
+body:has(.home-members--docked) .pm-chat {
+  @include media-breakpoint-up(xl) {
+    right: $pm-chat-members-docked-width + 24px;
+  }
+}
