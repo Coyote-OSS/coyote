@@ -2,6 +2,7 @@
 
 namespace Tests\Legacy\LaravelIntegration\Controllers\User;
 
+use Coyote\Pm;
 use Coyote\User;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -56,6 +57,23 @@ class PmControllerTest extends TestCase
 //            ->assertStatus(201)
 //            ->assertSeeText($text);
 //    }
+
+    public function testSubmitRedirectsToExistingConversation()
+    {
+        factory(Pm::class)->create(['user_id' => $this->user->id, 'author_id' => $this->author->id]);
+        $pm = Pm::where('user_id', $this->user->id)->where('author_id', $this->author->id)->first();
+
+        $response = $this->actingAs($this->user)->get('/User/Pm/Submit?to=' . urlencode($this->author->name));
+
+        $response->assertRedirect(route('user.pm.show', [$pm->id]));
+    }
+
+    public function testSubmitShowsFormWithoutExistingConversation()
+    {
+        $response = $this->actingAs($this->user)->get('/User/Pm/Submit?to=' . urlencode($this->author->name));
+
+        $response->assertStatus(200);
+    }
 
     public function testWriteMessageWithoutRecipient()
     {

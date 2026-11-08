@@ -15,6 +15,7 @@ use Coyote\Services\Parser\Extensions\Emoji;
 use Coyote\Services\Parser\Factories\PmFactory;
 use Coyote\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\View\View;
@@ -90,16 +91,32 @@ class PmController extends BaseController
         return PmResource::collection($pm);
     }
 
-    public function submit(Request $request): View
+    public function submit(Request $request): View|RedirectResponse
     {
+        $recipient = $request->has('to')
+            ? $this->user->findByName($request->input('to'))
+            : null;
+        if ($recipient) {
+            $conversation = $this->existingConversation($recipient);
+            if ($conversation) {
+                return redirect()->route('user.pm.show', [$conversation->id]);
+            }
+        }
         $this->breadcrumb->push('Napisz wiadomość', route('user.pm.submit'));
         return $this->view('user.pm.show', [
-            'recipient' => $request->has('to')
-                ? $this->user->findByName($this->request->input('to'))
-                : new \stdClass(),
+            'recipient' => $recipient ?? new \stdClass(),
             'messages'  => [],
             'emojis'    => Emoji::all(),
         ]);
+    }
+
+    private function existingConversation(User $recipient): ?Pm
+    {
+        return Pm::query()
+            ->where('user_id', $this->userId)
+            ->where('author_id', $recipient->id)
+            ->orderByDesc('id')
+            ->first();
     }
 
     public function preview(Request $request): Response
