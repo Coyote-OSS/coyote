@@ -32,13 +32,36 @@ function showVCard(event) {
       createVueApp('VCard', '#vcard', {components: {'vue-follow-button': VueFollowButton}});
 
       const vcard = document.getElementById('vcard');
-      vcard.style.top = `${anchorPoint.top + 20}px`;
-      vcard.style.left = `${Math.min(anchorPoint.left, window.innerWidth - 520)}px`;
+      if (!placeBesidePanel(vcard, event.target)) {
+        vcard.style.top = `${anchorPoint.top + 20}px`;
+        vcard.style.left = `${Math.min(anchorPoint.left, window.innerWidth - 520)}px`;
+      }
 
       vcard.addEventListener('mouseenter', () => clearTimeout(tooltipTimer));
       vcard.addEventListener('mouseleave', removeVCard);
     });
   }
+}
+
+/**
+ * In the homepage community list, the vcard is shown to the left of the panel, level with the row,
+ * so it doesn't cover the row's buttons or the users below.
+ */
+function placeBesidePanel(vcard, element) {
+  const panel = element.closest('.home-members');
+  if (!panel) {
+    return false;
+  }
+  const gap = 8;
+  const panelRect = panel.getBoundingClientRect();
+  if (panelRect.left - gap < vcard.offsetWidth) {
+    return false; // no room beside the panel
+  }
+  const rowRect = element.getBoundingClientRect();
+  const top = Math.max(gap, Math.min(rowRect.top, window.innerHeight - vcard.offsetHeight - gap));
+  vcard.style.top = `${top + window.scrollY}px`;
+  vcard.style.left = `${panelRect.left - vcard.offsetWidth - gap + window.scrollX}px`;
+  return true;
 }
 
 function elementAnchorPoint(event) {

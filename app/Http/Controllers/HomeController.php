@@ -3,6 +3,7 @@ namespace Coyote\Http\Controllers;
 
 use Coyote\Activity;
 use Coyote\Domain\DiscreetDate;
+use Coyote\Domain\Homepage\TopicSummaries;
 use Coyote\Domain\Online\CommunityMembers;
 use Coyote\Domain\Online\Viewers;
 use Coyote\Http\Resources\ActivityFeedResource;
@@ -21,6 +22,7 @@ use Coyote\Repositories\Eloquent\ReputationRepository;
 use Coyote\Repositories\Eloquent\TopicRepository;
 use Coyote\Reputation;
 use Coyote\Services\Flags;
+use Coyote\Services\Forum\UserDefined;
 use Coyote\Services\Microblogs\Builder;
 use Coyote\Services\Parser\Extensions\Emoji;
 use Coyote\Services\Session\Renderer;
@@ -57,23 +59,28 @@ class HomeController extends Controller {
             'reputation'                    => $this->reputation(),
             'emojis'                        => Emoji::all(),
             'events'                        => [],
-            'homepageMembers'               => $this->members($viewers),
             'settings'                      => $this->getSettings(),
             'home_ads'                      => $this->userIncludeAds(),
             'campaign_banners_home_desktop' => $presenter->bannerSet(Campaigns\DeviceType::Desktop),
             'campaign_banners_home_mobile'  => $presenter->bannerSet(Campaigns\DeviceType::Mobile),
         ];
-        if (Gate::check('alpha-access')) {
+        if (Gate::any(['alpha-access', 'beta-access'])) {
+            /** @var TopicSummaries $summaries */
+            $summaries = app(TopicSummaries::class);
+            $interestingIds = $common['interesting']->pluck('id')->all();
             return $this->view('homeModern', [
                 ...$common,
+                'topicLikes'        => $summaries->likes([...$interestingIds, ...$common['newest']->pluck('id')->all()]),
+                'topicParticipants' => $summaries->participants($interestingIds, limit:5),
                 'activities' => $this->activityFeed(),
                 'community'  => $this->community($viewers),
             ]);
         }
         return $this->view('home', [
             ...$common,
-            'activities'    => $this->getActivities(),
-            'globalViewers' => $this->globalViewers(),
+            'activities'      => $this->getActivities(),
+            'globalViewers'   => $this->globalViewers(),
+            'homepageMembers' => $this->members($viewers),
         ]);
     }
 
@@ -91,7 +98,7 @@ class HomeController extends Controller {
         /** @var CommunityMembers $members */
         $members = app(CommunityMembers::class);
         return [
-            ...$members->members($viewers, limit:12),
+            ...$members->members($viewers, onlineLimit:50, recentLimit:35, followedIds:$this->relatedUsers(blocked:false)),
             'onlineCount' => \count($viewers->users),
             'guestsCount' => $viewers->guestsCount,
         ];
@@ -125,9 +132,11 @@ class HomeController extends Controller {
         $result->loadMorphCount('content', [Post::class => ['comments']]);
         $activities = ActivityFeedResource::collection($result)->toArray($this->request);
         [$votedPosts, $votedComments] = $this->votedBy($activities);
+        $blockedUsers = $this->relatedUsers(blocked:true);
         foreach ($activities as &$activity) {
             $voted = $activity['vote']['type'] === 'post' ? $votedPosts : $votedComments;
             $activity['voted'] = \in_array($activity['vote']['id'], $voted);
+            $activity['blocked'] = $activity['user_id'] && \in_array($activity['user_id'], $blockedUsers);
         }
         return $activities;
     }
@@ -136,6 +145,20 @@ class HomeController extends Controller {
         /** @var Renderer $renderer */
         $renderer = app(Renderer::class);
         return $renderer->render('/', local:false, includeHeading:false);
+    }
+
+    /**
+     * Users blocked, or followed, by the current user.
+     * @return int[]
+     */
+    private function relatedUsers(bool $blocked): array {
+        if ($this->userId === null) {
+            return [];
+        }
+        /** @var UserDefined $userDefined */
+        $userDefined = app(UserDefined::class);
+        $relations = \array_filter($userDefined->followers($this->auth), fn(array $relation) => $relation['is_blocked'] == $blocked);
+        return \array_column($relations, 'user_id');
     }
 
     private function votedBy(array $activities): array {

@@ -44,6 +44,11 @@ readonly class FontAwesomeFree
             'homepageTopicScore'                        => 'far fa-thumbs-up',
             'homepageMembersDock'                       => 'fas fa-up-right-from-square',
             'homepageMembersUndock'                     => 'fas fa-down-left-and-up-right-to-center',
+            'homepageMembersGuests'                     => 'fas fa-users',
+            'homepageMemberFollow'                      => 'far fa-bell',
+            'homepageMemberFollowed'                    => 'fas fa-bell',
+            'homepageMemberMessage'                     => 'far fa-envelope',
+            'homepageMore'                              => 'fas fa-arrow-right',
 
             // microblog page
             'recommendedUsers'                          => 'fas fa-tag',

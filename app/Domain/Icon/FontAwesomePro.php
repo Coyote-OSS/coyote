@@ -65,6 +65,11 @@ readonly class FontAwesomePro {
             'homepageTopicScore'                        => 'fa-light fa-thumbs-up',
             'homepageMembersDock'                       => 'fa-light fa-up-right-from-square',
             'homepageMembersUndock'                     => 'fa-light fa-down-left-and-up-right-to-center',
+            'homepageMembersGuests'                     => 'fa-light fa-users',
+            'homepageMemberFollow'                      => 'fa-light fa-bell',
+            'homepageMemberFollowed'                    => 'fa-solid fa-bell',
+            'homepageMemberMessage'                     => 'fa-light fa-envelope',
+            'homepageMore'                              => 'fa-light fa-arrow-right',
 
             // microblog page
             'recommendedUsers'                          => 'fa-light fa-user-plus',

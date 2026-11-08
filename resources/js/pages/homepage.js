@@ -68,17 +68,93 @@ function initActivitiesShowMore() {
   }
 }
 
+function initMembersFollow() {
+  document.querySelectorAll('.home-member__follow').forEach(button => {
+    button.addEventListener('click', () => {
+      const followed = !button.classList.contains('home-member__follow--followed');
+      const name = button.closest('li').querySelector('.home-member__username').textContent.trim();
+      button.disabled = true;
+      axios.post(`/User/${followed ? 'Follow' : 'Unfollow'}/${button.dataset.followUserId}`)
+        .then(() => {
+          // the row deliberately stays where it is, so the click is easy to undo;
+          // it's re-sorted on reload, or when the panel is pinned/unpinned
+          button.classList.toggle('home-member__follow--followed', followed);
+          button.setAttribute('aria-pressed', String(followed));
+          button.title = followed
+            ? `Obserwujesz ${name}. Obserwowani są wyświetlani na górze listy. Kliknij, aby przestać obserwować.`
+            : `Obserwuj ${name}. Obserwowani są wyświetlani na górze listy.`;
+          button.closest('li').dataset.followed = followed ? '1' : '0';
+        })
+        .finally(() => button.disabled = false);
+    });
+  });
+}
+
+/**
+ * Followed users first, otherwise in their natural order (e.g. most recently seen first).
+ * Afterwards, the first few of each group are listed, as when the page was loaded.
+ */
+function sortMembers() {
+  const list = document.querySelector('.home-members__list');
+  ['online', 'recent'].forEach(group => {
+    const items = [...list.querySelectorAll(`li[data-member-group="${group}"]`)];
+    if (items.length === 0) {
+      return;
+    }
+    const before = items[0].previousElementSibling;
+    items.sort((a, b) => (b.dataset.followed - a.dataset.followed) || (a.dataset.memberOrder - b.dataset.memberOrder));
+    before.after(...items);
+
+    const shown = Number(list.dataset[`${group}Shown`]);
+    const allRevealed = !document.getElementById(`home-members-more-${group}`);
+    items.forEach((item, index) => {
+      item.classList.toggle('home-members__extra', index >= shown);
+      item.classList.toggle(`home-members__extra--${group}`, index >= shown);
+      if (allRevealed) {
+        item.classList.add('home-members__extra--revealed');
+      }
+    });
+  });
+}
+
 function initMembersDock() {
   const members = document.getElementById('home-members');
   const toggle = docked => {
     members.classList.toggle('home-members--docked', docked);
+    sortMembers();
     axios.post('/User/Settings/Ajax', {'homepage_members': docked ? 'docked' : 'inline'});
   };
   document.getElementById('home-members-dock')?.addEventListener('click', () => toggle(true));
   document.getElementById('home-members-undock')?.addEventListener('click', () => toggle(false));
 }
 
+function initBlockedActivities() {
+  document.querySelectorAll('.home-activity__blocked').forEach(button => {
+    button.addEventListener('click', () => button.closest('.home-activity').classList.toggle('home-activity--revealed'));
+  });
+}
+
+function initMembersShowMore() {
+  const reveal = items => items.forEach(item => item.classList.add('home-members__extra--revealed'));
+  const hidden = type => [...document.querySelectorAll(`.home-members__extra--${type}:not(.home-members__extra--revealed)`)];
+
+  document.getElementById('home-members-more-online')?.addEventListener('click', event => {
+    reveal(hidden('online'));
+    event.currentTarget.closest('li').remove();
+  });
+  document.getElementById('home-members-more-recent')?.addEventListener('click', event => {
+    const remaining = hidden('recent');
+    reveal(remaining.slice(0, 10));
+    if (remaining.length <= 10) {
+      event.currentTarget.closest('li').remove();
+    }
+  });
+}
+
 (function () {
+  initBlockedActivities();
+  initMembersShowMore();
+  initMembersFollow();
   const legacyStream = document.getElementById('stream');
   if (legacyStream) {
     new PerfectScrollbar(legacyStream);

@@ -14,24 +14,34 @@ readonly class CommunityMembers
     public function __construct(private Cache\Repository $cache) {}
 
     /**
-     * Fixed-size list: online users first, the remaining slots
-     * are filled with users seen most recently.
+     * Online users first, followed by a few users who were online recently, but aren't anymore.
+     * Within each group, users followed by the viewer come first.
+     * @param int[] $followedIds
      * @return array{online: array[], recent: array[], onlineHidden: int}
      */
-    public function members(Viewers $viewers, int $limit): array
+    public function members(Viewers $viewers, int $onlineLimit, int $recentLimit, array $followedIds = []): array
     {
-        $online = \array_map($this->onlineMember(...), $viewers->users);
-        $onlineShown = \array_slice($online, 0, $limit);
-        $recentSlots = $limit - \count($onlineShown);
+        $online = $this->followedFirst(\array_map($this->onlineMember(...), $viewers->users), $followedIds);
         $onlineIds = \array_column($online, 'id');
         $recent = \array_filter(
-            $recentSlots > 0 ? $this->recentlySeen($limit * 2) : [],
+            $this->recentlySeen($recentLimit + \count($online)),
             fn(array $member) => !\in_array($member['id'], $onlineIds, true));
         return [
-            'online'       => $onlineShown,
-            'onlineHidden' => \count($online) - \count($onlineShown),
-            'recent'       => \array_slice(\array_values($recent), 0, $recentSlots),
+            'online'       => \array_slice($online, 0, $onlineLimit),
+            'onlineHidden' => \max(0, \count($online) - $onlineLimit),
+            'recent'       => $this->followedFirst(\array_slice(\array_values($recent), 0, $recentLimit), $followedIds),
         ];
+    }
+
+    private function followedFirst(array $members, array $followedIds): array
+    {
+        foreach ($members as $index => &$member) {
+            $member['followed'] = \in_array($member['id'], $followedIds);
+            $member['order'] = $index; // natural position, so the list can be re-sorted in the browser
+        }
+        // usort() is stable, so otherwise the order (e.g. most recently seen first) is kept
+        \usort($members, fn(array $a, array $b) => $b['followed'] <=> $a['followed']);
+        return $members;
     }
 
     private function onlineMember(ViewerUser $user): array
@@ -51,7 +61,7 @@ readonly class CommunityMembers
         return $this->cache->remember('homepage:recently-seen:' . $limit, 60, fn() => User::query()
             ->select(['id', 'name', 'photo', 'group_name', 'visited_at'])
             ->where('is_incognito', false)
-            ->where('is_blocked', false)
+            ->where('is_blocked', 0)
             ->whereNotNull('visited_at')
             ->orderByDesc('visited_at')
             ->limit($limit)
