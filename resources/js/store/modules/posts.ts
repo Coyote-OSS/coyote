@@ -228,8 +228,11 @@ const mutations = {
     const {text, html, assets, editor, updated_at, edit_count, score} = post;
     state.data[post.id] = {...state.data[post.id], ...{text, html, assets, editor, updated_at, edit_count, score}};
   },
-  delete(state, post: Post): void {
+  delete(state, {post, deleter, reason}: {post: Post, deleter: User|null, reason: string|null}): void {
     post.deleted_at = new Date();
+    post.deleter_id = deleter?.id;
+    post.deleter_name = deleter?.name;
+    post.delete_reason = reason;
   },
   editStart(state, editable: Post|PostComment): void {
     editable.is_editing = true;
@@ -277,6 +280,7 @@ const mutations = {
 
     delete post.delete_reason;
     delete post.deleter_name;
+    delete post.deleter_id;
   },
   vote(state, post: Post): void {
     if (post.is_voted) {
@@ -394,8 +398,12 @@ const actions = {
     });
   },
 
-  delete({commit}, {post, reasonId}: {post: Post, reasonId: number|null}) {
-    return axios.delete(`/Forum/Post/Delete/${post.id}`, {data: {reason: reasonId}}).then(() => commit('delete', post));
+  delete({commit, rootState}, {post, reasonId}: {post: Post, reasonId: number|null}) {
+    return axios.delete(`/Forum/Post/Delete/${post.id}`, {data: {reason: reasonId}}).then(() => commit('delete', {
+      post,
+      deleter: rootState.user.user,
+      reason: reasonId ? rootState.topics.reasons?.[reasonId] ?? null : null,
+    }));
   },
 
   deleteComment({commit}, comment: PostComment) {
@@ -437,7 +445,7 @@ const actions = {
 
   merge({commit, getters}, post: Post) {
     return axios.post(`/Forum/Post/Merge/${post.id}`).then(response => {
-      commit('delete', post);
+      commit('delete', {post, deleter: null, reason: null});
       commit('update', response.data);
     });
   },

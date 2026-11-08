@@ -24,28 +24,18 @@
         </div>
       </div>
       <div :id="anchor" class="position-relative" :style="{top:'-'+navigationBarOffset+'px'}"/>
-      <div class="neon-tile neon-rounded card-post flex-grow-1 mb-0"
+      <div v-if="postObscured" class="neon-tile neon-rounded card-post card-post-obscured flex-grow-1 mb-0" :style="{minWidth:0}">
+        <div class="card-body text-muted small">
+          <vue-post-deletion :post="post"/>
+        </div>
+      </div>
+      <div v-else class="neon-tile neon-rounded card-post flex-grow-1 mb-0"
            :style="{minWidth:0}"
-           :class="{'is-deleted': hidden, 'not-read': !post.is_read, 'highlight-flash': highlight, 'post-deleted-collapsed': isCollapsed}">
+           :class="{'is-deleted': hidden, 'card-post-obscured': post.deleted_at && isCollapsed, 'not-read': !post.is_read, 'highlight-flash': highlight, 'post-deleted-collapsed': isCollapsed}">
         <div v-if="post.deleted_at"
              @click="toggleDeletedPost"
-             class="post-delete card-body text-decoration-none"
-             :class="{'cursor-pointer':!postObscured}">
-          <div class="mb-3">
-            <strong>Usunięto</strong>
-          </div>
-          <vue-icon name="postDeleted"/>
-          Post usunięty
-          <vue-timeago :datetime="post.deleted_at"/>
-          <template v-if="post.deleter_name">
-            {{' '}}
-            przez {{post.deleter_name}}.
-          </template>
-          <template v-else>.</template>
-          <template v-if="post.delete_reason">
-            {{' '}}
-            Powód: {{post.delete_reason}}.
-          </template>
+             class="post-deleted-header card-body text-muted small cursor-pointer">
+          <vue-post-deletion :post="post"/>
         </div>
         <div v-else-if="authorBlocked" class="post-delete card-body text-decoration-none" @click="isCollapsed = !isCollapsed">
           <vue-icon name="postAuthorBlocked"/>
@@ -427,6 +417,7 @@ import VueSelect from './../forms/select.vue';
 import VueCommentForm from "./comment-form.vue";
 import VueComment from './comment.vue';
 import VueForm from './form.vue';
+import VuePostDeletion from "./post-deletion.vue";
 import VuePostGuiderail, {ChildLink} from "./post-guiderail.vue";
 import UserStatusBanned from "./UserStatusBanned.vue";
 
@@ -437,6 +428,7 @@ export default {
     Icon,
     'vue-gallery': VueGallery,
     VuePostGuiderail,
+    VuePostDeletion,
     'vue-avatar': VueAvatar,
     'vue-button': VueButton,
     'vue-comment': VueComment,
@@ -492,6 +484,9 @@ export default {
   methods: {
     resetGalleryImages(): void {
       const postContent = this.$refs['postContent'];
+      if (!postContent) {
+        return;
+      }
       const images = postContent.querySelectorAll('img:not(.img-smile)');
       images.forEach((image, index) => {
         this.$data.galleryImages.push(image.src);
@@ -504,9 +499,7 @@ export default {
       this.$data.galleryImageIndex = null;
     },
     toggleDeletedPost(): void {
-      if (!this.postObscured) {
-        this.$data.isCollapsed = !this.$data.isCollapsed;
-      }
+      this.$data.isCollapsed = !this.$data.isCollapsed;
     },
     unfoldChildren(): void {
       store.commit('posts/unfoldChildren', this.$props.post);

@@ -85,7 +85,7 @@
 .card-post.post-deleted-collapsed {
   border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px);
 
-  .post-delete {
+  .post-delete, .post-deleted-header {
     border: none;
   }
 }

@@ -49,6 +49,14 @@
         {% endif %}
       </div>
       {% for post in posts.data %}
+        {% if post.type == 'obscured' %}
+        <div class="card card-post card-post-obscured">
+          <div class="card-body text-muted small">
+            {{ icon('postDeleted') }}
+            Post użytkownika {{ post.user ? post.user.name : post.user_name }} został usunięty.
+          </div>
+        </div>
+        {% else %}
         <div class="card card-post">
           <div class="d-none d-lg-block p-2 backport-post-header">
             <div class="row" style="font-size:12px;">
@@ -168,6 +176,7 @@
             </div>
           </div>
         </div>
+        {% endif %}
       {% endfor %}
     </div>
 

@@ -53,7 +53,9 @@ class PostResource extends JsonResource {
     private function postResourceToArray(): array {
         return [
             ...$this->post->only([
-                'id', 'user_name', 'score', 'text', 'edit_count', 'is_voted', 'is_accepted', 'is_subscribed', 'user_id', 'deleter_name', 'delete_reason',
+                'id', 'user_name', 'score', 'text',
+                'edit_count', 'is_voted', 'is_accepted', 'is_subscribed',
+                'user_id', 'deleter_id', 'deleter_name', 'delete_reason',
             ]),
             'orderingScore'        => $this->post->score,
             'created_at'           => $this->post->created_at->toIso8601String(),
@@ -116,7 +118,9 @@ class PostResource extends JsonResource {
 
     private function postResourceToArrayObscured(): array {
         return [
-            ...$this->post->only(['id', 'deleter_name', 'delete_reason']),
+            ...$this->post->only(['id', 'user_name', 'user_id', 'deleter_id', 'deleter_name', 'delete_reason']),
+            'user'                 => $this->post->user ? UserResource::make($this->post->user) : null,
+            'url'                  => UrlBuilder::post($this->post, true),
             'type'                 => 'obscured',
             'parentPostId'         => $this->post->tree_parent_post_id,
             'childrenFolded'       => false,

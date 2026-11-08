@@ -26,6 +26,7 @@ use Coyote\Topic;
 use Coyote\User;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Modules\Campaigns;
@@ -58,19 +59,12 @@ class TopicController extends BaseController {
             $perPage = $this->postsPerPage($request);
         }
 
-        // user with forum-update ability WILL see every post
+        // every user sees deleted posts, but users without forum-delete ability see them obscured (without content)
         // NOTE: criteria MUST BE pushed before calling getPage() method!
         $hasAccessToDeletedPosts = $gate->allows('delete', $forum);
-        if ($hasAccessToDeletedPosts) {
-            $this->post->pushCriteria(new WithTrashed());
-            $this->post->pushCriteria(new WithTrashedInfo());
-
-            $topic->replies = $topic->replies_real; // user is able to see real number of posts in this topic
-        } else {
-            if ($topic->is_tree) {
-                $this->post->pushCriteria(new WithTrashed());
-            }
-        }
+        $this->post->pushCriteria(new WithTrashed());
+        $this->post->pushCriteria(new WithTrashedInfo());
+        $topic->replies = $topic->replies_real;
 
         // user wants to show certain post. we need to calculate page number based on post id.
         if ($request->filled('p')) {
@@ -162,7 +156,8 @@ class TopicController extends BaseController {
         }
 
         $topic->load('tags');
-        $post = array_first($posts['data']);
+        $post = Arr::first($posts['data'], fn(array $post) => $post['type'] === 'regular')
+            ?? ['text' => '', 'html' => ''];
 
         return $this
             ->view('forum.topic', [
@@ -187,14 +182,14 @@ class TopicController extends BaseController {
                 'user_forums'                    => $userForums,
                 'description'                    => excerpt($post['text'], 100),
                 'flags'                          => $this->flags($forum),
-                'schema_topic'                   => $this->discussionForumPosting($topic, $post['html']),
+                'schema_topic'                   => $this->discussionForumPosting($topic, $post['html'], $topic->replies),
                 'topic_ads'                      => $this->userIncludeAds(),
                 'campaign_banners_topic_desktop' => $presenter->bannerSet(Campaigns\DeviceType::Desktop),
                 'campaign_banners_topic_mobile'  => $presenter->bannerSet(Campaigns\DeviceType::Mobile),
             ]);
     }
 
-    private function discussionForumPosting(Topic $topic, string $html): Seo\Schema {
+    private function discussionForumPosting(Topic $topic, string $html, int $replies): Seo\Schema {
         $user = $topic->firstPost->user;
         return new Seo\Schema(new DiscussionForumPosting(
             route('forum.topic', [$topic->forum, $topic, $topic->slug]),
@@ -202,7 +197,7 @@ class TopicController extends BaseController {
             \reduced_whitespace(\plain($html)),
             $user?->name ?? $topic->firstPost->user_name,
             $user ? route('profile', ['user_trashed' => $user->id]) : null,
-            $topic->replies,
+            $replies,
             $topic->score,
             $topic->views,
             $topic->created_at,

@@ -173,6 +173,7 @@ export interface Post {
   user_id: number|null;
   user_name?: string;
   editor?: User;
+  deleter_id?: number;
   deleter_name?: string;
   delete_reason?: string;
   created_at: Date;
