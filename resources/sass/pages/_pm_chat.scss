@@ -10,6 +10,7 @@ $pm-chat-right: 96px; // leaves room for the "scroll to top" floater in the corn
 $pm-chat-members-docked-width: 280px; // see $home-members-docked-width
 $pm-chat-muted: (light: style.$neutral-400, dark: style.$neutral-300);
 $pm-chat-border: (light: style.$navy-100, dark: style.$neutral-700);
+$pm-chat-accent: (light: style.$green-700, dark: #7fc99a); // see $home-accent
 
 .pm-chat {
   position:       fixed;
@@ -91,7 +92,7 @@ $pm-chat-border: (light: style.$navy-100, dark: style.$neutral-700);
 
     &:hover {
       @include theme.property(background, style.$navy-025, #202224);
-      @include theme.property(color, style.$green-700, style.$green-200);
+      @include theme.var(color, $pm-chat-accent);
     }
   }
 
@@ -230,7 +231,7 @@ $pm-chat-border: (light: style.$navy-100, dark: style.$neutral-700);
     border:        0;
     border-radius: 50%;
     background:    none;
-    @include theme.property(color, style.$green-700, style.$green-200);
+    @include theme.var(color, $pm-chat-accent);
 
     &:hover:not(:disabled) {
       @include theme.property(background, style.$green-050, style.$green-950);

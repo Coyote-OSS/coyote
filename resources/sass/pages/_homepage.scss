@@ -158,6 +158,10 @@ $home-muted: (light: style.$neutral-400, dark: style.$neutral-300);
 $home-hover: (light: style.$navy-025, dark: #202224);
 $home-divider: (light: style.$navy-100, dark: style.$neutral-700);
 $home-chip: (light: style.$navy-050, dark: style.$neutral-700);
+// In dark mode, the palette's greens (green-200, green-300) are nearly fully saturated and as bright as the text,
+// so accents are toned down to a softer green that still keeps good contrast on the dark tiles (8.9:1 and 7.9:1).
+$home-accent: (light: style.$green-700, dark: #7fc99a);
+$home-accent-strong: (light: style.$green-600, dark: #6fbf8a);
 $home-members-docked-width: 280px;
 
 // Spacing scale
@@ -211,7 +215,7 @@ body:has(.home-members--docked) {
   font-size:   14px;
   font-weight: normal;
   line-height: 20px;
-  @include theme.property(color, style.$green-700, style.$green-200);
+  @include theme.var(color, $home-accent);
 }
 
 // A hoverable row inside a card
@@ -263,7 +267,7 @@ body:has(.home-members--docked) {
   border:          0;
   font-size:       14px;
   font-weight:     normal;
-  @include theme.property(color, style.$green-700, style.$green-200);
+  @include theme.var(color, $home-accent);
 
   &:hover {
     text-decoration: none;
@@ -296,7 +300,7 @@ body:has(.home-members--docked) {
 
     &--answered {
       @include theme.property(background, style.$green-050, style.$green-950);
-      @include theme.property(color, style.$green-700, style.$green-200);
+      @include theme.var(color, $home-accent);
     }
   }
 
@@ -489,7 +493,7 @@ body:has(.home-members--docked) {
     @include muted;
 
     &--topic {
-      @include theme.property(color, style.$green-600, style.$green-300);
+      @include theme.var(color, $home-accent-strong);
     }
   }
 
@@ -567,7 +571,7 @@ body:has(.home-members--docked) {
     &:hover:not(:disabled) {
       text-decoration: none;
       @include theme.var(background, $home-hover);
-      @include theme.property(color, style.$green-700, style.$green-200);
+      @include theme.var(color, $home-accent);
     }
 
     &:disabled {
@@ -581,7 +585,7 @@ body:has(.home-members--docked) {
   }
 
   &__vote--voted {
-    @include theme.property(color, style.$green-600, style.$green-300);
+    @include theme.var(color, $home-accent-strong);
 
     .home-activity__vote-icon {
       display: none;
@@ -629,7 +633,7 @@ body:has(.home-members--docked) {
 
     &:hover {
       @include theme.var(background, $home-hover);
-      @include theme.property(color, style.$green-700, style.$green-200);
+      @include theme.var(color, $home-accent);
     }
   }
 
@@ -737,7 +741,7 @@ body:has(.home-members--docked) {
     border:        0;
     background:    none;
     font-size:     12px;
-    @include theme.property(color, style.$green-700, style.$green-200);
+    @include theme.var(color, $home-accent);
 
     &:hover {
       text-decoration: underline;
@@ -810,7 +814,7 @@ body:has(.home-members--docked) {
     font-weight:   normal;
     line-height:   16px;
     @include theme.property(background, style.$green-050, style.$green-950);
-    @include theme.property(color, style.$green-700, style.$green-200);
+    @include theme.var(color, $home-accent);
   }
 
   // message and follow buttons on the right; shown on hover, except the bell of a followed user
@@ -847,13 +851,13 @@ body:has(.home-members--docked) {
 
     .home-members__item &:hover {
       @include theme.var(background, $home-chip);
-      @include theme.property(color, style.$green-700, style.$green-200);
+      @include theme.var(color, $home-accent);
     }
   }
 
   .home-members__item &__follow--followed {
     opacity: 1;
-    @include theme.property(color, style.$green-600, style.$green-300);
+    @include theme.var(color, $home-accent-strong);
   }
 
   &__followed-icon,
@@ -872,7 +876,7 @@ body:has(.home-members--docked) {
     @include text-truncate();
 
     &--online {
-      @include theme.property(color, style.$green-600, style.$green-300);
+      @include theme.var(color, $home-accent-strong);
     }
   }
 }
