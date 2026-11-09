@@ -20,99 +20,191 @@
       </div>
     </div>
   {% endif %}
+
+  {% set topicsSection %}
+  <section id="home-topics" class="home-topic-list">
+    <h2 class="home-section-title">Co nowego na forum?</h2>
+    <div class="neon-tile neon-rounded">
+      <div id="forum-tabs" class="nav nav-pills neon-tabber home-topic-list__tabs">
+        <span data-bs-toggle="tab" data-bs-target="#home-interesting" title="Zobacz najciekawsze wątki na forum"
+              class="nav-link neon-tabber-tab {{ settings.topicMode == 'interesting' ? 'active' }}">Najciekawsze</span>
+        <span data-bs-toggle="tab" data-bs-target="#home-newest" title="Lista najnowszych wątków na forum"
+              class="nav-link neon-tabber-tab {{ settings.topicMode == 'newest' ? 'active' }}">Nowe wątki</span>
+      </div>
+      <div class="tab-content">
+        <div id="home-interesting" role="tabpanel" class="tab-pane {{ settings.topicMode == 'interesting' ? 'active' }}">
+          {{ home.topicList(interesting, topicLikes, topicParticipants) }}
+        </div>
+        <div id="home-newest" role="tabpanel" class="tab-pane {{ settings.topicMode == 'newest' ? 'active' }}">
+          {{ home.topicList(newest, topicLikes, topicParticipants) }}
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endset %}
+
+  {% set activitySection %}
+  <section id="box-activity" class="home-activity-feed--sidebar">
+    <h2 class="home-section-title">Ostatnia aktywność</h2>
+    <div class="home-activities">
+      {% set activityKinds = {
+        topic:   {label: 'Nowy wątek', icon: 'homepageActivityTopic'},
+        post:    {label: 'Odpowiedź', icon: 'homepageActivityPost'},
+        comment: {label: 'Komentarz', icon: 'homepageActivityPostComment'},
+      } %}
+      {% for activity in activities %}
+        <article class="home-activity neon-tile neon-rounded {{ loop.index > 6 ? 'home-activity--folded' }} {{ activity.blocked ? 'home-activity--blocked' }}">
+          {% if activity.blocked %}
+            <button type="button" class="home-activity__blocked" title="Kliknij, aby pokazać treść">
+              {{ icon('postAuthorBlocked') }}
+              Treść została ukryta, ponieważ autorem jest zablokowany przez Ciebie użytkownik.
+            </button>
+          {% endif %}
+          <header class="home-activity__header">
+            <a href="{{ activity.user.url ?: '#' }}" class="flex-shrink-0">
+              <div class="neon-avatar-border home-activity__avatar">
+                {{ user_avatar(activity.user.photo, activity.user.name) }}
+              </div>
+            </a>
+            <div class="home-activity__who">
+              <div class="home-activity__line">
+                {% if activity.user.url %}
+                  <a href="{{ activity.user.url }}" class="home-activity__user" data-user-id="{{ activity.user_id }}">{{ activity.user.name }}</a>
+                {% else %}
+                  <span class="home-activity__user">{{ activity.user.name }}</span>
+                {% endif %}
+                <span class="home-activity__kind home-activity__kind--{{ activity.kind }}">{{ icon(activityKinds[activity.kind].icon) }} {{ activityKinds[activity.kind].label }}</span>
+                <a href="{{ activity.topic.url }}" class="home-activity__thread" title="{{ activity.topic.title }}">{{ activity.topic.title }}</a>
+              </div>
+              <div class="home-activity__meta">
+                <a href="{{ activity.forum.url }}" class="home-chip">{{ activity.forum.name }}</a>
+                <span title="{{ activity.created_at|format_date(false) }}">{{ activity.created_at|format_date }}</span>
+              </div>
+            </div>
+          </header>
+          <a href="{{ activity.kind == 'topic' ? activity.topic.url : activity.url }}" class="home-activity__content">
+            <span class="home-activity__topic">
+              {% if activity.kind != 'topic' %}<span class="home-activity__topic-prefix">w wątku</span>{% endif %}
+              {{ activity.topic.title }}
+            </span>
+            {% if activity.excerpt %}
+              <span class="home-activity__excerpt">{{ activity.excerpt }}</span>
+            {% endif %}
+          </a>
+          <footer class="home-activity__actions">
+            {% set ownContent = user('id') and user('id') == activity.user_id %}
+            {% if not user('id') %}
+              <a href="{{ route('login') }}" class="home-activity__action" title="Zaloguj się, aby oddać głos">
+                {{ icon('homepageActivityVote') }}
+                <span>{{ activity.score }}</span>
+              </a>
+            {% else %}
+              <button
+                  type="button"
+                  class="home-activity__action home-activity__vote {{ activity.voted ? 'home-activity__vote--voted' }}"
+                  data-vote-type="{{ activity.vote.type }}"
+                  data-vote-id="{{ activity.vote.id }}"
+                  {{ ownContent ? 'disabled' }}
+                  title="{{ ownContent ? 'Nie możesz głosować na swój wpis' : (activity.kind == 'comment' ? 'Doceń komentarz' : 'Doceń post') }}">
+                <span class="home-activity__vote-icon">{{ icon('homepageActivityVote') }}</span>
+                <span class="home-activity__voted-icon">{{ icon('homepageActivityVoted') }}</span>
+                <span class="home-activity__score">{{ activity.score }}</span>
+              </button>
+            {% endif %}
+            {% if activity.replies is not null %}
+              <a href="{{ activity.topic.url }}" class="home-activity__action" title="Odpowiedzi">
+                {{ icon('homepageActivityReply') }}
+                <span>{{ activity.replies }}</span>
+              </a>
+            {% elseif activity.comments is not null %}
+              <a href="{{ activity.url }}" class="home-activity__action" title="Komentarze">
+                {{ icon('homepageActivityComments') }}
+                <span>{{ activity.comments }}</span>
+              </a>
+            {% endif %}
+          </footer>
+        </article>
+      {% endfor %}
+    </div>
+    {% if activities|length > 6 %}
+      <button type="button" id="home-activities-more" class="home-more neon-tile neon-rounded">
+        Pokaż więcej aktywności
+        {{ icon('homepageActivityShowMore') }}
+      </button>
+    {% endif %}
+  </section>
+  {% endset %}
+
+  {% set membersSection %}
+  <section id="home-members" class="home-members neon-tile neon-rounded {{ settings.membersDocked ? 'home-members--docked' }}">
+    <header class="home-members__header">
+      <h2 class="home-card-title">Społeczność</h2>
+      <span class="home-members__count">
+        <span class="members-banner__online-indicator d-inline-block me-1"></span>
+        {{ community.onlineCount }} online
+      </span>
+      <button type="button" class="home-members__dock" id="home-members-dock"
+              title="Odepnij od strony głównej i przypnij do boku ekranu"
+              aria-label="Odepnij od strony głównej i przypnij do boku ekranu">
+        {{ icon('homepageMembersDock') }}
+      </button>
+      <button type="button" class="home-members__dock" id="home-members-undock"
+              title="Przypnij z powrotem do strony głównej"
+              aria-label="Przypnij z powrotem do strony głównej">
+        {{ icon('homepageMembersUndock') }}
+      </button>
+    </header>
+    <ul class="home-members__list" data-online-shown="10" data-recent-shown="5">
+      {% if community.online is not empty or community.guestsCount > 0 %}
+        <li class="home-members__divider">Online</li>
+      {% endif %}
+      {% set onlineShown = 10 %}{# keep in sync with data-online-shown #}
+      {% set recentShown = 5 %}{# keep in sync with data-recent-shown #}
+      {% for member in community.online %}
+        {{ home.member(member, 'online', loop.index > onlineShown) }}
+      {% endfor %}
+      {% if community.online|length > onlineShown %}
+        <li class="home-members__more">
+          <button type="button" class="home-members__more-button" id="home-members-more-online">
+            Pokaż wszystkich online ({{ community.online|length }})
+          </button>
+        </li>
+      {% endif %}
+      {% if community.onlineHidden > 0 %}
+        {# refers to users beyond the full list, so it's revealed together with it #}
+        <li class="home-members__note {{ community.online|length > onlineShown ? 'home-members__extra home-members__extra--online' }}">
+          i {{ declination(community.onlineHidden, ['inna osoba', 'inne osoby', 'innych osób']) }} online
+        </li>
+      {% endif %}
+      {% if community.guestsCount > 0 %}
+        <li class="home-members__guests">
+          <span class="home-members__guests-pill" title="Niezalogowani użytkownicy, którzy są teraz na stronie">
+            <span class="home-members__guests-dot"></span>
+            {{ icon('homepageMembersGuests') }}
+            +{{ declination(community.guestsCount, ['niezalogowany gość', 'niezalogowanych gości', 'niezalogowanych gości']) }}
+          </span>
+        </li>
+      {% endif %}
+      {% if community.recent is not empty %}
+        <li class="home-members__divider">Ostatnio widziani</li>
+        {% for member in community.recent %}
+          {{ home.member(member, 'recent', loop.index > recentShown) }}
+        {% endfor %}
+        {% if community.recent|length > recentShown %}
+          <li class="home-members__more">
+            <button type="button" class="home-members__more-button" id="home-members-more-recent">
+              Pokaż więcej offline
+            </button>
+          </li>
+        {% endif %}
+      {% endif %}
+    </ul>
+  </section>
+  {% endset %}
+
   <div class="row">
     <main class="col-lg-8 home-column">
-      {{ home.topicList('home-interesting', 'Najciekawsze na forum', interesting, topicLikes, topicParticipants) }}
-
-      <section id="box-activity">
-        <h2 class="home-section-title">Ostatnia aktywność</h2>
-        <div class="home-activities">
-          {% set activityKinds = {
-            topic:   {label: 'Nowy wątek', icon: 'homepageActivityTopic'},
-            post:    {label: 'Odpowiedź', icon: 'homepageActivityPost'},
-            comment: {label: 'Komentarz', icon: 'homepageActivityPostComment'},
-          } %}
-          {% for activity in activities %}
-            <article class="home-activity neon-tile neon-rounded {{ loop.index > 6 ? 'home-activity--folded' }} {{ activity.blocked ? 'home-activity--blocked' }}">
-              {% if activity.blocked %}
-                <button type="button" class="home-activity__blocked" title="Kliknij, aby pokazać treść">
-                  {{ icon('postAuthorBlocked') }}
-                  Treść została ukryta, ponieważ autorem jest zablokowany przez Ciebie użytkownik.
-                </button>
-              {% endif %}
-              <header class="home-activity__header">
-                <a href="{{ activity.user.url ?: '#' }}" class="flex-shrink-0">
-                  <div class="neon-avatar-border home-activity__avatar">
-                    {{ user_avatar(activity.user.photo, activity.user.name) }}
-                  </div>
-                </a>
-                <div class="home-activity__who">
-                  <div class="home-activity__line">
-                    {% if activity.user.url %}
-                      <a href="{{ activity.user.url }}" class="home-activity__user" data-user-id="{{ activity.user_id }}">{{ activity.user.name }}</a>
-                    {% else %}
-                      <span class="home-activity__user">{{ activity.user.name }}</span>
-                    {% endif %}
-                    <span class="home-activity__kind home-activity__kind--{{ activity.kind }}">{{ icon(activityKinds[activity.kind].icon) }} {{ activityKinds[activity.kind].label }}</span>
-                    <a href="{{ activity.topic.url }}" class="home-activity__thread" title="{{ activity.topic.title }}">{{ activity.topic.title }}</a>
-                  </div>
-                  <div class="home-activity__meta">
-                    <a href="{{ activity.forum.url }}" class="home-chip">{{ activity.forum.name }}</a>
-                    <span title="{{ activity.created_at|format_date(false) }}">{{ activity.created_at|format_date }}</span>
-                  </div>
-                </div>
-              </header>
-              <a href="{{ activity.kind == 'topic' ? activity.topic.url : activity.url }}" class="home-activity__content">
-                <span class="home-activity__topic">
-                  {% if activity.kind != 'topic' %}<span class="home-activity__topic-prefix">w wątku</span>{% endif %}
-                  {{ activity.topic.title }}
-                </span>
-                {% if activity.excerpt %}
-                  <span class="home-activity__excerpt">{{ activity.excerpt }}</span>
-                {% endif %}
-              </a>
-              <footer class="home-activity__actions">
-                {% set ownContent = user('id') and user('id') == activity.user_id %}
-                {% if not user('id') %}
-                  <a href="{{ route('login') }}" class="home-activity__action" title="Zaloguj się, aby oddać głos">
-                    {{ icon('homepageActivityVote') }}
-                    <span>{{ activity.score }}</span>
-                  </a>
-                {% else %}
-                  <button
-                      type="button"
-                      class="home-activity__action home-activity__vote {{ activity.voted ? 'home-activity__vote--voted' }}"
-                      data-vote-type="{{ activity.vote.type }}"
-                      data-vote-id="{{ activity.vote.id }}"
-                      {{ ownContent ? 'disabled' }}
-                      title="{{ ownContent ? 'Nie możesz głosować na swój wpis' : (activity.kind == 'comment' ? 'Doceń komentarz' : 'Doceń post') }}">
-                    <span class="home-activity__vote-icon">{{ icon('homepageActivityVote') }}</span>
-                    <span class="home-activity__voted-icon">{{ icon('homepageActivityVoted') }}</span>
-                    <span class="home-activity__score">{{ activity.score }}</span>
-                  </button>
-                {% endif %}
-                {% if activity.replies is not null %}
-                  <a href="{{ activity.topic.url }}" class="home-activity__action" title="Odpowiedzi">
-                    {{ icon('homepageActivityReply') }}
-                    <span>{{ activity.replies }}</span>
-                  </a>
-                {% elseif activity.comments is not null %}
-                  <a href="{{ activity.url }}" class="home-activity__action" title="Komentarze">
-                    {{ icon('homepageActivityComments') }}
-                    <span>{{ activity.comments }}</span>
-                  </a>
-                {% endif %}
-              </footer>
-            </article>
-          {% endfor %}
-        </div>
-        {% if activities|length > 6 %}
-          <button type="button" id="home-activities-more" class="home-more neon-tile neon-rounded">
-            Pokaż więcej aktywności
-            {{ icon('homepageActivityShowMore') }}
-          </button>
-        {% endif %}
-      </section>
+      {{ topicsSection }}
 
       <section id="js-microblog">
         <h2 class="home-section-title">Popularne na mikroblogu</h2>
@@ -131,69 +223,8 @@
       <aside class="home-column">
         {{ render_block('homepage_banner_side') }}
 
-        {{ home.topicList('home-newest', 'Nowe wątki', newest, topicLikes, {}, route('forum.all'), 'Wszystkie wątki na forum') }}
-
-        <section id="home-members" class="home-members neon-tile neon-rounded {{ settings.membersDocked ? 'home-members--docked' }}">
-          <header class="home-members__header">
-            <h2 class="home-card-title">Społeczność</h2>
-            <span class="home-members__count">
-              <span class="members-banner__online-indicator d-inline-block me-1"></span>
-              {{ community.onlineCount }} online
-            </span>
-            <button type="button" class="home-members__dock" id="home-members-dock"
-                    title="Odepnij od strony głównej i przypnij do boku ekranu"
-                    aria-label="Odepnij od strony głównej i przypnij do boku ekranu">
-              {{ icon('homepageMembersDock') }}
-            </button>
-            <button type="button" class="home-members__dock" id="home-members-undock"
-                    title="Przypnij z powrotem do strony głównej"
-                    aria-label="Przypnij z powrotem do strony głównej">
-              {{ icon('homepageMembersUndock') }}
-            </button>
-          </header>
-          <ul class="home-members__list" data-online-shown="10" data-recent-shown="5">
-            {% if community.online is not empty or community.guestsCount > 0 %}
-              <li class="home-members__divider">Online</li>
-            {% endif %}
-            {% set onlineShown = 10 %}{# keep in sync with data-online-shown #}
-            {% set recentShown = 5 %}{# keep in sync with data-recent-shown #}
-            {% for member in community.online %}
-              {{ home.member(member, 'online', loop.index > onlineShown) }}
-            {% endfor %}
-            {% if community.online|length > onlineShown %}
-              <li class="home-members__more">
-                <button type="button" class="home-members__more-button" id="home-members-more-online">
-                  Pokaż wszystkich online ({{ community.online|length }})
-                </button>
-              </li>
-            {% endif %}
-            {% if community.onlineHidden > 0 %}
-              <li class="home-members__note">i {{ declination(community.onlineHidden, ['inna osoba', 'inne osoby', 'innych osób']) }} online</li>
-            {% endif %}
-            {% if community.guestsCount > 0 %}
-              <li class="home-members__guests">
-                <span class="home-members__guests-pill" title="Niezalogowani użytkownicy, którzy są teraz na stronie">
-                  <span class="home-members__guests-dot"></span>
-                  {{ icon('homepageMembersGuests') }}
-                  +{{ declination(community.guestsCount, ['niezalogowany gość', 'niezalogowanych gości', 'niezalogowanych gości']) }}
-                </span>
-              </li>
-            {% endif %}
-            {% if community.recent is not empty %}
-              <li class="home-members__divider">Ostatnio widziani</li>
-              {% for member in community.recent %}
-                {{ home.member(member, 'recent', loop.index > recentShown) }}
-              {% endfor %}
-              {% if community.recent|length > recentShown %}
-                <li class="home-members__more">
-                  <button type="button" class="home-members__more-button" id="home-members-more-recent">
-                    Pokaż więcej offline
-                  </button>
-                </li>
-              {% endif %}
-            {% endif %}
-          </ul>
-        </section>
+        {{ activitySection }}
+        {{ membersSection }}
 
         {{ render_block('job_ads') }}
 
@@ -254,10 +285,8 @@
   </script>
 {% endblock %}
 
-{% macro topicList(id, title, topics, likes, participants = {}, moreUrl = null, moreLabel = null) %}
-  <section id="{{ id }}" class="home-topic-list">
-    <h2 class="home-section-title">{{ title }}</h2>
-    <div class="neon-tile neon-rounded home-topics">
+{% macro topicList(topics, likes, participants) %}
+    <div class="home-topics">
       {% for topic in topics %}
         <div class="home-topic">
           <div class="home-topic__replies {{ topic.replies > 0 ? 'home-topic__replies--answered' }}"
@@ -310,16 +339,13 @@
       {% else %}
         <small class="d-block text-muted text-center py-4">Brak wątków do wyświetlenia.</small>
       {% endfor %}
-      {% if moreUrl %}
-        <div class="home-topics__footer">
-          <a href="{{ moreUrl }}" class="home-topics__more">
-            {{ moreLabel }}
-            {{ icon('homepageMore') }}
-          </a>
-        </div>
-      {% endif %}
+      <div class="home-topics__footer">
+        <a href="{{ route('forum.all') }}" class="home-topics__more">
+          Wszystkie wątki na forum
+          {{ icon('homepageMore') }}
+        </a>
+      </div>
     </div>
-  </section>
 {% endmacro %}
 
 {# A user in the community list. Rows are re-sorted in the browser when the panel is pinned/unpinned,

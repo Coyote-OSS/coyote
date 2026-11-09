@@ -67,13 +67,16 @@ class HomeController extends Controller {
         if (Gate::any(['alpha-access', 'beta-access'])) {
             /** @var TopicSummaries $summaries */
             $summaries = app(TopicSummaries::class);
-            $interestingIds = $common['interesting']->pluck('id')->all();
+            $topicIds = [
+                ...$common['interesting']->pluck('id')->all(),
+                ...$common['newest']->pluck('id')->all(),
+            ];
             return $this->view('homeModern', [
                 ...$common,
-                'topicLikes'        => $summaries->likes([...$interestingIds, ...$common['newest']->pluck('id')->all()]),
-                'topicParticipants' => $summaries->participants($interestingIds, limit:5),
-                'activities' => $this->activityFeed(),
-                'community'  => $this->community($viewers),
+                'topicLikes'        => $summaries->likes($topicIds),
+                'topicParticipants' => $summaries->participants($topicIds, limit:5),
+                'activities'        => $this->activityFeed(),
+                'community'         => $this->community($viewers),
             ]);
         }
         return $this->view('home', [
