@@ -3,7 +3,7 @@ import PerfectScrollbar from 'perfect-scrollbar';
 import {createApp} from 'vue';
 import {mapGetters} from "vuex";
 
-import VuePmChat from '../components/pm/chat.vue';
+import VuePmChatDock from '../components/pm/chat-dock.vue';
 import VueMicroblog from "../components/microblog/microblog.vue";
 import store from "../store/index.ts";
 import {createVueAppNotifications} from '../vue';
@@ -154,15 +154,15 @@ function initMembersShowMore() {
 }
 
 /**
- * On desktop, private messages from the community list open in a chat box at the bottom
- * of the page; on mobile (and with modifier keys) the links go to the full conversation.
+ * On desktop, private messages from the community list open in chat boxes at the bottom
+ * of the page, one per person; on mobile (and with modifier keys) the links go to the full conversation.
  */
 function initPmChat() {
   const element = document.getElementById('js-pm-chat');
   if (!element || !window.matchMedia('(min-width: 768px)').matches) {
     return;
   }
-  const app = createApp(VuePmChat);
+  const app = createApp(VuePmChatDock);
   app.use(store);
   app.provide('icons', window.icons);
   const chat = app.mount(element);

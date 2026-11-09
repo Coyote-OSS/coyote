@@ -3,31 +3,41 @@
 @use "../../feature/theme/theme";
 @use "../../feature/lookAndFeel/style-guide" as style;
 
-// Private message chat box, pinned to the bottom of the modern homepage (desktop only)
+// Private message chat boxes, side by side at the bottom of the modern homepage (desktop only)
 
-$pm-chat-width: 320px;
+$pm-chat-width: 320px; // see CHAT_WIDTH in chat-dock.vue
+$pm-chat-gap: 12px; // see CHAT_GAP in chat-dock.vue
 $pm-chat-right: 96px; // leaves room for the "scroll to top" floater in the corner
 $pm-chat-members-docked-width: 280px; // see $home-members-docked-width
 $pm-chat-muted: (light: style.$neutral-400, dark: style.$neutral-300);
 $pm-chat-border: (light: style.$navy-100, dark: style.$neutral-700);
 $pm-chat-accent: (light: style.$green-700, dark: #7fc99a); // see $home-accent
 
-.pm-chat {
+.pm-chat-dock {
   position:       fixed;
   z-index:        20;
   right:          $pm-chat-right;
   bottom:         0;
+  display:        flex;
+  align-items:    flex-end;
+  gap:            $pm-chat-gap;
+  pointer-events: none; // the empty space above minimized chats doesn't cover the page
+
+  @include media-breakpoint-down(md) {
+    display: none;
+  }
+}
+
+.pm-chat {
+  flex-shrink:    0;
   width:          $pm-chat-width;
   height:         440px;
   max-height:     calc(100vh - 90px);
   display:        flex;
   flex-direction: column;
   font-size:      13px;
+  pointer-events: auto;
   @include theme.property(box-shadow, 0 -2px 16px rgba(19, 26, 32, .12), 0 -2px 16px rgba(0, 0, 0, .5));
-
-  @include media-breakpoint-down(md) {
-    display: none;
-  }
 
   &--minimized {
     height: auto;
@@ -250,7 +260,7 @@ $pm-chat-accent: (light: style.$green-700, dark: #7fc99a); // see $home-accent
 }
 
 // next to the community panel docked to the side of the viewport
-body:has(.home-members--docked) .pm-chat {
+body:has(.home-members--docked) .pm-chat-dock {
   @include media-breakpoint-up(xl) {
     right: $pm-chat-members-docked-width + 24px;
   }

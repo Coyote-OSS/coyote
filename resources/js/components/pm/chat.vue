@@ -1,16 +1,16 @@
 <template>
-  <div v-if="recipient" class="pm-chat neon-tile neon-rounded-top" :class="{'pm-chat--minimized': minimized}">
-    <header class="pm-chat__header" @click="toggleMinimized">
+  <div class="pm-chat neon-tile neon-rounded-top" :class="{'pm-chat--minimized': minimized}">
+    <header class="pm-chat__header" @click="$emit('toggle')">
       <vue-avatar class="pm-chat__avatar" :photo="recipient.photo" :name="recipient.name" :initials="recipient.initials"/>
       <span class="pm-chat__name">{{ recipient.name }}</span>
       <span v-if="minimized && unreadCount" class="pm-chat__unread">{{ unreadCount }}</span>
       <a :href="fullConversationUrl" class="pm-chat__button" title="Otwórz pełną rozmowę" @click.stop>
         <vue-icon name="homepageChatFullConversation"/>
       </a>
-      <button type="button" class="pm-chat__button" :title="minimized ? 'Rozwiń' : 'Zwiń'" @click.stop="toggleMinimized">
+      <button type="button" class="pm-chat__button" :title="minimized ? 'Rozwiń' : 'Zwiń'" @click.stop="$emit('toggle')">
         <vue-icon name="homepageChatMinimize"/>
       </button>
-      <button type="button" class="pm-chat__button" title="Zamknij" @click.stop="close">
+      <button type="button" class="pm-chat__button" title="Zamknij" @click.stop="$emit('close')">
         <vue-icon name="homepageChatClose"/>
       </button>
     </header>
@@ -66,6 +66,7 @@
 
 <script lang="ts">
 import axios from 'axios';
+import {PropType} from 'vue';
 
 import {default as ws} from '../../libs/realtime';
 import {loadDraft, removeDraft, saveDraft} from '../../plugins/autosave';
@@ -81,20 +82,14 @@ export interface ChatRecipient {
   initials: string;
 }
 
-const STATE_KEY = 'pm-chat';
 const PAGE_SIZE = 10;
+
+export function privateChannel(recipientId: number): string {
+  return 'private:' + [store.state.user.user.id, recipientId].sort((a, b) => a - b).join('');
+}
 
 function draftKey(recipientId: number): string {
   return `pm-chat:draft:${recipientId}`;
-}
-
-function loadState(): { recipient: ChatRecipient, minimized: boolean } | null {
-  try {
-    const state = JSON.parse(localStorage.getItem(STATE_KEY) as string);
-    return state?.recipient ? state : null;
-  } catch {
-    return null;
-  }
 }
 
 export default {
@@ -103,10 +98,13 @@ export default {
     'vue-avatar': VueAvatar,
     'vue-icon': VueIcon,
   },
+  props: {
+    recipient: {type: Object as PropType<ChatRecipient>, required: true},
+    minimized: {type: Boolean, default: false},
+  },
+  emits: ['toggle', 'close'],
   data() {
     return {
-      recipient: null as ChatRecipient | null,
-      minimized: false,
       messages: [] as any[],
       hasMore: false,
       isLoading: false,
@@ -116,88 +114,35 @@ export default {
       isSending: false,
       isTyping: false,
       typingTimer: null as number | null,
-      text: '',
+      text: loadDraft(draftKey(this.recipient.id)),
       error: null as string | null,
-      typingChannels: new Set<string>(),
     };
   },
   mounted() {
-    this.listenForMessages();
-    const state = loadState();
-    if (state) {
-      this.show(state.recipient, state.minimized);
-    }
+    this.loadHistory();
+  },
+  unmounted() {
+    clearTimeout(this.typingTimer);
   },
   watch: {
     text(value: string) {
-      if (this.recipient) {
-        value ? saveDraft(draftKey(this.recipient.id), value) : removeDraft(draftKey(this.recipient.id));
-      }
+      value ? saveDraft(draftKey(this.recipient.id), value) : removeDraft(draftKey(this.recipient.id));
     },
   },
   methods: {
-    open(recipient: ChatRecipient) {
-      if (this.recipient?.id === recipient.id) {
-        this.minimized = false;
-        this.saveState();
-        this.afterExpand();
-        return;
-      }
-      this.show(recipient, false);
-    },
-
-    show(recipient: ChatRecipient, minimized: boolean) {
-      this.recipient = recipient;
-      this.minimized = minimized;
-      this.messages = [];
-      this.hasMore = false;
-      this.error = null;
-      this.isTyping = false;
-      this.text = loadDraft(draftKey(recipient.id));
-      this.saveState();
-      this.listenForTyping();
-      this.loadHistory();
-    },
-
     loadHistory() {
-      const recipientId = this.recipient.id;
       this.isLoading = true;
       this.loadError = false;
       this.loadMoreError = false;
       this.fetch(0)
         .then(messages => {
-          if (this.recipient?.id !== recipientId) {
-            return;
-          }
           // messages received live while the history was loading are kept
           const loaded = new Set(messages.map(message => message.id));
           this.messages = [...messages, ...this.messages.filter(message => !loaded.has(message.id))];
           this.afterExpand();
         })
-        .catch(() => {
-          if (this.recipient?.id === recipientId) {
-            this.loadError = true;
-          }
-        })
-        .finally(() => {
-          if (this.recipient?.id === recipientId) {
-            this.isLoading = false;
-          }
-        });
-    },
-
-    close() {
-      this.recipient = null;
-      this.messages = [];
-      localStorage.removeItem(STATE_KEY);
-    },
-
-    toggleMinimized() {
-      this.minimized = !this.minimized;
-      this.saveState();
-      if (!this.minimized) {
-        this.afterExpand();
-      }
+        .catch(() => this.loadError = true)
+        .finally(() => this.isLoading = false);
     },
 
     afterExpand() {
@@ -209,10 +154,6 @@ export default {
         this.$refs.input?.focus();
       });
       this.markAsRead();
-    },
-
-    saveState() {
-      localStorage.setItem(STATE_KEY, JSON.stringify({recipient: this.recipient, minimized: this.minimized}));
     },
 
     fetch(offset: number): Promise<any[]> {
@@ -240,21 +181,13 @@ export default {
       this.isLoadingMore = true;
       this.loadMoreError = false;
       const previousHeight = container.scrollHeight;
-      const recipientId = this.recipient.id;
       this.fetch(this.messages.length)
         .then(messages => {
-          if (this.recipient?.id !== recipientId) {
-            return;
-          }
           this.messages = [...messages, ...this.messages];
           // keep the message the user was looking at in place
           this.$nextTick(() => container.scrollTop = container.scrollHeight - previousHeight);
         })
-        .catch(() => {
-          if (this.recipient?.id === recipientId) {
-            this.loadMoreError = true;
-          }
-        })
+        .catch(() => this.loadMoreError = true)
         .finally(() => this.isLoadingMore = false);
     },
 
@@ -267,11 +200,9 @@ export default {
       axios.post('/User/Pm/Submit', {recipient: this.recipient.name, text: this.text, assets: []})
         .then(response => {
           this.error = null;
-          if (this.recipient?.id === recipientId) {
-            this.messages.push(response.data);
-            this.text = '';
-            this.$nextTick(() => this.scrollToBottom());
-          }
+          this.messages.push(response.data);
+          this.text = '';
+          this.$nextTick(() => this.scrollToBottom());
           removeDraft(draftKey(recipientId));
         })
         .catch(error => {
@@ -295,52 +226,33 @@ export default {
         .then(response => store.commit('inbox/SET_COUNT', response.data.count));
     },
 
-    listenForMessages() {
-      const channel = ws.subscribe(`user:${store.state.user.user.id}`);
-
-      channel.on('PmCreated', ({data}) => {
-        if (data.user.id !== this.recipient?.id || this.messages.some(message => message.id === data.id)) {
-          return;
-        }
-        this.messages.push(data);
-        this.isTyping = false;
-        if (!this.minimized) {
-          this.$nextTick(() => this.scrollToBottom());
-          if (document.visibilityState === 'visible') {
-            this.markAsRead();
-          }
-        }
-      });
-
-      // a message was read by the recipient
-      channel.on('PmRead', data => {
-        const message = this.messages.find(item => item.text_id === data.text_id);
-        if (message) {
-          message.read_at = new Date().toISOString();
-        }
-      });
-
-      document.addEventListener('visibilitychange', () => {
+    // called by the dock, which listens for websocket events of all the open chats
+    receiveMessage(message) {
+      if (this.messages.some(item => item.id === message.id)) {
+        return;
+      }
+      this.messages.push(message);
+      this.isTyping = false;
+      if (!this.minimized) {
+        this.$nextTick(() => this.scrollToBottom());
         if (document.visibilityState === 'visible') {
           this.markAsRead();
         }
-      });
+      }
     },
 
-    listenForTyping() {
-      const channelName = this.privateChannel;
-      if (this.typingChannels.has(channelName)) {
-        return;
+    // a message was read by the recipient
+    messageRead(textId: number) {
+      const message = this.messages.find(item => item.text_id === textId);
+      if (message) {
+        message.read_at = new Date().toISOString();
       }
-      this.typingChannels.add(channelName);
-      ws.subscribe(channelName).on('pm-typing', data => {
-        if (data.recipient.id !== this.recipient?.id) {
-          return;
-        }
-        this.isTyping = true;
-        clearTimeout(this.typingTimer);
-        this.typingTimer = setTimeout(() => this.isTyping = false, 1000);
-      });
+    },
+
+    recipientTyping() {
+      this.isTyping = true;
+      clearTimeout(this.typingTimer);
+      this.typingTimer = setTimeout(() => this.isTyping = false, 1000);
     },
 
     typing() {
@@ -381,7 +293,7 @@ export default {
     },
 
     privateChannel(): string {
-      return 'private:' + [store.state.user.user.id, this.recipient.id].sort((a, b) => a - b).join('');
+      return privateChannel(this.recipient.id);
     },
   },
 };
