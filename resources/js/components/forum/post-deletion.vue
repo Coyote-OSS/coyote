@@ -7,18 +7,18 @@
     napisany
     <vue-timeago :datetime="post.created_at"/>,
     <template v-if="deletedByAuthor">
-       został usunięty przez autora
-      <vue-timeago :datetime="post.deleted_at"/>
+       został <span class="post-deletion-word">usunięty</span> przez autora
+      <vue-timeago :datetime="post.deleted_at"/>.
     </template>
     <template v-else>
-       został usunięty
+      został <span class="post-deletion-word">usunięty</span>
+      {{ ' ' }}
       <vue-timeago :datetime="post.deleted_at"/>
       <template v-if="post.deleter_name">
         {{ ' przez ' }}
         <strong>{{ post.deleter_name }}</strong>
       </template>
-    </template>
-    {{ '. ' }}
+    </template>.
     <template v-if="post.delete_reason">
       Powód: {{ post.delete_reason }}.
     </template>

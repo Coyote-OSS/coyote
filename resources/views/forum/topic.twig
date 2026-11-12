@@ -53,7 +53,7 @@
         <div class="card card-post card-post-obscured">
           <div class="card-body text-muted small">
             {{ icon('postDeleted') }}
-            Post użytkownika {{ post.user ? post.user.name : post.user_name }} został usunięty.
+            Post użytkownika {{ post.user ? post.user.name : post.user_name }} został <span class="post-deletion-word">usunięty</span>.
           </div>
         </div>
         {% else %}

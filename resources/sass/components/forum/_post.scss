@@ -1,5 +1,6 @@
 @charset "UTF-8";
 @use "../../../feature/theme/theme" as theme;
+@use "../../../feature/lookAndFeel/style-guide" as style;
 @import "../../../feature/theme/theme";
 @import "../../helpers/mixins";
 @import "../../helpers/variables";
@@ -58,6 +59,12 @@
 
   &.card-post-obscured {
     opacity: .6;
+  }
+
+  // "usunięty" in the deleted post notice: stands out of the muted, dimmed text
+  .post-deletion-word {
+    font-weight: 600;
+    @include theme.property(color, style.$red-600, style.$red-400);
   }
 
   &.card-post-folded {
