@@ -350,9 +350,9 @@ body:has(.home-members--docked) {
   // avatars of the users who posted in the topic, most active first
   &__participants {
     display:         flex;
-    flex:            0 0 #{6px + 6 * 22px}; // fixed width: room for 5 avatars and "+N", so the dates stay aligned
+    flex:            0 0 #{28px + 5 * 22px}; // fixed width: room for 5 avatars and "+N", so the dates stay aligned
     align-items:     center;
-    justify-content: flex-end;
+    justify-content: flex-start;
     isolation:       isolate; // the avatars' z-index (stacking order) mustn't reach above the navigation bar
   }
 
@@ -374,6 +374,10 @@ body:has(.home-members--docked) {
     img, svg, .default-avatar, .user-avatar {
       width:  28px;
       height: 28px;
+    }
+
+    &:first-child {
+      margin-left: 0;
     }
 
     &:hover {
@@ -505,11 +509,12 @@ body:has(.home-members--docked) {
     }
   }
 
-  // thread of the activity, a separate item next to the activity type; on mobile it stays above the excerpt
+  // thread of the activity, next to the activity type
   &__thread {
-    min-width: 0;
-    font-size: 12px;
-    color:     inherit;
+    min-width:   0;
+    font-size:   12px;
+    font-weight: bold;
+    color:       inherit;
     @include text-truncate();
 
     &::before {
@@ -517,10 +522,6 @@ body:has(.home-members--docked) {
       display: inline-block; // keeps the link's hover underline off the separator
       margin:  0 6px;
       @include muted;
-    }
-
-    @include media-breakpoint-down(md) {
-      display: none;
     }
   }
 
@@ -545,38 +546,14 @@ body:has(.home-members--docked) {
 
     &:hover {
       text-decoration: none;
-
-      .home-activity__topic {
-        text-decoration: underline;
-      }
     }
-  }
-
-  &__topic {
-    display:     block;
-    font-size:   15px;
-    font-weight: 600;
-    @include text-truncate();
-
-    @include media-breakpoint-up(md) {
-      display: none;
-    }
-  }
-
-  &__topic-prefix {
-    font-weight: normal;
-    @include muted;
   }
 
   &__excerpt {
-    display:            -webkit-box;
-    margin-top:         4px;
-    font-size:          14px;
-    line-height:        1.5;
-    overflow:           hidden;
-    overflow-wrap:      anywhere;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    display:     block;
+    font-size:   14px;
+    line-height: 1.5;
+    @include text-truncate();
   }
 
   &__actions {
@@ -626,8 +603,7 @@ body:has(.home-members--docked) {
   }
 }
 
-// Activity feed in the sidebar: smaller, and laid out as on mobile,
-// with the thread above the excerpt instead of next to the activity type
+// Activity feed in the sidebar: smaller
 .home-activity-feed--sidebar {
   .home-activity {
     padding: 8px 8px 2px;
@@ -641,22 +617,12 @@ body:has(.home-members--docked) {
       height: 32px;
     }
 
-    &__thread {
-      display: none;
-    }
-
     &__content {
       margin-top: 8px;
     }
 
-    &__topic {
-      display:   block;
-      font-size: 14px;
-    }
-
     &__excerpt {
-      font-size:          13px;
-      -webkit-line-clamp: 2;
+      font-size: 13px;
     }
 
     &__actions {
@@ -965,10 +931,6 @@ body:has(.home-members--docked) {
     padding-right: 8px;
     white-space:   nowrap;
   }
-}
-
-.home-topic-list__tabs {
-  padding-top: $home-pad;
 }
 
 .home-reputation {

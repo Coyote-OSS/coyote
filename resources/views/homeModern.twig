@@ -49,7 +49,7 @@
     <div class="home-activities">
       {% set activityKinds = {
         topic:   {label: 'Nowy wątek', icon: 'homepageActivityTopic'},
-        post:    {label: 'Odpowiedź', icon: 'homepageActivityPost'},
+        post:    {label: 'Post', icon: 'homepageActivityPost'},
         comment: {label: 'Komentarz', icon: 'homepageActivityPostComment'},
       } %}
       {% for activity in activities %}
@@ -83,10 +83,6 @@
             </div>
           </header>
           <a href="{{ activity.kind == 'topic' ? activity.topic.url : activity.url }}" class="home-activity__content">
-            <span class="home-activity__topic">
-              {% if activity.kind != 'topic' %}<span class="home-activity__topic-prefix">w wątku</span>{% endif %}
-              {{ activity.topic.title }}
-            </span>
             {% if activity.excerpt %}
               <span class="home-activity__excerpt">{{ activity.excerpt }}</span>
             {% endif %}
@@ -328,7 +324,7 @@
                 </a>
               {% endfor %}
               {% if participants[topic.id].more > 0 %}
-                <span class="home-topic__participant home-topic__participant--more" style="z-index:2"
+                <span class="home-topic__participant home-topic__participant--more" style="z-index:0"
                       title="i {{ declination(participants[topic.id].more, ['inna osoba', 'inne osoby', 'innych osób']) }}">
                   +{{ participants[topic.id].more }}
                 </span>
