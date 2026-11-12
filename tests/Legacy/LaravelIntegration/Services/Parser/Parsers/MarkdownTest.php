@@ -196,6 +196,13 @@ class MarkdownTest extends TestCase
         $this->assertStringContainsString('https://youtube.com/embed/vd0zDG4vwOw?start=1107', $this->markdown->parse('https://www.youtube.com/watch?v=vd0zDG4vwOw#t=18m27s'));
     }
 
+    public function testYoutubeShorts()
+    {
+        $this->assertStringContainsString('src="https://youtube.com/embed/1b7mTjBcEyM"', $this->markdown->parse('https://www.youtube.com/shorts/1b7mTjBcEyM'));
+        $this->assertStringContainsString('src="https://youtube.com/embed/1b7mTjBcEyM"', $this->markdown->parse('https://youtube.com/shorts/1b7mTjBcEyM?feature=share'));
+        $this->assertStringNotContainsString('iframe', $this->markdown->parse('https://www.youtube.com/shorts/'));
+    }
+
     public function testParseInternalLinks()
     {
         $title = '"Kompetentność" uczących się programowania';

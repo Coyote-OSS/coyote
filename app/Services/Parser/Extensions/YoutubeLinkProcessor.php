@@ -30,9 +30,11 @@ class YoutubeLinkProcessor
 
             $path = trim($components['path'] ?? '', '/');
 
-            $iframe = $path === 'watch'
-                ? $this->makeIframeFromFullPath($components)
-                : $this->makeIframeFromShortPath($components);
+            $iframe = match (explode('/', $path)[0]) {
+                'watch'  => $this->makeIframeFromFullPath($components),
+                'shorts' => $this->makeIframeFromShortsPath($components),
+                default  => $this->makeIframeFromShortPath($components),
+            };
 
             if ($iframe) {
                 $link->replaceWith($iframe);
@@ -60,6 +62,20 @@ class YoutubeLinkProcessor
         parse_str($components['fragment'] ?? '', $hash);
 
         return $this->makeIframe($query['v'], $this->timeToSeconds($hash['t'] ?? null));
+    }
+
+    /**
+     * YouTube Shorts: youtube.com/shorts/{id}
+     */
+    private function makeIframeFromShortsPath(array $components): ?Iframe
+    {
+        $segments = explode('/', trim($components['path'], '/'));
+
+        if (empty($segments[1])) {
+            return null;
+        }
+
+        return $this->makeIframe($segments[1]);
     }
 
     private function makeIframeFromShortPath(array $components): ?Iframe
