@@ -36,9 +36,7 @@ class AssetsController extends Controller {
                 return response("No images to save.", 404);
             }
 
-            $extension = pathinfo(parse_url($object->images[0]->url, PHP_URL_PATH), PATHINFO_EXTENSION);
-
-            $filename = $this->humanName($extension);
+            $filename = $this->humanName(parse_url($object->images[0]->url, PHP_URL_PATH));
             $tmpPath = sys_get_temp_dir() . '/' . $filename;
 
             $db->beginTransaction();
