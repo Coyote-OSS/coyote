@@ -77,6 +77,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('topics:purge')->everyFifteenMinutes();
 //        $schedule->command('notifications:purge')->dailyAt('02:00:00');
         $schedule->command('tags:index')->everyFiveMinutes();
+        $schedule->command('visits:rollup')->dailyAt('01:00:00')->withoutOverlapping();
     }
 
     /**

@@ -22,33 +22,29 @@ readonly class CohortService {
      */
     public function retentionGrid(int $cohortHorizon, array $activeByMonths): array {
         $retainedCount = [];
+        if (empty($activeByMonths)) {
+            return [];
+        }
+        $lastDate = \max(\array_keys($activeByMonths));
         foreach ($this->groupCohorts($activeByMonths) as $cohortDate => $cohortUsers) {
             foreach (range(0, $cohortHorizon - 1) as $ageIndex) {
-                $targetDate = $this->cohortTargetDate(
-                    \array_keys($activeByMonths),
-                    $cohortDate,
-                    $ageIndex);
-                if ($targetDate === null) {
+                $targetDate = $this->cohortTargetDate($cohortDate, $ageIndex);
+                if ($targetDate > $lastDate) {
                     $retainedCount[$cohortDate][$ageIndex] = null;
                 } else {
                     $retainedCount[$cohortDate][$ageIndex] = \array_values(\array_intersect(
                         $cohortUsers,
-                        $activeByMonths[$targetDate]));
+                        $activeByMonths[$targetDate] ?? []));
                 }
             }
         }
         return $retainedCount;
     }
 
-    /**
-     * @param string[] $dates
-     */
-    private function cohortTargetDate(array $dates, string $originDate, int $offset): ?string {
-        $dateIndex = \array_search($originDate, $dates);
-        if ($dateIndex === false) {
-            throw new \Exception();
-        }
-        return $dates[$dateIndex + $offset] ?? null;
+    private function cohortTargetDate(string $originDate, int $offset): string {
+        return new \DateTimeImmutable($originDate)
+            ->modify("+$offset months")
+            ->format('Y-m-d');
     }
 
     /**

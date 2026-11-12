@@ -36,7 +36,8 @@ class DashboardController extends BaseController {
                 'downloadDate' => date('Y-m-d'),
             ],
             'cohortByView'    => [
-                'downloadUrl'  => route('adm.cohort.download', ['by' => 'view']),
+                'server'       => route('adm.cohort.download', ['by' => 'view-method-server']),
+                'client'       => route('adm.cohort.download', ['by' => 'view-method-client']),
                 'downloadDate' => date('Y-m-d'),
             ],
         ]);

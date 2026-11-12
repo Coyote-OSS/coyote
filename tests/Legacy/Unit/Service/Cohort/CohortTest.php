@@ -49,28 +49,50 @@ class CohortTest extends TestCase {
     #[Test]
     public function calculateRetainedUsersForEachCohort_inEachAgeOfHorizon(): void {
         $grid = $this->service->retentionGrid(3, [
-            'd1' => ['u1', 'u2'],
-            'd2' => ['u2', 'u3'],
-            'd3' => ['u1', 'u3', 'u4'],
+            '2000-01-01' => ['u1', 'u2'],
+            '2000-02-01' => ['u2', 'u3'],
+            '2000-03-01' => ['u1', 'u3', 'u4'],
         ]);
         $expectedGrid = [
-            'd1' => [
+            '2000-01-01' => [
                 ['u1', 'u2'],
                 ['u2'],
                 ['u1'],
             ],
-            'd2' => [
+            '2000-02-01' => [
                 ['u3'],
                 ['u3'],
                 null,
             ],
-            'd3' => [
+            '2000-03-01' => [
                 ['u4'],
                 null,
                 null,
             ],
         ];
         $this->assertSame($expectedGrid, $grid);
+    }
+
+    #[Test]
+    public function monthWithoutActivity_countsAsNoRetainedUsers_withoutShiftingLaterMonths(): void {
+        $grid = $this->service->retentionGrid(4, [
+            '2000-01-01' => ['u1', 'u2'],
+            '2000-03-01' => ['u1'],
+            '2000-04-01' => ['u2'],
+        ]);
+        $this->assertSame([
+            '2000-01-01' => [
+                ['u1', 'u2'],
+                [],
+                ['u1'],
+                ['u2'],
+            ],
+        ], $grid);
+    }
+
+    #[Test]
+    public function noActivity_emptyGrid(): void {
+        $this->assertSame([], $this->service->retentionGrid(3, []));
     }
 
     #[Test]

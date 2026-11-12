@@ -68,6 +68,7 @@ class PurgeViewsCommand extends Command {
 
             /** @var \Coyote\Page $page */
             $page = $this->page->findByPath('/' . $path);
+            $this->saveContentVisit($hits, $page?->content_type);
 
             $this->commit($page, $hits);
         }
@@ -118,5 +119,21 @@ class PurgeViewsCommand extends Command {
             ])
             ->toArray();
         $this->db->table('url_visits')->insert($batchInsert);
+    }
+
+    private function saveContentVisit(Support\Collection $hits, ?string $contentType): void {
+        $batchInsert = $hits
+            ->filter(fn(array $hit): bool => $hit['user_id'] !== null || $hit['guest_id'] !== null)
+            ->map(fn(array $hit): array => [
+                'user_id'      => $hit['user_id'],
+                'guest_id'     => $hit['guest_id'],
+                'content_type' => $contentType,
+                'created_at'   => new Carbon($hit['timestamp']),
+            ])
+            ->values()
+            ->toArray();
+        if ($batchInsert) {
+            $this->db->table('content_visits')->insert($batchInsert);
+        }
     }
 }

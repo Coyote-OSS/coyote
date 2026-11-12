@@ -37,11 +37,32 @@
           <div class="d-flex justify-content-between align-items-center">
             <span>
               {{ icon('adminTickMark') }}
-              <span>Dane kohortowe z: <code>{{ cohortByView.downloadDate }}</code> (na podstawie wyświetleń podstron)</span>
+              <span>
+                Dane kohortowe z: <code>{{ cohortByView.downloadDate }}</code>
+                (na podstawie wyświetleń podstron) - metoda serwera
+              </span>
             </span>
-            <a href="{{ cohortByView.downloadUrl }}" class="btn btn-sm btn-secondary" target="_blank">
+            <a href="{{ cohortByView.server }}" class="btn btn-sm btn-secondary" target="_blank"
+               title="Miesiące, w których użytkownik zostawił ślad (logowanie, post, głos, przeczytane powiadomienie lub wątek, ...)">
               Pobierz
             </a>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>
+              {{ icon('adminTickMark') }}
+              <span>
+                Dane kohortowe z: <code>{{ cohortByView.downloadDate }}</code>
+                (na podstawie wyświetleń podstron) - metoda klienta
+              </span>
+            </span>
+            <a href="{{ cohortByView.client }}" class="btn btn-sm btn-secondary" target="_blank"
+               title="Każdy miesiąc od rejestracji do ostatniej wizyty użytkownika">
+              Pobierz
+            </a>
+
           </div>
         </li>
       </ul>
