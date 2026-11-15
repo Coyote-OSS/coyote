@@ -85,4 +85,17 @@ class TopicResourceTest extends TestCase
         $this->assertArrayNotHasKey('firstPost', $result);
         $this->assertArrayNotHasKey('lastPost', $result);
     }
+
+    public function testRepliesIncludeDeletedPosts()
+    {
+        /** @var Topic $topic */
+        $topic = factory(Topic::class)->state('id')->make(['replies' => 10, 'replies_real' => 15]);
+
+        TopicResource::withoutWrapping();
+
+        $tracker = new Tracker($topic, $this->guest);
+        $result = (new TopicResource($tracker))->toResponse(request())->getData(true);
+
+        $this->assertSame(15, $result['replies']);
+    }
 }

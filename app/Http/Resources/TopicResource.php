@@ -47,7 +47,7 @@ class TopicResource extends JsonResource {
                 'last_post_created_at'      => $this->last_post_created_at->toIso8601String(),
                 'url'                       => url(UrlBuilder::topic($this->resource->getModel())),
                 'is_read'                   => $this->isRead(),
-                'replies'                   => $this->replies($request),
+                'replies'                   => $this->replies_real,
                 'forum'                     => [
                     'id'   => $this->forum->id,
                     'name' => $this->forum->name,
@@ -72,13 +72,6 @@ class TopicResource extends JsonResource {
 
     public function setSelectedPostId(int $postId): void {
         $this->selectedPostId = $postId;
-    }
-
-    private function replies(Request $request): int {
-        if ($request->user() && $request->user()->can('delete', $this->forum)) {
-            return $this->replies_real;
-        }
-        return $this->replies;
     }
 
     private function isSubscribed(Request $request): bool {
