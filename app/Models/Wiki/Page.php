@@ -112,7 +112,7 @@ class Page extends Model
     /**
      * @param \Coyote\Wiki\Path $parent
      * @param string $slug
-     * @return $this
+     * @return Page
      */
     public function createPath($parent, $slug)
     {

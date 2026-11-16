@@ -33,6 +33,8 @@ class CommentController extends Controller
         if (!$comment->exists) {
             $comment->user_id = $this->userId;
             $comment->ip = $form->getRequest()->ip();
+        } else {
+            $this->authorize('update', $comment);
         }
 
         $this->transaction(function () use ($wiki, $dispatcher, $comment) {
