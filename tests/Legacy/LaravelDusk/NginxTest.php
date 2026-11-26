@@ -65,6 +65,16 @@ class NginxTest extends TestCase
         $this->assertStringStartsNotWith('/Forum/css/stylesEager-', $stylesheetHref);
     }
 
+    #[Test]
+    public function redirectProviderHostname(): void
+    {
+        $response = Http::withOptions(['allow_redirects' => false])
+            ->withHeaders(['Host' => 'static.175.128.202.115.clients.your-server.de'])
+            ->get('http://nginx/Forum?page=2');
+        $this->assertSame(301, $response->status());
+        $this->assertSame('https://4programmers.net/Forum?page=2', $response->header('Location'));
+    }
+
     private function stylesheetHref(Response $response): string
     {
         return $this->textNode($response->body(), '/html/head/link[@rel="stylesheet"]/@href');
