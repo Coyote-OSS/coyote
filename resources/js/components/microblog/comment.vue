@@ -20,7 +20,7 @@
       <div v-if="!comment.is_editing" class="w-100">
         <vue-username :user="comment.user"/>
         <vue-flag v-for="flag in flags" :key="flag.id" :flag="flag"/>
-        <div class="comment-text neon-contains-a-color-link" v-html="comment.html"/>
+        <div ref="comment-text" class="comment-text neon-contains-a-color-link" v-html="comment.html" @click="openContentImage"/>
         <ul class="d-none d-sm-block list-inline list-inline-bullet-sm microblog-comment-list small m-0">
           <li class="list-inline-item">
             <a :href="comment.url" class="text-muted cursor-pointer">
@@ -106,6 +106,7 @@
         </div>
       </div>
     </div>
+    <vue-gallery :images="contentImages" :index="contentImageIndex" @close="contentImageIndex = null"/>
   </div>
 </template>
 
@@ -123,6 +124,7 @@ import {MicroblogMixin} from "../mixins/microblog";
 import mixins from '../mixins/user.js';
 import VueUserName from '../user-name.vue';
 import VueCommentForm from "./comment-form.vue";
+import VueGallery, {contentGallery} from "./gallery.vue";
 
 export default {
   name: 'comment',
@@ -135,6 +137,7 @@ export default {
     'vue-comment-form': VueCommentForm,
     'vue-flag': VueFlag,
     'vue-timeago': VueTimeAgo,
+    'vue-gallery': VueGallery,
   },
   props: {
     comment: {
@@ -142,8 +145,21 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      contentImages: [] as string[],
+      contentImageIndex: null as number|null,
+    };
+  },
   methods: {
     ...mapActions('microblogs', ['vote', 'loadVoters']),
+    openContentImage(event: MouseEvent): void {
+      const gallery = contentGallery(this.$refs['comment-text'], event);
+      if (gallery) {
+        this.$data.contentImages = gallery.images;
+        this.$data.contentImageIndex = gallery.index;
+      }
+    },
     flagComment(): void {
       openFlagModal(this.$props.comment.url, this.$props.comment.metadata);
     },

@@ -76,7 +76,7 @@
           <div v-show="!microblog.is_editing">
             <vue-see-more>
               <vue-flag v-for="flag in flags" :key="flag.id" :flag="flag"/>
-              <div ref="microblog-text" v-html="microblog.html" class="microblog-text neon-contains-a-color-link"/>
+              <div ref="microblog-text" v-html="microblog.html" class="microblog-text neon-contains-a-color-link" @click="openContentImage"/>
 
               <a v-if="opg" :href="opg.metadata.url" :title="opg.metadata.title" class="card microblog-opg" target="_blank">
                 <div class="microblog-opg-image" :style="`background-image: url(${opg.url})`"/>
@@ -176,6 +176,7 @@
       </div>
     </div>
     <vue-gallery :images="imageUrls" :index="index" @close="index = null"/>
+    <vue-gallery :images="contentImages" :index="contentImageIndex" @close="contentImageIndex = null"/>
   </div>
 </template>
 
@@ -201,7 +202,7 @@ import VueUserName from "../user-name.vue";
 import VueCommentForm from './comment-form.vue';
 import VueComment from "./comment.vue";
 import VueForm from './form.vue';
-import VueGallery from "./gallery.vue";
+import VueGallery, {contentGallery} from "./gallery.vue";
 
 export default {
   name: 'microblog',
@@ -226,6 +227,8 @@ export default {
   data() {
     return {
       index: null as number|null,
+      contentImages: [] as string[],
+      contentImageIndex: null as number|null,
       commentDefault: {parent_id: this.microblog.id, text: '', assets: []},
     };
   },
@@ -272,6 +275,13 @@ export default {
     },
     focus() {
       this.$refs['comment-form'].focus();
+    },
+    openContentImage(event: MouseEvent): void {
+      const gallery = contentGallery(this.$refs['microblog-text'], event);
+      if (gallery) {
+        this.$data.contentImages = gallery.images;
+        this.$data.contentImageIndex = gallery.index;
+      }
     },
   },
   computed: {

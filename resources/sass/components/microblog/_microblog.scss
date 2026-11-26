@@ -44,6 +44,10 @@
 
 .microblog-text,
 .comment-text {
+  img:not(.img-smile) {
+    cursor: pointer;
+  }
+
   img.img-smile {
     height: 1em;
   }
