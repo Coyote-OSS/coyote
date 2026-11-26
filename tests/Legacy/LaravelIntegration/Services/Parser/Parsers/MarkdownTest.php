@@ -194,12 +194,17 @@ class MarkdownTest extends TestCase
 
         $this->assertStringContainsString('https://youtube.com/embed/vd0zDG4vwOw?start=1107', $this->markdown->parse('https://youtu.be/vd0zDG4vwOw?t=18m27s'));
         $this->assertStringContainsString('https://youtube.com/embed/vd0zDG4vwOw?start=1107', $this->markdown->parse('https://www.youtube.com/watch?v=vd0zDG4vwOw#t=18m27s'));
+        $this->assertStringContainsString('https://youtube.com/embed/TKDL1HxZFJI?start=5', $this->markdown->parse('https://www.youtube.com/watch?v=TKDL1HxZFJI&t=5s'));
+        $this->assertStringContainsString('https://youtube.com/embed/TKDL1HxZFJI?start=5', $this->markdown->parse('https://www.youtube.com/watch?v=TKDL1HxZFJI&t=5'));
+        $this->assertStringContainsString('https://youtube.com/embed/TKDL1HxZFJI?start=5', $this->markdown->parse('https://www.youtube.com/watch?v=TKDL1HxZFJI#t=5s'));
+        $this->assertStringContainsString('https://youtube.com/embed/TKDL1HxZFJI?start=5', $this->markdown->parse('https://youtu.be/TKDL1HxZFJI?t=5'));
     }
 
     public function testYoutubeShorts()
     {
         $this->assertStringContainsString('src="https://youtube.com/embed/1b7mTjBcEyM"', $this->markdown->parse('https://www.youtube.com/shorts/1b7mTjBcEyM'));
         $this->assertStringContainsString('src="https://youtube.com/embed/1b7mTjBcEyM"', $this->markdown->parse('https://youtube.com/shorts/1b7mTjBcEyM?feature=share'));
+        $this->assertStringContainsString('src="https://youtube.com/embed/TKDL1HxZFJI?start=5"', $this->markdown->parse('https://www.youtube.com/shorts/TKDL1HxZFJI?t=5'));
         $this->assertStringNotContainsString('iframe', $this->markdown->parse('https://www.youtube.com/shorts/'));
     }
 

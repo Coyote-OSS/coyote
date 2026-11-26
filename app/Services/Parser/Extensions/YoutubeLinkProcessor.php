@@ -9,14 +9,12 @@ use League\CommonMark\Node\Inline\AbstractInline;
 use TRegx\CleanRegex\Exception\SubjectNotMatchedException;
 use TRegx\CleanRegex\Pattern;
 
-class YoutubeLinkProcessor
-{
+class YoutubeLinkProcessor {
     use LinkSupport;
 
     private const YOUTUBE_HOSTS = ['youtube.com', 'youtu.be', 'www.youtube.com', 'www.youtu.be'];
 
-    public function __invoke(DocumentParsedEvent $e): void
-    {
+    public function __invoke(DocumentParsedEvent $e): void {
         foreach ($e->getDocument()->iterator() as $link) {
             if (!($link instanceof Link)) {
                 continue;
@@ -42,8 +40,7 @@ class YoutubeLinkProcessor
         }
     }
 
-    private function isYoutubeLink(Link $link, array $components): bool
-    {
+    private function isYoutubeLink(Link $link, array $components): bool {
         if ($link->parent() instanceof AbstractInline) {
             return false;
         }
@@ -51,8 +48,7 @@ class YoutubeLinkProcessor
         return ExternalLinkProcessor::hostMatches($components['host'], self::YOUTUBE_HOSTS);
     }
 
-    private function makeIframeFromFullPath(array $components): ?Iframe
-    {
+    private function makeIframeFromFullPath(array $components): ?Iframe {
         parse_str($components['query'] ?? '', $query);
 
         if (empty($query['v'])) {
@@ -61,32 +57,33 @@ class YoutubeLinkProcessor
 
         parse_str($components['fragment'] ?? '', $hash);
 
-        return $this->makeIframe($query['v'], $this->timeToSeconds($hash['t'] ?? null));
+        return $this->makeIframe(
+            $query['v'],
+            $this->timeToSeconds($query['t'] ?? $hash['t'] ?? null));
     }
 
     /**
      * YouTube Shorts: youtube.com/shorts/{id}
      */
-    private function makeIframeFromShortsPath(array $components): ?Iframe
-    {
+    private function makeIframeFromShortsPath(array $components): ?Iframe {
         $segments = explode('/', trim($components['path'], '/'));
 
         if (empty($segments[1])) {
             return null;
         }
 
-        return $this->makeIframe($segments[1]);
+        parse_str($components['query'] ?? '', $query);
+
+        return $this->makeIframe($segments[1], $this->timeToSeconds($query['t'] ?? null));
     }
 
-    private function makeIframeFromShortPath(array $components): ?Iframe
-    {
+    private function makeIframeFromShortPath(array $components): ?Iframe {
         parse_str($components['query'] ?? '', $query);
 
         return $this->makeIframe(trim($components['path'], '/'), $this->timeToSeconds($query['t'] ?? null));
     }
 
-    private function makeIframe(string $videoId, string $start = null): Iframe
-    {
+    private function makeIframe(string $videoId, string $start = null): Iframe {
         $iframe = new Iframe();
         $iframe->data->set('src', 'https://youtube.com/embed/' . $videoId . ($start !== null ? "?start=$start" : ''));
         $iframe->data->set('class', 'youtube-player');
@@ -95,8 +92,7 @@ class YoutubeLinkProcessor
         return $iframe;
     }
 
-    private function timeToSeconds(?string $time): ?int
-    {
+    private function timeToSeconds(?string $time): ?int {
         if (!$time) {
             return null;
         }
@@ -106,7 +102,7 @@ class YoutubeLinkProcessor
         try {
             [$minutes, $seconds] = $pattern->match($time)->tuple(1, 2);
         } catch (SubjectNotMatchedException) {
-            return (int) $time;
+            return (int)$time;
         }
 
         return $minutes * 60 + $seconds;
