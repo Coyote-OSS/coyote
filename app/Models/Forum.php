@@ -4,7 +4,9 @@ namespace Coyote;
 
 use Coyote\Forum\Access;
 use Coyote\Models\Scopes\TrackForum;
+use Coyote\Models\Subscription;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property int $id
@@ -94,6 +96,11 @@ class Forum extends Model
                 $model->parent_id = null;
             }
         });
+    }
+
+    public function subscribers(): MorphMany
+    {
+        return $this->morphMany(Subscription::class, 'resource');
     }
 
     /**

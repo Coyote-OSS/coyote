@@ -67,6 +67,11 @@ class CategoryController extends BaseController {
             'collapse'     => $this->collapse(),
             'flags'        => $flags,
             'postsPerPage' => $this->postsPerPage($this->request),
+            'forumState'   => [
+                'id'            => $forum->id,
+                'slug'          => $forum->slug,
+                'is_subscribed' => $this->userId !== null && $forum->subscribers()->forUser($this->userId)->exists(),
+            ],
         ]);
     }
 

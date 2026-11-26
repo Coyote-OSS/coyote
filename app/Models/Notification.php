@@ -44,6 +44,7 @@ class Notification extends Model
     const MICROBLOG_SUBSCRIBER = 26;
     const POST_COMMENT_MIGRATED = 27;
     const POST_COMMENT_VOTED = 28;
+    const FORUM_SUBSCRIBER = 29;
 
     const DB = 'db';
     const MAIL = 'mail';

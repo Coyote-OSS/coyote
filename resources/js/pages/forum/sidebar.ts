@@ -1,3 +1,4 @@
+import axios from "axios";
 import {mapGetters} from "vuex";
 
 import VueButton from "../../components/forms/button.vue";
@@ -57,6 +58,11 @@ export default {
 
     subscribe() {
       store.dispatch('topics/subscribe', this.topic);
+    },
+
+    subscribeForum(): void {
+      this.forum.is_subscribed = !this.forum.is_subscribed;
+      axios.post(`/Forum/${this.forum.slug}/Subscribe`);
     },
 
     move() {

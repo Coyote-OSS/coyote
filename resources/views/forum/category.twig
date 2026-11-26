@@ -39,6 +39,7 @@
     var forums = {{ forums|json_encode|raw }};
     var topics = {{ topics|json_encode|raw }};
     var postsPerPage = {{ postsPerPage }};
+    var forum = {{ forumState|json_encode|raw }};
     var flags = {{ flags|json_encode|raw }};
     var groupStickyTopics = true;
     var tags = {{ tags.user|json_encode|raw }};
@@ -59,6 +60,18 @@
             <a @click="markTopics" title="Oznacz kategorie jako przeczytane">
               {{ icon('forumCategoryMarkAsRead') }}
               Oznacz jako przeczytane
+            </a>
+          </li>
+          <li v-if="isAuthorized" class="action-link">
+            <a @click="subscribeForum" title="Kliknij aby wł/wył obserwowanie kategorii">
+              <vue-icon v-if="forum.is_subscribed" name="topicSubscribed" class="neon-subscribe neon-subscribe--active"></vue-icon>
+              <vue-icon v-else name="topicSubscribe" class="neon-subscribe"></vue-icon>
+              <template v-if="forum.is_subscribed">
+                Zakończ obserwację kategorii
+              </template>
+              <template v-else>
+                Obserwuj kategorię
+              </template>
             </a>
           </li>
         </ul>

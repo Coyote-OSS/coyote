@@ -170,6 +170,13 @@ $this->post('Forum/Topic/Subscribe/{topic}', [
     'middleware' => 'auth',
 ]);
 
+// obserwowanie kategorii forum
+$this->post('Forum/{forum}/Subscribe', [
+    'uses'       => 'SubscribeController@forum',
+    'as'         => 'forum.subscribe',
+    'middleware' => 'auth',
+]);
+
 // obserwowanie posta
 $this->post('Forum/Post/Subscribe/{post}', [
     'uses'       => 'SubscribeController@post',

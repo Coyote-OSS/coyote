@@ -2,6 +2,7 @@
 namespace Coyote\Listeners;
 
 use Coyote\Events\PostSaved;
+use Coyote\Notifications\Forum\TopicCreatedNotification;
 use Coyote\Notifications\Post\AbstractNotification;
 use Coyote\Notifications\Post\ChangedNotification;
 use Coyote\Notifications\Post\SubmittedNotification;
@@ -35,6 +36,28 @@ class DispatchPostNotifications implements ShouldQueue
         $users = $this->postUsersToMention($post, null);
         $this->sendNotificationUserMentioned($post, $author, $users);
         $this->sendNotificationPostCreated($post, $author, $users);
+        if ($post->topic->first_post_id === $post->id) {
+            $this->sendNotificationTopicCreated($post, $author, $users);
+        }
+    }
+
+    private function sendNotificationTopicCreated(Post $post, User $author, array $alreadyMentioned): void
+    {
+        $this->dispatcher->send(
+            $this->forumSubscribers($post, $author, $alreadyMentioned),
+            new TopicCreatedNotification($author, $post));
+    }
+
+    private function forumSubscribers(Post $post, User $notifiableBy, array $exceptSubscribers): Support\Collection
+    {
+        return $post->forum
+            ->subscribers()
+            ->whereNotIn('subscriptions.user_id', $exceptSubscribers)
+            ->excludeUserAndBlockers($notifiableBy->id)
+            ->has('user')
+            ->with('user')
+            ->get()
+            ->pluck('user');
     }
 
     private function handlePostEdited(Post $post, User $editor, ?string $previousPostHtml): void
